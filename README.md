@@ -16,9 +16,9 @@ No additional instructions required.
 
 Name | Mobile | Email | Development OS/Toolchain
 -:|:-:|:-|-|
-Aakanksha Rai | 90166928 | rai.aakanksha@gmail.com | MacOS/CLion
-Fatin Nabilah | 96715774 | fatinnbs@gmail.com | Windows 10/Visual Studio 2019
-Gabriel Benedict Teo Jian Cheng | 81219348 | gabriel.teo212@gmail.com | MacOS/CLion
-Huynh Thai Duong | 82506629 | htduong292001@gmail.com | Windows 10/Visual Studio 2019
+Aakanksha Rai | 90166928 | aakanksha.rai@u.nus.edu | MacOS/CLion
+Fatin Nabilah | 96715774 | fatin@u.nus.edu | Windows 10/Visual Studio 2019
+Gabriel Benedict Teo Jian Cheng | 81219348 | e0313469@u.nus.edu | MacOS/CLion
+Huynh Thai Duong | 82506629 | thaiduong.huynh@u.nus.edu | Windows 10/Visual Studio 2019
 Wallace Lim | 90218955 | wallace@u.nus.edu | MacOS/CLion
 Zhu Yjie | 97210012 | e0323600@u.nus.edu | Windows 10/Visual Studio 2019
