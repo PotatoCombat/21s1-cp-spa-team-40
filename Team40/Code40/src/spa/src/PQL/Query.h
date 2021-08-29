@@ -12,19 +12,18 @@ using namespace std;
 
 class Query {
 private:
-	vector<Entity> entityList;
-	vector<Relationship> relationshipList;
-	Entity returnEntity;
+	vector<Entity*> entityList;
+	vector<Relationship*> relationshipList;
+	Entity* returnEntity;
 public:
 	Query();
 
-	void setReturnEntity(Entity entity);
-	Entity getReturnEntity();
+	void setReturnEntity(Entity* entity);
+	Entity* getReturnEntity();
 
-	void addEntity(Entity entity);
-	vector<Entity> getEntities();
+	void addEntity(Entity* entity);
+	vector<Entity*> getEntities();
 
-	void addRelationship(Relationship relationship);
-	vector<Relationship> getRelationships();
-
+	void addRelationship(Relationship* relationship);
+	vector<Relationship*> getRelationships();
 }
