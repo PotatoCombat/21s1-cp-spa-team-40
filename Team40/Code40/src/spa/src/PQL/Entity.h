@@ -5,15 +5,15 @@
 using namespace std;
 
 
-enum class EntityType { Statement };
+enum class EntityType { STATEMENT, ENTITY };
 
 class Entity {
 private:
 	string name;
-	EntityType type;
 
 public:
-	Entity(string n, EntityType t);
-	EntityType getType();
+	Entity(string name);
 	string getName();
+
+	virtual EntityType getType();
 };
