@@ -5,7 +5,10 @@
 using namespace std;
 
 
-enum class EntityType { STATEMENT, ENTITY };
+enum class EntityType { 
+	UNKNOWN, 
+	STATEMENT 
+};
 
 class Entity {
 private:
@@ -14,6 +17,5 @@ private:
 public:
 	Entity(string name);
 	string getName();
-
 	virtual EntityType getType();
 };

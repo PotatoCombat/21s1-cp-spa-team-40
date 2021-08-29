@@ -11,5 +11,5 @@ string Entity::getName() {
 }
 
 EntityType Entity::getType() {
-	return EntityType::ENTITY;
+	return EntityType::UNKNOWN;
 }
