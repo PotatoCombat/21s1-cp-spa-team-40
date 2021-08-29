@@ -2,6 +2,11 @@
 
 #include <Entity.h>
 
+enum class RelationshipType { 
+	UNKNOWN, 
+	FOLLOWS
+};
+
 class Relationship {
 private:
 	Entity firstEntity;
@@ -10,4 +15,5 @@ public:
 	Relationship(Entity firstEntity, Entity secondEntity);
 	Entity getFirstEntity();
 	Entiry getSecondEntity();
+	virtual RelationshipType getRelationshipType();
 };

@@ -15,3 +15,7 @@ Entity Relationship::getFirstEntity() {
 Entity Relationship::getSecondEntity() {
 	return secondEntity;
 }
+
+RelationshipType Relationship::getRelationshipType() {
+	return RelationshipType::UNKNOWN;
+}
