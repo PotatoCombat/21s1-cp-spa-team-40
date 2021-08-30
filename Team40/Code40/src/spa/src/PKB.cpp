@@ -1,7 +1,3 @@
-#pragma once
-
-#include <vector>
-
 #include "PKB.h"
 
 using namespace std;

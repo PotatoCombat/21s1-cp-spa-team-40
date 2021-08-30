@@ -1,7 +1,6 @@
-#include <map>
+#include <string>
 #include <vector>
 
-#include "Abstractions.h"
 #include "PKB.h"
 
 #include "catch.hpp"
