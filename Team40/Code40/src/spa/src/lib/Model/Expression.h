@@ -1,23 +1,21 @@
 #pragma once
-#include "lib/Model/Factor.h"
-using namespace std;
+#include "Factor.h"
 
 enum class ExpressionType {
 	SINGLE_TERM,
     SUM_OF_TERMS,
-    DIFF_OF_TERMS
+    DIFFERENCE_OF_TERMS
 };
 
-class Expression : public Factor{
+class Expression : public Factor {
 private:
 	ExpressionType expressionType;
 public:
 	//constructor
-	Expression(string name);
-
-    //setters
-	void setExpressionType(ExpressionType expressionType);
+	Expression(ExpressionType expressionType, int value);
 
 	//getters
 	ExpressionType getExpressionType();
+
+	virtual int evaluateSelf() = 0;
 };

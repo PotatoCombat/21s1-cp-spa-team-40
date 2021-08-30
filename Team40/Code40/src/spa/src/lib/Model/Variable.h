@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Variable: Factor{
+class Variable: Factor {
     private:
         const string name;
     public:
