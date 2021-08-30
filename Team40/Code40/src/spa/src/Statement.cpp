@@ -5,7 +5,7 @@ using namespace std;
 
 //constructors
 Statement::Statement(int index) {
-	this->StatementType = type;
+	this->type = type;
 }
 
 //setters
@@ -21,8 +21,8 @@ void Statement::addVar(char var) {
 	this->varsList.push_back(var);
 }
 
-void Statement::addConst(int const) {
-	this->constsList.push_back(const);
+void Statement::addConst(int constant) {
+	this->constsList.push_back(constant);
 }
 
 //getters

@@ -1,17 +1,15 @@
 using namespace std;
-#include "Statment.h
+#include "Statement.h"
 #include "Factor.h"
-using Statement::Statement;
-using Factor::Factor;
 
 class PrintStatement : public Statement {
 
 private:
 	Factor variable;
-	Expression expression;
+	//Expression expression; //TODO: Implement this
 
 public:
-	void setVariable(Factor variable) { //this can only be a variable
+	void setVariable(Factor variable) { //this can only be a factor of type variable
 		this->variable = variable;
 	}
 
@@ -19,6 +17,6 @@ public:
 		return this->variable;
 	}
 	StatementType getStatementType() {
-		return StatementType::READ;
+		return StatementType::ASSIGN;
 	}
 };

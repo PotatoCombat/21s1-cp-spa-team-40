@@ -27,5 +27,5 @@ public:
 	//getters
 	string getName();
 	int getValue();
-	FactorType getType();
+	FactorType getFactorType();
 };
