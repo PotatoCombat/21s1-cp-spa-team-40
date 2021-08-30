@@ -5,17 +5,18 @@
 
 #include "Abstractions.h"
 #include "EntityTable.h"
+#include "Iterator.h"
 #include "StatementTable.h"
 
 using namespace std;
 
 class PKB {
 public:
-    vector<VarIndex> getAllVars();
-    vector<ConstIndex> getAllConsts();
-    vector<ProcedureIndex> getAllProcs();
+    Iterator<VarIndex> getAllVars();
+    Iterator<ConstIndex> getAllConsts();
+    Iterator<ProcedureIndex> getAllProcs();
 
-    vector<StatementIndex> getAllStmts();
+    Iterator<StatementIndex> getAllStmts();
 
     VarIndex insertVar(Var variable);
     ConstIndex insertConst(Const constant);

@@ -50,7 +50,7 @@ TEST_CASE("EntityTable: getIndices") {
     auto table = TestEntityTable::createTable();
 
     vector<int> test = TestEntityTable::createIndices();
-    vector<int> actual = table.getIndices();
+    vector<int> actual = table.getIndices().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {

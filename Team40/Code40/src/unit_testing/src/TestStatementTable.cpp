@@ -50,7 +50,7 @@ TEST_CASE("StatementTable: getIndices") {
     auto table = TestStatementTable::createTable();
 
     vector<int> test = TestStatementTable::createIndices();
-    vector<int> actual = table.getIndices();
+    vector<int> actual = table.getIndices().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {

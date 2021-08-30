@@ -24,10 +24,10 @@ vector<int> TestPKB::createIndices() {
 
 TEST_CASE("PKB: ctor") {
     PKB pkb;
-    REQUIRE(pkb.getAllVars().empty());
-    REQUIRE(pkb.getAllConsts().empty());
-    REQUIRE(pkb.getAllProcs().empty());
-    REQUIRE(pkb.getAllStmts().empty());
+    REQUIRE(pkb.getAllVars().asVector().empty());
+    REQUIRE(pkb.getAllConsts().asVector().empty());
+    REQUIRE(pkb.getAllProcs().asVector().empty());
+    REQUIRE(pkb.getAllStmts().asVector().empty());
 }
 
 TEST_CASE("PKB: insertVar/getAllVars") {
@@ -40,7 +40,7 @@ TEST_CASE("PKB: insertVar/getAllVars") {
     }
 
     vector<VarIndex> test = TestPKB::createIndices();
-    vector<VarIndex> actual = pkb.getAllVars();
+    vector<VarIndex> actual = pkb.getAllVars().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -58,7 +58,7 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
     }
 
     vector<ConstIndex> test = TestPKB::createIndices();
-    vector<ConstIndex> actual = pkb.getAllConsts();
+    vector<ConstIndex> actual = pkb.getAllConsts().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -76,7 +76,7 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
     }
 
     vector<ProcedureIndex> test = TestPKB::createIndices();
-    vector<ProcedureIndex> actual = pkb.getAllProcs();
+    vector<ProcedureIndex> actual = pkb.getAllProcs().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -94,7 +94,7 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
     }
 
     vector<StatementIndex> test = vector<int> {1, 2, 3};
-    vector<StatementIndex> actual = pkb.getAllStmts();
+    vector<StatementIndex> actual = pkb.getAllStmts().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {

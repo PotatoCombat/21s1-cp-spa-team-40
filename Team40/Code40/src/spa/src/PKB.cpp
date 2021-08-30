@@ -2,24 +2,23 @@
 
 #include <vector>
 
-#include "Abstractions.h"
 #include "PKB.h"
 
 using namespace std;
 
-vector<VarIndex> PKB::getAllVars() {
+Iterator<VarIndex> PKB::getAllVars() {
     return varTable.getIndices();
 }
 
-vector<ConstIndex> PKB::getAllConsts() {
+Iterator<ConstIndex> PKB::getAllConsts() {
     return constTable.getIndices();
 }
 
-vector<ProcedureIndex> PKB::getAllProcs() {
+Iterator<ProcedureIndex> PKB::getAllProcs() {
     return procTable.getIndices();
 }
 
-vector<StatementIndex> PKB::getAllStmts() {
+Iterator<StatementIndex> PKB::getAllStmts() {
     return statementTable.getIndices();
 }
 

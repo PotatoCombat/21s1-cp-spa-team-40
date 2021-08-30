@@ -3,6 +3,8 @@
 #include <map>
 #include <vector>
 
+#include "Iterator.h"
+
 using namespace std;
 
 template <typename T, typename Index>
@@ -16,7 +18,7 @@ public:
 
     T getEntity(Index index);
     Index getIndex(T entity);
-    const vector<Index> &getIndices();
+    Iterator<Index> getIndices();
 
     Index insert(T entity);
 
@@ -46,8 +48,8 @@ Index EntityTable<T, Index>::getIndex(T entity) {
 }
 
 template <typename T, typename Index>
-const vector<Index> &EntityTable<T, Index>::getIndices() {
-    return indices;
+Iterator<Index> EntityTable<T, Index>::getIndices() {
+    return Iterator<Index>(indices);
 }
 
 template <typename T, typename Index>
