@@ -11,21 +11,13 @@ enum class FactorType {
 
 class Factor {
 private:
-	string name;
-	int value;
-	FactorType factorType;
+	const FactorType factorType;
 
 public:
 	//constructor
-	Factor(string name);
-
-	//setters
-	void setName(string name);
-	void setValue(int value);
-	void setFactorType(FactorType factorType);
+	Factor(FactorType factorType);
 
 	//getters
-	string getName();
-	int getValue();
-	FactorType getFactorType();
+	const FactorType getFactorType();
+	const virtual int getValue() = 0;
 };
