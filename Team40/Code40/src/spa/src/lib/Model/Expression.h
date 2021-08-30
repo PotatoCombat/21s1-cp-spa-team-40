@@ -3,8 +3,8 @@
 
 enum class ExpressionType {
 	SINGLE_TERM,
-    SUM_OF_TERMS,
-    DIFFERENCE_OF_TERMS
+    SUM_TERMS,
+    SUBTRACT_TERMS,
 };
 
 class Expression : public Factor {

@@ -7,7 +7,7 @@ add_library(spa ${srcs} ${headers}
         src/lib/Model/Statement.cpp src/lib/Model/Statement.h
         src/lib/Model/Term.cpp src/lib/Model/Term.h
         src/lib/Model/Variable.cpp src/lib/Model/Variable.h
-        src/lib/Model/SingleTermExpression.cpp src/lib/Model/SingleTermExpression.h src/lib/Model/SumTermsExpression.cpp src/lib/Model/SumTermsExpression.h)
+        src/lib/Model/SingleTermExpression.cpp src/lib/Model/SingleTermExpression.h src/lib/Model/SumTermsExpression.cpp src/lib/Model/SumTermsExpression.h src/lib/Model/SubtractTermsExpression.cpp src/lib/Model/SubtractTermsExpression.h)
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
