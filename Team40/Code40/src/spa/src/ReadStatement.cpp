@@ -1,16 +1,22 @@
 using namespace std;
 #include "Statment.h"
-using Statment::Statment;
+#include "Factor.h"
+using Statement::Statement;
+using Factor::Factor;
 
-class ReadStatement : public Statment {
+class ReadStatement : public Statement {
 
 private:
-	StatementType type;
-	int index;
-	vector<char> varsList;
-	vector<int> constsList;
+	Factor factor;
 
 public:
+	void setFactor(Factor factor) { //this can only be a variable
+		this->factor = factor;
+	}
+
+	Factor getFactor() {
+		return this->getFactor;
+	}
 	StatementType getStatementType() {
 		return StatementType::READ;
 	}

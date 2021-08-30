@@ -2,8 +2,6 @@
 #include<vector>;
 using namespace std;
 
-#pragma once
-
 enum class StatementType {
 	READ,
 	PRINT,
@@ -17,8 +15,8 @@ class Statement {
 private:
 	StatementType type;
 	int index;
-	vector<char> vars;
-	vector<int> consts;
+	vector<char> varsList; 
+	vector<int> constsList;
 public:
 	//constructor
 	Statement(int index);
