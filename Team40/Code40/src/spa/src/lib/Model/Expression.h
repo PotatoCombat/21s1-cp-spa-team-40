@@ -10,6 +10,7 @@ enum class ExpressionType {
 class Expression : public Factor {
 private:
 	ExpressionType expressionType;
+
 public:
 	//constructor
 	Expression(ExpressionType expressionType, int value);
@@ -17,5 +18,4 @@ public:
 	//getters
 	ExpressionType getExpressionType();
 
-	virtual int evaluateSelf() = 0;
 };
