@@ -1,7 +1,7 @@
 using namespace std;
 #include<vector>;
 #include<string>;
-#include "Factor.h"
+#include "Factor.h";
 
 //constructor
 Factor::Factor(string name) {

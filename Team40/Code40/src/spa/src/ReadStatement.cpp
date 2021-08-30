@@ -1,6 +1,6 @@
 using namespace std;
-#include "Statement.h"
-#include "Factor.h"
+#include "Statement.h";
+#include "Factor.h";
 
 class ReadStatement : public Statement {
 

@@ -1,11 +1,11 @@
 
 using namespace std;
 #include<vector>;
-#include "Statement.h"
+#include "Statement.h";
 
 //constructors
 Statement::Statement(int index) {
-	this->type = type;
+	this->index = index;
 }
 
 //setters
@@ -13,8 +13,8 @@ void Statement::setIndex(int index) {
 	this->index = index;
 }
 
-void Statement::setStatementType(StatementType type) {
-	this->type = type;
+void Statement::setStatementType(StatementType statementType) {
+	this->statementType = statementType;
 }
 
 void Statement::addVar(char var) {
@@ -31,7 +31,7 @@ int Statement::getIndex() {
 }
 
 StatementType Statement::getStatementType() {
-	return this->type;
+	return this->statementType;
 }
 
 vector<char> Statement::getVars() {

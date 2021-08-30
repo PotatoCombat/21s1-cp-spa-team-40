@@ -1,12 +1,13 @@
 using namespace std;
-#include "Statement.h"
-#include "Factor.h"
+#include "Statement.h";
+#include "Factor.h";
+#include "Expression.h";
 
 class PrintStatement : public Statement {
 
 private:
 	Factor variable;
-	//Expression expression; //TODO: Implement this
+	Expression expression; //TODO: Implement this
 
 public:
 	void setVariable(Factor variable) { //this can only be a factor of type variable
