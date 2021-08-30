@@ -13,7 +13,7 @@ enum class StatementType {
 
 class Statement {
 private:
-	StatementType type;
+	StatementType statementType;
 	int index;
 	vector<char> varsList; 
 	vector<int> constsList;
@@ -23,7 +23,7 @@ public:
 
 	//setters
 	void setIndex(int index);
-	void setStatementType(StatementType type);
+	void setStatementType(StatementType statementType);
 	void addVar(char var);
 	void addConst(int const);
 

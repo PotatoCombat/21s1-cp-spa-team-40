@@ -13,7 +13,7 @@ class Factor {
 private:
 	string name;
 	int value;
-	FactorType type;
+	FactorType factorType;
 
 public:
 	//constructor
@@ -22,7 +22,7 @@ public:
 	//setters
 	void setName(string name);
 	void setValue(int value);
-	void setType(FactorType type);
+	void setFactorType(FactorType factorType);
 
 	//getters
 	string getName();

@@ -17,8 +17,8 @@ void Factor::setValue(int value) {
 	this->value = value;
 }
 
-void Factor::setType(FactorType type) {
-	this->type = type;
+void Factor::setFactorType(FactorType factorType) {
+	this->factorType = factorType;
 }
 
 //getters
@@ -31,5 +31,5 @@ int Factor::getValue() {
 }
 
 FactorType Factor::getFactorType() {
-	return this->type;
+	return this->factorType;
 }
