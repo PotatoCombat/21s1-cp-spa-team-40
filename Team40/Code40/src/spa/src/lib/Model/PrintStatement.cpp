@@ -1,6 +1,5 @@
 #include "Statement.h"
-#include "lib/Model/Factor.h"
-#include "lib/Model/Variable.h"
+#include "Variable.h"
 
 class PrintStatement : public Statement {
 
