@@ -2,12 +2,14 @@
 
 #include "Factor.h"
 
-class ConstantValue: Factor {
+class Variable: Factor{
     private:
         const int value;
+        const string name;
     public:
-        explicit ConstantValue(int value);
+        Variable(int value, string name);
 
         // getter
+        string getName();
         int getValue() override; // Declared in Factor
 };

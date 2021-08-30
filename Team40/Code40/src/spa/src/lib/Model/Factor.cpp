@@ -1,4 +1,4 @@
-#include "Factor.h";
+#include "Factor.h"
 
 //constructor
 Factor::Factor(FactorType factorType) :factorType(factorType) {}
