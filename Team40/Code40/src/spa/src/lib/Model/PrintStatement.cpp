@@ -1,8 +1,8 @@
 using namespace std;
 #include "Statement.h";
-#include "Factor.h";
+#include "lib/Model/Factor.h";
 
-class ReadStatement : public Statement {
+class PrintStatement : public Statement {
 
 private:
 	Factor variable;
@@ -16,6 +16,6 @@ public:
 		return this->variable;
 	}
 	StatementType getStatementType() {
-		return StatementType::READ;
+		return StatementType::PRINT;
 	}
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "Factor.h";
+#include "lib/Model/Factor.h";
 using namespace std;
 
 enum class ExpressionType {

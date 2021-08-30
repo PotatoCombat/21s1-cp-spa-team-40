@@ -1,6 +1,6 @@
 using namespace std;
-#include "Statement.h";
-#include "Factor.h";
+#include "lib/Model/Statement.h";
+#include "lib/Model/Factor.h";
 #include "Expression.h";
 
 class PrintStatement : public Statement {
