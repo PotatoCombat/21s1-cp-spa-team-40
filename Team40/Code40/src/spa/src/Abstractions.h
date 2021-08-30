@@ -4,7 +4,7 @@
 
 using namespace std;
 
-typedef int Statement;
+typedef string Statement;
 typedef string Var;
 typedef string Const;
 typedef string Procedure;
