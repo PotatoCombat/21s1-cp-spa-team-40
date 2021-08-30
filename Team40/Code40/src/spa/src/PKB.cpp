@@ -19,6 +19,10 @@ vector<ProcedureIndex> PKB::getAllProcs() {
     return procTable.getIndices();
 }
 
+vector<StatementIndex> PKB::getAllStmts() {
+    return statementTable.getIndices();
+}
+
 VarIndex PKB::insertVar(Var variable) {
     return varTable.insert(variable);
 }
@@ -29,4 +33,8 @@ ConstIndex PKB::insertConst(Const constant) {
 
 ProcedureIndex PKB::insertProc(Procedure procedure) {
     return procTable.insert(procedure);
+}
+
+StatementIndex PKB::insertStmt(Statement statement) {
+    return statementTable.insert(statement);
 }

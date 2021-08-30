@@ -83,3 +83,21 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
         REQUIRE(test.at(i) == actual.at(i));
     }
 }
+
+TEST_CASE("PKB: insertStmt/getAllStmts") {
+    PKB pkb;
+
+    vector<Statement> items = TestPKB::createItems();
+    for (const auto& i : items)
+    {
+        pkb.insertStmt(i);
+    }
+
+    vector<StatementIndex> test = vector<int> {1, 2, 3};
+    vector<StatementIndex> actual = pkb.getAllStmts();
+
+    for (int i = 0; i < actual.size(); i++)
+    {
+        REQUIRE(test.at(i) == actual.at(i));
+    }
+}
