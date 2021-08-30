@@ -1,18 +1,16 @@
-using namespace std;
-#include "Statement.h";
-#include "lib/Model/Factor.h";
+#include "Statement.h"
+#include "lib/Model/Factor.h"
+#include "lib/Model/Variable.h"
 
 class PrintStatement : public Statement {
 
 private:
-	Factor variable;
+	Variable variable;
 
 public:
-	void setVariable(Factor variable) { //this can only be a factor of type variable
-		this->variable = variable;
-	}
+    PrintStatement(int index, Variable variable): variable(variable), Statement(index) {}
 
-	Factor getVariable() {
+	Variable getVariable() {
 		return this->variable;
 	}
 	StatementType getStatementType() {

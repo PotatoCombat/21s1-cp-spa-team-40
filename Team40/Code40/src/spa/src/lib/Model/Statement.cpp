@@ -1,7 +1,6 @@
 
-using namespace std;
-#include<vector>;
-#include "Statement.h";
+#include<vector>
+#include "Statement.h"
 
 //constructors
 Statement::Statement(int index) {

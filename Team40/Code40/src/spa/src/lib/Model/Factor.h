@@ -13,10 +13,10 @@ private:
 
 public:
 	//constructor
-	explicit Factor(FactorType factorType);
+	Factor(FactorType factorType, int value);
 
 	//getters
 	const FactorType getFactorType();
 
-    virtual int getValue() = 0;
+    const int getValue();
 };
