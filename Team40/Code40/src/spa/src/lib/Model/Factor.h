@@ -1,7 +1,4 @@
 #pragma once
-#include<vector>;
-#include<string>;
-using namespace std;
 
 enum class FactorType {
 	VARIABLE,
@@ -12,12 +9,14 @@ enum class FactorType {
 class Factor {
 private:
 	const FactorType factorType;
+	const int value;
 
 public:
 	//constructor
-	Factor(FactorType factorType);
+	explicit Factor(FactorType factorType);
 
 	//getters
 	const FactorType getFactorType();
-	const virtual int getValue() = 0;
+
+    virtual int getValue() = 0;
 };
