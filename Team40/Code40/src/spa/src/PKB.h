@@ -5,18 +5,19 @@
 
 #include "Abstractions.h"
 #include "EntityTable.h"
+#include "StatementTable.h"
 
 using namespace std;
 
 class PKB {
 public:
+    vector<VarIndex> getAllVars();
+    vector<ConstIndex> getAllConsts();
+    vector<ProcedureIndex> getAllProcs();
+
     VarIndex insertVar(Var variable);
     ConstIndex insertConst(Const constant);
     ProcedureIndex insertProc(Procedure procedure);
-
-    vector<Var> getAllVars();
-    vector<Const> getAllConsts();
-    vector<Procedure> getAllProcs();
 
 private:
     typedef EntityTable<Var, VarIndex> VarTable;

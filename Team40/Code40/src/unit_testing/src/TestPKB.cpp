@@ -1,29 +1,46 @@
-#include <iostream>
-#include <string>
 #include <map>
 #include <vector>
 
+#include "Abstractions.h"
 #include "PKB.h"
 
 #include "catch.hpp"
 
 using namespace std;
 
-PKB createPKB() {
+struct TestPKB {
+public:
+    static vector<string> createItems();
+    static vector<int> createIndices();
+};
+
+vector<string> TestPKB::createItems() {
+    return vector<string> {"hello", "goodbye", "sayonara"};
+}
+
+vector<int> TestPKB::createIndices() {
+    return vector<int> {0, 1, 2};
+}
+
+TEST_CASE("PKB: ctor") {
+    PKB pkb;
+    REQUIRE(pkb.getAllVars().empty());
+    REQUIRE(pkb.getAllConsts().empty());
+    REQUIRE(pkb.getAllProcs().empty());
+    REQUIRE(pkb.getAllStmts().empty());
+}
+
+TEST_CASE("PKB: insertVar/getAllVars") {
     PKB pkb;
 
-    pkb.insertVar("hello");
-    pkb.insertVar("goodbye");
-    pkb.insertVar("sayonara");
+    vector<Var> items = TestPKB::createItems();
+    for (const auto& i : items)
+    {
+        pkb.insertVar(i);
+    }
 
-    return pkb;
-}
-
-TEST_CASE("PKB VarTable - insert/get") {
-    PKB pkb = createPKB();
-
-    vector<Var> test {"hello", "goodbye", "sayonara"};
-    vector<Var> actual = pkb.getAllVars();
+    vector<VarIndex> test = TestPKB::createIndices();
+    vector<VarIndex> actual = pkb.getAllVars();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -31,11 +48,17 @@ TEST_CASE("PKB VarTable - insert/get") {
     }
 }
 
-TEST_CASE("PKB ConstTable - insert/get") {
-    PKB pkb = createPKB();
+TEST_CASE("PKB: insertConst/getAllConsts") {
+    PKB pkb;
 
-    vector<Const> test {"hello", "goodbye", "sayonara"};
-    vector<Const> actual = pkb.getAllConsts();
+    vector<Const> items = TestPKB::createItems();
+    for (const auto& i : items)
+    {
+        pkb.insertConst(i);
+    }
+
+    vector<ConstIndex> test = TestPKB::createIndices();
+    vector<ConstIndex> actual = pkb.getAllConsts();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -43,11 +66,17 @@ TEST_CASE("PKB ConstTable - insert/get") {
     }
 }
 
-TEST_CASE("PKB ProcedureTable - insert/get") {
-    PKB pkb = createPKB();
+TEST_CASE("PKB: insertProcs/getAllProcs") {
+    PKB pkb;
 
-    vector<Procedure> test {"hello", "goodbye", "sayonara"};
-    vector<Procedure> actual = pkb.getAllProcs();
+    vector<Procedure> items = TestPKB::createItems();
+    for (const auto& i : items)
+    {
+        pkb.insertProc(i);
+    }
+
+    vector<ProcedureIndex> test = TestPKB::createIndices();
+    vector<ProcedureIndex> actual = pkb.getAllProcs();
 
     for (int i = 0; i < actual.size(); i++)
     {

@@ -5,55 +5,55 @@
 
 using namespace std;
 
-template <typename T, typename U>
+template <typename T, typename Index>
 class EntityTable {
-    static_assert(is_convertible<int, U>::value, "U must be convertible to a primitive int");
+    static_assert(is_convertible<int, Index>::value, "Index must be convertible to a primitive int");
 
 public:
     EntityTable();
-    ~EntityTable();
 
-    U insert(T entity);
-    U getIndex(T entity);
-    T getEntity(U index);
-    const vector<T> &getEntities() const;
     int getSize();
 
+    T getEntity(Index index);
+    Index getIndex(T entity);
+    const vector<Index> &getIndices();
+
+    Index insert(T entity);
+
 private:
-    U size = 0;
-    vector<T> indexToEntity;
-    map<T, U> entityToIndex;
+    Index size = 0;
+    vector<T> entities;
+    vector<Index> indices;
+    map<T, Index> entityToIndex;
 };
 
-template <typename T, typename U>
-EntityTable<T, U>::EntityTable() = default;
+template <typename T, typename Index>
+EntityTable<T, Index>::EntityTable() = default;
 
-template <typename T, typename U>
-EntityTable<T, U>::~EntityTable() = default;
-
-template <typename T, typename U>
-U EntityTable<T, U>::insert(T entity) {
-    indexToEntity.push_back(entity);
-    entityToIndex[entity] = size;
-    return size++;
+template <typename T, typename Index>
+int EntityTable<T, Index>::getSize() {
+    return size;
 }
 
-template <typename T, typename U>
-U EntityTable<T, U>::getIndex(T entity) {
+template <typename T, typename Index>
+T EntityTable<T, Index>::getEntity(Index index) {
+    return entities.at(index);
+}
+
+template <typename T, typename Index>
+Index EntityTable<T, Index>::getIndex(T entity) {
     return entityToIndex.at(entity);
 }
 
-template <typename T, typename U>
-T EntityTable<T, U>::getEntity(U index) {
-    return indexToEntity.at(index);
+template <typename T, typename Index>
+const vector<Index> &EntityTable<T, Index>::getIndices() {
+    return indices;
 }
 
-template <typename T, typename U>
-const vector<T> &EntityTable<T, U>::getEntities() const {
-    return indexToEntity;
-}
-
-template <typename T, typename U>
-int EntityTable<T, U>::getSize() {
-    return size;
+template <typename T, typename Index>
+Index EntityTable<T, Index>::insert(T entity) {
+    entities.push_back(entity);
+    indices.push_back(size);
+    entityToIndex[entity] = size;
+    return size++;
 }
