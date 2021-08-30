@@ -1,21 +1,29 @@
 #pragma once
 
-#include<stdio.h>
-#include <iostream>
 #include <string>
 #include <vector>
 
+#include "Abstractions.h"
+#include "EntityTable.h"
+
 using namespace std;
-typedef short PROC;
-
-class TNode;
-
-class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
 
 class PKB {
 public:
-	static VarTable* varTable; 
-	static int setProcToAST(PROC p, TNode* r);
-	static TNode* getRootAST (PROC p);
+    VarIndex insertVar(Var variable);
+    ConstIndex insertConst(Const constant);
+    ProcedureIndex insertProc(Procedure procedure);
 
+    vector<Var> getAllVars();
+    vector<Const> getAllConsts();
+    vector<Procedure> getAllProcs();
+
+private:
+    typedef EntityTable<Var, VarIndex> VarTable;
+    typedef EntityTable<Const, ConstIndex> ConstTable;
+    typedef EntityTable<Procedure, ProcedureIndex> ProcedureTable;
+
+    VarTable varTable;
+    ConstTable constTable;
+    ProcedureTable procTable;
 };

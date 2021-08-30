@@ -1,17 +1,31 @@
-#include<stdio.h>
-#include <iostream>
-#include <string>
+#pragma once
+
 #include <vector>
+
+#include "Abstractions.h"
+#include "PKB.h"
 
 using namespace std;
 
-#include "PKB.h"
-#include "TNode.h"
-
-int PKB::setProcToAST(PROC p, TNode* r) {
-	return 0;
+vector<Var> PKB::getAllVars() {
+    return varTable.getEntities();
 }
 
-TNode* PKB::getRootAST (PROC p){
-	return nullptr;
+VarIndex PKB::insertVar(Var variable) {
+    return varTable.insert(variable);
+}
+
+vector<Const> PKB::getAllConsts() {
+    return constTable.getEntities();
+}
+
+ConstIndex PKB::insertConst(Const constant) {
+    return constTable.insert(constant);
+}
+vector<Procedure> PKB::getAllProcs() {
+    return procTable.getEntities();
+}
+
+ProcedureIndex PKB::insertProc(Procedure procedure) {
+    return procTable.insert(procedure);
 }
