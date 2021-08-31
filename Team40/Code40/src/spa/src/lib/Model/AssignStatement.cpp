@@ -8,8 +8,10 @@ private:
     Expression expression;
 
 public:
-    AssignStatement(int index, Variable variable, Expression expression)
-        : variable(variable), expression(expression), Statement(index) {}
+    AssignStatement::AssignStatement(int index, Variable variable,
+                                     Expression expression)
+        : variable(variable), expression(expression),
+          Statement(index, StatementType::ASSIGN) {}
 
     Variable getVariable() { return this->variable; }
 

@@ -6,9 +6,8 @@ private:
     Variable variable;
 
 public:
-    ReadStatement(int index, Variable variable)
-        : variable(variable), Statement(index) {}
+    ReadStatement::ReadStatement(int index, Variable variable)
+        : variable(variable), Statement(index, StatementType::READ) {}
 
     Variable getVariable() { return this->variable; }
-    StatementType getStatementType() { return StatementType::READ; }
 };
