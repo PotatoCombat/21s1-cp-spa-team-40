@@ -11,7 +11,7 @@ private:
 
 public:
     Relationship(Entity firstEntity, Entity secondEntity);
-    Entity getFirstEntity();
-    Entity getSecondEntity();
-    virtual RelationshipType getRelationshipType();
+    Entity GetFirstEntity();
+    Entity GetSecondEntity();
+    virtual RelationshipType GetRelationshipType();
 };

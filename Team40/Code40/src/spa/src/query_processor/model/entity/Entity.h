@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string"
+#include <string>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ private:
 
 public:
     Entity(string name);
-    string getName();
-    virtual EntityType getType();
+    string GetName();
+    virtual EntityType GetType();
     bool operator==(const Entity &other);
 };

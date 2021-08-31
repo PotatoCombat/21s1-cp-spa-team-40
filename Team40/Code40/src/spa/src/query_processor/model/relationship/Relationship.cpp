@@ -8,10 +8,10 @@ Relationship::Relationship(Entity firstEntity, Entity secondEntity) {
     this->secondEntity = secondEntity;
 }
 
-Entity Relationship::getFirstEntity() { return firstEntity; }
+Entity Relationship::GetFirstEntity() { return firstEntity; }
 
-Entity Relationship::getSecondEntity() { return secondEntity; }
+Entity Relationship::GetSecondEntity() { return secondEntity; }
 
-RelationshipType Relationship::getRelationshipType() {
+RelationshipType Relationship::GetRelationshipType() {
     return RelationshipType::UNKNOWN;
 }
