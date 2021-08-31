@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum class EntityType { UNKNOWN, STATEMENT };
+enum class EntityType { STATEMENT };
 
 class Entity {
 private:
@@ -13,6 +13,7 @@ private:
 public:
     Entity(string name);
     string GetName();
-    virtual EntityType GetType();
+    virtual EntityType GetType() = 0;
+    virtual bool isSynonymEntity() = 0;
     bool operator==(const Entity &other);
 };

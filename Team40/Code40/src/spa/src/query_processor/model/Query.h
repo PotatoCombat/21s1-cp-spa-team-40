@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "Entity.h"
-#include "Relationship.h"
+#include "entity/Entity.h"
+#include "relationship/Relationship.h"
 
 using namespace std;
 

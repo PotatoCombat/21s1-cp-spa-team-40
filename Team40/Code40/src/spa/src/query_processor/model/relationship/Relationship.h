@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Entity.h"
+#include "../entity/Entity.h"
 
-enum class RelationshipType { UNKNOWN, FOLLOWS };
+using namespace std;
+
+enum class RelationshipType { FOLLOWS };
 
 class Relationship {
 private:
@@ -13,5 +15,5 @@ public:
     Relationship(Entity firstEntity, Entity secondEntity);
     Entity GetFirstEntity();
     Entity GetSecondEntity();
-    virtual RelationshipType GetRelationshipType();
+    virtual RelationshipType GetRelationshipType() = 0;
 };
