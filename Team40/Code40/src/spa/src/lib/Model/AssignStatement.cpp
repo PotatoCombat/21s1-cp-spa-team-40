@@ -1,14 +1,15 @@
 #include "Statement.h"
 #include "Variable.h"
 
-class PrintStatement : public Statement {
+class AssignStatement : public Statement {
 private:
   Variable variable;
 
 public:
-  PrintStatement(int index, Variable variable)
+  AssignStatement(int index, Variable variable)
       : variable(variable), Statement(index) {}
 
   Variable getVariable() { return this->variable; }
-  StatementType getStatementType() { return StatementType::PRINT; }
+
+  StatementType getStatementType() { return StatementType::ASSIGN; }
 };

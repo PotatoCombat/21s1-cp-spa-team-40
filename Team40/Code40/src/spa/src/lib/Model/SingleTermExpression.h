@@ -1,9 +1,10 @@
 #include "Expression.h"
 #include "Term.h"
 
-class SingleTermExpression: public Expression {
+class SingleTermExpression : public Expression {
 private:
-    Term *term;
+  Term *term;
+
 public:
-    SingleTermExpression(Term *term);
+  SingleTermExpression(Term *term);
 };

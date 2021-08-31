@@ -1,35 +1,28 @@
 #pragma once
-#include<vector>
+#include <vector>
 using namespace std;
 
-enum class StatementType {
-	READ,
-	PRINT,
-	ASSIGN,
-	CALL,
-	WHILE,
-	IF
-};
+enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
 class Statement {
 private:
-	StatementType statementType;
-	int index;
-	vector<char> varsList; 
-	vector<int> constsList;
+  StatementType statementType;
+  int index;
+  vector<char> varsList;
+  vector<int> constsList;
+
 public:
-	//constructor
-	Statement(int index);
+  // constructor
+  Statement(int index);
 
-	//setters
-	void setIndex(int index);
-	void setStatementType(StatementType statementType);
-	void addVar(char var);
-	void addConst(int const);
+  // setters
+  void setStatementType(StatementType statementType);
+  void addVar(char var);
+  void addConst(int const);
 
-	//getters
-	int getIndex();
-	StatementType getStatementType();
-	vector<char> getVars();
-	vector<int> getConsts();
+  // getters
+  int getIndex();
+  StatementType getStatementType();
+  vector<char> getVars();
+  vector<int> getConsts();
 };
