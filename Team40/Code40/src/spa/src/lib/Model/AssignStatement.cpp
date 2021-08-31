@@ -1,15 +1,19 @@
+#include "Expression.h"
 #include "Statement.h"
 #include "Variable.h"
 
 class AssignStatement : public Statement {
-private:
-  Variable variable;
+    private:
+    Variable variable;
+    Expression expression;
 
-public:
-  AssignStatement(int index, Variable variable)
-      : variable(variable), Statement(index) {}
+    public:
+    AssignStatement(int index, Variable variable, Expression expression)
+        : variable(variable), expression(expression), Statement(index) {}
 
-  Variable getVariable() { return this->variable; }
+    Variable getVariable() { return this->variable; }
 
-  StatementType getStatementType() { return StatementType::ASSIGN; }
+    Expression getExpression() { return this->expression; }
+
+    StatementType getStatementType() { return StatementType::ASSIGN; }
 };

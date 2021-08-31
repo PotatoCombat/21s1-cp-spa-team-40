@@ -1,4 +1,5 @@
 #include "Statement.h"
+
 #include <vector>
 
 // constructors
@@ -6,7 +7,7 @@ Statement::Statement(int index) { this->index = index; }
 
 // setters
 void Statement::setStatementType(StatementType statementType) {
-  this->statementType = statementType;
+    this->statementType = statementType;
 }
 
 void Statement::addVar(char var) { this->varsList.push_back(var); }
