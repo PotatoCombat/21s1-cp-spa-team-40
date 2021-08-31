@@ -9,8 +9,8 @@ private:
 public:
     IfStatement::IfStatement(int index, ConditionalExpression cond)
         : cond(cond), Statement(index, StatementType::IF) {
-            this->stmtLst = {};
-        }
+        this->stmtLst = {};
+    }
 
     void addStatement(Statement statement) {
         this->stmtLst.push_back(statement);

@@ -10,9 +10,9 @@ private:
 public:
     IfStatement::IfStatement(int index, ConditionalExpression cond)
         : cond(cond), Statement(index, StatementType::IF) {
-            this->thenStmtLst = {};
-            this->elseStmtLst = {};
-        }
+        this->thenStmtLst = {};
+        this->elseStmtLst = {};
+    }
 
     void addThenStatement(Statement statement) {
         this->thenStmtLst.push_back(statement);
