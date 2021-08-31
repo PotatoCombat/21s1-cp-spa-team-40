@@ -3,11 +3,11 @@
 #include "Variable.h"
 
 class AssignStatement : public Statement {
-    private:
+private:
     Variable variable;
     Expression expression;
 
-    public:
+public:
     AssignStatement(int index, Variable variable, Expression expression)
         : variable(variable), expression(expression), Statement(index) {}
 

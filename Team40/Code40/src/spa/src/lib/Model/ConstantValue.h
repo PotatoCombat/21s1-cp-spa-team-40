@@ -3,6 +3,6 @@
 #include "Factor.h"
 
 class ConstantValue : Factor {
-    public:
+public:
     explicit ConstantValue(int value);
 };

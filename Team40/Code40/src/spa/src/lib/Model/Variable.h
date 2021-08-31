@@ -6,10 +6,10 @@
 using namespace std;
 
 class Variable : Factor {
-    private:
+private:
     const string name;
 
-    public:
+public:
     Variable(int value, string name);
 
     // getter

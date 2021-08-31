@@ -2,9 +2,9 @@
 #include "Term.h"
 
 class SingleTermExpression : public Expression {
-    private:
+private:
     Term *term;
 
-    public:
+public:
     SingleTermExpression(Term *term);
 };

@@ -3,10 +3,10 @@
 #include "Term.h"
 
 class SubtractTermsExpression : public Expression {
-    private:
+private:
     Term *term1;
     Term *term2;
 
-    public:
+public:
     SubtractTermsExpression(Term *term1, Term *term2);
 };

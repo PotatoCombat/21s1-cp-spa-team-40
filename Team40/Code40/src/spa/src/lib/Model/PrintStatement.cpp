@@ -2,10 +2,10 @@
 #include "Variable.h"
 
 class PrintStatement : public Statement {
-    private:
+private:
     Variable variable;
 
-    public:
+public:
     PrintStatement(int index, Variable variable)
         : variable(variable), Statement(index) {}
 

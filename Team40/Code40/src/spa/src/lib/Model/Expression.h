@@ -8,10 +8,10 @@ enum class ExpressionType {
 };
 
 class Expression : public Factor {
-    private:
+private:
     ExpressionType expressionType;
 
-    public:
+public:
     // constructor
     Expression(ExpressionType expressionType, int value);
 

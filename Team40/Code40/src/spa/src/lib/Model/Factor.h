@@ -3,11 +3,11 @@
 enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 
 class Factor {
-    private:
+private:
     const FactorType factorType;
     const int value;
 
-    public:
+public:
     // constructor
     Factor(FactorType factorType, int value);
 

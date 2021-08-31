@@ -8,10 +8,10 @@ enum class TermType {
 };
 
 class Term {
-    private:
+private:
     TermType termType;
 
-    public:
+public:
     Term(TermType termType);
 
     TermType getTermType();

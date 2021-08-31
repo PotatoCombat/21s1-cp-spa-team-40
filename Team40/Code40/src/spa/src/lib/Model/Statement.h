@@ -5,13 +5,13 @@ using namespace std;
 enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
 class Statement {
-    private:
+private:
     StatementType statementType;
     int index;
     vector<char> varsList;
     vector<int> constsList;
 
-    public:
+public:
     // constructor
     Statement(int index);
 
