@@ -1,10 +1,9 @@
 #include "Statement.h"
-#include "factor/expression/ConditionalExpression.h"
 #include <vector>
 
 class IfStatement : public Statement {
 private:
-    ConditionalExpression cond; //TODO
+    // ConditionalExpression cond; //TODO
     vector<Statement> thenStmtLst;
     vector<Statement> elseStmtLst;
 

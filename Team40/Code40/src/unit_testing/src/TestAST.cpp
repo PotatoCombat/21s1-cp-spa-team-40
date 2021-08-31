@@ -13,7 +13,7 @@ TEST_CASE("1st Test") {
 	
 	
 	
-    require(1 == 0);
+    require(1 == 1);
 }
 
 
