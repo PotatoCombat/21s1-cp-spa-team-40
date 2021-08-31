@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 using namespace std;
 
 enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };

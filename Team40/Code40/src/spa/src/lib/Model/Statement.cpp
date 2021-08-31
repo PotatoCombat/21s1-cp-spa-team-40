@@ -1,7 +1,5 @@
 #include "Statement.h"
 
-#include <vector>
-
 // constructors
 Statement::Statement(int index, StatementType statementType)
     : index(index), statementType(statementType) {}
