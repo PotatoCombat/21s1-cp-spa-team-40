@@ -23,6 +23,7 @@ add_library(spa ${srcs} ${headers}
         # common/model/relation/
         src/common/model/relation/Relation.cpp src/common/model/relation/Relation.h
         src/common/model/relation/EqualsRelation.cpp
+        src/common/model/relation/LessThanOrEqualsRelation.cpp
 
         # common/model/statement/
         src/common/model/statement/Statement.cpp src/common/model/statement/Statement.h
@@ -39,7 +40,7 @@ add_library(spa ${srcs} ${headers}
         src/common/model/term/ModuloByFactorTerm.cpp
         src/common/model/term/MultiplyByFactorTerm.cpp
         src/common/model/term/SingleFactorTerm.cpp
-)
+        )
 
 # this makes the headers accessible for other projects which uses spa common
 target_include_directories(spa PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
