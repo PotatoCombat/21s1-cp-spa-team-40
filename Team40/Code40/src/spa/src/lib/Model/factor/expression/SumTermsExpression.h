@@ -1,5 +1,5 @@
 #pragma once
-#include "Expression.h"
+#include "../Expression.h"
 #include "Term.h"
 
 class SumTermsExpression : public Expression {

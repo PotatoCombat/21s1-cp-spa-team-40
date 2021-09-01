@@ -1,4 +1,4 @@
-#include "Expression.h"
+#include "../Expression.h"
 #include "Term.h"
 
 class SingleTermExpression : public Expression {
