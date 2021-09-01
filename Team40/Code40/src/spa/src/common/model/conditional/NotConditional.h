@@ -1,6 +1,6 @@
 #pragma once
-#include "../Conditional.h"
-#include "Relational.h"
+#include "Conditional.h"
+#include "common/model/relation/Relation.h"
 
 class NotConditional : public Conditional {
 private:

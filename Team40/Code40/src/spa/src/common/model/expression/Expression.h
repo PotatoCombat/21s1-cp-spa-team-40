@@ -1,5 +1,5 @@
 #pragma once
-#include "Factor.h"
+#include "common/model/Factor.h"
 
 enum class ExpressionType {
     SINGLE_TERM,

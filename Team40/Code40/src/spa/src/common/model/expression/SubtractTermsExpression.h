@@ -1,6 +1,6 @@
 #pragma once
-#include "../Expression.h"
-#include "Term.h"
+#include "Expression.h"
+#include "common/model/Term.h"
 
 class SubtractTermsExpression : public Expression {
 private:

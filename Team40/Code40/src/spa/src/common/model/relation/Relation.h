@@ -1,7 +1,7 @@
 #pragma once
-#include "../Factor.h"
+#include "common/model/Factor.h"
 
-enum class RelationalType {
+enum class RelationType {
     MORE_THAN,
     MORE_THAN_OR_EQUALS,
     LESS_THAN,
@@ -10,16 +10,16 @@ enum class RelationalType {
     NOT_EQUALS
 };
 
-class Relational {
+class Relation {
 private:
-    RelationalType relType;
+    RelationType relType;
     bool value;
 
 public:
     // constructor
-    Relational(RelationalType relType, bool value);
+    Relation(RelationType relType, bool value);
 
     // getters
-    RelationalType getRelationalType();
+    RelationType getRelationType();
     bool getValue();
 };
