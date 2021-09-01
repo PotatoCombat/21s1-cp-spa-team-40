@@ -1,4 +1,3 @@
-#include "../expression/Expression.h"
 #include "Relation.h"
 
 class LessThanOrEqualsRelation : public Relation {
@@ -8,6 +7,7 @@ public:
                    rightFactor){};
 
     bool getValue() {
-        return this->getLeftFactor() <= this->getRightFactor().getValue();
+        return this->getLeftFactor().getValue() <=
+               this->getRightFactor().getValue();
     }
 };

@@ -24,6 +24,7 @@ add_library(spa ${srcs} ${headers}
         src/common/model/relation/Relation.cpp src/common/model/relation/Relation.h
         src/common/model/relation/EqualsRelation.cpp
         src/common/model/relation/LessThanOrEqualsRelation.cpp
+        src/common/model/relation/LessThanRelation.cpp
 
         # common/model/statement/
         src/common/model/statement/Statement.cpp src/common/model/statement/Statement.h
