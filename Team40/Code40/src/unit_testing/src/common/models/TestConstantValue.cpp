@@ -1,7 +1,5 @@
-#include "common/model/ConstantValue.h"
-
 #include "catch.hpp"
-using namespace std;
+#include "common/model/ConstantValue.h"
 
 TEST_CASE("ConstantValue: Creates and retrieves value correctly") {
     const int VALUE = 10;
