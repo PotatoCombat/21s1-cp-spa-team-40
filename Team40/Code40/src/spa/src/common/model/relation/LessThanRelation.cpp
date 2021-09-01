@@ -1,8 +1,8 @@
 #include "Relation.h"
 
-class LessThan : public Relation {
+class LessThanRelation : public Relation {
 public:
-    LessThan(Factor leftFactor, Factor rightFactor)
+    LessThanRelation(Factor leftFactor, Factor rightFactor)
         : Relation(RelationType::LESS_THAN, leftFactor, rightFactor){};
 
     bool getValue() {
