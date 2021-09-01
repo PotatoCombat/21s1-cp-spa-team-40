@@ -8,4 +8,10 @@ string Entity::GetName() { return name; }
 
 EntityType Entity::GetType() { return EntityType::UNKNOWN; }
 
-bool Entity::operator==(const Entity &other) { return name == other.name; }
+bool Entity::IsSynonymEntity() { return true; }
+
+bool Entity::Equals(Entity &other) { 
+	return this->GetName() == other.GetName() &&
+		this->GetType() == other.GetType() &&
+		this->IsSynonymEntity() == other.IsSynonymEntity();
+}

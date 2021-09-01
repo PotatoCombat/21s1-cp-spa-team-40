@@ -14,5 +14,6 @@ public:
     Entity(string name);
     string GetName();
     virtual EntityType GetType();
-    bool operator==(const Entity &other);
+    virtual bool IsSynonymEntity();
+    bool Equals(Entity &other);
 };
