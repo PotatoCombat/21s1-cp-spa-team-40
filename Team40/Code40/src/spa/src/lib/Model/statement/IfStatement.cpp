@@ -4,7 +4,7 @@
 
 class IfStatement : public Statement {
 private:
-    Conditional cond; //TODO
+    Conditional cond;
     vector<Statement> thenStmtLst;
     vector<Statement> elseStmtLst;
 

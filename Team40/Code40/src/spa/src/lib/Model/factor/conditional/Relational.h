@@ -13,14 +13,13 @@ enum class RelationalType {
 class Relational {
 private:
     RelationalType relType;
-    Factor fac1;
-    Factor fac2;
+    bool value;
 
 public:
     // constructor
-    Relational(RelationalType relType, Factor fac1,
-                         Factor fac2);
+    Relational(RelationalType relType, bool value);
 
     // getters
-    RelationalType getRelType();
+    RelationalType getRelationalType();
+    bool getValue();
 };

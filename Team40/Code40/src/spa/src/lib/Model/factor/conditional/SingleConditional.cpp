@@ -1,4 +1,4 @@
 #include "SingleConditional.h"
 
-SingleConditional::SingleConditional(Conditional *cond)
-    : cond(cond), Conditional(ConditionalType::SINGLE, cond->getValue()) {}
+SingleConditional::SingleConditional(Relational *rel)
+    : rel(rel), Conditional(ConditionalType::SINGLE, rel->getValue()) {}
