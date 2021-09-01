@@ -1,18 +1,18 @@
 #pragma once
 
-enum class ConditionalExpressionType { SINGLE, AND, OR, NOT };
+enum class ConditionalType { SINGLE, AND, OR, NOT };
 
-class ConditionalExpression {
+class Conditional {
 private:
-    ConditionalExpressionType condExprType;
-    // RelationalExpression relExpr;      // for SINGLE only
-    // ConditionalExpression condExpr1; // for NOT, AND and OR
-    // ConditionalExpression condExpr2; // for AND and OR only
+    ConditionalType condType;
+    // Relational relExpr;      // for SINGLE only
+    // Conditional condExpr1; // for NOT, AND and OR
+    // Conditional condExpr2; // for AND and OR only
 
 public:
     // constructor
-    ConditionalExpression(ConditionalExpressionType condExprType);
+    Conditional(ConditionalType condType);
 
     // getters
-    ConditionalExpressionType getCondExprType();
+    ConditionalType getCondType();
 };

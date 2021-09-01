@@ -4,12 +4,12 @@
 
 class IfStatement : public Statement {
 private:
-    ConditionalExpression cond; //TODO
+    Conditional cond; //TODO
     vector<Statement> thenStmtLst;
     vector<Statement> elseStmtLst;
 
 public:
-    IfStatement::IfStatement(int index, ConditionalExpression cond)
+    IfStatement::IfStatement(int index, Conditional cond)
         : cond(cond), Statement(index, StatementType::IF) {
         this->thenStmtLst = {};
         this->elseStmtLst = {};
@@ -22,7 +22,7 @@ public:
         this->elseStmtLst.push_back(statement);
     }
 
-    ConditionalExpression getConditional() { return this->cond; }
+    Conditional getConditional() { return this->cond; }
 
     vector<Statement> getThenStmtLst() { return this->thenStmtLst; }
 

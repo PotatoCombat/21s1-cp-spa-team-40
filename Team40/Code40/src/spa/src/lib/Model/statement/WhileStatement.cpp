@@ -4,12 +4,12 @@
 
 class IfStatement : public Statement {
 private:
-    ConditionalExpression cond;
+    Conditional cond;
     vector<Statement> stmtLst;
 
 public:
     //constructor
-    IfStatement::IfStatement(int index, ConditionalExpression cond)
+    IfStatement::IfStatement(int index, Conditional cond)
         : cond(cond), Statement(index, StatementType::IF) {
         this->stmtLst = {};
     }
@@ -20,7 +20,7 @@ public:
     }
 
     //getters
-    ConditionalExpression getConditional() { return this->cond; }
+    Conditional getConditional() { return this->cond; }
 
     vector<Statement> getStmtLst() { return this->stmtLst; }
 };
