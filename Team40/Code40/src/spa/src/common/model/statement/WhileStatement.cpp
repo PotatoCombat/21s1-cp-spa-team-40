@@ -1,7 +1,8 @@
 #include "Statement.h"
-#include "factor/Conditional.h"
+#include "../conditional/Conditional.h"
 #include <vector>
 
+using namespace std;
 class IfStatement : public Statement {
 private:
     Conditional cond;
@@ -9,7 +10,7 @@ private:
 
 public:
     // constructor
-    IfStatement::IfStatement(int index, Conditional cond)
+    IfStatement(int index, Conditional cond)
         : cond(cond), Statement(index, StatementType::IF) {
         this->stmtLst = {};
     }

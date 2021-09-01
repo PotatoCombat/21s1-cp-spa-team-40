@@ -4,9 +4,9 @@
 
 class SingleConditional : public Conditional {
 private:
-    Relational *rel;
+    Relation *rel;
     bool value;
 
 public:
-    SingleConditional(Relational *rel);
+    SingleConditional(Relation *rel);
 };

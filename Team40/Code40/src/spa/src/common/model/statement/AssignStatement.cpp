@@ -1,6 +1,6 @@
 #include "Statement.h"
-#include "factor/Expression.h"
-#include "factor/Variable.h"
+#include "../expression/Expression.h"
+#include "../Variable.h"
 
 class AssignStatement : public Statement {
 private:
@@ -8,7 +8,7 @@ private:
     Expression expression;
 
 public:
-    AssignStatement::AssignStatement(int index, Variable variable,
+    AssignStatement(int index, Variable variable,
                                      Expression expression)
         : variable(variable), expression(expression),
           Statement(index, StatementType::ASSIGN) {}
