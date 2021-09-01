@@ -1,6 +1,7 @@
 #include "Conditional.h"
 
-Conditional::Conditional(ConditionalType condType, bool value) : condType(condType), value(value) {}
+Conditional::Conditional(ConditionalType condType, bool value)
+    : condType(condType), value(value) {}
 
 ConditionalType Conditional::getConditionalType() { return this->condType; }
 

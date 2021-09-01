@@ -1,5 +1,5 @@
-#include "factor/Expression.h"
 #include "Statement.h"
+#include "factor/Expression.h"
 #include "factor/Variable.h"
 
 class AssignStatement : public Statement {

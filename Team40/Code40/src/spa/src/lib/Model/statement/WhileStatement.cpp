@@ -8,18 +8,18 @@ private:
     vector<Statement> stmtLst;
 
 public:
-    //constructor
+    // constructor
     IfStatement::IfStatement(int index, Conditional cond)
         : cond(cond), Statement(index, StatementType::IF) {
         this->stmtLst = {};
     }
 
-    //adder
+    // adder
     void addStatement(Statement statement) {
         this->stmtLst.push_back(statement);
     }
 
-    //getters
+    // getters
     Conditional getConditional() { return this->cond; }
 
     vector<Statement> getStmtLst() { return this->stmtLst; }
