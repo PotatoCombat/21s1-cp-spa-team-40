@@ -1,5 +1,5 @@
 #include "Statement.h"
-#include "factor/expression/ConditionalExpression.h"
+#include "factor/Conditional.h"
 #include <vector>
 
 class IfStatement : public Statement {
