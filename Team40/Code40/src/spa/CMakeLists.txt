@@ -20,6 +20,10 @@ add_library(spa ${srcs} ${headers}
         src/common/model/expression/SubtractTermsExpression.cpp src/common/model/expression/SubtractTermsExpression.h
         src/common/model/expression/SumTermsExpression.cpp src/common/model/expression/SumTermsExpression.h
 
+        # common/model/relation/
+        src/common/model/relation/Relation.cpp src/common/model/relation/Relation.h
+        src/common/model/relation/EqualsRelation.cpp
+
         # common/model/statement/
         src/common/model/statement/Statement.cpp src/common/model/statement/Statement.h
         src/common/model/statement/AssignStatement.cpp

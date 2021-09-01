@@ -1,8 +1,8 @@
 #include "Relation.h"
 
-Relation::Relation(RelationalType relType, bool value)
+Relation::Relation(RelationType relType, bool value)
     : relType(relType), value(value) {}
 
-RelationType Relational::getRelationType() { return this->relType; }
+RelationType Relation::getRelationType() { return this->relType; }
 
 bool Relation::getValue() { return this->value; }
