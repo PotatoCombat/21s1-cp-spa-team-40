@@ -4,9 +4,9 @@
 
 class SubtractTermsExpression : public Expression {
 private:
-    Expression *expr;
-    Term *term;
+    Term *term1;
+    Term *term2;
 
 public:
-    SubtractTermsExpression(Expression *expr, Term *term);
+    SubtractTermsExpression(Term *term1, Term *term2);
 };
