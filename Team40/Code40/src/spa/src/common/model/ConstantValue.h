@@ -2,7 +2,7 @@
 
 #include "Factor.h"
 
-class ConstantValue : Factor {
+class ConstantValue : public Factor {
 public:
     explicit ConstantValue(int value);
 };
