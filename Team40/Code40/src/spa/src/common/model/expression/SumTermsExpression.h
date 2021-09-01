@@ -4,9 +4,9 @@
 
 class SumTermsExpression : public Expression {
 private:
-    Term *term1;
-    Term *term2;
+    Expression *expr;
+    Term *term;
 
 public:
-    SumTermsExpression(Term *term1, Term *term2);
+    SumTermsExpression(Expression *expr, Term *term);
 };
