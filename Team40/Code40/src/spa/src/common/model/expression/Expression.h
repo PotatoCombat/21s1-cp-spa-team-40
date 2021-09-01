@@ -11,10 +11,11 @@ class Expression : public Factor {
 private:
     ExpressionType expressionType;
 
-public:
+protected:
     // constructor
     Expression(ExpressionType expressionType, int value);
 
+public:
     // getters
     ExpressionType getExpressionType();
 };

@@ -17,10 +17,11 @@ private:
     Factor rightFactor;
     bool value;
 
-public:
+protected:
     // constructor
     Relation(RelationType relType, Factor leftFactor, Factor rightFactor);
 
+public:
     // getters
     RelationType getRelationType();
     virtual bool getValue() = 0;

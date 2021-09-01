@@ -7,10 +7,11 @@ private:
     ConditionalType condType;
     const bool value;
 
-public:
+protected:
     // constructor
     Conditional(ConditionalType condType, bool value);
 
+public:
     // getters
     ConditionalType getConditionalType();
 

@@ -7,10 +7,11 @@ private:
     const FactorType factorType;
     const int value;
 
-public:
+protected:
     // constructor
     Factor(FactorType factorType, int value);
 
+public:
     // getters
     const FactorType getFactorType();
     const int getValue();

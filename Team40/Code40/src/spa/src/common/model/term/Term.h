@@ -11,9 +11,10 @@ class Term {
 private:
     TermType termType;
 
-public:
+protected:
     Term(TermType termType);
 
+public:
     TermType getTermType();
 
     virtual int getValue() = 0;

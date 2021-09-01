@@ -7,10 +7,11 @@ private:
     StatementType statementType;
     int index;
 
-public:
+protected:
     // constructor
     Statement(int index, StatementType statementType);
 
+public:
     // getters
     int getIndex();
     StatementType getStatementType();
