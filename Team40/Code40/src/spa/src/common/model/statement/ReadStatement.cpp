@@ -1,5 +1,5 @@
-#include "../statement/Statement.h"
 #include "../Variable.h"
+#include "../statement/Statement.h"
 
 class ReadStatement : public Statement {
 private:

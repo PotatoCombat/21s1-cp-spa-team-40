@@ -1,5 +1,5 @@
-#include "Statement.h"
 #include "../Variable.h"
+#include "Statement.h"
 
 class PrintStatement : public Statement {
 private:
