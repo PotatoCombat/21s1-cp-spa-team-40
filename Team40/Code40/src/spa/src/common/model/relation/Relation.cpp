@@ -1,8 +1,10 @@
 #include "Relation.h"
 
-Relation::Relation(RelationType relType, bool value)
-    : relType(relType), value(value) {}
+Relation::Relation(RelationType relType, Factor leftFactor, Factor rightFactor)
+    : relType(relType), leftFactor(leftFactor), rightFactor(rightFactor) {}
 
 RelationType Relation::getRelationType() { return this->relType; }
 
-bool Relation::getValue() { return this->value; }
+Factor Relation::getLeftFactor() { return this->leftFactor; }
+
+Factor Relation::getRightFactor() { return this->rightFactor; }

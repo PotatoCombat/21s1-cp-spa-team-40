@@ -13,13 +13,17 @@ enum class RelationType {
 class Relation {
 private:
     RelationType relType;
+    Factor leftFactor;
+    Factor rightFactor;
     bool value;
 
 public:
     // constructor
-    Relation(RelationType relType, bool value);
+    Relation(RelationType relType, Factor leftFactor, Factor rightFactor);
 
     // getters
     RelationType getRelationType();
-    bool getValue();
+    virtual bool getValue() = 0;
+    Factor getLeftFactor();
+    Factor getRightFactor();
 };
