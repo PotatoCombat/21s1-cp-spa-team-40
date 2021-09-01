@@ -14,7 +14,7 @@ private:
 
 public:
     QueryParser() {}
-    vector<Entity *> extractDeclarationEntities(string input);
-    Entity *extractReturnEntity(string input);
-    vector<Relationship *> extractClauses(string input);
+    vector<Entity *> ExtractDeclarationEntities(string input);
+    Entity *ExtractReturnEntity(string input);
+    vector<Relationship *> ExtractClauses(string input);
 };

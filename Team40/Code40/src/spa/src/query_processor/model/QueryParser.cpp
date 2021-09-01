@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-vector<Entity *> extractDeclarationEntities(string input) {
+vector<Entity *> ExtractDeclarationEntities(string input) {
     // extract the entity declaration into Entity objects
     smatch s;
 
@@ -22,7 +22,7 @@ vector<Entity *> extractDeclarationEntities(string input) {
     }
 }
 
-Entity *extractReturnEntity(string input) {
+Entity *ExtractReturnEntity(string input) {
     smatch s;
 
     // extract the return entity into Entity object
@@ -36,7 +36,7 @@ Entity *extractReturnEntity(string input) {
     }
 }
 
-vector<Relationship *> extractClauses(string input) {
+vector<Relationship *> ExtractClauses(string input) {
     smatch s;
 
     // extract the clause into FollowsRelationship objects

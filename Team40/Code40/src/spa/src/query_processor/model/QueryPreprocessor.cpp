@@ -1,7 +1,3 @@
-#include "Entity.h"
-#include "FollowsRelationship.cpp"
-#include "Query.h"
-#include "Statement.cpp"
 #include <iostream>
 #include <regex>
 #include <string>
