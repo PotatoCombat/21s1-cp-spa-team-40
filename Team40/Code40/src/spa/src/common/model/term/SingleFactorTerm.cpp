@@ -9,12 +9,14 @@ private:
 
 public:
     SingleFactorTerm(Factor factor)
-        : value(NULL), factor(factor), Term(TermType::SINGLE_FACTOR){};
+        // Note that value is initialized to a dummy value here
+        : value(0), factor(factor), Term(TermType::SINGLE_FACTOR){};
 
     int getValue() override {
         std::cout << "CALLED" << std::endl;
-        if (value == NULL) {
+        if (!hasComputedValue) {
             value = factor.getValue();
+            hasComputedValue = true;
         }
         return value;
     }

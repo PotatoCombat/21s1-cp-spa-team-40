@@ -12,6 +12,7 @@ private:
     TermType termType;
 
 protected:
+    bool hasComputedValue; // Used for lazy initialization of value
     Term(TermType termType);
 
 public:
