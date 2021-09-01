@@ -9,7 +9,7 @@ add_executable(unit_testing ${srcs}
         src/common/models/term/TestSingleFactorTerm.cpp
         src/common/models/term/TestMultiplyByFactorTerm.cpp
         src/common/models/term/TestModuloByFactorTerm.cpp
-        )
+        src/common/models/term/TestDivideByFactorTerm.cpp)
 
 target_link_libraries(unit_testing spa)
 
