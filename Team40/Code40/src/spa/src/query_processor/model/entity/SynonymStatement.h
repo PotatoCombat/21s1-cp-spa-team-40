@@ -5,8 +5,8 @@ using namespace std;
 
 class SynonymStatement : public SynonymEntity {
 public:
-	using SynonymEntity::
-	EntityType getType() {
+    SynonymStatement(string name) : SynonymEntity(name) {}
+	EntityType GetType() {
 		return EntityType::STATEMENT;
 	}
 };

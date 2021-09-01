@@ -18,7 +18,6 @@ private:
 
 public:
     Query();
-
     void SetReturnEntity(Entity *entity);
     Entity *GetReturnEntity();
 
@@ -27,4 +26,4 @@ public:
 
     void AddRelationship(Relationship *relationship);
     vector<Relationship *> GetRelationships();
-}
+};

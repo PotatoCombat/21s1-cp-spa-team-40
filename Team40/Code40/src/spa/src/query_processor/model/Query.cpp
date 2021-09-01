@@ -1,14 +1,12 @@
 #include "Query.h"
 
-using namespace std;
-
 Query::Query() {
     vector<Entity *> entityList;
     vector<Relationship *> relationshipList;
     Entity *returnEntity;
 }
 
-Entity Query::GetReturnEntity() { return returnEntity; }
+Entity* Query::GetReturnEntity() { return returnEntity; }
 
 void Query::SetReturnEntity(Entity *entity) { returnEntity = entity; }
 

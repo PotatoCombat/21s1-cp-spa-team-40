@@ -1,11 +1,15 @@
 #pragma once
 
+#include <string>
+
 #include "Entity.h"
+
+using namespace std;
 
 class NamedEntity : public Entity {
 public:
-	using Entity::Entity;
-	bool isSynonymEntity() {
+	NamedEntity(string name) : Entity(name) {}
+	bool IsSynonymEntity() {
 		return false;
 	}
 };

@@ -4,7 +4,8 @@
 
 class SynonymEntity : public Entity {
 public:
-	bool isSynonymEntity() {
+    SynonymEntity(string name) : Entity(name) {}
+	bool IsSynonymEntity() {
 		return true;
 	}
 };

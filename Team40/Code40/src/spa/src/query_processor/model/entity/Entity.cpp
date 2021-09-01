@@ -6,8 +6,12 @@ Entity::Entity(string name) { this->name = name; }
 
 string Entity::GetName() { return name; }
 
-bool Entity::operator==(const Entity &other) { 
-	return this->getType() == other.getType() &&
-           this->getName() == other.getName() &&
-           this->isSynonymEntity() == other.isSynonymEntity();
+EntityType Entity::GetType() { return EntityType::UNKNOWN; }
+
+bool Entity::IsSynonymEntity() { return true; }
+
+bool Entity::Equals(Entity &other) { 
+	return this->GetName() == other.GetName() &&
+		this->GetType() == other.GetType() &&
+		this->IsSynonymEntity() == other.IsSynonymEntity();
 }
