@@ -1,5 +1,5 @@
 #include "Expression.h"
-#include "common/model/Term.h"
+#include "common/model/term/Term.h"
 
 class SingleTermExpression : public Expression {
 private:
