@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "Entity.h"
-#include "Relationship.h"
+#include "entity/Entity.h"
+#include "relationship/Relationship.h"
 
 using namespace std;
 
@@ -18,7 +18,6 @@ private:
 
 public:
     Query();
-
     void SetReturnEntity(Entity *entity);
     Entity *GetReturnEntity();
 
@@ -27,4 +26,4 @@ public:
 
     void AddRelationship(Relationship *relationship);
     vector<Relationship *> GetRelationships();
-}
+};
