@@ -8,6 +8,5 @@ using namespace std;
 class StatementReference : public Reference {
 public:
     StatementReference(string value) : Reference(value) {}
-    string getValue();
-    ReferenceType getType();
+    ReferenceType getType() { return ReferenceType::STMT_REF; }
 };

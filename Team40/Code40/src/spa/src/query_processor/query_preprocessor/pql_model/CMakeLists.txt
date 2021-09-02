@@ -10,4 +10,4 @@ add_library(pql-model ${srcs} ${headers})
 
 target_include_directories(pql-model PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} relation/ clause/)
 
-target_link_libraries(pql-model pql-model-clause pql-model-relation)
+target_link_libraries(pql-model pql-model-relation pql-model-clause)

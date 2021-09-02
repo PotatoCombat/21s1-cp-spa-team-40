@@ -3,6 +3,7 @@
 #include "../Reference.h"
 
 enum class RelationType {
+    UNKNOWN,
     FOLLOWS,
     FOLLOWS_T,
     PARENT,
@@ -14,7 +15,7 @@ enum class RelationType {
 };
 
 class Relation {
-private:
+protected:
     Reference ref1;
     Reference ref2;
 
@@ -22,5 +23,5 @@ public:
     Relation(Reference r1, Reference r2);
     Reference getFirstReference();
     Reference getSecondReference();
-    RelationType getRelationType();
+    virtual RelationType getRelationType();
 };
