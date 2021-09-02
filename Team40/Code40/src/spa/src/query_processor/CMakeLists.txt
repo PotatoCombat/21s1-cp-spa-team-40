@@ -10,5 +10,5 @@ add_library(query_processor ${srcs} ${headers})
 
 target_link_directories(query_processor PUBLIC model/)
 
-target_link_libraries(query_processor model)
+target_link_libraries(query_processor query-processor-model)
 #also transitively gets the "entity" and "relationship" dependency
