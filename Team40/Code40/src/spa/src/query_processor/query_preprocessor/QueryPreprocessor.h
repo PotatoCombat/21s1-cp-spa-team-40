@@ -4,5 +4,5 @@ using namespace std;
 
 class QueryPreprocessor {
 public:
-    Query *preprocessQuery(string input);
+    Query preprocessQuery(string input);
 };

@@ -1,6 +1,7 @@
 #include "QueryPreprocessor.h"
+#include "../model/Query.h"
 
-Query *QueryPreprocessor::preprocessQuery(string input) {
+Query QueryPreprocessor::preprocessQuery(string input) {
     // read the input
     // tokenize the input using a lexer
     // syntax checker here
