@@ -3,3 +3,5 @@
 Reference::Reference(string value) { this->value = value; }
 
 string Reference::getValue() { return this->value; }
+
+ReferenceType Reference::getType() { return ReferenceType::UNKNOWN; }

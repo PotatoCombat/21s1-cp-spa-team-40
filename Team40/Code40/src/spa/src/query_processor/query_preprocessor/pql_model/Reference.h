@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum class ReferenceType { ENT_REF, STMT_REF };
+enum class ReferenceType { UNKNOWN, ENT_REF, STMT_REF };
 
 class Reference {
 protected:
@@ -13,5 +13,5 @@ protected:
 public:
     Reference(string value);
     string getValue();
-    ReferenceType getType();
+    virtual ReferenceType getType();
 };
