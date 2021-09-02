@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Reference.h"
-#include <string>
 
 using namespace std;
 
@@ -9,4 +8,5 @@ using namespace std;
 class EntityReference : public Reference {
 public:
     EntityReference(string value) : Reference(value) {}
+    ReferenceType getType() { return ReferenceType::ENT_REF; }
 };
