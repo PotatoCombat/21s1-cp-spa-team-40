@@ -7,11 +7,11 @@ using namespace std;
 enum class ReferenceType { ENT_REF, STMT_REF };
 
 class Reference {
-private:
+protected:
     string value;
 
 public:
-    Reference(string value) { this->value = value; }
-    string getValue() { return value; }
-    virtual ReferenceType getType() = 0;
+    Reference(string value);
+    string getValue();
+    ReferenceType getType();
 };

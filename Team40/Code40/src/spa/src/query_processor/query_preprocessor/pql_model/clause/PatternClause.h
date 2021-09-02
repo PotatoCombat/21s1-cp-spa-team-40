@@ -1,7 +1,8 @@
 #pragma once
 
-#include '../relation/Relation.h'
-#include '../EntityReference.h'
+#include "../relation/Relation.h"
+#include "../EntityReference.h"
+#include <string>
 
 using namespace std;
 
@@ -12,12 +13,12 @@ private:
     // Expression expr;
 
 public:
-    PatternClause() = 0;
+    PatternClause();
     PatternClause(string syn, EntityReference entRef);
 
-    string getSynonym() { return syn; }
-    EntityReference getEntRef() { return entRef; }
+    string getSynonym();
+    EntityReference getEntRef();
 
-    void setSynonym(string syn) { this->syn = syn; }
-    void setEntRef(EntityReference entRef) { this->entRef = entRef; }
+    void setSynonym(string syn);
+    void setEntRef(EntityReference entRef);
 };

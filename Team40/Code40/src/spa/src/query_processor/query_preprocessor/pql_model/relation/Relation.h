@@ -2,8 +2,6 @@
 
 #include "../Reference.h"
 
-using namespace std;
-
 enum class RelationType {
     FOLLOWS,
     FOLLOWS_T,
@@ -21,8 +19,8 @@ private:
     Reference ref2;
 
 public:
-    Relation(Reference r1, Reference r2) : ref1(r1), ref2(r2) {}
-    Reference getFirstReference() { return ref1; }
-    Reference getSecondReference() { return ref2; }
-    virtual RelationType getRelationType() = 0;
+    Relation(Reference r1, Reference r2);
+    Reference getFirstReference();
+    Reference getSecondReference();
+    RelationType getRelationType();
 };

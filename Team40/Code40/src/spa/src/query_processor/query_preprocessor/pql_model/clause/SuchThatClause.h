@@ -1,6 +1,6 @@
 #pragma once
 
-#include '../relation/Relation.h'
+#include "../relation/Relation.h"
 
 using namespace std;
 
@@ -9,10 +9,10 @@ private:
     Relation rel;
 
 public:
-    SuchThatClause() = 0;
+    SuchThatClause();
     SuchThatClause(Relation rel);
 
-    Relation getRelation() { return rel; }
+    Relation getRelation();
 
-    void setRelation(Relation rel) { this->rel = rel; }
+    void setRelation(Relation rel);
 };

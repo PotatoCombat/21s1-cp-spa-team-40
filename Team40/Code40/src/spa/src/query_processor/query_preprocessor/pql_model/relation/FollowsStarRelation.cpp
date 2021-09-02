@@ -4,6 +4,6 @@
 
 class FollowsStarRelation : public Relation {
 public:
-    FollowsStarRelation(Reference r1, Reference r2) : Reference(r1, r2) {}
+    FollowsStarRelation(Reference r1, Reference r2) : Relation(r1, r2) {}
     RelationType getRelationType() { return RelationType::FOLLOWS_T; }
 };

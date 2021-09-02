@@ -1,9 +1,10 @@
 #pragma once
 
-#include '../relation/Relation.h'
-#include '../EntityReference.h'
-#include 'SuchThatClause.h'
-#include 'PatternClause.h'
+#include "../EntityReference.h"
+#include "../relation/Relation.h"
+#include "PatternClause.h"
+#include "SuchThatClause.h"
+#include <vector>
 
 using namespace std;
 
@@ -14,18 +15,13 @@ private:
     vector<PatternClause> ptClauses;
 
 public:
-    SelectClause() = 0;
+    SelectClause();
     SelectClause(vector<SuchThatClause> stClauses,
-                 vector<PatternClause> ptClauses)
-        : stClauses(stClauses), ptClauses(ptClauses) {}
+                 vector<PatternClause> ptClauses);
 
-    vector<SuchThatClause> getSuchThatClauses() { return stClauses; }
-    vector<PatternClause> getPatternClauses() { return ptClauses; }
+    vector<SuchThatClause> getSuchThatClauses();
+    vector<PatternClause> getPatternClauses();
 
-    void setSuchThatClause(SuchThatClause stClause) {
-        stClauses.push_back(stClause);
-    }
-    void setPatternClause(PatternClause ptClause) {
-        ptClauses.push_back(ptClause);
-    }
+    void setSuchThatClause(SuchThatClause stClause);
+    void setPatternClause(PatternClause ptClause);
 };
