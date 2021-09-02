@@ -1,5 +1,3 @@
-using namespace std;
-
 #include "Entity.h"
 
 Entity::Entity(string name) { this->name = name; }
