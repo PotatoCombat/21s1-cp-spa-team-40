@@ -7,10 +7,12 @@ using namespace std;
 
 class QueryTokenizer {
 private:
-    string query; // should this be object or pointer ?
+    string trimString(string input);
+
 public:
     // tokenize query into declaration part and the returnSynonym part and the
-    // clauses part this returns DECLARATION and RETURN_SYNONYM and CLAUSES (vector?) tuple?
+    // clauses part this returns DECLARATION and RETURN_SYNONYM and CLAUSES
+    // (vector?) tuple?
 
     // then using the DECLARATION from step 1
     // tokenize into DESIGN_ENTITY and SYNONYM
@@ -24,9 +26,9 @@ public:
 
     // tokenize EXPRESSION_SPEC into EXPRESSION
 
-    QueryTokenizer(string query);
+    QueryTokenizer(){};
 
-    pair<string, string> splitIntoParts();
+    pair<string, string> splitIntoParts(string queryString);
 
     vector<string> tokenizeDeclaration(string declaration);
 

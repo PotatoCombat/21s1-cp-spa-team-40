@@ -18,49 +18,57 @@ using namespace std;
 
 // tokenize EXPRESSION_SPEC into EXPRESSION
 
-QueryTokenizer::QueryTokenizer(string query) { this->query = query; }
-
-pair<string, string> QueryTokenizer::splitIntoParts() {
-    char delimiter = ';';
-    string whitespace = " ";
-    int split = query.rfind(delimiter);
-    string declaration = query.substr(0, split);
-    // return first position non-whitespace
-    size_t front_w = declaration.find_first_not_of(whitespace);
-    // return last position non-whitespace
-    size_t back_w = declaration.find_last_not_of(whitespace);
-    if (back_w != string::npos && front_w != string::npos) {
-        declaration = declaration.substr(front_w, back_w - front_w);
-    } else {
-        throw "Empty declaration ?";
-    }
-    string selectClause = query.substr(split);
-    // return first position non-whitespace
-    size_t front_w = selectClause.find_first_not_of(whitespace);
-    // return last position non-whitespace
-    size_t back_w = selectClause.find_last_not_of(whitespace);
-    if (back_w != string::npos && front_w != string::npos) {
-        selectClause = selectClause.substr(front_w, back_w - front_w);
-    } else {
-        throw "Empty select clause ?";
-    }
+string QueryTokenizer::trimString(string input) {
     // char* split = strrchr(*(this->query), delimiter);
+    string whitespace = " \n\t\r";
+    // return first position non-whitespace
+    size_t front_w = input.find_first_not_of(whitespace);
+    // return last position non-whitespace
+    size_t back_w = input.find_last_not_of(whitespace);
+    if (back_w != string::npos && front_w != string::npos) {
+        input = input.substr(front_w, back_w - front_w + 1);
+    }
+    else {
+        throw "Empty string";
+    }
+    return input;
+}
+
+pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
+    char delimiter = ';';
+    string whitespace = " \n\t\r";
+    int split = queryString.rfind(delimiter);
+    string declaration = queryString.substr(0, split + 1);
+    try {
+        declaration = trimString(declaration);
+    }
+    catch (const char* msg) {
+        throw "Empty declaration";
+    }
+    string selectClause = queryString.substr(split + 1);
+    try {
+        selectClause = trimString(selectClause);
+    }
+    catch (const char* msg) {
+        throw "Empty select clause";
+    }
     return make_pair(declaration, selectClause);
 }
 
 vector<string> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
-    // switch statement
-
+    // switch statement ( in parser )
     vector<string> decl;
     string::iterator it;
     string::iterator it_b;
     it = declaration.begin();
     it_b = declaration.begin();
+    int found = 0;
     for (; it != declaration.end(); ++it) {
         if (*it == ';') {
-            decl.push_back(string(it_b, it));
+            decl.push_back(trimString(string(it_b, it)));
             it_b = it + 1;
+            found = 1;
         }
     }
     return decl;
