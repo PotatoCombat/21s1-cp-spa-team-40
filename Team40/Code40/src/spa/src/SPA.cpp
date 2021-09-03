@@ -9,12 +9,18 @@ void SPA::processSource(string filename) {
     file.open(filename, ios::in);
     if (file.is_open()) {
         string input;
+        int stmtNum;
         while (getline(file, input)) {
-            cout << input << "\n";
+            if (parser.isProc(input)) {
+                stmtNum = 0;
+            } else if (parser.isStmt(input)) {
+                stmtNum++;
+            }
+            // cout << input << "\n";
         }
         file.close();
     } else {
-        cout << "No such file";
+        // cout << "No such file";
     }
     file.close();
 }
