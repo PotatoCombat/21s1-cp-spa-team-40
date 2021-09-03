@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 
@@ -26,7 +28,7 @@ public:
 
     // tokenize EXPRESSION_SPEC into EXPRESSION
 
-    QueryTokenizer(){};
+    QueryTokenizer() {}
 
     pair<string, string> splitIntoParts(string queryString);
 
