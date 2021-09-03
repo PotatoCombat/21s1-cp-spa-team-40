@@ -1,4 +1,5 @@
 #include "SPA.h"
+#include "SourceProcessor/Line.cpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -11,15 +12,15 @@ void SPA::processSource(string filename) {
     if (file.is_open()) {
         string input;
         int stmtNum;
-        vector<vector<string>> program = {};
+        vector<Line> programLines = {};
         while (getline(file, input)) {
             vector<string> inputLine = parser.parseLine(input);
-            program.push_back(inputLine);
-            // if (parser.isProc(inputLine)) {
-            //     stmtNum = 0;
-            // } else if (parser.isStmt(inputLine)) {
-            //     stmtNum++;
-            // }
+            if (parser.isProc(inputLine)) {
+                stmtNum = 0;
+            } else {
+                stmtNum++;
+            }
+            programLines.push_back(Line(stmtNum, inputLine));
             // cout << input << "\n";
         }
         file.close();

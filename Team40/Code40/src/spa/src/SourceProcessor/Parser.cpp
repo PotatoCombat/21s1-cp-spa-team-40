@@ -12,18 +12,25 @@ vector<string> Parser::parseLine(string input) {
     string currString = "";
     for (int i = 0; i < input.size(); i++) {
         char curr = input.at(i);
+        currString = clean(currString);
 
         if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
             if (currString.length() != 0) {
-                inputLine.push_back(clean(currString));
+                if (!currString.empty()) {
+                    inputLine.push_back(currString);
+                }
                 currString = "";
             }
-            inputLine.push_back(clean(string(1, curr)));
+            if (!string(1, curr).empty()) {
+                inputLine.push_back(string(1, curr));
+            }
 
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                inputLine.push_back(clean(currString));
+                if (!currString.empty()) {
+                    inputLine.push_back(currString);
+                }
                 currString = "";
             }
         }
@@ -36,9 +43,10 @@ string Parser::clean(string input) {
     return input;
 }
 
-bool Parser::isStmt(vector<string> inputLine) { return true; }
-
-bool Parser::isProc(vector<string> inputLine) { return true; }
+bool Parser::isProc(vector<string> inputLine) {
+    return find(inputLine.begin(), inputLine.end(), "procedure") !=
+           inputLine.end();
+}
 
 bool Parser::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
