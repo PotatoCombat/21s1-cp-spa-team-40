@@ -4,7 +4,10 @@ using namespace std;
 
 class Parser {
 public:
-    void parse(int index, string input);
-    bool isStmt(string input);
-    bool isProc(string input);
+    vector<string> parseLine(string input);
+    bool isStmt(vector<string> inputLine);
+    bool isProc(vector<string> inputLine);
+    bool isBracket(char input);
+    bool isOperator(char input);
+    bool isSemiColon(char input);
 };
