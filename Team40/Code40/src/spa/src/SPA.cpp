@@ -1,21 +1,20 @@
 #include "SPA.h"
 #include <fstream>
 #include <iostream>
+#include <string>
+using namespace std;
 
 void SPA::processSource(string filename) {
     fstream file;
     file.open(filename, ios::in);
-    if (!file) {
-        cout << "No such file";
-    } else {
-        char ch;
-        while (1) {
-            file >> ch;
-            if (file.eof()) {
-                break;
-            }
-            cout << ch;
+    if (file.is_open()) {
+        string input;
+        while (getline(file, input)) {
+            cout << input << "\n";
         }
+        file.close();
+    } else {
+        cout << "No such file";
     }
     file.close();
 }
