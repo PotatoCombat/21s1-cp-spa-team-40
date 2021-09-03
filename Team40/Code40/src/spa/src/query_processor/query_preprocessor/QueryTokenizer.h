@@ -32,5 +32,5 @@ public:
 
     vector<string> tokenizeDeclaration(string declaration);
 
-    vector<string> tokenizeClauses(string selecClause);
+    pair<string, vector<string>> tokenizeSelectClause(string selectClause);
 };
