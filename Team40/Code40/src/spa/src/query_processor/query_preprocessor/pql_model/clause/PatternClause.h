@@ -3,23 +3,24 @@
 #include "../EntityReference.h"
 #include "../Expression.h"
 #include "../relation/Relation.h"
+#include "Clause.h"
 #include <string>
 
 using namespace std;
 
-class PatternClause {
+class PatternClause : public Clause {
 private:
     string syn;
     EntityReference entRef;
     Expression expr;
 
 public:
-    PatternClause();
     PatternClause(string syn, EntityReference entRef, Expression expr);
 
     string getSynonym();
     EntityReference getEntRef();
     Expression getExpression();
+    ClauseType getType();
 
     void setSynonym(string syn);
     void setEntRef(EntityReference entRef);

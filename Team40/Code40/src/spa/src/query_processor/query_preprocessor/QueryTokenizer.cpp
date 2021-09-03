@@ -54,7 +54,6 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
 
 vector<string> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
-    // switch statement ( in parser )
     vector<string> decl;
     string::iterator it;
     string::iterator it_b;
@@ -71,15 +70,14 @@ vector<string> QueryTokenizer::tokenizeDeclaration(string declaration) {
     return decl;
 }
 
-pair<string, vector<string>>
+tuple<string, vector<string>, vector<string>>
 QueryTokenizer::tokenizeSelectClause(string selectClause) {
     // split by "Select" + SYNONYM + SUCH_THAT clause / PATTERN clause
-    // switch statement?
     // "Select x such that clause"
     // "Select x pattern x clause"
-
     string returnEntity;
-    string clause;
+    string suchThatClause;
+    string patternClause;
     string partial;
 
     size_t selectKeyword = selectClause.find("Select"); // length 6
@@ -92,7 +90,7 @@ QueryTokenizer::tokenizeSelectClause(string selectClause) {
         returnEntity = partial.substr(0, firstWhitespace);
     } else { // NO CLAUSE
         returnEntity = trimString(partial);
-        return make_pair(returnEntity, vector<string>());
+        return make_tuple(returnEntity, vector<string>(), vector<string>());
     }
 
     partial = trimString(partial.substr(firstWhitespace));
@@ -100,10 +98,12 @@ QueryTokenizer::tokenizeSelectClause(string selectClause) {
     size_t patternPos = partial.find("pattern");    // length 7
 
     if (suchThatPos != string::npos) {
-        clause = trimString(partial.substr(suchThatPos + 9));
+        suchThatClause = trimString(partial.substr(suchThatPos + 9));
+        return make_tuple(returnEntity, vector<string>{suchThatClause}, vector<string>());
     } else if (patternPos != string::npos) {
-        clause = trimString(partial.substr(patternPos + 7));
+        patternClause = trimString(partial.substr(patternPos + 7));
+        return make_tuple(returnEntity, vector<string>(), vector<string>{patternClause});
     }
 
-    return make_pair(returnEntity, vector<string>{clause});
+    return make_tuple(returnEntity, vector<string>(), vector<string>());
 }

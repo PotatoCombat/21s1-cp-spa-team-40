@@ -5,6 +5,7 @@
 using namespace std;
 
 enum class DesignEntityType {
+    UNKNOWN,
     STMT,
     ASSIGN,
     VARIABLE,

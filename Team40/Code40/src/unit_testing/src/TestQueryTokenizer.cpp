@@ -53,16 +53,18 @@ TEST_CASE("QP-QueryTokenizer: tokenizeDeclaration") {
 
 TEST_CASE("QP-QueryTokenizer: tokenizeSelectClause") {
     string expectedReturn;
-    pair<string, vector<string>> selectClause;
+    tuple<string, vector<string>, vector<string>> selectClause;
     string expectedClause;
 
     expectedReturn = "s";
     selectClause = tokenizer.tokenizeSelectClause(selectcl);
-    REQUIRE(selectClause.first == expectedReturn);
-    REQUIRE(selectClause.second == vector<string>());
+    REQUIRE(get<0>(selectClause) == expectedReturn);
+    REQUIRE(get<1>(selectClause) == vector<string>());
+    REQUIRE(get<2>(selectClause) == vector<string>());
     
     expectedClause = "Follows(s, p1)";
     selectClause = tokenizer.tokenizeSelectClause(selectcl1);
-    REQUIRE(selectClause.first == expectedReturn);
-    REQUIRE(selectClause.second[0] == expectedClause);
+    REQUIRE(get<0>(selectClause) == expectedReturn);
+    REQUIRE(get<1>(selectClause)[0] == expectedClause);
+    REQUIRE(get<2>(selectClause) == vector<string>());
 }

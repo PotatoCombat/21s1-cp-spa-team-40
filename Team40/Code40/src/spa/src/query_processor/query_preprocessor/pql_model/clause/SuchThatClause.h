@@ -1,18 +1,19 @@
 #pragma once
 
 #include "../relation/Relation.h"
+#include "Clause.h"
 
 using namespace std;
 
-class SuchThatClause {
+class SuchThatClause : public Clause {
 private:
     Relation rel;
 
 public:
-    SuchThatClause();
     SuchThatClause(Relation rel);
 
     Relation getRelation();
+    ClauseType getType();
 
     void setRelation(Relation rel);
 };
