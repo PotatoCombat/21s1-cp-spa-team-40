@@ -10,7 +10,9 @@ private:
     vector<Statement> stmtLst;
 
 public:
-    Procedure(string name, vector<Statement> stmtLst);
+    Procedure(string name);
+
+    void addToStmtLst(Statement stmt);
 
     string getName();
 

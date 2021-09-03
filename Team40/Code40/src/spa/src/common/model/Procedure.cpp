@@ -1,8 +1,8 @@
 #include "Procedure.h"
-#include <vector>
 
-Procedure::Procedure(string name, vector<Statement> stmtLst)
-    : name(name), stmtLst(stmtLst) {}
+Procedure::Procedure(string name) : name(name) { this->stmtLst = {}; }
+
+void Procedure::addToStmtLst(Statement stmt) { this->stmtLst.push_back(stmt); }
 
 string Procedure::getName() { return this->name; };
 

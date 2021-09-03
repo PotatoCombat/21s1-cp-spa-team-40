@@ -6,6 +6,9 @@
 using namespace std;
 
 #include "PKB.h"
+#include "Parser.h"
 #include "TNode.h"
 
-int Parse() { return 0; }
+void Parser::parse(int index, string input) {}
+bool Parser::isStmt(string input) {}
+bool Parser::isProc(string input) {}
