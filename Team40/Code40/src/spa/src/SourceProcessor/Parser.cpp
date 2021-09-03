@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include <algorithm>
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -14,15 +15,15 @@ vector<string> Parser::parseLine(string input) {
 
         if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
             if (currString.length() != 0) {
-                inputLine.push_back(currString);
+                inputLine.push_back(clean(currString));
                 currString = "";
             }
-            inputLine.push_back(string(1, curr));
+            inputLine.push_back(clean(string(1, curr)));
 
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                inputLine.push_back(currString);
+                inputLine.push_back(clean(currString));
                 currString = "";
             }
         }
@@ -30,9 +31,14 @@ vector<string> Parser::parseLine(string input) {
     return inputLine;
 }
 
-bool Parser::isStmt(vector<string> inputLine) {}
+string Parser::clean(string input) {
+    input.erase(remove(input.begin(), input.end(), ' '), input.end());
+    return input;
+}
 
-bool Parser::isProc(vector<string> inputLine) {}
+bool Parser::isStmt(vector<string> inputLine) { return true; }
+
+bool Parser::isProc(vector<string> inputLine) { return true; }
 
 bool Parser::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
