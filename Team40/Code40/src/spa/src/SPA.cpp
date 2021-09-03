@@ -10,13 +10,15 @@ void SPA::processSource(string filename) {
     if (file.is_open()) {
         string input;
         int stmtNum;
+        vector<vector<string>> program = {};
         while (getline(file, input)) {
             vector<string> inputLine = parser.parseLine(input);
-            if (parser.isProc(inputLine)) {
-                stmtNum = 0;
-            } else if (parser.isStmt(inputLine)) {
-                stmtNum++;
-            }
+            program.push_back(inputLine);
+            // if (parser.isProc(inputLine)) {
+            //     stmtNum = 0;
+            // } else if (parser.isStmt(inputLine)) {
+            //     stmtNum++;
+            // }
             // cout << input << "\n";
         }
         file.close();
