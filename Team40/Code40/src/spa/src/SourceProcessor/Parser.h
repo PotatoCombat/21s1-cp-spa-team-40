@@ -1,12 +1,15 @@
 #pragma once
+#include "Line.h"
+#include <fstream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 class Parser {
 public:
+    vector<Line> parseFile(fstream &file);
     vector<string> parseLine(string input);
-    bool isStmt(vector<string> inputLine);
     bool isProc(vector<string> inputLine);
     bool isKeyword(string input);
     string clean(string input);

@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include "Line.cpp"
 #include <algorithm>
 #include <iostream>
 #include <stdio.h>
@@ -6,6 +7,23 @@
 #include <vector>
 
 using namespace std;
+
+vector<Line> Parser::parseFile(fstream &file) {
+    vector<Line> programLines = {};
+    string input;
+    int stmtNum;
+    while (getline(file, input)) {
+        vector<string> inputLine = parseLine(input);
+        if (isProc(inputLine)) {
+            stmtNum = 0;
+        } else {
+            stmtNum++;
+        }
+        Line curr = Line(stmtNum, inputLine);
+        programLines.push_back(curr);
+    }
+    return programLines;
+}
 
 vector<string> Parser::parseLine(string input) {
     vector<string> inputLine;
