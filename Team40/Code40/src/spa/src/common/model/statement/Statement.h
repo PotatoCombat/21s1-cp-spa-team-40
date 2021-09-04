@@ -8,10 +8,10 @@ private:
     int index;
 
 protected:
+public:
     // constructor
     Statement(int index, StatementType statementType);
 
-public:
     // getters
     int getIndex();
     StatementType getStatementType();

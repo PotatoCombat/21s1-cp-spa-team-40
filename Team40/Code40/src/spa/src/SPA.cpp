@@ -23,5 +23,5 @@ void SPA::processSource(string filename) {
 int main() { // For testing on Fatin's machine only
     SPA spa;
     spa.processSource("C:\\Users\\Admin\\source\\repos\\21s1-cp-spa-team-"
-                      "40\\Team40\\Tests40\\Sample_source.txt");
+                      "40\\Team40\\Tests40\\Code1.txt");
 }

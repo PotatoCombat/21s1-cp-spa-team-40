@@ -11,6 +11,7 @@ private:
 
 public:
     Variable(int value, string name);
+    Variable(string name);
 
     // getter
     string getName();

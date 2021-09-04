@@ -1,8 +1,8 @@
 #include "Factor.h"
 
 // constructor
-Factor::Factor(FactorType factorType, int value)
-    : factorType(factorType), value(value) {}
+Factor::Factor(FactorType factorType, int value, bool knownValue)
+    : factorType(factorType), value(value), knownValue(knownValue) {}
 
 // getters
 const FactorType Factor::getFactorType() { return this->factorType; }

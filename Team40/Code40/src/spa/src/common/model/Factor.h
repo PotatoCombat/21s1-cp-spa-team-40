@@ -5,11 +5,12 @@ enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 class Factor {
 private:
     const FactorType factorType;
-    const int value;
+    int value;
+    bool knownValue;
 
 protected:
     // constructor
-    Factor(FactorType factorType, int value);
+    Factor(FactorType factorType, int value, bool knownValue);
 
 public:
     // getters
