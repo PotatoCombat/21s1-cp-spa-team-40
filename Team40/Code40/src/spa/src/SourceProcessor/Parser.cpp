@@ -1,8 +1,10 @@
 #include "Parser.h"
+#include "../common/model/ConstantValue.cpp"
 #include "../common/model/Factor.cpp"
 #include "../common/model/Procedure.cpp"
 #include "../common/model/Program.cpp"
 #include "../common/model/Variable.cpp"
+#include "../common/model/statement/CallStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
 #include "../common/model/statement/Statement.cpp"
@@ -75,14 +77,14 @@ string Parser::clean(string input) {
 // parse preprocessed file
 
 Program Parser::parseProgram(vector<Line> programLines) {
-    Program program = Program();
+    this->program = Program();
     Procedure currProc("");
     for (int i = 0; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         if (currIndex == 0) {
             if (!currProc.getName().empty()) {
-                program.addToProcLst(currProc);
+                this->program.addToProcLst(currProc);
             }
             currProc = parseProcedure(currContent);
         } else {
@@ -90,20 +92,21 @@ Program Parser::parseProgram(vector<Line> programLines) {
             currProc.addToStmtLst(stmt);
         }
     }
-    program.addToProcLst(currProc);
-    return program;
+    this->program.addToProcLst(currProc);
+    return this->program;
 }
 
+// TODO: Add pointers to program design entities (procedure, variable, constant)
 Statement Parser::parseStatement(vector<string> content, int index) {
     if (isReadStmt(content)) {
         return parseReadStatement(content, index);
     } else if (isPrintStmt(content)) {
         return parsePrintStatement(content, index);
+    } else if (isCallStmt(content)) {
+        return parseCallStatement(content, index);
     } else {
         return Statement(index, StatementType::ASSIGN);
     }
-    // } else if (isCallStmt(content)) {
-    //     return parseCallStatement(content, index);
     // } else if (isWhileStmt(content)) {
     //     return parseWhileStatement(content, index);
     // } else if (isIfStmt(content)) {
@@ -134,6 +137,13 @@ Statement Parser::parsePrintStatement(vector<string> content, int index) {
     string var_name = *next(printItr);
     // Note: variable value is unknown
     return PrintStatement(index, Variable(var_name));
+}
+
+Statement Parser::parseCallStatement(vector<string> content, int index) {
+    vector<string>::iterator callItr =
+        find(content.begin(), content.end(), "call");
+    string proc_name = *next(callItr);
+    return CallStatement(index, Procedure(proc_name));
 }
 
 // special keywords
@@ -183,3 +193,14 @@ bool Parser::isBracket(char input) {
 }
 
 bool Parser::isSemiColon(char input) { return input == ';'; }
+
+// modifiers
+void Parser::addToVarLst(Variable var) { this->varLst.push_back(var); }
+void Parser::addToConstLst(ConstantValue constVal) {
+    this->constLst.push_back(constVal);
+}
+
+// getters
+vector<Variable> Parser::getVarLst() { return this->varLst; }
+vector<ConstantValue> Parser::getConstLst() { return this->constLst; }
+Program Parser::getProgram() { return this->program; }

@@ -1,6 +1,8 @@
 #pragma once
+#include "../common/model/ConstantValue.h"
 #include "../common/model/Procedure.h"
 #include "../common/model/Program.h"
+#include "../common/model/Variable.h"
 #include "../common/model/statement/Statement.h"
 #include "Line.h"
 #include <fstream>
@@ -10,6 +12,11 @@
 using namespace std;
 
 class Parser {
+private:
+    Program program;
+    vector<Variable> varLst;
+    vector<ConstantValue> constLst;
+
 public:
     // parse file input
     vector<Line> parseFile(fstream &file);
@@ -22,6 +29,7 @@ public:
     Statement parseStatement(vector<string> content, int index);
     Statement parseReadStatement(vector<string> content, int index);
     Statement parsePrintStatement(vector<string> content, int index);
+    Statement parseCallStatement(vector<string> content, int index);
 
     // special keywords
     bool isProc(vector<string> inputLine);
@@ -36,4 +44,13 @@ public:
     bool isBracket(char input);
     bool isOperator(char input);
     bool isSemiColon(char input);
+
+    // modifiers
+    void addToVarLst(Variable var);
+    void addToConstLst(ConstantValue constVal);
+
+    // getters
+    vector<Variable> getVarLst();
+    vector<ConstantValue> getConstLst();
+    Program getProgram();
 };
