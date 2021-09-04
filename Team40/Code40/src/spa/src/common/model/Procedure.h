@@ -6,7 +6,7 @@ using namespace std;
 
 class Procedure {
 private:
-    const string name;
+    string name;
     vector<Statement> stmtLst;
 
 public:

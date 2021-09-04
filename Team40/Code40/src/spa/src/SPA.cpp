@@ -1,5 +1,6 @@
 #include "SPA.h"
 #include "SourceProcessor/Line.h"
+#include "common/model/Program.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -11,6 +12,8 @@ void SPA::processSource(string filename) {
     file.open(filename, ios::in);
     if (file.is_open()) {
         vector<Line> programLines = parser.parseFile(file);
+        Program program = parser.parseProgram(programLines);
+        int test = 0; // to bypass debugger
     } else {
         cout << "No such file";
     }

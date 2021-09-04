@@ -1,4 +1,6 @@
 #include "Parser.h"
+#include "../common/model/Procedure.cpp"
+#include "../common/model/Program.cpp"
 #include "Line.cpp"
 #include <algorithm>
 #include <iostream>
@@ -6,7 +8,10 @@
 #include <string>
 #include <vector>
 
+
 using namespace std;
+
+// parse file input
 
 vector<Line> Parser::parseFile(fstream &file) {
     vector<Line> programLines = {};
@@ -19,8 +24,10 @@ vector<Line> Parser::parseFile(fstream &file) {
         } else {
             stmtNum++;
         }
-        Line curr = Line(stmtNum, inputLine);
-        programLines.push_back(curr);
+        if (!inputLine.empty()) {
+            Line curr = Line(stmtNum, inputLine);
+            programLines.push_back(curr);
+        }
     }
     return programLines;
 }
@@ -60,6 +67,30 @@ string Parser::clean(string input) {
     input.erase(remove(input.begin(), input.end(), ' '), input.end());
     return input;
 }
+
+// parse preprocessed file
+
+Program Parser::parseProgram(vector<Line> programLines) {
+    Program program = Program();
+    for (int i = 0; i < programLines.size(); i++) {
+        int currIndex = programLines[i].getIndex();
+        vector<string> currContent = programLines[i].getContent();
+        if (currIndex == 0) {
+            Procedure proc = parseProcedure(currContent);
+            program.addToProcLst(proc);
+        }
+    }
+    return program;
+}
+
+Procedure Parser::parseProcedure(vector<string> content) {
+    vector<string>::iterator procIt =
+        find(content.begin(), content.end(), "procedure");
+    string proc_name = *next(procIt);
+    return Procedure(proc_name);
+}
+
+// special keywords
 
 bool Parser::isProc(vector<string> inputLine) {
     return find(inputLine.begin(), inputLine.end(), "procedure") !=
