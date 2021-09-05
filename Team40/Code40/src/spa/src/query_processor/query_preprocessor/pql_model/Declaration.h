@@ -5,6 +5,7 @@
 using namespace std;
 
 enum class DesignEntityType {
+    UNKNOWN,
     STMT,
     ASSIGN,
     VARIABLE,
@@ -18,12 +19,14 @@ enum class DesignEntityType {
 };
 
 class Declaration {
-protected:
+private:
     string syn;
     DesignEntityType type;
 
 public:
     Declaration(string syn, DesignEntityType type);
+
     string getSynonym();
+
     DesignEntityType getType();
 };
