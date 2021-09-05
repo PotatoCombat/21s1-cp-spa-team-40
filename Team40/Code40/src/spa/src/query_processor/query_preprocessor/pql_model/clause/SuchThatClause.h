@@ -9,10 +9,7 @@ private:
     Relation rel;
 
 public:
-    SuchThatClause();
     SuchThatClause(Relation rel);
 
     Relation getRelation();
-
-    void setRelation(Relation rel);
 };

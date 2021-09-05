@@ -4,33 +4,70 @@
 #include "query_processor/query_preprocessor/pql_model/Reference.h"
 #include "query_processor/query_preprocessor/pql_model/StatementReference.h"
 
-EntityReference entRef1("SYNONYM");
-EntityReference entRef2("NAMED_SYNONYM");
-StatementReference stmtRef1("_");
-StatementReference stmtRef2("1235134");
+struct TestReference {
+    static const string VALUE;
+    static const string OTHER_VALUE;
+    static Reference createReference();
+    static Reference createOtherReference();
+    static EntityReference createEntityReference();
+    static StatementReference createStatementReference();
+};
 
-TEST_CASE("QP-EntityReference: constructor, getValue") {
-    Reference entRef("SYNONYM");
-    REQUIRE(entRef1.getValue() == entRef.getValue());
-    REQUIRE(entRef2.getValue() != entRef.getValue());
+const string TestReference::VALUE = "s1";
+const string TestReference::OTHER_VALUE = "s2";
+
+Reference TestReference::createReference() {
+    return Reference(VALUE);
 }
 
-TEST_CASE("QP-EntityReference: getType") {
-    Reference *entRef;
-    entRef = &entRef1;
-    REQUIRE(entRef1.getType() == entRef->getType());
-    REQUIRE(entRef->getType() == ReferenceType::ENT_REF);
+Reference TestReference::createOtherReference() {
+    return Reference(OTHER_VALUE);
 }
 
-TEST_CASE("QP-StatementReference: constructor, getValue") {
-    Reference entRef("1235134");
-    REQUIRE(stmtRef1.getValue() != entRef.getValue());
-    REQUIRE(stmtRef2.getValue() == entRef.getValue());
+EntityReference TestReference::createEntityReference() {
+    return EntityReference(VALUE);
 }
 
-TEST_CASE("QP-StatementReference: getType") {
-    Reference *entRef;
-    entRef = &stmtRef1;
-    REQUIRE(stmtRef1.getType() == entRef->getType());
-    REQUIRE(entRef->getType() == ReferenceType::STMT_REF);
+StatementReference TestReference::createStatementReference() {
+    return StatementReference(VALUE);
+}
+
+TEST_CASE("QP-Reference: ctor, getValue") {
+    EntityReference entRef = TestReference::createEntityReference();
+    StatementReference stmtRef = TestReference::createStatementReference();
+    
+    REQUIRE(entRef.getValue() == TestReference::VALUE);
+    REQUIRE(stmtRef.getValue() == TestReference::VALUE);
+}
+
+TEST_CASE("QP-Reference: getType") {
+    EntityReference entRef = TestReference::createEntityReference();
+    StatementReference stmtRef = TestReference::createStatementReference();
+
+    SECTION("Test not equals unknown type") {
+        Reference ref = TestReference::createReference();
+        Reference* ref1 = &entRef;
+        Reference* ref2 = &stmtRef;
+        REQUIRE(ref1->getType() != ref.getType());
+        REQUIRE(ref2->getType() != ref.getType());
+    }
+
+    SECTION("Test equals type") {
+        REQUIRE(entRef.getType() == ReferenceType::ENT_REF);
+        REQUIRE(stmtRef.getType() == ReferenceType::STMT_REF);
+    }
+}
+
+TEST_CASE("QP-Reference: operator==") {
+    Reference ref1 = TestReference::createReference();
+
+    SECTION("test equals") {
+        Reference ref2 = TestReference::createReference();
+        REQUIRE(ref1 == ref2);
+    }
+    
+    SECTION("test not equals") {
+        Reference ref2 = TestReference::createOtherReference();
+        REQUIRE(!(ref1 == ref2));
+    }
 }

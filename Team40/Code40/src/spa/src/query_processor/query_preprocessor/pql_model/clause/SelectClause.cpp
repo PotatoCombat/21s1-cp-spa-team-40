@@ -1,11 +1,6 @@
 #include "SelectClause.h"
 
-SelectClause::SelectClause(string returnEntity,
-                           vector<Declaration> declarations,
-                           vector<SuchThatClause> stClauses,
-                           vector<PatternClause> ptClauses)
-    : returnEntity(returnEntity), declarations(declarations),
-      stClauses(stClauses), ptClauses(ptClauses) {}
+SelectClause::SelectClause() = default;
 
 string SelectClause::getReturnEntity() { return this->returnEntity; }
 
@@ -23,12 +18,12 @@ void SelectClause::setReturnEntity(string returnEntity) {
     this->returnEntity = returnEntity;
 }
 
-void SelectClause::setDeclaration(Declaration declaration) {
+void SelectClause::addDeclaration(Declaration declaration) {
     declarations.push_back(declaration);
 }
-void SelectClause::setSuchThatClause(SuchThatClause stClause) {
+void SelectClause::addSuchThatClause(SuchThatClause stClause) {
     stClauses.push_back(stClause);
 }
-void SelectClause::setPatternClause(PatternClause ptClause) {
+void SelectClause::addPatternClause(PatternClause ptClause) {
     ptClauses.push_back(ptClause);
 }

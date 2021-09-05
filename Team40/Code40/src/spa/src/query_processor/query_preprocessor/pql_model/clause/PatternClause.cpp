@@ -7,7 +7,3 @@ PatternClause::PatternClause(string syn, EntityReference entRef,
 string PatternClause::getSynonym() { return this->syn; }
 EntityReference PatternClause::getEntRef() { return this->entRef; }
 Expression PatternClause::getExpression() { return this->expr; }
-
-void PatternClause::setSynonym(string syn) { this->syn = syn; }
-void PatternClause::setEntRef(EntityReference entRef) { this->entRef = entRef; }
-void PatternClause::setExpression(Expression expr) { this->expr = expr; }
