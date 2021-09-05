@@ -15,14 +15,15 @@ enum class RelationType {
 };
 
 class Relation {
-protected:
+private:
     Reference ref1;
     Reference ref2;
+    RelationType type;
 
 public:
-    Relation(Reference r1, Reference r2);
+    Relation(Reference r1, Reference r2, RelationType type);
 
     Reference getFirstReference();
     Reference getSecondReference();
-    virtual RelationType getRelationType();
+    RelationType getRelationType();
 };

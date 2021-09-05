@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "query_processor/query_preprocessor/pql_model/Declaration.h";
+#include "query_processor/query_preprocessor/pql_model/Declaration.h"
 
 struct TestDeclaration {
 	static const string SYN;
