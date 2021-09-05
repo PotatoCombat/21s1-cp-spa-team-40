@@ -3,17 +3,34 @@
 #include "query_processor/query_preprocessor/pql_model/relation/Relation.h"
 #include "query_processor/query_preprocessor/pql_model/relation/FollowsRelation.h"
 
-Reference ref1("reference");
-Reference ref2("another");
-FollowsRelation followsR(ref1, ref2);
+struct TestRelation {
+	static const Reference R1;
+	static const Reference R2;
+	static FollowsRelation createFollowsRelation();
+};
 
-TEST_CASE("QP-FollowsRelation: contructor, getReference") {
-	REQUIRE(followsR.getFirstReference().getValue() == ref1.getValue());
-	REQUIRE(followsR.getSecondReference().getValue() == ref2.getValue());
+const Reference TestRelation::R1 = Reference("s");
+const Reference TestRelation::R2 = Reference("_");
+
+FollowsRelation TestRelation::createFollowsRelation() {
+	return FollowsRelation(R1, R2);
 }
 
-TEST_CASE("QP-FollowsRelation: getRelationType") {
+TEST_CASE("QP-Relation: contructor, getReference") {
+
+	SECTION("test follows relation") {
+		FollowsRelation rel = TestRelation::createFollowsRelation();
+
+		REQUIRE(rel.getFirstReference() == TestRelation::R1);
+		REQUIRE(rel.getSecondReference() == TestRelation::R2);
+	}
+}
+
+TEST_CASE("QP-Relation: getRelationType") {
 	Relation* rel;
+	FollowsRelation followsR = TestRelation::createFollowsRelation();
 	rel = &followsR;
+
 	REQUIRE(rel->getRelationType() == RelationType::FOLLOWS);
+	REQUIRE(rel->getRelationType() != RelationType::FOLLOWS_T);
 }

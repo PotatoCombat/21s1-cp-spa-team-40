@@ -14,6 +14,7 @@ public:
     Reference(string value);
 
     string getValue();
-
     virtual ReferenceType getType();
+    
+    bool operator==(const Reference& other) const;
 };

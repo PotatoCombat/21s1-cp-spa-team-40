@@ -21,6 +21,7 @@ protected:
 
 public:
     Relation(Reference r1, Reference r2);
+
     Reference getFirstReference();
     Reference getSecondReference();
     virtual RelationType getRelationType();

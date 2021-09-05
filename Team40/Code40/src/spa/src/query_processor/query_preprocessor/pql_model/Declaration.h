@@ -27,6 +27,5 @@ public:
     Declaration(string syn, DesignEntityType type);
 
     string getSynonym();
-
     DesignEntityType getType();
 };
