@@ -14,14 +14,9 @@ private:
     Expression expr;
 
 public:
-    PatternClause();
     PatternClause(string syn, EntityReference entRef, Expression expr);
 
     string getSynonym();
     EntityReference getEntRef();
     Expression getExpression();
-
-    void setSynonym(string syn);
-    void setEntRef(EntityReference entRef);
-    void setExpression(Expression expr);
 };
