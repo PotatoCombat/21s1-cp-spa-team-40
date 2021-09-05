@@ -74,8 +74,8 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
         pkb.insertProc(i);
     }
 
-    vector<ProcedureIndex> test = TestPKB::createIndices();
-    vector<ProcedureIndex> actual = pkb.getAllProcs().asVector();
+    vector<ProcIndex> test = TestPKB::createIndices();
+    vector<ProcIndex> actual = pkb.getAllProcs().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {
@@ -92,8 +92,8 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
         pkb.insertStmt(i);
     }
 
-    vector<StatementIndex> test = vector<int> {1, 2, 3};
-    vector<StatementIndex> actual = pkb.getAllStmts().asVector();
+    vector<StmtIndex> test = vector<int> {1, 2, 3};
+    vector<StmtIndex> actual = pkb.getAllStmts().asVector();
 
     for (int i = 0; i < actual.size(); i++)
     {

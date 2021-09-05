@@ -12,5 +12,5 @@ typedef string Pattern;
 
 typedef int VarIndex;
 typedef int ConstIndex;
-typedef int ProcedureIndex;
-typedef int StatementIndex;
+typedef int ProcIndex;
+typedef int StmtIndex;
