@@ -1,23 +1,6 @@
 #include "QueryTokenizer.h"
 // #include <cstring> // am i able to use c libraries? :(
 
-using namespace std;
-
-// tokenize query into declaration part and the returnSynonym part and the
-// clauses part this returns DECLARATION and SELECT_CLAUSE (vector?) tuple?
-
-// then using the DECLARATION from step 1
-// tokenize into DESIGN_ENTITY and SYNONYM
-
-// then using the SELECT_CLAUSES from step 1
-// tokenize into RETURN_ENTITY, SUCHTHAT_CLAUSE and PATTERN_CLAUSE
-
-// tokenize SUCHTHAT_CLAUSE into (vector of) RELATION
-
-// tokenize PATTERN_CLAUSE into SYNONYM, ENTITY_REF and EXPRESSION_SPEC
-
-// tokenize EXPRESSION_SPEC into EXPRESSION
-
 string QueryTokenizer::trimString(string input) {
     // char* split = strrchr(*(this->query), delimiter);
     string whitespace = " \n\t\r";
@@ -25,12 +8,39 @@ string QueryTokenizer::trimString(string input) {
     size_t front_w = input.find_first_not_of(whitespace);
     // return last position non-whitespace
     size_t back_w = input.find_last_not_of(whitespace);
+    string x;
     if (back_w != string::npos && front_w != string::npos) {
-        input = input.substr(front_w, back_w - front_w + 1);
+        x = input.substr(front_w, back_w - front_w + 1);
     } else {
         throw "Empty string";
     }
-    return input;
+    return x;
+}
+
+pair<string, string> QueryTokenizer::splitDecl(string input) {
+    string whitespace = " ";
+    size_t w_pos = input.find_first_not_of(whitespace);
+    if (w_pos == string::npos) {
+        throw "No whitespace";
+    }
+    return make_pair(input.substr(0, w_pos), input.substr(w_pos));
+}
+
+// split '(' _ ',' _ ')'
+tuple<string, string, string> QueryTokenizer::splitBCB(string input) {
+    size_t f_bracket = input.find('(');
+    size_t b_bracket = input.find(')');
+    size_t comma = input.find(',');
+
+    if (f_bracket == string::npos || 
+        b_bracket == string::npos || 
+        comma == string::npos) {
+        throw "Invalid clause";
+    }
+
+    return make_tuple(input.substr(0, f_bracket), 
+            input.substr(f_bracket, comma), 
+            input.substr(comma, b_bracket));
 }
 
 pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
@@ -52,58 +62,88 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
     return make_pair(declaration, selectClause);
 }
 
-vector<string> QueryTokenizer::tokenizeDeclaration(string declaration) {
+vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
-    // switch statement ( in parser )
-    vector<string> decl;
+    vector<pair<string, string>> decl;
     string::iterator it;
-    string::iterator it_b;
+    string::iterator itB;
     it = declaration.begin();
-    it_b = declaration.begin();
+    itB = declaration.begin();
     int found = 0;
     for (; it != declaration.end(); ++it) {
         if (*it == ';') {
-            decl.push_back(trimString(string(it_b, it)));
-            it_b = it + 1;
+            decl.push_back(splitDecl(trimString(string(itB, it))));
+            itB = it + 1;
             found = 1;
         }
     }
     return decl;
 }
 
-pair<string, vector<string>>
-QueryTokenizer::tokenizeSelectClause(string selectClause) {
-    // split by "Select" + SYNONYM + SUCH_THAT clause / PATTERN clause
-    // switch statement?
-    // "Select x such that clause"
-    // "Select x pattern x clause"
-
-    string returnEntity;
-    string clause;
+string QueryTokenizer::tokenizeReturnEntity(string clause) {
+    string re;
     string partial;
 
-    size_t selectKeyword = selectClause.find("Select"); // length 6
+    size_t selectKeyword = clause.find("Select"); // length 6
     if (selectKeyword != string::npos) {
-        partial = trimString(selectClause.substr(selectKeyword + 6));
+        partial = trimString(clause.substr(selectKeyword + 6));
     }
 
     size_t firstWhitespace = partial.find(" ");
+    size_t secondWhitespace = partial.find(" ", firstWhitespace);
     if (firstWhitespace != string::npos) {
-        returnEntity = partial.substr(0, firstWhitespace);
-    } else { // NO CLAUSE
-        returnEntity = trimString(partial);
-        return make_pair(returnEntity, vector<string>());
+        if (secondWhitespace != string::npos) {
+            re = trimString(partial.substr(firstWhitespace, secondWhitespace));
+        }
+        else {
+            re = trimString(partial);
+        }
+    }
+    return re;
+}
+
+vector<tuple<string, string, string>> QueryTokenizer::tokenizeSuchThatClause(string clause) {
+    string result;
+    size_t suchThatPos = clause.find("such that"); // length 9
+    
+    if (suchThatPos == string::npos) {
+        return vector<tuple<string, string, string>>();
     }
 
-    partial = trimString(partial.substr(firstWhitespace));
-    size_t suchThatPos = partial.find("such that"); // length 9
-    size_t patternPos = partial.find("pattern");    // length 7
+    result = trimString(clause.substr(suchThatPos + 9));
+
+    size_t patternPos = clause.find("pattern");    // length 7
+
+    if (patternPos != string::npos) {
+        if (patternPos > suchThatPos) {
+            result = trimString(result.substr(0, patternPos));
+        }
+    }
+
+    tuple<string, string, string> tup = splitBCB(result);
+
+    return vector<tuple<string, string, string>>{tup};
+}
+
+vector<tuple<string, string, string>> QueryTokenizer::tokenizePatternClause(string clause) {
+    string result;
+    size_t patternPos = clause.find("pattern");    // length 7
+
+    if (patternPos == string::npos) {
+        return vector<tuple<string, string, string>>();
+    }
+
+    result = trimString(clause.substr(patternPos + 9));
+
+    size_t suchThatPos = clause.find("such that"); // length 9
 
     if (suchThatPos != string::npos) {
-        clause = trimString(partial.substr(suchThatPos + 9));
-    } else if (patternPos != string::npos) {
-        clause = trimString(partial.substr(patternPos + 7));
+        if (suchThatPos > patternPos) {
+            result = trimString(result.substr(0, suchThatPos));
+        }
     }
 
-    return make_pair(returnEntity, vector<string>{clause});
+    tuple<string, string, string> tup = splitBCB(result);
+
+    return vector<tuple<string, string, string>>{tup};
 }
