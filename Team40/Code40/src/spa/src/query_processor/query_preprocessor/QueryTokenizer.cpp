@@ -1,4 +1,5 @@
 #include "QueryTokenizer.h"
+#include <iostream>
 // #include <cstring> // am i able to use c libraries? :(
 
 string QueryTokenizer::trimString(string input) {
@@ -19,11 +20,11 @@ string QueryTokenizer::trimString(string input) {
 
 pair<string, string> QueryTokenizer::splitDecl(string input) {
     string whitespace = " ";
-    size_t w_pos = input.find_first_not_of(whitespace);
+    size_t w_pos = input.find(whitespace);
     if (w_pos == string::npos) {
         throw "No whitespace";
     }
-    return make_pair(input.substr(0, w_pos), input.substr(w_pos));
+    return make_pair(input.substr(0, w_pos), input.substr(w_pos+1));
 }
 
 // split '(' _ ',' _ ')'
@@ -33,14 +34,18 @@ tuple<string, string, string> QueryTokenizer::splitBCB(string input) {
     size_t comma = input.find(',');
 
     if (f_bracket == string::npos || 
-        b_bracket == string::npos || 
+        b_bracket == string::npos ||
         comma == string::npos) {
         throw "Invalid clause";
     }
 
-    return make_tuple(input.substr(0, f_bracket), 
-            input.substr(f_bracket, comma), 
-            input.substr(comma, b_bracket));
+    string rel = trimString(input.substr(0, f_bracket));
+    string ref1 = trimString(input.substr(f_bracket + 1, comma));
+    string ref2 = trimString(input.substr(comma + 1, b_bracket - 1));
+    cout << rel << endl;
+    cout << ref1 << endl;
+    cout << ref2 << endl;
+    return make_tuple(rel, ref1, ref2);
 }
 
 pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
@@ -80,6 +85,7 @@ vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declarat
     return decl;
 }
 
+// takes in all non declaration input
 string QueryTokenizer::tokenizeReturnEntity(string clause) {
     string re;
     string partial;
@@ -90,14 +96,8 @@ string QueryTokenizer::tokenizeReturnEntity(string clause) {
     }
 
     size_t firstWhitespace = partial.find(" ");
-    size_t secondWhitespace = partial.find(" ", firstWhitespace);
     if (firstWhitespace != string::npos) {
-        if (secondWhitespace != string::npos) {
-            re = trimString(partial.substr(firstWhitespace, secondWhitespace));
-        }
-        else {
-            re = trimString(partial);
-        }
+        re = trimString(partial.substr(0, firstWhitespace));
     }
     return re;
 }

@@ -38,7 +38,7 @@ pair<string, string> TestQueryTokenizer::splitIntoParts() {
 vector<pair<string, string>> TestQueryTokenizer::tokenizeDeclaration() {
     pair<string, string> p1 = make_pair("stmt", "s");
     pair<string, string> p2 = make_pair("assign", "a");
-    pair<string, string> p3 = make_pair("print", "p");
+    pair<string, string> p3 = make_pair("print", "p1");
 
     return vector<pair<string, string>>{p1, p2, p3};
 }
@@ -102,18 +102,40 @@ TEST_CASE("QP-QueryTokenizer: tokenizeDeclaration") {
 
 }
 
-//TEST_CASE("QP-QueryTokenizer: tokenizeSelectClause") {
-//    string expectedReturn;
-//    pair<string, vector<string>> selectClause;
-//    string expectedClause;
+TEST_CASE("QP-QueryTokenizer: returnEntity") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test standard") {
+        string actual = tokenizer.tokenizeReturnEntity(TestQueryTokenizer::CLAUSE1);
+        string expected = TestQueryTokenizer::tokenizeReturnEntity();
+        REQUIRE(actual == expected);
+    }
+}
+
+TEST_CASE("QP-QueryTokenizer: tokenizeSuchThatClause") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test only one such that clause present") {
+        vector<tuple<string, string, string>> actual = 
+            tokenizer.tokenizeSuchThatClause(TestQueryTokenizer::CLAUSE1);
+        vector<tuple<string, string, string>> expected = 
+            TestQueryTokenizer::tokenizeSuchThatClause();
+        REQUIRE(get<0>(actual[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(actual[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(actual[0]) == get<2>(expected[0]));
+    }
+}
+
+//TEST_CASE("QP-QueryTokenizer: tokenizePatternClause") {
+//    QueryTokenizer tokenizer;
 //
-//    expectedReturn = "s";
-//    selectClause = tokenizer.tokenizeClauses(selectcl);
-//    REQUIRE(selectClause.first == expectedReturn);
-//    REQUIRE(selectClause.second == vector<string>());
-//    
-//    expectedClause = "Follows(s, p1)";
-//    selectClause = tokenizer.tokenizeClauses(selectcl1);
-//    REQUIRE(selectClause.first == expectedReturn);
-//    REQUIRE(selectClause.second[0] == expectedClause);
+//    SECTION("test standard") {
+//        vector<tuple<string, string, string>> actual =
+//            tokenizer.tokenizePatternClause(TestQueryTokenizer::CLAUSE1);
+//        vector<tuple<string, string, string>> expected =
+//            TestQueryTokenizer::tokenizePatternClause();
+//        REQUIRE(get<0>(actual[0]) == get<0>(expected[0]));
+//        REQUIRE(get<1>(actual[0]) == get<1>(expected[0]));
+//        REQUIRE(get<2>(actual[0]) == get<2>(expected[0]));
+//    }
 //}
