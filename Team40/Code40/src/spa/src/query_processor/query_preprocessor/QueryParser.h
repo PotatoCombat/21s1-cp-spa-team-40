@@ -7,14 +7,9 @@
 using namespace std;
 
 class QueryParser {
-private:
-    vector<string> tokenizeClause(string clause);
-    vector<Declaration> parseDeclarations(vector<string> declarations);
-    vector<SuchThatClause> parseSuchThatClause(vector<string> clause);
-    vector<PatternClause> parsePatternClause(vector<string> clause);
-
 public:
     QueryParser();
-    SelectClause parseQuery(vector<string> declarations,
-               tuple<string, vector<string>, vector<string>> clause);
+    Declaration parseDeclaration(pair<string, string> declaration);
+    SuchThatClause parseSuchThatClause(tuple<string, string, string> clause);
+    PatternClause parsePatternClause(tuple<string, string, string> clause);
 };

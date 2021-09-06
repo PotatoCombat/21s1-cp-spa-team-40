@@ -10,5 +10,6 @@ private:
     QueryParser parser;
 
 public:
+    QueryPreprocessor();
     Query preprocessQuery(string input);
 };
