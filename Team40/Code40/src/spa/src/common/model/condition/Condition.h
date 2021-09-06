@@ -1,19 +1,19 @@
 #pragma once
 
-enum class ConditionalType { SINGLE, AND, OR, NOT };
+enum class ConditionType { SINGLE, AND, OR, NOT };
 
-class Conditional {
+class Condition {
 private:
-    ConditionalType condType;
+    ConditionType condType;
     const bool value;
 
 protected:
     // constructor
-    Conditional(ConditionalType condType, bool value);
+    Condition(ConditionType condType, bool value);
 
 public:
     // getters
-    ConditionalType getConditionalType();
+    ConditionType getConditionType();
 
     bool getValue();
 };

@@ -1,17 +1,17 @@
-#include "../conditional/Conditional.h"
+#include "../condition/Condition.h"
 #include "Statement.h"
 #include <vector>
 
 using namespace std;
-class IfStatement : public Statement {
+class WhileStatement : public Statement {
 private:
-    Conditional cond;
+    Condition cond;
     vector<Statement> stmtLst;
 
 public:
     // constructor
-    IfStatement(int index, Conditional cond)
-        : cond(cond), Statement(index, StatementType::IF) {
+    WhileStatement(int index, Condition cond)
+        : cond(cond), Statement(index, StatementType::WHILE) {
         this->stmtLst = {};
     }
 
@@ -21,7 +21,7 @@ public:
     }
 
     // getters
-    Conditional getConditional() { return this->cond; }
+    Condition getCondition() { return this->cond; }
 
     vector<Statement> getStmtLst() { return this->stmtLst; }
 };

@@ -1,12 +1,12 @@
 #pragma once
+#include "../relation/Relation.h"
 #include "Condition.h"
-#include "common/model/relation/Relation.h"
 
-class SingleConditional : public Conditional {
+class SingleCondition : public Condition {
 private:
     Relation *rel;
     bool value;
 
 public:
-    SingleConditional(Relation *rel);
+    SingleCondition(Relation *rel);
 };

@@ -1,16 +1,16 @@
-#include "../conditional/Conditional.h"
+#include "../condition/Condition.h"
 #include "Statement.h"
 #include <vector>
 
 using namespace std;
 class IfStatement : public Statement {
 private:
-    Conditional cond;
+    Condition cond;
     vector<Statement> thenStmtLst;
     vector<Statement> elseStmtLst;
 
 public:
-    IfStatement(int index, Conditional cond)
+    IfStatement(int index, Condition cond)
         : cond(cond), Statement(index, StatementType::IF) {
         this->thenStmtLst = {};
         this->elseStmtLst = {};
@@ -23,7 +23,7 @@ public:
         this->elseStmtLst.push_back(statement);
     }
 
-    Conditional getConditional() { return this->cond; }
+    Condition getCondition() { return this->cond; }
 
     vector<Statement> getThenStmtLst() { return this->thenStmtLst; }
 

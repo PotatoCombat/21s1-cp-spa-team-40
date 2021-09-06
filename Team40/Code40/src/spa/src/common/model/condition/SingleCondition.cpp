@@ -1,4 +1,4 @@
 #include "SingleCondition.h"
 
-SingleConditional::SingleConditional(Relation *rel)
-    : rel(rel), Conditional(ConditionalType::SINGLE, rel->getValue()) {}
+SingleCondition::SingleCondition(Relation *rel)
+    : rel(rel), Condition(ConditionType::SINGLE, rel->getValue()) {}

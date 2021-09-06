@@ -1,6 +1,5 @@
 #include "OrCondition.h"
 
-OrConditional::OrConditional(Conditional *cond1, Conditional *cond2)
+OrCondition::OrCondition(Condition *cond1, Condition *cond2)
     : cond1(cond1), cond2(cond2),
-      Conditional(ConditionalType::OR, cond1->getValue() || cond2->getValue()) {
-}
+      Condition(ConditionType::OR, cond1->getValue() || cond2->getValue()) {}

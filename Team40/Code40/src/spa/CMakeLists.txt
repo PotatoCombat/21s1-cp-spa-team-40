@@ -7,12 +7,12 @@ add_library(spa ${srcs} ${headers}
         src/common/model/Procedure.cpp src/common/model/Procedure.h
         src/common/model/Variable.cpp src/common/model/Variable.h
 
-        # common/model/conditional/
-        src/common/model/conditional/Conditional.cpp src/common/model/conditional/Conditional.h
-        src/common/model/conditional/AndConditional.cpp src/common/model/conditional/AndConditional.h
-        src/common/model/conditional/NotConditional.cpp src/common/model/conditional/NotConditional.h
-        src/common/model/conditional/OrConditional.cpp src/common/model/conditional/OrConditional.h
-        src/common/model/conditional/SingleConditional.cpp src/common/model/conditional/SingleConditional.h
+        # common/model/condition/
+        src/common/model/condition/condition.cpp src/common/model/condition/condition.h
+        src/common/model/condition/AndCondition.cpp src/common/model/condition/AndCondition.h
+        src/common/model/condition/NotCondition.cpp src/common/model/condition/NotCondition.h
+        src/common/model/condition/OrCondition.cpp src/common/model/condition/OrCondition.h
+        src/common/model/condition/SingleCondition.cpp src/common/model/condition/SingleCondition.h
 
         # common/model/expression/
         src/common/model/expression/Expression.cpp src/common/model/expression/Expression.h

@@ -1,4 +1,4 @@
 #include "NotCondition.h"
 
-NotConditional::NotConditional(Conditional *cond)
-    : cond(cond), Conditional(ConditionalType::NOT, !cond->getValue()) {}
+NotCondition::NotCondition(Condition *cond)
+    : cond(cond), Condition(ConditionType::NOT, !cond->getValue()) {}

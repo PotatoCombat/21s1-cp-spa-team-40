@@ -4,15 +4,28 @@
 #include "../common/model/Procedure.cpp"
 #include "../common/model/Program.cpp"
 #include "../common/model/Variable.cpp"
+#include "../common/model/condition/AndCondition.cpp"
+#include "../common/model/condition/Condition.cpp"
+#include "../common/model/condition/NotCondition.cpp"
+#include "../common/model/condition/OrCondition.cpp"
+#include "../common/model/condition/SingleCondition.cpp"
 #include "../common/model/expression/Expression.cpp"
 #include "../common/model/expression/SingleTermExpression.cpp"
 #include "../common/model/expression/SubtractTermsExpression.cpp"
 #include "../common/model/expression/SumTermsExpression.cpp"
+#include "../common/model/relation/EqualsRelation.cpp"
+#include "../common/model/relation/LessThanOrEqualsRelation.cpp"
+#include "../common/model/relation/LessThanRelation.cpp"
+#include "../common/model/relation/MoreThanOrEqualsRelation.cpp"
+#include "../common/model/relation/MoreThanRelation.cpp"
+#include "../common/model/relation/NotEqualsRelation.cpp"
+#include "../common/model/relation/Relation.cpp"
 #include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
 #include "../common/model/statement/Statement.cpp"
+#include "../common/model/statement/WhileStatement.cpp"
 #include "../common/model/term/DivideByFactorTerm.cpp"
 #include "../common/model/term/ModuloByFactorTerm.cpp"
 #include "../common/model/term/MultiplyByFactorTerm.cpp"
@@ -126,7 +139,7 @@ Statement Parser::parseStatement(vector<string> content, int index) {
         return parseCallStatement(content, index);
     } else if (isWhileStmt(content)) {
         return parseWhileStatement(content, index);
-    } else { // assign
+    } else if (isAssignStmt(content)) { // assign
         return parseAssignStatement(content, index);
     }
     //
@@ -171,15 +184,17 @@ Statement Parser::parseAssignStatement(vector<string> content, int index) {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    Conditional cond;
-    vector<Statement> stmtLst;
+    Expression expr = parseExpression(next(assignItr));
     AssignStatement stmt = AssignStatement(index, Variable(var_name), expr);
     return stmt;
 }
 
 Statement Parser::parseWhileStatement(vector<string> content, int index) {
-    vector<string>::iterator whileItr =
-        find(content.begin(), content.end(), "while");
+    vector<string>::iterator condItr =
+        find(content.begin(), content.end(), "(");
+    // Condition -> SingleCondition -> Relation -> Factor
+    Condition cond = parseCondition(next(condItr));
+    WhileStatement stmt = WhileStatement(index, cond);
     return stmt;
 }
 
@@ -222,6 +237,44 @@ Expression Parser::parseExpression(vector<string>::iterator exprItr) {
     return SingleTermExpression(term);
 }
 
+Condition Parser::parseCondition(vector<string>::iterator condItr) {
+    vector<Factor> facLst = {};
+    while (!isRoundBracket(*condItr) && !isCurlyBracket(*condItr)) {
+        if (isInteger(*condItr)) {
+            facLst.push_back(ConstantValue(stoi(*condItr)));
+        } else if (isName(*condItr)) {
+            facLst.push_back(Variable(*condItr));
+        }
+        if (isComparisonOperator(*prev(condItr))) {
+            string opr = *prev(condItr);
+            Factor second = facLst.back();
+            facLst.pop_back();
+            Factor first = facLst.back();
+            facLst.pop_back();
+            if (opr == "==") {
+                Relation *rel = new EqualsRelation(first, second);
+                return SingleCondition(rel);
+            } else if (opr == "<=") {
+                Relation *rel = new LessThanOrEqualsRelation(first, second);
+                return SingleCondition(rel);
+            } else if (opr == "<") {
+                Relation *rel = new LessThanRelation(first, second);
+                return SingleCondition(rel);
+            } else if (opr == ">=") {
+                Relation *rel = new MoreThanOrEqualsRelation(first, second);
+                return SingleCondition(rel);
+            } else if (opr == ">") {
+                Relation *rel = new MoreThanRelation(first, second);
+                return SingleCondition(rel);
+            } else if (opr == "!=") {
+                Relation *rel = new NotEqualsRelation(first, second);
+                return SingleCondition(rel);
+            }
+        }
+        condItr = next(condItr);
+    }
+}
+
 // special keywords
 
 bool Parser::isProc(vector<string> inputLine) {
@@ -247,6 +300,10 @@ bool Parser::isWhileStmt(vector<string> inputLine) {
 
 bool Parser::isIfStmt(vector<string> inputLine) {
     return find(inputLine.begin(), inputLine.end(), "if") != inputLine.end();
+}
+
+bool Parser::isAssignStmt(vector<string> inputLine) {
+    return find(inputLine.begin(), inputLine.end(), "=") != inputLine.end();
 }
 
 bool Parser::isKeyword(string input) {
@@ -288,7 +345,7 @@ bool Parser::isCurlyBracket(string input) {
     return input == "{" || input == "}";
 }
 
-bool Parser::isNormalBracket(string input) {
+bool Parser::isRoundBracket(string input) {
     return input == "(" || input == ")";
 }
 

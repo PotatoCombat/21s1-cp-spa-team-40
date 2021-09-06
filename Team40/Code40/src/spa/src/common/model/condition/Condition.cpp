@@ -1,8 +1,8 @@
 #include "Condition.h"
 
-Conditional::Conditional(ConditionalType condType, bool value)
+Condition::Condition(ConditionType condType, bool value)
     : condType(condType), value(value) {}
 
-ConditionalType Conditional::getConditionalType() { return this->condType; }
+ConditionType Condition::getConditionType() { return this->condType; }
 
-bool Conditional::getValue() { return this->value; }
+bool Condition::getValue() { return this->value; }

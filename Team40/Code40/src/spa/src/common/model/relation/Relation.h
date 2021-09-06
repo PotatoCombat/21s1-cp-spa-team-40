@@ -1,5 +1,5 @@
 #pragma once
-#include "common/model/Factor.h"
+#include "../Factor.h"
 
 enum class RelationType {
     MORE_THAN,

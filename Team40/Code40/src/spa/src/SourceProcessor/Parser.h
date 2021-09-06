@@ -3,6 +3,7 @@
 #include "../common/model/Procedure.h"
 #include "../common/model/Program.h"
 #include "../common/model/Variable.h"
+#include "../common/model/condition/Condition.h"
 #include "../common/model/expression/Expression.h"
 #include "../common/model/statement/Statement.h"
 #include "Line.h"
@@ -34,6 +35,7 @@ public:
     Statement parseWhileStatement(vector<string> content, int index);
     Statement parseAssignStatement(vector<string> content, int index);
     Expression parseExpression(vector<string>::iterator exprItr);
+    Condition parseCondition(vector<string>::iterator condItr);
 
     // special keywords
     bool isProc(vector<string> inputLine);
@@ -41,6 +43,7 @@ public:
     bool isPrintStmt(vector<string> inputLine);
     bool isCallStmt(vector<string> inputLine);
     bool isWhileStmt(vector<string> inputLine);
+    bool isAssignStmt(vector<string> inputLine);
     bool isIfStmt(vector<string> inputLine);
     bool isKeyword(string input);
 
@@ -49,7 +52,7 @@ public:
     bool isOperator(char input);
     bool isSemiColon(char input);
     bool isCurlyBracket(string input);
-    bool isNormalBracket(string input);
+    bool isRoundBracket(string input);
     bool isArtihmeticOperator(string input);
     bool isComparisonOperator(string input);
     bool isLogicalOperator(string input);

@@ -1,11 +1,11 @@
 #pragma once
+#include "../relation/Relation.h"
 #include "Condition.h"
-#include "common/model/relation/Relation.h"
 
-class NotConditional : public Conditional {
+class NotCondition : public Condition {
 private:
-    Conditional *cond;
+    Condition *cond;
 
 public:
-    NotConditional(Conditional *cond);
+    NotCondition(Condition *cond);
 };
