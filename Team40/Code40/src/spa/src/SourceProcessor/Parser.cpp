@@ -4,11 +4,20 @@
 #include "../common/model/Procedure.cpp"
 #include "../common/model/Program.cpp"
 #include "../common/model/Variable.cpp"
+#include "../common/model/expression/Expression.cpp"
+#include "../common/model/expression/SingleTermExpression.cpp"
+#include "../common/model/expression/SubtractTermsExpression.cpp"
+#include "../common/model/expression/SumTermsExpression.cpp"
 #include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
 #include "../common/model/statement/Statement.cpp"
+#include "../common/model/term/DivideByFactorTerm.cpp"
+#include "../common/model/term/ModuloByFactorTerm.cpp"
+#include "../common/model/term/MultiplyByFactorTerm.cpp"
+#include "../common/model/term/SingleFactorTerm.cpp"
+#include "../common/model/term/Term.cpp"
 #include "Line.cpp"
 #include <algorithm>
 #include <iostream>
@@ -129,39 +138,41 @@ Procedure Parser::parseProcedure(vector<string> content) {
     vector<string>::iterator procItr =
         find(content.begin(), content.end(), "procedure");
     string proc_name = *next(procItr);
-    return Procedure(proc_name);
+    Procedure proc = Procedure(proc_name);
+    return proc;
 }
 
 Statement Parser::parseReadStatement(vector<string> content, int index) {
     vector<string>::iterator readItr =
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
-    // Note: variable value is unknown
-    return ReadStatement(index, Variable(var_name));
+    ReadStatement stmt = ReadStatement(index, Variable(var_name));
+    return stmt;
 }
 
 Statement Parser::parsePrintStatement(vector<string> content, int index) {
     vector<string>::iterator printItr =
         find(content.begin(), content.end(), "print");
     string var_name = *next(printItr);
-    // Note: variable value is unknown
-    return PrintStatement(index, Variable(var_name));
+    PrintStatement stmt = PrintStatement(index, Variable(var_name));
+    return stmt;
 }
 
 Statement Parser::parseCallStatement(vector<string> content, int index) {
     vector<string>::iterator callItr =
         find(content.begin(), content.end(), "call");
     string proc_name = *next(callItr);
-    return CallStatement(index, Procedure(proc_name));
+    CallStatement stmt = CallStatement(index, Procedure(proc_name));
+    return stmt;
 }
 
 Statement Parser::parseAssignStatement(vector<string> content, int index) {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    // Expression expr = parseExpression(next(assignItr));
-    // return AssignStatement(index, Variable(var_name), expr);
-    return Statement(index, StatementType::ASSIGN);
+    Expression expr = parseExpression(next(assignItr));
+    AssignStatement stmt = AssignStatement(index, Variable(var_name), expr);
+    return stmt;
 }
 
 Expression Parser::parseExpression(vector<string>::iterator exprItr) {
@@ -174,19 +185,33 @@ Expression Parser::parseExpression(vector<string>::iterator exprItr) {
         }
         if (isArtihmeticOperator(*prev(exprItr))) {
             string opr = *prev(exprItr);
+            Factor second = facLst.back();
+            facLst.pop_back();
+            Factor first = facLst.back();
+            facLst.pop_back();
+            Term *term1 = new SingleFactorTerm(first);
+            Term *term2 = new SingleFactorTerm(second);
             if (opr == "+") {
-
+                Expression *expr = new SingleTermExpression(term1);
+                return SumTermsExpression(expr, term2);
             } else if (opr == "-") {
-
+                Expression *expr = new SingleTermExpression(term1);
+                return SubtractTermsExpression(expr, term2);
             } else if (opr == "*") {
-
+                Term *term = new MultiplyByFactorTerm(term1, second);
+                return SingleTermExpression(term);
             } else if (opr == "/") {
-
+                Term *term = new DivideByFactorTerm(term1, second);
+                return SingleTermExpression(term);
             } else if (opr == "%") {
+                Term *term = new ModuloByFactorTerm(term1, second);
+                return SingleTermExpression(term);
             }
         }
         exprItr = next(exprItr);
     }
+    Term *term = new SingleFactorTerm(facLst.back());
+    return SingleTermExpression(term);
 }
 
 // special keywords

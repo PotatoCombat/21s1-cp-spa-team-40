@@ -1,4 +1,3 @@
 #include "ConstantValue.h"
 
-ConstantValue::ConstantValue(int value)
-    : Factor(FactorType::CONSTANT, value, true) {}
+ConstantValue::ConstantValue(int value) : Factor(FactorType::CONSTANT, value) {}

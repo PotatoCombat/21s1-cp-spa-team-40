@@ -14,8 +14,6 @@ private:
 protected:
     int value;
     bool hasComputedValue; // Used for lazy initialization of value
-    Term(TermType termType);
-    Term(TermType termType, int value);
 
 public:
     Term(TermType termType);
