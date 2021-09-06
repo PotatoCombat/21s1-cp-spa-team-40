@@ -3,6 +3,7 @@
 #include "../model/Query.h"
 #include "QueryTokenizer.h"
 #include "QueryParser.h"
+#include <string>
 
 using namespace std;
 
