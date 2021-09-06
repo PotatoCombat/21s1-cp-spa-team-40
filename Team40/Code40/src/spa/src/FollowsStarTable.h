@@ -8,74 +8,64 @@ class FollowsStarTable {
 
 public:
     FollowsStarTable();
-    bool insertNextStatement(StatementIndex stmt1, StatementIndex stmt2);
-    set<StatementIndex> getNextStatements(StatementIndex stmt);
-    set<StatementIndex> getPreviousStatements(StatementIndex stmt);
+    bool insertFollowsStar(StatementIndex stmt1, StatementIndex stmt2);
+    set<StatementIndex> getFollowingStarStatements(StatementIndex stmt);
+    set<StatementIndex> getPrecedingStarStatements(StatementIndex stmt);
     bool followsStar(StatementIndex stmt1, StatementIndex stmt2);
 
 private:
     //stmt2 follows stmt1 (i.e. key comes before stmts in value)
-    map<StatementIndex, set<StatementIndex>> followsStarTable;
+    map<StatementIndex, set<StatementIndex>> followsStarMap;
     //stmt2 is followed by stmt1 (i.e. stmts in value comes before key)
-    map<StatementIndex, set<StatementIndex>> followedByStarTable;
+    map<StatementIndex, set<StatementIndex>> followedByStarMap;
+    void insertIntoMaps(StatementIndex stmt1, StatementIndex stmt2);
 };
 
 FollowsStarTable::FollowsStarTable() = default;
 
-bool insertNextStatement(StatementIndex stmt1, StatementIndex stmt2) {
-    if (followsStarTable.count(stmt1) <= 0) {
-        followsStarTable.insert(pair<StatementIndex, set<StatementIndex>>(stmt1, {}));
+void FollowsStarTable::insertIntoMaps(StatementIndex stmt1, StatementIndex stmt2) {
+    if (followsStarMap.count(stmt1) <= 0) {
+        followsStarMap.insert(pair<StatementIndex, set<StatementIndex>>(stmt1, {}));
     }
-    followsStarTable[stmt1].insert(stmt2);
+    followsStarMap[stmt1].insert(stmt2);
 
-    if (followedByStarTable.count(stmt2) <= 0) {
-        followedByStarTable.insert(pair<StatementIndex, set<StatementIndex>>(stmt2, {}));
+    if (followedByStarMap.count(stmt2) <= 0) {
+        followedByStarMap.insert(pair<StatementIndex, set<StatementIndex>>(stmt2, {}));
     }
-    followedByStarTable[stmt2].insert(stmt1);
+    followedByStarMap[stmt2].insert(stmt1);
+}
+
+bool FollowsStarTable::insertFollowsStar(StatementIndex stmt1, StatementIndex stmt2) {
+    insertIntoMaps(stmt1, stmt2);
 
     //Adding follows*(prevStmts, stmt2)
-    if (followedByStarTable.count(stmt1) > 0) {
-        for (const StatementIndex& prevStmt : followedByStarTable[stmt1]) {
-            if (followsStarTable.count(prevStmt) <= 0) {
-                followsStarTable.insert(pair<StatementIndex, set<StatementIndex>>(prevStmt, {}));
-            }
-            followsStarTable[prevStmt].insert(stmt2);
-
-            if (followedByStarTable.count(stmt2) <= 0) {
-                followedByStarTable.insert(pair<StatementIndex, set<StatementIndex>>(stmt2, {}));
-            }
-            followedByStarTable[stmt2].insert(prevStmt);
+    if (followedByStarMap.count(stmt1) > 0) {
+        for (const StatementIndex& prevStmt : followedByStarMap[stmt1]) {
+            insertIntoMaps(prevStmt, stmt2);
         }
     }
 
     //Adding follows*(stmt1, nextStmts)
-    if (followsStarTable.count(stmt2) > 0) {
-        for (const StatementIndex& nextStmt : followsStarTable[stmt2]) {
-            if (followsStarTable.count(stmt1) <= 0) {
-                followsStarTable.insert(pair<StatementIndex, set<StatementIndex>>(stmt1, {}));
-            }
-            followsStarTable[stmt1].insert(nextStmt);
-
-            if (followedByStarTable.count(nextStmt) <= 0) {
-                followedByStarTable.insert(pair<StatementIndex, set<StatementIndex>>(nextStmt, {}));
-            }
-            followedByStarTable[nextStmt].insert(stmt1);
+    if (followsStarMap.count(stmt2) > 0) {
+        for (const StatementIndex& nextStmt : followsStarMap[stmt2]) {
+            insertIntoMaps(stmt1, nextStmt);
         }
     }
 
     return true;
 }
 
-set<StatementIndex> getNextStatements(StatementIndex stmt) {
-    return followsStarTable[stmt];
+set<StatementIndex> FollowsStarTable::getFollowingStarStatements(StatementIndex stmt) {
+    return followsStarMap[stmt];
 }
 
-set<StatementIndex> getPreviousStatements(StatementIndex stmt) {
-    return followedByStarTable[stmt];
+set<StatementIndex> FollowsStarTable::getPrecedingStarStatements(StatementIndex stmt) {
+    return followedByStarMap[stmt];
 }
 
-bool followsStar(StatementIndex stmt1, StatementIndex stmt2) {
-    set<StatementIndex> nextIndexes = followsStarTable[stmt1];
+//Follows(stmt1, stmt2)
+bool FollowsStarTable::followsStar(StatementIndex stmt1, StatementIndex stmt2) {
+    set<StatementIndex> nextIndexes = followsStarMap[stmt1];
     if (nextIndexes.find(stmt2) != nextIndexes.end()) {
         return true;
     }

@@ -7,37 +7,38 @@ class FollowsTable {
 
 public:
     FollowsTable();
-    bool insertNextStatement(StatementIndex stmt1, StatementIndex stmt2);
-    StatementIndex getNextStatement(StatementIndex stmt);
-    StatementIndex getPreviousStatement(StatementIndex stmt);
+    bool insertFollows(StatementIndex stmt1, StatementIndex stmt2);
+    StatementIndex getFollowingStatement(StatementIndex stmt);
+    StatementIndex getPrecedingStatement(StatementIndex stmt);
     bool follows(StatementIndex stmt1, StatementIndex stmt2);
 
 private:
-    //stmt2 follows stmt1 (i.e. key comes before value)
-    map<StatementIndex, StatementIndex> followsTable;
-    //stmt2 is followed by stmt1 (i.e. value comes before key)
-    map<StatementIndex, StatementIndex> followedByTable;
+    //value follows key
+    map<StatementIndex, StatementIndex> followsMap;
+    //key follows value (value is followed by key)
+    map<StatementIndex, StatementIndex> followedByMap;
 };
 
 FollowsTable::FollowsTable() = default;
 
-bool insertNextStatement(StatementIndex stmt1, StatementIndex stmt2) {
-    followsTable[stmt1] = stmt2;
-    followedByTable[stmt2] = stmt1;
+bool FollowsTable::insertFollows(StatementIndex stmt1, StatementIndex stmt2) {
+    followsMap[stmt1] = stmt2;
+    followedByMap[stmt2] = stmt1;
     return true;
 }
 
-StatementIndex getNextStatement(StatementIndex stmt) {
-    return followsTable.at(stmt);
+StatementIndex FollowsTable::getFollowingStatement(StatementIndex stmt) {
+    return followsMap.at(stmt);
 }
 
-StatementIndex getPreviousStatement(StatementIndex stmt) {
-    return followedByTable.at(stmt);
+StatementIndex FollowsTable::getPrecedingStatement(StatementIndex stmt) {
+    return followedByMap.at(stmt);
 }
 
-bool follows(StatementIndex stmt1, StatementIndex stmt2) {
-    StatementIndex nextIndex = followsTable.at(stmt1);
-    if (nextIndex == stmt2) {
+//Follows*(stmt1, stmt2)
+bool FollowsTable::follows(StatementIndex stmt1, StatementIndex stmt2) {
+    StatementIndex followsIndex = followsMap.at(stmt1);
+    if (followsIndex == stmt2) {
         return true;
     }
     return false;
