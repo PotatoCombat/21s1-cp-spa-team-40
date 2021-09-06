@@ -35,7 +35,7 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
             FollowsRelationship fls(&e1, &e2);
             ship = &fls;
         } else {
-            throw "Query: error making relationship object"
+            throw "Query: error making relationship object";
         }
         q.AddRelationship(ship);
     }

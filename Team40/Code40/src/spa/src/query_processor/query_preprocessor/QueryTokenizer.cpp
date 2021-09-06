@@ -33,21 +33,21 @@ tuple<string, string, string> QueryTokenizer::splitBCB(string input) {
     string ref1;
     string ref2;
     
-    size_t pos = input.find('\(');
+    size_t pos = input.find('(');
     if (pos == string::npos) {
         throw "Invalid clause";
     }
     rel = trimString(input.substr(0, pos));
     partial = input.substr(pos + 1);
 
-    pos = partial.find('\,');
+    pos = partial.find(',');
     if (pos == string::npos) {
         throw "Invalid clause";
     }
     ref1 = trimString(partial.substr(0, pos));
     partial = partial.substr(pos + 1);
 
-    pos = partial.find('\)');
+    pos = partial.find(')');
     if (pos == string::npos) {
         throw "Invalid clause";
     }
@@ -75,8 +75,10 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
     return make_pair(declaration, selectClause);
 }
 
+// return <designentity, syn>
 vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
+    // TODO handle ,
     vector<pair<string, string>> decl;
     string::iterator it;
     string::iterator itB;

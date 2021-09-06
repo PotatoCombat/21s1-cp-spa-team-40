@@ -1,11 +1,10 @@
 #pragma once
 
 #include "../relation/Relation.h"
-#include "Clause.h"
 
 using namespace std;
 
-class SuchThatClause : public Clause {
+class SuchThatClause {
 private:
     Relation rel;
 

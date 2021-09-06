@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../model/Query.h"
 #include "QueryTokenizer.h"
 #include "QueryParser.h"

@@ -1,33 +1,48 @@
 #include "catch.hpp"
 
 #include "query_processor/query_preprocessor/QueryParser.h"
-#include "query_processor/query_preprocessor/pql_model/relation/FollowsRelation.h"
 
-//TEST_CASE("QP-QueryParser: parseQuery") {
-//    QueryParser parser;
-//    vector<string> decl{"stmt s", "assign a", "print p1"};
-//    string returnEntity = "s";
-//    vector<string> stcl{"Follows(s, p1)"};
-//    vector<string> ptcl;
-//    tuple<string, vector<string>, vector<string>> cl =
-//        make_tuple(returnEntity, stcl, ptcl);
-//
-//    Declaration stmt("s", DesignEntityType::STMT);
-//    Declaration assign("a", DesignEntityType::ASSIGN);
-//    Declaration print("p1", DesignEntityType::PRINT);
-//
-//    SuchThatClause suchThatClause(FollowsRelation(Reference("s"), Reference("p1")));
-//    SelectClause result = parser.parseQuery(decl, cl);
-//    vector<Declaration> resultDecl = result.getDeclarations();
-//    vector<SuchThatClause> resultStcl = result.getSuchThatClauses();
-//    vector<PatternClause> resultPtcl = result.getPatternClauses();
-//    REQUIRE(resultDecl.size() == 3);
-//    // REQUIRE(resultDecl[0] == stmt);
-//    // REQUIRE(resultDecl[1] == assign);
-//    // REQUIRE(resultDecl[2] == print);
-//
-//    REQUIRE(resultDecl.size() == 1);
-//    //REQUIRE(resultStcl[0] == suchThatClause);
-//
-//    REQUIRE(resultPtcl.size() == 0);
-//}
+struct TestQueryParser {
+    static const pair<string, string> DECL;
+    static const tuple<string, string, string> STCL;
+    static Declaration createDeclaration();
+    static SuchThatClause createSuchThatClause();
+    // static PatternClause createPatternClause();
+};
+
+const pair<string, string> TestQueryParser::DECL = make_pair("stmt", "s");
+const tuple<string, string, string> TestQueryParser::STCL =
+    make_tuple("Follows", "s", "p1");
+
+Declaration TestQueryParser::createDeclaration() {
+    return Declaration(DECL.second, DesignEntityType::STMT);
+}
+
+SuchThatClause TestQueryParser::createSuchThatClause() {
+    return SuchThatClause(
+        Relation(get<1>(STCL), get<2>(STCL), RelationType::FOLLOWS));
+}
+
+TEST_CASE("QP-QueryParser: parseDeclaration") {
+    QueryParser parser;
+    Declaration expected = TestQueryParser::createDeclaration();
+    Declaration actual = parser.parseDeclaration(TestQueryParser::DECL);
+
+    REQUIRE(expected.getSynonym() == actual.getSynonym());
+    REQUIRE(expected.getType() == actual.getType());
+    REQUIRE(expected.getType() == DesignEntityType::STMT);
+}
+
+TEST_CASE("QP-QueryParser: parseSuchThatClause") {
+    QueryParser parser;
+    SuchThatClause expected = TestQueryParser::createSuchThatClause();
+    SuchThatClause actual = parser.parseSuchThatClause(TestQueryParser::STCL);
+
+    REQUIRE(expected.getRelation().getFirstReference().getValue() ==
+            actual.getRelation().getFirstReference().getValue());
+    REQUIRE(expected.getRelation().getSecondReference().getValue() ==
+            actual.getRelation().getSecondReference().getValue());
+    REQUIRE(expected.getRelation().getRelationType() ==
+            actual.getRelation().getRelationType());
+    REQUIRE(expected.getRelation().getRelationType() == RelationType::FOLLOWS);
+}

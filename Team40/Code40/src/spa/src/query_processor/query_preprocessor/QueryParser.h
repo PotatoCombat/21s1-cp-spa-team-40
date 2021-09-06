@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pql_model/clause/PatternClause.cpp"
-#include "pql_model/clause/SelectClause.cpp"
-#include "pql_model/clause/SuchThatClause.cpp"
+#include "pql_model/clause/PatternClause.h"
+#include "pql_model/clause/SelectClause.h"
+#include "pql_model/clause/SuchThatClause.h"
 
 using namespace std;
 
@@ -11,5 +11,5 @@ public:
     QueryParser();
     Declaration parseDeclaration(pair<string, string> declaration);
     SuchThatClause parseSuchThatClause(tuple<string, string, string> clause);
-    PatternClause parsePatternClause(tuple<string, string, string> clause);
+    //PatternClause parsePatternClause(tuple<string, string, string> clause);
 };
