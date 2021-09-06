@@ -29,22 +29,31 @@ pair<string, string> QueryTokenizer::splitDecl(string input) {
 
 // split '(' _ ',' _ ')'
 tuple<string, string, string> QueryTokenizer::splitBCB(string input) {
-    size_t f_bracket = input.find('(');
-    size_t b_bracket = input.find(')');
-    size_t comma = input.find(',');
-
-    if (f_bracket == string::npos || 
-        b_bracket == string::npos ||
-        comma == string::npos) {
+    string partial;
+    string rel;
+    string ref1;
+    string ref2;
+    
+    size_t pos = input.find('\(');
+    if (pos == string::npos) {
         throw "Invalid clause";
     }
+    rel = trimString(input.substr(0, pos));
+    partial = input.substr(pos + 1);
 
-    string rel = trimString(input.substr(0, f_bracket));
-    string ref1 = trimString(input.substr(f_bracket + 1, comma));
-    string ref2 = trimString(input.substr(comma + 1, b_bracket - 1));
-    cout << rel << endl;
-    cout << ref1 << endl;
-    cout << ref2 << endl;
+    pos = partial.find('\,');
+    if (pos == string::npos) {
+        throw "Invalid clause";
+    }
+    ref1 = trimString(partial.substr(0, pos));
+    partial = partial.substr(pos + 1);
+
+    pos = partial.find('\)');
+    if (pos == string::npos) {
+        throw "Invalid clause";
+    }
+    ref2 = trimString(partial.substr(0, pos));
+
     return make_tuple(rel, ref1, ref2);
 }
 

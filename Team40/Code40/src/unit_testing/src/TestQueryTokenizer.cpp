@@ -115,7 +115,7 @@ TEST_CASE("QP-QueryTokenizer: returnEntity") {
 TEST_CASE("QP-QueryTokenizer: tokenizeSuchThatClause") {
     QueryTokenizer tokenizer;
 
-    SECTION("test only one such that clause present") {
+    SECTION("test only one such that clause") {
         vector<tuple<string, string, string>> actual = 
             tokenizer.tokenizeSuchThatClause(TestQueryTokenizer::CLAUSE1);
         vector<tuple<string, string, string>> expected = 
@@ -126,16 +126,15 @@ TEST_CASE("QP-QueryTokenizer: tokenizeSuchThatClause") {
     }
 }
 
-//TEST_CASE("QP-QueryTokenizer: tokenizePatternClause") {
-//    QueryTokenizer tokenizer;
-//
-//    SECTION("test standard") {
-//        vector<tuple<string, string, string>> actual =
-//            tokenizer.tokenizePatternClause(TestQueryTokenizer::CLAUSE1);
-//        vector<tuple<string, string, string>> expected =
-//            TestQueryTokenizer::tokenizePatternClause();
-//        REQUIRE(get<0>(actual[0]) == get<0>(expected[0]));
-//        REQUIRE(get<1>(actual[0]) == get<1>(expected[0]));
-//        REQUIRE(get<2>(actual[0]) == get<2>(expected[0]));
-//    }
-//}
+TEST_CASE("QP-QueryTokenizer: tokenizePatternClause") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test no pattern clause") {
+        vector<tuple<string, string, string>> actual =
+            tokenizer.tokenizePatternClause(TestQueryTokenizer::CLAUSE1);
+        vector<tuple<string, string, string>> expected =
+            TestQueryTokenizer::tokenizePatternClause();
+        REQUIRE(actual.size() == expected.size());
+        REQUIRE(actual.size() == 0);
+    }
+}
