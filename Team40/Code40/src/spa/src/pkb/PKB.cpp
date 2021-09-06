@@ -10,11 +10,11 @@ Iterator<ConstIndex> PKB::getAllConsts() {
     return constTable.getIndices();
 }
 
-Iterator<ProcedureIndex> PKB::getAllProcs() {
+Iterator<ProcIndex> PKB::getAllProcs() {
     return procTable.getIndices();
 }
 
-Iterator<StatementIndex> PKB::getAllStmts() {
+Iterator<StmtIndex> PKB::getAllStmts() {
     return statementTable.getIndices();
 }
 
@@ -26,10 +26,10 @@ ConstIndex PKB::insertConst(Const constant) {
     return constTable.insert(constant);
 }
 
-ProcedureIndex PKB::insertProc(Procedure procedure) {
+ProcIndex PKB::insertProc(Procedure procedure) {
     return procTable.insert(procedure);
 }
 
-StatementIndex PKB::insertStmt(Statement statement) {
+StmtIndex PKB::insertStmt(Statement statement) {
     return statementTable.insert(statement);
 }

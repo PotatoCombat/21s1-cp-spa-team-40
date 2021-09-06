@@ -11,22 +11,22 @@ class PKB {
 public:
     Iterator<VarIndex> getAllVars();
     Iterator<ConstIndex> getAllConsts();
-    Iterator<ProcedureIndex> getAllProcs();
+    Iterator<ProcIndex> getAllProcs();
 
-    Iterator<StatementIndex> getAllStmts();
+    Iterator<StmtIndex> getAllStmts();
 
     VarIndex insertVar(Var variable);
     ConstIndex insertConst(Const constant);
-    ProcedureIndex insertProc(Procedure procedure);
+    ProcIndex insertProc(Procedure procedure);
 
-    StatementIndex insertStmt(Statement statement);
+    StmtIndex insertStmt(Statement statement);
 
 private:
     typedef EntityTable<Var, VarIndex> VarTable;
     typedef EntityTable<Const, ConstIndex> ConstTable;
-    typedef EntityTable<Procedure, ProcedureIndex> ProcedureTable;
+    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
 
-    typedef StatementTable<Statement, StatementIndex> StatementTable;
+    typedef StatementTable<Statement, StmtIndex> StatementTable;
 
     VarTable varTable;
     ConstTable constTable;
