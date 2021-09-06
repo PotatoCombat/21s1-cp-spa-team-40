@@ -5,35 +5,19 @@
 
 using namespace std;
 
-// typedef string TOKEN;
-
 class QueryTokenizer {
 private:
     string trimString(string input);
+    pair<string, string> splitDecl(string input);
+    tuple<string, string, string> splitBCB(string input);
 
 public:
-    // tokenize query into declaration part and the returnSynonym part and the
-    // clauses part this returns DECLARATION and RETURN_SYNONYM and CLAUSES
-    // (vector?) tuple?
-
-    // then using the DECLARATION from step 1
-    // tokenize into DESIGN_ENTITY and SYNONYM
-
-    // then using the CLAUSES from step 1
-    // tokenize into SUCHTHAT_CLAUSE and PATTERN_CLAUSE
-
-    // tokenize SUCHTHAT_CLAUSE into (vector of) RELATION
-
-    // tokenize PATTERN_CLAUSE into SYNONYM, ENTITY_REF and EXPRESSION_SPEC
-
-    // tokenize EXPRESSION_SPEC into EXPRESSION
-
     QueryTokenizer() {}
 
     pair<string, string> splitIntoParts(string queryString);
 
-    vector<string> tokenizeDeclaration(string declaration);
-
-    tuple<string, vector<string>, vector<string>>
-    tokenizeSelectClause(string selectClause);
+    vector<pair<string, string>> tokenizeDeclaration(string declaration);
+    string tokenizeReturnEntity(string clause);
+    vector<tuple<string, string, string>> tokenizeSuchThatClause(string clause);
+    vector<tuple<string, string, string>> tokenizePatternClause(string clause);
 };
