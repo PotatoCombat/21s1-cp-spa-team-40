@@ -19,12 +19,13 @@ enum class DesignEntityType {
 };
 
 class Declaration {
-protected:
+private:
     string syn;
     DesignEntityType type;
 
 public:
     Declaration(string syn, DesignEntityType type);
+
     string getSynonym();
     DesignEntityType getType();
 };

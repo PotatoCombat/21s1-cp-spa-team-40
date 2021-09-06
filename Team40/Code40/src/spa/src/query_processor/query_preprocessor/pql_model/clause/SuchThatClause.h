@@ -13,7 +13,4 @@ public:
     SuchThatClause(Relation rel);
 
     Relation getRelation();
-    ClauseType getType();
-
-    void setRelation(Relation rel);
 };

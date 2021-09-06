@@ -20,7 +20,6 @@ public:
     string getSynonym();
     EntityReference getEntRef();
     Expression getExpression();
-    ClauseType getType();
 
     void setSynonym(string syn);
     void setEntRef(EntityReference entRef);
