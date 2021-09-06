@@ -24,12 +24,12 @@ private:
 FollowsStarTable::FollowsStarTable() = default;
 
 void FollowsStarTable::insertIntoMaps(StmtIndex stmt1, StmtIndex stmt2) {
-    if (followsStarMap.count(stmt1) <= 0) {
+    if (followsStarMap.count(stmt1) == 0) {
         followsStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt1, {}));
     }
     followsStarMap[stmt1].insert(stmt2);
 
-    if (followedByStarMap.count(stmt2) <= 0) {
+    if (followedByStarMap.count(stmt2) == 0) {
         followedByStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt2, {}));
     }
     followedByStarMap[stmt2].insert(stmt1);

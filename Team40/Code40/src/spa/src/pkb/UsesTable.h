@@ -27,12 +27,12 @@ private:
 UsesTable::UsesTable() = default;
 
 bool UsesTable::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
-    if (stmtUsesVarsMap.count(stmt) <= 0) {
+    if (stmtUsesVarsMap.count(stmt) == 0) {
         stmtUsesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
     }
     stmtUsesVarsMap[stmt].insert(var);
 
-    if (varUsedByStmtsMap.count(var) <= 0) {
+    if (varUsedByStmtsMap.count(var) == 0) {
         varUsedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
     }
     varUsedByStmtsMap[var].insert(stmt);
@@ -40,12 +40,12 @@ bool UsesTable::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
 }
 
 bool UsesTable::insertProcUsingVar(ProcIndex proc, VarIndex var) {
-    if (procUsesVarsMap.count(proc) <= 0) {
+    if (procUsesVarsMap.count(proc) == 0) {
         procUsesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
     }
     procUsesVarsMap[proc].insert(var);
 
-    if (varUsedByProcsMap.count(var) <= 0) {
+    if (varUsedByProcsMap.count(var) == 0) {
         varUsedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
     }
     varUsedByProcsMap[var].insert(proc);
@@ -61,7 +61,7 @@ set<StmtIndex> UsesTable::getStmtsUsingVar(VarIndex var) {
 }
 
 set<VarIndex> UsesTable::getVarsUsedByProc(ProcIndex proc) {
-    return procUsesVarsMap.at(stmt);
+    return procUsesVarsMap.at(proc);
 }
 
 set<ProcIndex> UsesTable::getProcsUsingVar(VarIndex var) {

@@ -27,12 +27,12 @@ private:
 ModifiesTable::ModifiesTable() = default;
 
 bool ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
-    if (stmtModifiesVarsMap.count(stmt) <= 0) {
+    if (stmtModifiesVarsMap.count(stmt) == 0) {
         stmtModifiesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
     }
     stmtModifiesVarsMap[stmt].insert(var);
 
-    if (varModifiedByStmtsMap.count(var) <= 0) {
+    if (varModifiedByStmtsMap.count(var) == 0) {
         varModifiedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
     }
     varModifiedByStmtsMap[var].insert(stmt);
@@ -40,12 +40,12 @@ bool ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
 }
 
 bool ModifiesTable::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
-    if (procModifiesVarsMap.count(proc) <= 0) {
+    if (procModifiesVarsMap.count(proc) == 0) {
         procModifiesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
     }
     procModifiesVarsMap[proc].insert(var);
 
-    if (varModifiedByProcsMap.count(var) <= 0) {
+    if (varModifiedByProcsMap.count(var) == 0) {
         varModifiedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
     }
     varModifiedByProcsMap[var].insert(proc);
@@ -61,7 +61,7 @@ set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
 }
 
 set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
-    return procModifiesVarsMap.at(stmt);
+    return procModifiesVarsMap.at(proc);
 }
 
 set<ProcIndex> ModifiesTable::getProcsModifyingVar(VarIndex var) {

@@ -25,12 +25,12 @@ ParentStarTable::ParentStarTable() = default;
 
 //NOTE: stmt2 is parent of stmt1
 void ParentStarTable::insertIntoMaps(StmtIndex stmt1, StmtIndex stmt2) {
-    if (parentStarMap.count(stmt1) <= 0) {
+    if (parentStarMap.count(stmt1) == 0) {
         parentStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt1, {}));
     }
     parentStarMap[stmt1].insert(stmt2);
 
-    if (childStarMap.count(stmt2) <= 0) {
+    if (childStarMap.count(stmt2) == 0) {
         childStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt2, {}));
     }
     childStarMap[stmt2].insert(stmt1);
@@ -68,7 +68,7 @@ set<StmtIndex> ParentStarTable::getChildStarStmts(StmtIndex stmt) {
 //Parent*(stmt1, stmt2)
 bool ParentStarTable::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
     set<StmtIndex> parentIndexes = parentStarMap[stmt1];
-    return nextIndexes.find(stmt2) != nextIndexes.end();
+    return parentIndexes.find(stmt2) != parentIndexes.end();
 }
 
 
