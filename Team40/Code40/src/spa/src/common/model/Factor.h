@@ -6,11 +6,12 @@ class Factor {
 private:
     const FactorType factorType;
     int value;
-    bool knownValue;
+    bool hasComputedValue; // Used for lazy initialization of value
 
 protected:
     // constructor
-    Factor(FactorType factorType, int value, bool knownValue);
+    Factor(FactorType factorType, int value);
+    Factor(FactorType factorType);
 
 public:
     // getters

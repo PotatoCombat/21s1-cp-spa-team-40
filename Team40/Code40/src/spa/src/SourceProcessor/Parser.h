@@ -3,6 +3,7 @@
 #include "../common/model/Procedure.h"
 #include "../common/model/Program.h"
 #include "../common/model/Variable.h"
+#include "../common/model/expression/Expression.h"
 #include "../common/model/statement/Statement.h"
 #include "Line.h"
 #include <fstream>
@@ -30,6 +31,8 @@ public:
     Statement parseReadStatement(vector<string> content, int index);
     Statement parsePrintStatement(vector<string> content, int index);
     Statement parseCallStatement(vector<string> content, int index);
+    Statement parseAssignStatement(vector<string> content, int index);
+    Expression parseExpression(vector<string>::iterator exprItr);
 
     // special keywords
     bool isProc(vector<string> inputLine);
@@ -44,6 +47,14 @@ public:
     bool isBracket(char input);
     bool isOperator(char input);
     bool isSemiColon(char input);
+    bool isCurlyBracket(string input);
+    bool isNormalBracket(string input);
+    bool isArtihmeticOperator(string input);
+    bool isComparisonOperator(string input);
+    bool isLogicalOperator(string input);
+    bool isSemiColon(string input);
+    bool isInteger(string input);
+    bool isName(string input);
 
     // modifiers
     void addToVarLst(Variable var);

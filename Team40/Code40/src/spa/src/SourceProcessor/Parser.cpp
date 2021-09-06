@@ -4,6 +4,7 @@
 #include "../common/model/Procedure.cpp"
 #include "../common/model/Program.cpp"
 #include "../common/model/Variable.cpp"
+#include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
@@ -52,9 +53,19 @@ vector<string> Parser::parseLine(string input) {
                 }
                 currString = "";
             }
-            if (!string(1, curr).empty()) {
-                inputLine.push_back(string(1, curr));
+            currString.push_back(curr);
+
+            if (i < input.size() - 1) {
+                char next = input.at(i + 1);
+                if (isOperator(next)) {
+                    currString.push_back(next);
+                    i++;
+                }
             }
+            if (!currString.empty()) {
+                inputLine.push_back(currString);
+            }
+            currString = "";
 
         } else {
             currString.push_back(curr);
@@ -104,15 +115,13 @@ Statement Parser::parseStatement(vector<string> content, int index) {
         return parsePrintStatement(content, index);
     } else if (isCallStmt(content)) {
         return parseCallStatement(content, index);
-    } else {
-        return Statement(index, StatementType::ASSIGN);
+    } else { // assign
+        return parseAssignStatement(content, index);
     }
     // } else if (isWhileStmt(content)) {
     //     return parseWhileStatement(content, index);
     // } else if (isIfStmt(content)) {
     //     return parseIfStatement(content, index);
-    // } else { // assign
-    //     return parseAssignStatement(content, index);
     // }
 }
 
@@ -144,6 +153,40 @@ Statement Parser::parseCallStatement(vector<string> content, int index) {
         find(content.begin(), content.end(), "call");
     string proc_name = *next(callItr);
     return CallStatement(index, Procedure(proc_name));
+}
+
+Statement Parser::parseAssignStatement(vector<string> content, int index) {
+    vector<string>::iterator assignItr =
+        find(content.begin(), content.end(), "=");
+    string var_name = *prev(assignItr);
+    // Expression expr = parseExpression(next(assignItr));
+    // return AssignStatement(index, Variable(var_name), expr);
+    return Statement(index, StatementType::ASSIGN);
+}
+
+Expression Parser::parseExpression(vector<string>::iterator exprItr) {
+    vector<Factor> facLst = {};
+    while (!isSemiColon(*exprItr) && !isCurlyBracket(*exprItr)) {
+        if (isInteger(*exprItr)) {
+            facLst.push_back(ConstantValue(stoi(*exprItr)));
+        } else if (isName(*exprItr)) {
+            facLst.push_back(Variable(*exprItr));
+        }
+        if (isArtihmeticOperator(*prev(exprItr))) {
+            string opr = *prev(exprItr);
+            if (opr == "+") {
+
+            } else if (opr == "-") {
+
+            } else if (opr == "*") {
+
+            } else if (opr == "/") {
+
+            } else if (opr == "%") {
+            }
+        }
+        exprItr = next(exprItr);
+    }
 }
 
 // special keywords
@@ -193,6 +236,48 @@ bool Parser::isBracket(char input) {
 }
 
 bool Parser::isSemiColon(char input) { return input == ';'; }
+
+bool Parser::isArtihmeticOperator(string input) {
+    return input == "+" || input == "-" || input == "*" || input == "/" ||
+           input == "%";
+}
+
+bool Parser::isComparisonOperator(string input) {
+    return input == ">" || input == ">=" || input == "<" || input == "<=" ||
+           input == "==" || input == "!=";
+}
+
+bool Parser::isLogicalOperator(string input) {
+    return input == "!" || input == "&&" || input == "||";
+}
+
+bool Parser::isCurlyBracket(string input) {
+    return input == "{" || input == "}";
+}
+
+bool Parser::isNormalBracket(string input) {
+    return input == "(" || input == ")";
+}
+
+bool Parser::isSemiColon(string input) { return input == ";"; }
+
+bool Parser::isInteger(string input) {
+    for (char &ch : input) {
+        if (!isdigit(ch)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Parser::isName(string input) {
+    for (char &ch : input) {
+        if (!isalnum(ch)) {
+            return false;
+        }
+    }
+    return true;
+}
 
 // modifiers
 void Parser::addToVarLst(Variable var) { this->varLst.push_back(var); }
