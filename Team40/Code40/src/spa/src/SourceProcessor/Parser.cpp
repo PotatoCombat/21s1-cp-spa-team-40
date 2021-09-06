@@ -124,11 +124,12 @@ Statement Parser::parseStatement(vector<string> content, int index) {
         return parsePrintStatement(content, index);
     } else if (isCallStmt(content)) {
         return parseCallStatement(content, index);
+    } else if (isWhileStmt(content)) {
+        return parseWhileStatement(content, index);
     } else { // assign
         return parseAssignStatement(content, index);
     }
-    // } else if (isWhileStmt(content)) {
-    //     return parseWhileStatement(content, index);
+    //
     // } else if (isIfStmt(content)) {
     //     return parseIfStatement(content, index);
     // }
@@ -170,8 +171,15 @@ Statement Parser::parseAssignStatement(vector<string> content, int index) {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    Expression expr = parseExpression(next(assignItr));
+    Conditional cond;
+    vector<Statement> stmtLst;
     AssignStatement stmt = AssignStatement(index, Variable(var_name), expr);
+    return stmt;
+}
+
+Statement Parser::parseWhileStatement(vector<string> content, int index) {
+    vector<string>::iterator whileItr =
+        find(content.begin(), content.end(), "while");
     return stmt;
 }
 

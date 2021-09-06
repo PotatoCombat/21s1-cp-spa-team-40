@@ -1,4 +1,4 @@
-#include "AndConditional.h"
+#include "AndCondition.h"
 
 AndConditional::AndConditional(Conditional *cond1, Conditional *cond2)
     : cond1(cond1), cond2(cond2),

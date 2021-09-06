@@ -1,4 +1,4 @@
-#include "OrConditional.h"
+#include "OrCondition.h"
 
 OrConditional::OrConditional(Conditional *cond1, Conditional *cond2)
     : cond1(cond1), cond2(cond2),

@@ -31,6 +31,7 @@ public:
     Statement parseReadStatement(vector<string> content, int index);
     Statement parsePrintStatement(vector<string> content, int index);
     Statement parseCallStatement(vector<string> content, int index);
+    Statement parseWhileStatement(vector<string> content, int index);
     Statement parseAssignStatement(vector<string> content, int index);
     Expression parseExpression(vector<string>::iterator exprItr);
 

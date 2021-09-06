@@ -1,12 +1,12 @@
 #pragma once
-#include "Conditional.h"
+#include "Condition.h"
 #include "common/model/relation/Relation.h"
 
-class OrConditional : public Conditional {
+class AndConditional : public Conditional {
 private:
     Conditional *cond1;
     Conditional *cond2;
 
 public:
-    OrConditional(Conditional *cond1, Conditional *cond2);
+    AndConditional(Conditional *cond1, Conditional *cond2);
 };

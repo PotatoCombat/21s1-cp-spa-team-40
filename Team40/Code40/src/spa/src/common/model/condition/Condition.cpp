@@ -1,4 +1,4 @@
-#include "Conditional.h"
+#include "Condition.h"
 
 Conditional::Conditional(ConditionalType condType, bool value)
     : condType(condType), value(value) {}
