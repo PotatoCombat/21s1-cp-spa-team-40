@@ -1,9 +1,13 @@
+#pragma once
+
 #include "QueryEvaluator.h"
 #include "query_preprocessor/QueryPreprocessor.h"
 #include <algorithm>
 #include <iterator>
 #include <list>
 #include <string>
+
+using namespace std;
 
 class QueryProcessor {
 private:
