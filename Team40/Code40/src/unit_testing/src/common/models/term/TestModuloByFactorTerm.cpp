@@ -1,6 +1,6 @@
-#include "ConstantValue.h"
-#include "ModuloByFactorTerm.h"
-#include "SingleFactorTerm.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/term/ModuloByFactorTerm.h"
+#include "common/model/term/SingleFactorTerm.h"
 #include "catch.hpp"
 
 TEST_CASE("ModuloByFactorTerm: Creates and retrieves value correctly") {

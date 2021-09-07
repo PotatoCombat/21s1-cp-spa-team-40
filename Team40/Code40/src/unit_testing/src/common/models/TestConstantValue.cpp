@@ -1,5 +1,5 @@
+#include "common/model/ConstantValue.h"
 #include "catch.hpp"
-#include "ConstantValue.h"
 
 TEST_CASE("ConstantValue: Creates and retrieves value correctly") {
     const int VALUE = 10;

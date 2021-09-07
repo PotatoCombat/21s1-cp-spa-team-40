@@ -1,4 +1,4 @@
-#include "SingleFactorTerm.h"
+#include "common/model/term/SingleFactorTerm.h"
 
 SingleFactorTerm::SingleFactorTerm(Factor factor)
     : factor(factor), Term(TermType::SINGLE_FACTOR){};
