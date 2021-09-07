@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "common/model/Variable.h"
+#include "Variable.h"
 
 TEST_CASE("Variable: Creates and retrieves value correctly") {
     const int VALUE = 10;
