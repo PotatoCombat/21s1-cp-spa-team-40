@@ -1,7 +1,7 @@
+#include "ConstantValue.h"
+#include "DivideByFactorTerm.h"
+#include "SingleFactorTerm.h"
 #include "catch.hpp"
-#include "common/model/ConstantValue.h"
-#include "common/model/term/DivideByFactorTerm.cpp"
-#include "common/model/term/SingleFactorTerm.cpp"
 
 TEST_CASE("DivideByFactorTerm: Creates and retrieves value correctly") {
     const int VALUE_1 = 15;

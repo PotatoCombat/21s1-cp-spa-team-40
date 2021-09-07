@@ -1,15 +1,12 @@
-file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
-add_executable(unit_testing ${srcs}
-        # common/models/
-        src/common/models/TestConstantValue.cpp
-        src/common/models/TestVariable.cpp
+# Only keep one main.cpp file or else there will be linker conflicts.
+file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
-        # common/models/term/
-        src/common/models/term/TestSingleFactorTerm.cpp
-        src/common/models/term/TestMultiplyByFactorTerm.cpp
-        src/common/models/term/TestModuloByFactorTerm.cpp
-        src/common/models/term/TestDivideByFactorTerm.cpp)
+# Extend the executable with the path to your unit test files.
+add_executable(unit_testing ${catch_main})
 
+# Add the relative path to your unit test files to be included in the build.
+add_subdirectory(src/common)
+add_subdirectory(src/pkb)
+
+# Ensures that unit_testing runs with spa library.
 target_link_libraries(unit_testing spa)
-
