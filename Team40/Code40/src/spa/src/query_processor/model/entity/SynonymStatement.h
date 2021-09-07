@@ -6,7 +6,7 @@ using namespace std;
 class SynonymStatement : public SynonymEntity {
 public:
     SynonymStatement(string name) : SynonymEntity(name) {}
-	EntityType GetType() {
+	EntityType getType() {
 		return EntityType::STATEMENT;
 	}
 };

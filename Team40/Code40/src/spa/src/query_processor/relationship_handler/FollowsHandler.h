@@ -7,6 +7,7 @@
 #include "../model/entity/Entity.h"
 #include "RelationshipHandler.h"
 #include "PKB.h"
+#include "../Util.h"
 
 using namespace std;
 

@@ -12,8 +12,8 @@ private:
 
 public:
     Entity(string name);
-    string GetName();
-    virtual EntityType GetType();
-    virtual bool IsSynonymEntity();
-    bool Equals(Entity &other);
+    string getName();
+    virtual EntityType getType();
+    virtual bool isSynonymEntity();
+    bool equals(Entity &other);
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../model/relationship/Relationship.h"
-#include "PKB.h"
+#include "../../pkb/include/PKB.h"
 
 class RelationshipHandler {
 protected:

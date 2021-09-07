@@ -6,7 +6,7 @@ using namespace std;
 class NamedStatement : public NamedEntity {
 public:
     NamedStatement(string name) : NamedEntity(name) {}
-	EntityType GetType() {
+	EntityType getType() {
 		return EntityType::STATEMENT;
 	}
 };

@@ -12,10 +12,9 @@
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
+#include "Util.h"
 
 using namespace std;
-
-void toString(vector<int> vectorIn, vector<string> vectorOut);
 
 class QueryEvaluator {
 private:

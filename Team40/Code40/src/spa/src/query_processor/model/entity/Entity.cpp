@@ -2,14 +2,14 @@
 
 Entity::Entity(string name) { this->name = name; }
 
-string Entity::GetName() { return name; }
+string Entity::getName() { return name; }
 
-EntityType Entity::GetType() { return EntityType::UNKNOWN; }
+EntityType Entity::getType() { return EntityType::UNKNOWN; }
 
-bool Entity::IsSynonymEntity() { return true; }
+bool Entity::isSynonymEntity() { return true; }
 
-bool Entity::Equals(Entity &other) { 
-	return this->GetName() == other.GetName() &&
-		this->GetType() == other.GetType() &&
-		this->IsSynonymEntity() == other.IsSynonymEntity();
+bool Entity::equals(Entity &other) { 
+	return this->getName() == other.getName() &&
+		this->getType() == other.getType() &&
+		this->isSynonymEntity() == other.isSynonymEntity();
 }

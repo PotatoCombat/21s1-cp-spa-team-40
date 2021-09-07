@@ -47,7 +47,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
     int resultIndex = -1;
     for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->Equals(*returnEntity)) {
+        if (entities[i]->equals(*returnEntity)) {
             resultIndex = i;
         }
     }
@@ -65,7 +65,7 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Entit
                                    vector<string> result, Entity* entity, vector<bool> &entitiesAppearInQuery) {
     int index = -1;
     for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->Equals(*entity)) {
+        if (entities[i]->equals(*entity)) {
             index = i;
         }
     }
@@ -82,9 +82,4 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Entit
         }
         results[index] = filteredResult;
     }
-}
-
-void toString(vector<int> vectorIn, vector<string> vectorOut) {
-    transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
-              [](int i) { return std::to_string(i); });
 }

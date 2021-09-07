@@ -9,7 +9,7 @@ using namespace std;
 class NamedEntity : public Entity {
 public:
 	NamedEntity(string name) : Entity(name) {}
-	bool IsSynonymEntity() {
+	bool isSynonymEntity() {
 		return false;
 	}
 };
