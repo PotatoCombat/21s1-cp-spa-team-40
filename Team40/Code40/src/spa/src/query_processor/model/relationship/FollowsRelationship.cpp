@@ -6,5 +6,5 @@ class FollowsRelationship : public Relationship {
     using Relationship::Relationship;
 
 public:
-    RelationshipType GetRelationshipType() { return RelationshipType::FOLLOWS; }
+    RelationshipType getRelationshipType() { return RelationshipType::FOLLOWS; }
 };

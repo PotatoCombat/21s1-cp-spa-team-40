@@ -6,16 +6,16 @@ Query::Query() {
     Entity *returnEntity;
 }
 
-Entity* Query::GetReturnEntity() { return returnEntity; }
+Entity* Query::getReturnEntity() { return returnEntity; }
 
-void Query::SetReturnEntity(Entity *entity) { returnEntity = entity; }
+void Query::setReturnEntity(Entity *entity) { returnEntity = entity; }
 
-void Query::AddEntity(Entity *entity) { entityList.push_back(entity); }
+void Query::addEntity(Entity *entity) { entityList.push_back(entity); }
 
-vector<Entity *> Query::GetEntities() { return entityList; }
+vector<Entity *> Query::getEntities() { return entityList; }
 
-void Query::AddRelationship(Relationship *relationship) {
+void Query::addRelationship(Relationship *relationship) {
     relationshipList.push_back(relationship);
 }
 
-vector<Relationship *> Query::GetRelationships() { return relationshipList; }
+vector<Relationship *> Query::getRelationships() { return relationshipList; }

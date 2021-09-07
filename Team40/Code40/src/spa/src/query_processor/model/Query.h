@@ -18,12 +18,12 @@ private:
 
 public:
     Query();
-    void SetReturnEntity(Entity *entity);
-    Entity *GetReturnEntity();
+    void setReturnEntity(Entity *entity);
+    Entity *getReturnEntity();
 
-    void AddEntity(Entity *entity);
-    vector<Entity *> GetEntities();
+    void addEntity(Entity *entity);
+    vector<Entity *> getEntities();
 
-    void AddRelationship(Relationship *relationship);
-    vector<Relationship *> GetRelationships();
+    void addRelationship(Relationship *relationship);
+    vector<Relationship *> getRelationships();
 };

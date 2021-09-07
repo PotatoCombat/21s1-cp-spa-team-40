@@ -13,7 +13,7 @@ private:
 
 public:
     Relationship(Entity* firstEntity, Entity* secondEntity);
-    Entity* GetFirstEntity();
-    Entity* GetSecondEntity();
-    virtual RelationshipType GetRelationshipType() = 0;
+    Entity* getFirstEntity();
+    Entity* getSecondEntity();
+    virtual RelationshipType getRelationshipType() = 0;
 };

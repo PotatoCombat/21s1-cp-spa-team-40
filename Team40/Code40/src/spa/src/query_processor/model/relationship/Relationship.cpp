@@ -5,6 +5,6 @@ Relationship::Relationship(Entity* firstEntity, Entity* secondEntity) {
     this->secondEntity = secondEntity;
 }
 
-Entity* Relationship::GetFirstEntity() { return firstEntity; }
+Entity* Relationship::getFirstEntity() { return firstEntity; }
 
-Entity* Relationship::GetSecondEntity() { return secondEntity; }
+Entity* Relationship::getSecondEntity() { return secondEntity; }
