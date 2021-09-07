@@ -1,5 +1,5 @@
-#include "model/Variable.h"
-#include "model/statement/Statement.h"
+#include "common/model/Variable.h"
+#include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
 

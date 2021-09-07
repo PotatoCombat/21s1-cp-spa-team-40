@@ -1,4 +1,4 @@
-#include "model/relation/Relation.h"
+#include "common/model/relation/Relation.h"
 
 class MoreThanOrEqualsRelation : public Relation {
 public:

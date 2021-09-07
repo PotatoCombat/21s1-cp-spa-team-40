@@ -5,9 +5,7 @@ file(GLOB srcs
 add_library(source_processor ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
-target_include_directories(source_processor PUBLIC
-        include
-        )
+target_include_directories(source_processor PUBLIC include)
 
 target_link_libraries(source_processor
         common

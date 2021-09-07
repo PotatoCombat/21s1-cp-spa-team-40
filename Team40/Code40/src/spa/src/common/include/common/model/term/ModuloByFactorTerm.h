@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Term.h"
-#include "model/Factor.h"
+#include "common/model/Factor.h"
 
 class ModuloByFactorTerm : public Term {
 private:

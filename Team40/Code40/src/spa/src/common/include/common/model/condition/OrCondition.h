@@ -1,6 +1,6 @@
 #pragma once
 #include "Condition.h"
-#include "model/relation/Relation.h"
+#include "common/model/relation/Relation.h"
 
 class OrCondition : public Condition {
 private:

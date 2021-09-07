@@ -1,4 +1,4 @@
-#include "model/term/MultiplyByFactorTerm.h"
+#include "common/model/term/MultiplyByFactorTerm.h"
 
 // Note that value is initialized to a dummy value here
 MultiplyByFactorTerm::MultiplyByFactorTerm(Term *term, Factor factor)

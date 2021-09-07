@@ -2,18 +2,18 @@
 
 #include "Line.h"
 
-#include "model/ConstantValue.h"
-#include "model/Procedure.h"
-#include "model/Program.h"
-#include "model/Variable.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/Procedure.h"
+#include "common/model/Program.h"
+#include "common/model/Variable.h"
 
-#include "model/condition/Condition.h"
+#include "common/model/condition/Condition.h"
 
-#include "model/expression/Expression.h"
+#include "common/model/expression/Expression.h"
 
-#include "model/statement/IfStatement.h"
-#include "model/statement/Statement.h"
-#include "model/statement/WhileStatement.h"
+#include "common/model/statement/IfStatement.h"
+#include "common/model/statement/Statement.h"
+#include "common/model/statement/WhileStatement.h"
 
 #include <fstream>
 #include <string>

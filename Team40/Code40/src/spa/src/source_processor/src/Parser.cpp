@@ -1,9 +1,9 @@
 #include "source_processor/Parser.h"
 
-#include "model/statement/AssignStatement.h"
-#include "model/statement/CallStatement.h"
-#include "model/statement/PrintStatement.h"
-#include "model/statement/ReadStatement.h"
+#include "common/model/statement/AssignStatement.h"
+#include "common/model/statement/CallStatement.h"
+#include "common/model/statement/PrintStatement.h"
+#include "common/model/statement/ReadStatement.h"
 
 #include <algorithm>
 #include <iostream>

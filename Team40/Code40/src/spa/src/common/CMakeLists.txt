@@ -11,14 +11,6 @@ file(GLOB srcs
 add_library(common ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
-target_include_directories(common PUBLIC
-        include/common
-        include/common/model
-        include/common/model/condition
-        include/common/model/expression
-        include/common/model/relation
-        include/common/model/statement
-        include/common/model/term
-        )
+target_include_directories(common PUBLIC include)
 
 #target_link_libraries(common spa)
