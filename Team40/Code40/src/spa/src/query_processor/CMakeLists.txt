@@ -1,16 +1,24 @@
 #CMakeLists for query_processor
 
+file(GLOB srcs
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/entity/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/entity/relationship/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/query_preprocessor/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/relationship_handler/*.cpp"
+        )
 
-add_subdirectory(model)
-add_subdirectory(query_preprocessor)
-add_subdirectory(relationship_handler)
+add_library(query_processor ${srcs})
 
-file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+# this makes the headers accessible for other projects which uses spa lib
+target_include_directories(query_processor PUBLIC
+        include
+        include/model
+        include/model/entity
+        include/model/relationship
+        include/query_preprocessor
+        include/relationship_handler
+        )
 
-add_library(query_processor ${srcs} ${headers})
-
-target_link_directories(query_processor PUBLIC model/ query_preprocessor/ relationship_handler/)
-
-target_link_libraries(query_processor query-processor-model query-preprocessor pkb query-relationship-handler)
-#also transitively gets the "entity" and "relationship" dependency
+target_link_libraries(query_processor pkb)
