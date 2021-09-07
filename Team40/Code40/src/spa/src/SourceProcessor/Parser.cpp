@@ -36,7 +36,6 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-
 using namespace std;
 
 // parse file input
@@ -176,6 +175,8 @@ Statement Parser::parseStatement(vector<string> content, int index,
             }
         }
         return ifStmt;
+    } else {
+        return Statement(index, StatementType::NONE);
     }
 }
 
@@ -218,7 +219,7 @@ Statement Parser::parseAssignStatement(vector<string> content, int index) {
     string var_name = *prev(assignItr);
     AssignStatement stmt = AssignStatement(index, Variable(var_name));
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
-    vector<string> exprLst(assignItr, endItr);
+    vector<string> exprLst(next(assignItr), endItr);
     stmt.setExprLst(exprLst);
     return stmt;
 }

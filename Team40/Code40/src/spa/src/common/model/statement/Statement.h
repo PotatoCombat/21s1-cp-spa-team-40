@@ -1,6 +1,6 @@
 #pragma once
 
-enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };
+enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF, NONE };
 
 class Statement {
 private:

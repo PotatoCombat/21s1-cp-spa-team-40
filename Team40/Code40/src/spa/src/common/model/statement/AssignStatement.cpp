@@ -2,6 +2,7 @@
 #include "../expression/Expression.h"
 #include "Statement.h"
 #include <string>
+#include <vector>
 
 class AssignStatement : public Statement {
 private:
