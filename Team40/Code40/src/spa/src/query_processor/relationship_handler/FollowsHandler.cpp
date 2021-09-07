@@ -1,9 +1,5 @@
 #include "FollowsHandler.h"
 
-FollowsHandler::FollowsHandler(Relationship* relationship) {
-	this->relationship = relationship;
-}
-
 Result FollowsHandler::eval() {
 	Result result;
 	Entity firstEntity = relationship->getFirstEntity();
@@ -16,28 +12,28 @@ Result FollowsHandler::eval() {
 	// Todo later: assert firstEntiy and secondEntity are stmts
 
 	if (!isFirstEntitySynonym &&  !isSecondEntitySynonym) {
-		bool queryIsTrue = PKB.getNextStmt(firstStmt) == secondStmt;
+		bool queryIsTrue = pkb.getNextStmt(firstStmt) == secondStmt;
 		result.setValid(queryIsTrue);
 	}
 
 	if (isFirstEntitySynonym && !isSecondEntitySynonym) {
 		vector<string> firstStmtResults;
-		firstStmtResults.push_back(to_string(PKB.getPrevStmt(secondStmt)));
+		firstStmtResults.push_back(to_string(pkb.getPrevStmt(secondStmt)));
 		result.setResultList1(firstStmtResults);
 	}
 
 	if (!isFirstEntitySynonym && isSecondEntitySynonym) {
 		vector<string> secondStmtResults;
-		secondStmtResults.push_back(to_string(PKB.getNextStmt(firstStmt)));
+		secondStmtResults.push_back(to_string(pkb.getNextStmt(firstStmt)));
 		result.setResultList2(secondStmtResults);
 	}
 
 	if (isFirstEntitySynonym && isSecondEntitySynonym) {
 		vector<string> firstStmtResults;
 		vector<string> secondStmtResults;
-		vector<int> prevStmts = PKB.getAllStmts();
+		vector<int> prevStmts = pkb.getAllStmts();
 		for (int prevStmt : prevStmts) {
-			int nextStmt = PKB.getNextStmt(prevStmt);
+			int nextStmt = pkb.getNextStmt(prevStmt);
 			if (nextStmt != -1) { // change accordingly to the PKB API later
 				firstStmtResults.push_back(to_string(prevStmt));
 				secondStmtResults.push_back(to_string(nextStmt));

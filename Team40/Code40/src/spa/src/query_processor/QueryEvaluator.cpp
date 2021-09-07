@@ -1,5 +1,7 @@
 #include "QueryEvaluator.h"
 
+QueryEvaluator::QueryEvaluator(PKB pkb) { this->pkb = pkb; }
+
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     Entity* returnEntity = query.getReturnEntity();
     vector<Entity *> entities = query.getEntities();
@@ -20,7 +22,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         // TODO: add more handlers for relationshipType later
         if (relationship->getRelationshipType() == RelationshipType::FOLLOWS) {
-            FollowsHandler followsHandler(relationship);
+            FollowsHandler followsHandler(relationship, pkb);
             relationshipHandler = &followsHandler;
         }
 
@@ -51,8 +53,9 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 
     if (entitiesAppearInQuery[resultIndex] = false) {
-        return PKB.getAllStmts(); // might check the type of returnEntity to run
-                                  // the corresponding method later
+        vector<string> result;
+        toString(pkb.getAllStmts().asVector(), result); 
+        return result;
     }
 
     return results[resultIndex];
@@ -79,4 +82,9 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Entit
         }
         results[index] = filteredResult;
     }
+}
+
+void toString(vector<int> vectorIn, vector<string> vectorOut) {
+    transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
+              [](int i) { return std::to_string(i); });
 }
