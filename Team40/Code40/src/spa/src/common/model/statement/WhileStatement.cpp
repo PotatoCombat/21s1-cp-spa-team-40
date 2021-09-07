@@ -1,18 +1,26 @@
 #include "../condition/Condition.h"
 #include "Statement.h"
+#include <string>
 #include <vector>
 
 using namespace std;
 class WhileStatement : public Statement {
 private:
-    Condition cond;
+    // No AST yet
+    // Condition cond;
     vector<Statement> stmtLst;
+    vector<string> condLst;
 
 public:
     // constructor
-    WhileStatement(int index, Condition cond)
-        : cond(cond), Statement(index, StatementType::WHILE) {
+    // WhileStatement(int index, Condition cond)
+    //     : cond(cond), Statement(index, StatementType::WHILE) {
+    //     this->stmtLst = {};
+    // }
+
+    WhileStatement(int index) : Statement(index, StatementType::WHILE) {
         this->stmtLst = {};
+        this->condLst = {};
     }
 
     // adder
@@ -20,8 +28,10 @@ public:
         this->stmtLst.push_back(statement);
     }
 
+    void setCondLst(vector<string> condLst) { this->condLst = condLst; }
+
     // getters
-    Condition getCondition() { return this->cond; }
+    // Condition getCondition() { return this->cond; }
 
     vector<Statement> getStmtLst() { return this->stmtLst; }
 };

@@ -34,8 +34,7 @@ public:
     Statement parseCallStatement(vector<string> content, int index);
     Statement parseWhileStatement(vector<string> content, int index);
     Statement parseAssignStatement(vector<string> content, int index);
-    Expression parseExpression(vector<string>::iterator exprItr);
-    Condition parseCondition(vector<string>::iterator condItr);
+    Statement parseIfStatement(vector<string> content, int index);
 
     // special keywords
     bool isProc(vector<string> inputLine);

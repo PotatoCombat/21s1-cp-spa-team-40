@@ -22,6 +22,7 @@
 #include "../common/model/relation/Relation.cpp"
 #include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
+#include "../common/model/statement/IfStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
 #include "../common/model/statement/Statement.cpp"
@@ -139,13 +140,11 @@ Statement Parser::parseStatement(vector<string> content, int index) {
         return parseCallStatement(content, index);
     } else if (isWhileStmt(content)) {
         return parseWhileStatement(content, index);
-    } else if (isAssignStmt(content)) { // assign
+    } else if (isIfStmt(content)) {
+        return parseIfStatement(content, index);
+    } else if (isAssignStmt(content)) {
         return parseAssignStatement(content, index);
     }
-    //
-    // } else if (isIfStmt(content)) {
-    //     return parseIfStatement(content, index);
-    // }
 }
 
 Procedure Parser::parseProcedure(vector<string> content) {
@@ -180,99 +179,35 @@ Statement Parser::parseCallStatement(vector<string> content, int index) {
     return stmt;
 }
 
+// assign: var_name ‘=’ expr ‘;’
 Statement Parser::parseAssignStatement(vector<string> content, int index) {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    Expression expr = parseExpression(next(assignItr));
-    AssignStatement stmt = AssignStatement(index, Variable(var_name), expr);
+    AssignStatement stmt = AssignStatement(index, Variable(var_name));
+    vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
+    vector<string> exprLst(assignItr, endItr);
+    stmt.setExprLst(exprLst);
     return stmt;
 }
 
 Statement Parser::parseWhileStatement(vector<string> content, int index) {
-    vector<string>::iterator condItr =
-        find(content.begin(), content.end(), "(");
-    // Condition -> SingleCondition -> Relation -> Factor
-    Condition cond = parseCondition(next(condItr));
-    WhileStatement stmt = WhileStatement(index, cond);
+    vector<string>::iterator whileItr =
+        find(content.begin(), content.end(), "while");
+    WhileStatement stmt = WhileStatement(index);
+    vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
+    vector<string> condLst(next(whileItr), endItr);
+    stmt.setCondLst(condLst);
     return stmt;
 }
 
-Expression Parser::parseExpression(vector<string>::iterator exprItr) {
-    vector<Factor> facLst = {};
-    while (!isSemiColon(*exprItr) && !isCurlyBracket(*exprItr)) {
-        if (isInteger(*exprItr)) {
-            facLst.push_back(ConstantValue(stoi(*exprItr)));
-        } else if (isName(*exprItr)) {
-            facLst.push_back(Variable(*exprItr));
-        }
-        if (isArtihmeticOperator(*prev(exprItr))) {
-            string opr = *prev(exprItr);
-            Factor second = facLst.back();
-            facLst.pop_back();
-            Factor first = facLst.back();
-            facLst.pop_back();
-            Term *term1 = new SingleFactorTerm(first);
-            Term *term2 = new SingleFactorTerm(second);
-            if (opr == "+") {
-                Expression *expr = new SingleTermExpression(term1);
-                return SumTermsExpression(expr, term2);
-            } else if (opr == "-") {
-                Expression *expr = new SingleTermExpression(term1);
-                return SubtractTermsExpression(expr, term2);
-            } else if (opr == "*") {
-                Term *term = new MultiplyByFactorTerm(term1, second);
-                return SingleTermExpression(term);
-            } else if (opr == "/") {
-                Term *term = new DivideByFactorTerm(term1, second);
-                return SingleTermExpression(term);
-            } else if (opr == "%") {
-                Term *term = new ModuloByFactorTerm(term1, second);
-                return SingleTermExpression(term);
-            }
-        }
-        exprItr = next(exprItr);
-    }
-    Term *term = new SingleFactorTerm(facLst.back());
-    return SingleTermExpression(term);
-}
-
-Condition Parser::parseCondition(vector<string>::iterator condItr) {
-    vector<Factor> facLst = {};
-    while (!isRoundBracket(*condItr) && !isCurlyBracket(*condItr)) {
-        if (isInteger(*condItr)) {
-            facLst.push_back(ConstantValue(stoi(*condItr)));
-        } else if (isName(*condItr)) {
-            facLst.push_back(Variable(*condItr));
-        }
-        if (isComparisonOperator(*prev(condItr))) {
-            string opr = *prev(condItr);
-            Factor second = facLst.back();
-            facLst.pop_back();
-            Factor first = facLst.back();
-            facLst.pop_back();
-            if (opr == "==") {
-                Relation *rel = new EqualsRelation(first, second);
-                return SingleCondition(rel);
-            } else if (opr == "<=") {
-                Relation *rel = new LessThanOrEqualsRelation(first, second);
-                return SingleCondition(rel);
-            } else if (opr == "<") {
-                Relation *rel = new LessThanRelation(first, second);
-                return SingleCondition(rel);
-            } else if (opr == ">=") {
-                Relation *rel = new MoreThanOrEqualsRelation(first, second);
-                return SingleCondition(rel);
-            } else if (opr == ">") {
-                Relation *rel = new MoreThanRelation(first, second);
-                return SingleCondition(rel);
-            } else if (opr == "!=") {
-                Relation *rel = new NotEqualsRelation(first, second);
-                return SingleCondition(rel);
-            }
-        }
-        condItr = next(condItr);
-    }
+Statement Parser::parseIfStatement(vector<string> content, int index) {
+    vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
+    IfStatement stmt = IfStatement(index);
+    vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
+    vector<string> condLst(next(ifItr), endItr);
+    stmt.setCondLst(condLst);
+    return stmt;
 }
 
 // special keywords

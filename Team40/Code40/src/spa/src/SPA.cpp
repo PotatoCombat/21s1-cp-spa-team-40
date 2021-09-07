@@ -17,8 +17,8 @@ void SPA::processSource(string filename) {
         // Program design entities
         // Program -> list of procedures -> contains a list of statements
         Program program = parser.parseProgram(programLines);
-        vector<Variable> varLst = parser.getVarLst();
-        vector<ConstantValue> constLst = parser.getConstLst();
+        // vector<Variable> varLst = parser.getVarLst();
+        // vector<ConstantValue> constLst = parser.getConstLst();
         int test = 0; // to bypass debugger
     } else {
         cout << "No such file";
