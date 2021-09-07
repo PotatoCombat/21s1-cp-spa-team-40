@@ -1,6 +1,6 @@
 #pragma once
 #include "PKB.h"
-#include "source_processor/Parser.cpp"
+//#include "source_processor/Parser.cpp"
 #include "source_processor/Parser.h"
 #include <list>
 #include <string>
@@ -14,5 +14,5 @@ private:
 
 public:
     void processSource(string filename);
-    void processQuery(string query, list<string> &results);
+    // void processQuery(string query, list<string> &results);
 };

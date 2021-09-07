@@ -6,6 +6,7 @@ add_library(spa ${srcs} ${headers}
         src/common/model/Factor.cpp src/common/model/Factor.h
         src/common/model/Procedure.cpp src/common/model/Procedure.h
         src/common/model/Variable.cpp src/common/model/Variable.h
+        src/common/model/Program.cpp src/common/model/Program.h
 
         # common/model/condition/
         src/common/model/condition/condition.cpp src/common/model/condition/condition.h
@@ -44,6 +45,9 @@ add_library(spa ${srcs} ${headers}
         src/common/model/term/ModuloByFactorTerm.cpp
         src/common/model/term/MultiplyByFactorTerm.cpp
         src/common/model/term/SingleFactorTerm.cpp
+
+        #source_processor/
+        src/source_processor/Line.cpp src/source_processor/Line.h
         )
 
 # this makes the headers accessible for other projects which uses spa common
