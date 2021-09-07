@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "PKB.h"
+#include "pkb/PKB.h"
 
 #include "catch.hpp"
 

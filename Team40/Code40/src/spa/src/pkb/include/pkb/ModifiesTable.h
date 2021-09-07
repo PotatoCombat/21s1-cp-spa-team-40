@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Abstractions.h"
+
 #include <map>
 #include <set>
-#include <Abstractions.h>
 
 class ModifiesTable {
 

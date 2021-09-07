@@ -9,4 +9,7 @@ target_include_directories(source_processor PUBLIC
         include
         )
 
-target_link_libraries(source_processor common)
+target_link_libraries(source_processor
+        common
+        pkb
+        )

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "TNode.h"
+#include "pkb/TNode.h"
 using namespace std;
 void require(bool b) { REQUIRE(b); }
 

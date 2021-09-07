@@ -1,8 +1,11 @@
-#include "SPA.h"
+#include "spa/SPA.h"
+
 #include "model/ConstantValue.h"
 #include "model/Program.h"
 #include "model/Variable.h"
+
 #include "source_processor/Line.h"
+
 #include <fstream>
 #include <iostream>
 #include <vector>
