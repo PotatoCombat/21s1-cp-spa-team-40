@@ -46,3 +46,33 @@ vector<string> Result::getResultList1() {
 vector<string> Result::getResultList2() {
 	return resultList2;
 }
+
+bool Result::equals(Result& other) {
+    if (this->isResultValid() != other.isResultValid()) {
+        return false;
+	}
+	
+	if (this->hasResultList1() != other.hasResultList1()) {
+		return false;    
+	}
+
+	if (this->hasResultList2() != other.hasResultList2()) {
+        return false;
+	}
+
+	if (this->hasResultList1()) {
+		if (!(this->getEntity1()->equals(*(other.getEntity1())) &&
+			this->getResultList1() == other.getResultList1())) {
+            return false;
+		}
+	}
+
+	if (this->hasResultList2()) {
+		if (!(this->getEntity2()->equals(*(other.getEntity2())) &&
+			this->getResultList2() == other.getResultList2())) {
+			return false;
+		}
+	}
+
+    return true;
+}

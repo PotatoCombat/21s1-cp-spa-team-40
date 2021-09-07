@@ -27,4 +27,5 @@ public:
 	vector<string> getResultList2();
 	Entity* getEntity1();
 	Entity* getEntity2();
+	bool equals(Result &other);
 };
