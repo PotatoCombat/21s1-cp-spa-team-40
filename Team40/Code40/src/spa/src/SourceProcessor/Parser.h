@@ -5,11 +5,14 @@
 #include "../common/model/Variable.h"
 #include "../common/model/condition/Condition.h"
 #include "../common/model/expression/Expression.h"
+#include "../common/model/statement/IfStatement.cpp"
 #include "../common/model/statement/Statement.h"
+#include "../common/model/statement/WhileStatement.cpp"
 #include "Line.h"
 #include <fstream>
 #include <string>
 #include <vector>
+
 
 using namespace std;
 
@@ -28,13 +31,14 @@ public:
     // parse preprocessed file
     Program parseProgram(vector<Line> programLines);
     Procedure parseProcedure(vector<string> content);
-    Statement parseStatement(vector<string> content, int index);
+    Statement parseStatement(vector<string> content, int index,
+                             vector<Line> programLines, int programIndex);
     Statement parseReadStatement(vector<string> content, int index);
     Statement parsePrintStatement(vector<string> content, int index);
     Statement parseCallStatement(vector<string> content, int index);
-    Statement parseWhileStatement(vector<string> content, int index);
+    WhileStatement parseWhileStatement(vector<string> content, int index);
     Statement parseAssignStatement(vector<string> content, int index);
-    Statement parseIfStatement(vector<string> content, int index);
+    IfStatement parseIfStatement(vector<string> content, int index);
 
     // special keywords
     bool isProc(vector<string> inputLine);
@@ -45,6 +49,7 @@ public:
     bool isAssignStmt(vector<string> inputLine);
     bool isIfStmt(vector<string> inputLine);
     bool isKeyword(string input);
+    bool hasTerminator(vector<string> inputLine);
 
     // special characters
     bool isBracket(char input);

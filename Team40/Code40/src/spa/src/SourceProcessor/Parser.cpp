@@ -22,11 +22,9 @@
 #include "../common/model/relation/Relation.cpp"
 #include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
-#include "../common/model/statement/IfStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"
 #include "../common/model/statement/ReadStatement.cpp"
 #include "../common/model/statement/Statement.cpp"
-#include "../common/model/statement/WhileStatement.cpp"
 #include "../common/model/term/DivideByFactorTerm.cpp"
 #include "../common/model/term/ModuloByFactorTerm.cpp"
 #include "../common/model/term/MultiplyByFactorTerm.cpp"
@@ -122,7 +120,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             }
             currProc = parseProcedure(currContent);
         } else {
-            Statement stmt = parseStatement(currContent, currIndex);
+            Statement stmt =
+                parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
         }
     }
@@ -131,19 +130,52 @@ Program Parser::parseProgram(vector<Line> programLines) {
 }
 
 // TODO: Add pointers to program design entities (procedure, variable, constant)
-Statement Parser::parseStatement(vector<string> content, int index) {
+Statement Parser::parseStatement(vector<string> content, int index,
+                                 vector<Line> programLines, int programIndex) {
     if (isReadStmt(content)) {
         return parseReadStatement(content, index);
     } else if (isPrintStmt(content)) {
         return parsePrintStatement(content, index);
     } else if (isCallStmt(content)) {
         return parseCallStatement(content, index);
-    } else if (isWhileStmt(content)) {
-        return parseWhileStatement(content, index);
-    } else if (isIfStmt(content)) {
-        return parseIfStatement(content, index);
     } else if (isAssignStmt(content)) {
         return parseAssignStatement(content, index);
+    } else if (isWhileStmt(content)) {
+        WhileStatement whileStmt = parseWhileStatement(content, index);
+        for (int i = programIndex + 1; i < programLines.size(); i++) {
+            int currIndex = programLines[i].getIndex();
+            vector<string> currContent = programLines[i].getContent();
+            if (currIndex == 0 || hasTerminator(currContent)) {
+                break;
+            } else {
+                Statement stmt =
+                    parseStatement(currContent, currIndex, programLines, i);
+                whileStmt.addStatement(stmt);
+            }
+        }
+        return whileStmt;
+    } else if (isIfStmt(content)) {
+        IfStatement ifStmt = parseIfStatement(content, index);
+        int terminator = 0;
+        for (int i = programIndex + 1; i < programLines.size(); i++) {
+            int currIndex = programLines[i].getIndex();
+            vector<string> currContent = programLines[i].getContent();
+            if (hasTerminator(currContent)) {
+                terminator++;
+            }
+            if (currIndex == 0 || terminator == 2) {
+                break;
+            } else if (terminator == 0) {
+                Statement stmt =
+                    parseStatement(currContent, currIndex, programLines, i);
+                ifStmt.addThenStatement(stmt);
+            } else if (terminator == 1) {
+                Statement stmt =
+                    parseStatement(currContent, currIndex, programLines, i);
+                ifStmt.addElseStatement(stmt);
+            }
+        }
+        return ifStmt;
     }
 }
 
@@ -191,7 +223,7 @@ Statement Parser::parseAssignStatement(vector<string> content, int index) {
     return stmt;
 }
 
-Statement Parser::parseWhileStatement(vector<string> content, int index) {
+WhileStatement Parser::parseWhileStatement(vector<string> content, int index) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
     WhileStatement stmt = WhileStatement(index);
@@ -201,7 +233,7 @@ Statement Parser::parseWhileStatement(vector<string> content, int index) {
     return stmt;
 }
 
-Statement Parser::parseIfStatement(vector<string> content, int index) {
+IfStatement Parser::parseIfStatement(vector<string> content, int index) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     IfStatement stmt = IfStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
@@ -245,6 +277,10 @@ bool Parser::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
            input == "while" || input == "if" || input == "then" ||
            input == "procedure";
+}
+
+bool Parser::hasTerminator(vector<string> inputLine) {
+    return find(inputLine.begin(), inputLine.end(), "}") != inputLine.end();
 }
 
 // special characters
