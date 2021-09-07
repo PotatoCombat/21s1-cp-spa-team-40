@@ -5,8 +5,6 @@ file(GLOB srcs
 add_library(pkb ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
-target_include_directories(pkb PUBLIC
-        include
-        )
+target_include_directories(pkb PUBLIC include)
 
 #target_link_libraries(pkb spa)

@@ -7,8 +7,12 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "spa/SPA.h"
 
 class TestWrapper : public AbstractWrapper {
+private:
+    SPA spa;
+
 public:
     // default constructor
     TestWrapper();

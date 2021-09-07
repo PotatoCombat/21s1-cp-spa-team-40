@@ -1,4 +1,4 @@
-#include "Relation.h"
+#include "common/model/relation/Relation.h"
 
 Relation::Relation(RelationType relType, Factor leftFactor, Factor rightFactor)
     : relType(relType), leftFactor(leftFactor), rightFactor(rightFactor) {}
