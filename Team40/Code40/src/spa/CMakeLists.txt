@@ -47,6 +47,7 @@ add_library(spa ${srcs} ${headers}
         src/common/model/term/SingleFactorTerm.cpp
 
         #source_processor/
+        src/source_processor/Parser.cpp src/source_processor/Parser.h
         src/source_processor/Line.cpp src/source_processor/Line.h
         )
 
