@@ -4,8 +4,6 @@
 #include "common/model/Variable.h"
 #include "source_processor/Line.h"
 #include <fstream>
-#include <iostream>
-#include <string>
 #include <vector>
 
 using namespace std;

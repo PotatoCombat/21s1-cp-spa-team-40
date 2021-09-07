@@ -1,7 +1,4 @@
 #include "Line.h"
-#include <string>
-#include <vector>
-
 using namespace std;
 
 Line::Line(int index, vector<string> content) {
