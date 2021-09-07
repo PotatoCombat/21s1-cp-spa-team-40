@@ -1,6 +1,6 @@
-#include "ConstantValue.h"
-#include "MultiplyByFactorTerm.h"
-#include "SingleFactorTerm.h"
+#include "model/ConstantValue.h"
+#include "model/term/MultiplyByFactorTerm.h"
+#include "model/term/SingleFactorTerm.h"
 #include "catch.hpp"
 
 TEST_CASE("MultiplyByFactorTerm: Creates and retrieves value correctly") {

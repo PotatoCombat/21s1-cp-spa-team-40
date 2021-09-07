@@ -1,4 +1,4 @@
-#include "Line.h"
+#include "../include/Line.h"
 using namespace std;
 
 Line::Line(int index, vector<string> content) {

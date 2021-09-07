@@ -1,5 +1,5 @@
-#include "Relation.h"
-#include "Factor.h"
+#include "model/Factor.h"
+#include "model/relation/Relation.h"
 
 class EqualsRelation : public Relation {
 public:

@@ -1,4 +1,4 @@
-#include "Expression.h"
+#include "model/expression/Expression.h"
 
 Expression::Expression(ExpressionType expressionType, int value)
     : expressionType(expressionType), Factor(FactorType::EXPRESSION, value) {}

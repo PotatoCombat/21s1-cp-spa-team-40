@@ -1,6 +1,6 @@
 #pragma once
-#include "../relation/Relation.h"
 #include "Condition.h"
+#include "model/relation/Relation.h"
 
 class NotCondition : public Condition {
 private:

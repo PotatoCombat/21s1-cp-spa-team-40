@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Term.h"
-#include "Factor.h"
+#include "model/Factor.h"
 
 class MultiplyByFactorTerm : public Term {
 private:

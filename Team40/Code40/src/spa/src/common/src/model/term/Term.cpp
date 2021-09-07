@@ -1,4 +1,4 @@
-#include "Term.h"
+#include "model/term/Term.h"
 
 Term::Term(TermType termType)
     : termType(termType), hasComputedValue(false), value(0) {}

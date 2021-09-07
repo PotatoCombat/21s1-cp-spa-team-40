@@ -5,8 +5,10 @@ add_library(spa ${srcs})
 
 add_subdirectory(src/common)
 add_subdirectory(src/pkb)
+add_subdirectory(src/source_processor)
 
 target_link_libraries(spa
         common
         pkb
+        source_processor
         )

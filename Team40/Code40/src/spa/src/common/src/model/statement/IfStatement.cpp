@@ -1,5 +1,4 @@
-#include "Statement.h"
-#include "Condition.h"
+#include "model/statement/Statement.h"
 #include <string>
 #include <vector>
 

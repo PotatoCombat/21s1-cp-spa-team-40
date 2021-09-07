@@ -1,7 +1,7 @@
 file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/conditional/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/condition/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/expression/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/relation/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/statement/*.cpp"
@@ -12,13 +12,13 @@ add_library(common ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(common PUBLIC
-        include
-        include/model
-        include/model/conditional
-        include/model/expression
-        include/model/relation
-        include/model/statement
-        include/model/term
+        include/common
+        include/common/model
+        include/common/model/condition
+        include/common/model/expression
+        include/common/model/relation
+        include/common/model/statement
+        include/common/model/term
         )
 
 #target_link_libraries(common spa)

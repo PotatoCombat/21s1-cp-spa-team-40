@@ -1,4 +1,4 @@
-#include "Procedure.h"
+#include "model/Procedure.h"
 
 Procedure::Procedure(string name) : name(name) { this->stmtLst = {}; }
 

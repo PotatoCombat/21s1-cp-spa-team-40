@@ -1,4 +1,4 @@
-#include "Factor.h"
+#include "model/Factor.h"
 
 // constructor
 Factor::Factor(FactorType factorType, int value)

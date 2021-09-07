@@ -1,6 +1,5 @@
-#include "Statement.h"
-#include "Variable.h"
-#include "Expression.h"
+#include "model/Variable.h"
+#include "model/statement/Statement.h"
 #include <string>
 #include <vector>
 

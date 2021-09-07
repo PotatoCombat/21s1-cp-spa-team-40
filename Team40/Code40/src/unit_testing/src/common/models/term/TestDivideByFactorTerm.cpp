@@ -1,6 +1,6 @@
-#include "ConstantValue.h"
-#include "DivideByFactorTerm.h"
-#include "SingleFactorTerm.h"
+#include "model/ConstantValue.h"
+#include "model/term/DivideByFactorTerm.h"
+#include "model/term/SingleFactorTerm.h"
 #include "catch.hpp"
 
 TEST_CASE("DivideByFactorTerm: Creates and retrieves value correctly") {

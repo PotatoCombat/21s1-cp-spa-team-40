@@ -1,4 +1,4 @@
-#include "Program.h"
+#include "model/Program.h"
 
 Program::Program() { this->procLst = {}; }
 

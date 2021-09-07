@@ -1,4 +1,4 @@
-#include "Condition.h"
+#include "model/condition/Condition.h"
 
 Condition::Condition(ConditionType condType, bool value)
     : condType(condType), value(value) {}

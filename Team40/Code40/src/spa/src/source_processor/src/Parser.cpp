@@ -1,4 +1,4 @@
-#include "Parser.h"
+#include "../include/Parser.h"
 #include "../common/model/statement/AssignStatement.cpp"
 #include "../common/model/statement/CallStatement.cpp"
 #include "../common/model/statement/PrintStatement.cpp"

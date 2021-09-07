@@ -1,4 +1,4 @@
-#include "Relation.h"
+#include "model/relation/Relation.h"
 
 class NotEqualsRelation : public Relation {
 public:
