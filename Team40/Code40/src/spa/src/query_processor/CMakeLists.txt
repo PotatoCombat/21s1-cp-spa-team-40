@@ -4,7 +4,7 @@ file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/entity/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/entity/relationship/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/model/relationship/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/query_preprocessor/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/relationship_handler/*.cpp"
         )
