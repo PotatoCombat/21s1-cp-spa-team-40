@@ -7,6 +7,7 @@ add_executable(unit_testing ${catch_main})
 # Add the relative path to your unit test files to be included in the build.
 add_subdirectory(src/common)
 add_subdirectory(src/pkb)
+add_subdirectory(src/query_processor)
 
 # Ensures that unit_testing runs with spa library.
 target_link_libraries(unit_testing spa)
