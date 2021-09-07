@@ -1,5 +1,5 @@
-#include "model/ConstantValue.h"
-#include "model/SingleFactorTerm.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/term/SingleFactorTerm.h"
 #include "catch.hpp"
 
 TEST_CASE("SingleFactorTerm: Creates and retrieves value correctly") {
