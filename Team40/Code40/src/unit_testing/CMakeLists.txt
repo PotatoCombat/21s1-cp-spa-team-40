@@ -12,4 +12,3 @@ add_executable(unit_testing ${srcs}
         src/common/models/term/TestDivideByFactorTerm.cpp)
 
 target_link_libraries(unit_testing spa)
-
