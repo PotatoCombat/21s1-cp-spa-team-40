@@ -1,4 +1,4 @@
-#include <ParentStarTable.h>
+#include "ParentStarTable.h"
 
 ParentStarTable::ParentStarTable() = default;
 

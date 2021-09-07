@@ -1,5 +1,4 @@
-#include <FollowsStarTable.h>
-
+#include "FollowsStarTable.h"
 
 FollowsStarTable::FollowsStarTable() = default;
 

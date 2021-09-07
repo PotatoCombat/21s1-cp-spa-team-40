@@ -1,4 +1,4 @@
-#include <FollowsTable.h>
+#include "FollowsTable.h"
 
 FollowsTable::FollowsTable() = default;
 
