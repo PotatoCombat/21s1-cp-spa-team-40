@@ -1,5 +1,7 @@
 #include "Entity.h"
 
+const string Entity::WILDCARD = "_";
+
 Entity::Entity(string name) { this->name = name; }
 
 string Entity::getName() { return name; }

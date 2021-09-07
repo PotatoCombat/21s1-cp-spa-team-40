@@ -22,12 +22,12 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         // TODO: add more handlers for relationshipType later
         if (relationship->getRelationshipType() == RelationshipType::FOLLOWS) {
-            FollowsHandler followsHandler(relationship, pkb);
+            FollowsHandler followsHandler(relationship, &pkb);
             relationshipHandler = &followsHandler;
         }
 
         // eval and combine result
-        tempResult = relationshipHandler->eval();
+        relationshipHandler->eval(tempResult);
         allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();
 
         if (tempResult.hasResultList1()) {

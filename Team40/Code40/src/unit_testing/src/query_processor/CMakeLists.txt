@@ -1,9 +1,12 @@
 file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/../main.cpp")
 file(GLOB srcs 
 	"${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/models/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/models/entity/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/models/relationship_handler/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/model/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/model/entity/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/model/relationship/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/relationship_handler/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/test_util/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/test_util/*.h"
 )
 
 target_sources(unit_testing PRIVATE ${srcs})

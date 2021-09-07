@@ -11,6 +11,7 @@ private:
     string name;
 
 public:
+    static const string WILDCARD;
     Entity(string name);
     string getName();
     virtual EntityType getType();

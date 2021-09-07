@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../entity/Entity.h"
+#include "Entity.h"
 
 using namespace std;
 
 enum class RelationshipType { FOLLOWS };
 
 class Relationship {
-private:
+protected:
     Entity* firstEntity;
     Entity* secondEntity;
 

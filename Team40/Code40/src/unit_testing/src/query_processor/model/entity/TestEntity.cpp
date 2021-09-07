@@ -1,8 +1,8 @@
 #include "catch.hpp"
 
-#include "query_processor/model/entity/Entity.h"
-#include "query_processor/model/entity/NamedStatement.h"
-#include "query_processor/model/entity/SynonymStatement.h"
+#include "Entity.h"
+#include "NamedStatement.h"
+#include "SynonymStatement.h"
 
 using namespace std;
 
@@ -12,17 +12,17 @@ NamedStatement namedStatement2("s2");
 NamedStatement namedStatement3("s1");
 
 TEST_CASE("Entity: IsSynonymEntity") {
-    REQUIRE(!namedStatement.IsSynonymEntity());
-    REQUIRE(synonymStatement.IsSynonymEntity());
+    REQUIRE(!namedStatement.isSynonymEntity());
+    REQUIRE(synonymStatement.isSynonymEntity());
 }
 
 TEST_CASE("Entity: GetType") {
-    REQUIRE(namedStatement.GetType() == EntityType::STATEMENT);
-    REQUIRE(synonymStatement.GetType() == EntityType::STATEMENT);
+    REQUIRE(namedStatement.getType() == EntityType::STATEMENT);
+    REQUIRE(synonymStatement.getType() == EntityType::STATEMENT);
 }
 
 TEST_CASE("Entity: Equals") { 
-    REQUIRE(namedStatement.Equals(namedStatement3));
-    REQUIRE(!namedStatement.Equals(namedStatement2));
-    REQUIRE(!synonymStatement.Equals(namedStatement2));
+    REQUIRE(namedStatement.equals(namedStatement3));
+    REQUIRE(!namedStatement.equals(namedStatement2));
+    REQUIRE(!synonymStatement.equals(namedStatement2));
 }
