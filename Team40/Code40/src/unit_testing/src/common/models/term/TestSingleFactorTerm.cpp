@@ -1,6 +1,6 @@
-#include "catch.hpp"
 #include "ConstantValue.h"
-#include "SingleFactorTerm.cpp"
+#include "SingleFactorTerm.h"
+#include "catch.hpp"
 
 TEST_CASE("SingleFactorTerm: Creates and retrieves value correctly") {
     const int VALUE = 12;

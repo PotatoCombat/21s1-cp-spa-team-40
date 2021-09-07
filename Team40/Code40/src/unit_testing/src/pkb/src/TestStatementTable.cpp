@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "pkb/include/StatementTable.h"
+#include "StatementTable.h"
 
 #include "catch.hpp"
 

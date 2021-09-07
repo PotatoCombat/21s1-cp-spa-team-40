@@ -1,7 +1,7 @@
-#include "catch.hpp"
 #include "ConstantValue.h"
-#include "ModuloByFactorTerm.cpp"
-#include "SingleFactorTerm.cpp"
+#include "ModuloByFactorTerm.h"
+#include "SingleFactorTerm.h"
+#include "catch.hpp"
 
 TEST_CASE("ModuloByFactorTerm: Creates and retrieves value correctly") {
     const int VALUE_1 = 12;

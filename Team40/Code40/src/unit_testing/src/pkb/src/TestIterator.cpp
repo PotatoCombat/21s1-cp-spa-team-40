@@ -1,7 +1,7 @@
 #include <functional>
 #include <vector>
 
-#include "pkb/include/Iterator.h"
+#include "Iterator.h"
 
 #include "catch.hpp"
 

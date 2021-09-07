@@ -1,19 +1,12 @@
-#include "Term.h"
-#include "Factor.h"
+#include "SingleFactorTerm.h"
 
-class SingleFactorTerm : public Term {
-private:
-    Factor factor;
+SingleFactorTerm::SingleFactorTerm(Factor factor)
+    : factor(factor), Term(TermType::SINGLE_FACTOR){};
 
-public:
-    SingleFactorTerm(Factor factor)
-        : factor(factor), Term(TermType::SINGLE_FACTOR){};
-
-    int getValue() override {
-        if (!hasComputedValue) {
-            value = factor.getValue();
-            hasComputedValue = true;
-        }
-        return value;
+int SingleFactorTerm::getValue() {
+    if (!hasComputedValue) {
+        value = factor.getValue();
+        hasComputedValue = true;
     }
-};
+    return value;
+}

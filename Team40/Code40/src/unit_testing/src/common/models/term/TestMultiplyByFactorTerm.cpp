@@ -1,7 +1,7 @@
-#include "catch.hpp"
 #include "ConstantValue.h"
-#include "MultiplyByFactorTerm.cpp"
-#include "SingleFactorTerm.cpp"
+#include "MultiplyByFactorTerm.h"
+#include "SingleFactorTerm.h"
+#include "catch.hpp"
 
 TEST_CASE("MultiplyByFactorTerm: Creates and retrieves value correctly") {
     const int VALUE_1 = 7;

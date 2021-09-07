@@ -1,20 +1,12 @@
-#include "Term.h"
-#include "Factor.h"
+#include "DivideByFactorTerm.h"
 
-class DivideByFactorTerm : public Term {
-private:
-    Factor factor;
-    Term *term;
+DivideByFactorTerm::DivideByFactorTerm(Term *term, Factor factor)
+    : factor(factor), term(term), Term(TermType::MODULO_TERM_BY_FACTOR){};
 
-public:
-    DivideByFactorTerm(Term *term, Factor factor)
-        : factor(factor), term(term), Term(TermType::MODULO_TERM_BY_FACTOR){};
-
-    int getValue() override {
-        if (!hasComputedValue) {
-            value = term->getValue() / factor.getValue();
-            hasComputedValue = true;
-        }
-        return value;
+int DivideByFactorTerm::getValue() {
+    if (!hasComputedValue) {
+        value = term->getValue() / factor.getValue();
+        hasComputedValue = true;
     }
-};
+    return value;
+}

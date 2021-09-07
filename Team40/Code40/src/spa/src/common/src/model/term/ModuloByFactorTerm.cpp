@@ -1,20 +1,12 @@
-#include "Term.h"
-#include "Factor.h"
+#include "ModuloByFactorTerm.h"
 
-class ModuloByFactorTerm : public Term {
-private:
-    Factor factor;
-    Term *term;
+ModuloByFactorTerm::ModuloByFactorTerm(Term *term, Factor factor)
+    : factor(factor), term(term), Term(TermType::MODULO_TERM_BY_FACTOR){};
 
-public:
-    ModuloByFactorTerm(Term *term, Factor factor)
-        : factor(factor), term(term), Term(TermType::MODULO_TERM_BY_FACTOR){};
-
-    int getValue() override {
-        if (!hasComputedValue) {
-            value = term->getValue() % factor.getValue();
-            hasComputedValue = true;
-        }
-        return value;
+int ModuloByFactorTerm::getValue() {
+    if (!hasComputedValue) {
+        value = term->getValue() % factor.getValue();
+        hasComputedValue = true;
     }
-};
+    return value;
+}
