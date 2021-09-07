@@ -1,12 +1,13 @@
 #include "SPA.h"
-#include "SourceProcessor/Line.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Program.h"
 #include "common/model/Variable.h"
+#include "source_processor/Line.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 void SPA::processSource(string filename) {
