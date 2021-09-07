@@ -1,14 +1,20 @@
 #pragma once
-#include "Program.h"
-#include "Condition.h"
-#include "ConstantValue.h"
-#include "Procedure.h"
-#include "Variable.h"
-#include "Expression.h"
-#include "IfStatement.cpp"
-#include "Statement.h"
-#include "WhileStatement.cpp"
+
 #include "Line.h"
+
+#include "model/ConstantValue.h"
+#include "model/Procedure.h"
+#include "model/Program.h"
+#include "model/Variable.h"
+
+#include "model/condition/Condition.h"
+
+#include "model/expression/Expression.h"
+
+#include "model/statement/IfStatement.h"
+#include "model/statement/Statement.h"
+#include "model/statement/WhileStatement.h"
+
 #include <fstream>
 #include <string>
 #include <vector>

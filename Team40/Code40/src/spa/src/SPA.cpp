@@ -1,9 +1,10 @@
 #include "SPA.h"
-#include "common/model/ConstantValue.h"
-#include "common/model/Program.h"
-#include "common/model/Variable.h"
+#include "model/ConstantValue.h"
+#include "model/Program.h"
+#include "model/Variable.h"
 #include "source_processor/Line.h"
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 using namespace std;

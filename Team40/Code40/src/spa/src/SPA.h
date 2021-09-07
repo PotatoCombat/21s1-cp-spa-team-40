@@ -1,7 +1,6 @@
 #pragma once
 #include "PKB.h"
-#include "source_processor/include/Parser.h"
-#include <list>
+#include "source_processor/Parser.h"
 #include <string>
 
 using namespace std;
