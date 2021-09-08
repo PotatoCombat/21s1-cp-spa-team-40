@@ -103,7 +103,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
                 program.addToProcLst(currProc);
             }
             currProc = parseProcedure(currContent);
-        } else {
+        } else if (!currContent.empty() && currContent[0] != "}" &&
+                   currContent[0] != "else") {
             Statement stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
@@ -128,7 +129,7 @@ Statement Parser::parseStatement(vector<string> content, int index,
     } else if (isIfStmt(content)) {
         return parseIfStatement(content, index, programLines, programIndex);
     } else {
-        return Statement(index, StatementType::NONE);
+        return Statement(0, StatementType::NONE);
     }
 }
 
@@ -179,7 +180,7 @@ Statement Parser::parseWhileStatement(vector<string> content, int index,
                                       vector<Line> programLines,
                                       int programIndex) {
     vector<string>::iterator whileItr =
-        find(content.begin(), content.end(), "while");
+        find(content.begin(), content.end(), "(");
     WhileStatement stmt = WhileStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
     vector<string> condLst(next(whileItr), endItr);
