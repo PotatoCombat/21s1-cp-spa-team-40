@@ -9,4 +9,5 @@ public:
     DesignExtractor(PKB pkb);
     void handleProgram(Program program);
     void handleProcedure(Procedure *program);
+    void handleStatement(Statement *statement);
 };

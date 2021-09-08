@@ -14,11 +14,13 @@ void DesignExtractor::handleProgram(Program program) {
 }
 
 void DesignExtractor::handleProcedure(Procedure *procedure) {
-    // 1. Store into PKB
     pkb.insertProc(procedure);
-    // 2. Iterate (BFS)
     for (Statement statement : procedure->getStmtLst()) {
-        // handleStatement()
+        handleStatement(&statement);
     }
     // 3. Tie-up
+}
+
+void DesignExtractor::handleStatement(Statement *statement) {
+    pkb.insertStmt(statement);
 }
