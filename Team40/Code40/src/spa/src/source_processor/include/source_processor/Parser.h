@@ -41,9 +41,11 @@ public:
     Statement parseReadStatement(vector<string> content, int index);
     Statement parsePrintStatement(vector<string> content, int index);
     Statement parseCallStatement(vector<string> content, int index);
-    WhileStatement parseWhileStatement(vector<string> content, int index);
     Statement parseAssignStatement(vector<string> content, int index);
-    IfStatement parseIfStatement(vector<string> content, int index);
+    Statement parseWhileStatement(vector<string> content, int index,
+                                  vector<Line> programLines, int programIndex);
+    Statement parseIfStatement(vector<string> content, int index,
+                               vector<Line> programLines, int programIndex);
 
     // special keywords
     bool isProc(vector<string> inputLine);

@@ -113,41 +113,9 @@ Statement Parser::parseStatement(vector<string> content, int index,
     } else if (isAssignStmt(content)) {
         return parseAssignStatement(content, index);
     } else if (isWhileStmt(content)) {
-        WhileStatement whileStmt = parseWhileStatement(content, index);
-        for (int i = programIndex + 1; i < programLines.size(); i++) {
-            int currIndex = programLines[i].getIndex();
-            vector<string> currContent = programLines[i].getContent();
-            if (currIndex == 0 || hasTerminator(currContent)) {
-                break;
-            } else {
-                Statement stmt =
-                    parseStatement(currContent, currIndex, programLines, i);
-                whileStmt.addStatement(stmt);
-            }
-        }
-        return whileStmt;
+        return parseWhileStatement(content, index, programLines, programIndex);
     } else if (isIfStmt(content)) {
-        IfStatement ifStmt = parseIfStatement(content, index);
-        int terminator = 0;
-        for (int i = programIndex + 1; i < programLines.size(); i++) {
-            int currIndex = programLines[i].getIndex();
-            vector<string> currContent = programLines[i].getContent();
-            if (hasTerminator(currContent)) {
-                terminator++;
-            }
-            if (currIndex == 0 || terminator == 2) {
-                break;
-            } else if (terminator == 0) {
-                Statement stmt =
-                    parseStatement(currContent, currIndex, programLines, i);
-                ifStmt.addThenStatement(stmt);
-            } else if (terminator == 1) {
-                Statement stmt =
-                    parseStatement(currContent, currIndex, programLines, i);
-                ifStmt.addElseStatement(stmt);
-            }
-        }
-        return ifStmt;
+        return parseIfStatement(content, index, programLines, programIndex);
     } else {
         return Statement(index, StatementType::NONE);
     }
@@ -185,7 +153,6 @@ Statement Parser::parseCallStatement(vector<string> content, int index) {
     return stmt;
 }
 
-// assign: var_name ‘=’ expr ‘;’
 Statement Parser::parseAssignStatement(vector<string> content, int index) {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
@@ -197,22 +164,56 @@ Statement Parser::parseAssignStatement(vector<string> content, int index) {
     return stmt;
 }
 
-WhileStatement Parser::parseWhileStatement(vector<string> content, int index) {
+Statement Parser::parseWhileStatement(vector<string> content, int index,
+                                      vector<Line> programLines,
+                                      int programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
     WhileStatement stmt = WhileStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
     vector<string> condLst(next(whileItr), endItr);
     stmt.setCondLst(condLst);
+    for (int i = programIndex + 1; i < programLines.size(); i++) {
+        int currIndex = programLines[i].getIndex();
+        vector<string> currContent = programLines[i].getContent();
+        if (currIndex == 0 || hasTerminator(currContent)) {
+            break;
+        } else {
+            Statement nestedStmt =
+                parseStatement(currContent, currIndex, programLines, i);
+            stmt.addStatement(nestedStmt);
+        }
+    }
     return stmt;
 }
 
-IfStatement Parser::parseIfStatement(vector<string> content, int index) {
+Statement Parser::parseIfStatement(vector<string> content, int index,
+                                   vector<Line> programLines,
+                                   int programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     IfStatement stmt = IfStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
     vector<string> condLst(next(ifItr), endItr);
     stmt.setCondLst(condLst);
+    int terminator = 0;
+    for (int i = programIndex + 1; i < programLines.size(); i++) {
+        int currIndex = programLines[i].getIndex();
+        vector<string> currContent = programLines[i].getContent();
+        if (hasTerminator(currContent)) {
+            terminator++;
+        }
+        if (currIndex == 0 || terminator == 2) {
+            break;
+        } else if (terminator == 0) {
+            Statement nestedStmt =
+                parseStatement(currContent, currIndex, programLines, i);
+            stmt.addThenStatement(nestedStmt);
+        } else if (terminator == 1) {
+            Statement nestedStmt =
+                parseStatement(currContent, currIndex, programLines, i);
+            stmt.addElseStatement(nestedStmt);
+        }
+    }
     return stmt;
 }
 
