@@ -26,9 +26,10 @@ vector<Line> Parser::parseFile(fstream &file) {
     int stmtNum;
     while (getline(file, input)) {
         vector<string> inputLine = parseLine(input);
+        // The procedure definition does not receive an index.
         if (isProc(inputLine)) {
             stmtNum = 0;
-        } else {
+        } else if (!inputLine.empty()) {
             stmtNum++;
         }
         if (!inputLine.empty()) {
@@ -94,6 +95,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             }
             currProc = parseProcedure(currContent);
         } else {
+            // empty lines, "else" keywords on a line, curly brackets on a line
+            // do not receive an index
             Statement stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
