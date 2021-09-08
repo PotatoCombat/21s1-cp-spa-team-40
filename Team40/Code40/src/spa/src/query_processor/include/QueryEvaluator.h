@@ -6,8 +6,8 @@
 #include <iterator>
 
 #include "model/Query.h"
-#include "model/reference/Reference.h"
-#include "model/relation/Relation.h"
+#include "model/Reference.h"
+#include "model/Relation.h"
 #include "pkb/PKB.h"
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
