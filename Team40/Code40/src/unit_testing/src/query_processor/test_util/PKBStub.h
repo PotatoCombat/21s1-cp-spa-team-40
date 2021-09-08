@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "Abstractions.h"
-#include "Iterator.h"
-#include "PKB.h"
+#include "pkb/Abstractions.h"
+#include "pkb/Iterator.h"
+#include "pkb/PKB.h"
 
 using namespace std;
 

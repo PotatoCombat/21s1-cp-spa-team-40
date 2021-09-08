@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Relationship.h"
-#include "PKB.h"
+#include "pkb/PKB.h"
 
 class RelationshipHandler {
 protected:
@@ -14,5 +14,5 @@ protected:
 
 public:
 	// evaluates the relationship and writes the answer to the result object
-	Result eval() = 0;
+	virtual Result eval() = 0;
 };

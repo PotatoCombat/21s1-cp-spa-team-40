@@ -6,7 +6,7 @@
 #include "Result.h"
 #include "Entity.h"
 #include "RelationshipHandler.h"
-#include "PKB.h"
+#include "pkb/PKB.h"
 #include "Util.h"
 
 using namespace std;

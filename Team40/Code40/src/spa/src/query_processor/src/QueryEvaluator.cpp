@@ -27,7 +27,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         }
 
         // eval and combine result
-        relationshipHandler->eval(tempResult);
+        tempResult = relationshipHandler->eval();
         allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();
 
         if (tempResult.hasResultList1()) {

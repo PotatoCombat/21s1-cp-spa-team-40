@@ -8,7 +8,7 @@
 #include "model/Query.h"
 #include "model/entity/Entity.h"
 #include "model/relationship/Relationship.h"
-#include "PKB.h"
+#include "pkb/PKB.h"
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
