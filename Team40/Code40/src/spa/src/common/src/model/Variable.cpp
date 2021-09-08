@@ -1,4 +1,5 @@
-#include "common/model/Variable.h"
+//#include "common/model/Variable.h"
+#include "../../include/common/model/Variable.h"
 
 Variable::Variable(int value, string name)
     : name(name), Factor(FactorType::VARIABLE, value) {}

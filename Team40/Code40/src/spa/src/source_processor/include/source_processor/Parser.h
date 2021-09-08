@@ -1,19 +1,44 @@
 #pragma once
 
+#include "../../src/Line.cpp"
 #include "Line.h"
 
-#include "common/model/ConstantValue.h"
-#include "common/model/Procedure.h"
-#include "common/model/Program.h"
-#include "common/model/Variable.h"
+// #include "common/model/ConstantValue.h"
+// #include "common/model/Procedure.h"
+// #include "common/model/Program.h"
+// #include "common/model/Variable.h"
 
-#include "common/model/condition/Condition.h"
+// #include "common/model/condition/Condition.h"
 
-#include "common/model/expression/Expression.h"
+// #include "common/model/expression/Expression.h"
 
-#include "common/model/statement/IfStatement.h"
-#include "common/model/statement/Statement.h"
-#include "common/model/statement/WhileStatement.h"
+// #include "common/model/statement/IfStatement.h"
+// #include "common/model/statement/Statement.h"
+// #include "common/model/statement/WhileStatement.h"
+
+#include "../../../common/include/common/model/ConstantValue.h"
+#include "../../../common/include/common/model/Procedure.h"
+#include "../../../common/include/common/model/Program.h"
+#include "../../../common/include/common/model/Variable.h"
+
+#include "../../../common/include/common/model/condition/Condition.h"
+
+#include "../../../common/include/common/model/expression/Expression.h"
+
+#include "../../../common/include/common/model/statement/IfStatement.h"
+#include "../../../common/include/common/model/statement/Statement.h"
+#include "../../../common/include/common/model/statement/WhileStatement.h"
+
+#include "../../../common/src/model/ConstantValue.cpp"
+#include "../../../common/src/model/Procedure.cpp"
+#include "../../../common/src/model/Program.cpp"
+#include "../../../common/src/model/Variable.cpp"
+
+#include "../../../common/src/model/condition/Condition.cpp"
+
+#include "../../../common/src/model/expression/Expression.cpp"
+
+#include "../../../common/src/model/statement/Statement.cpp"
 
 #include <fstream>
 #include <string>
@@ -22,17 +47,12 @@
 using namespace std;
 
 class Parser {
-private:
-    Program program;
-    vector<Variable> varLst;
-    vector<ConstantValue> constLst;
-
 public:
     // parse file input
     vector<Line> parseFile(fstream &file);
     vector<string> parseLine(string input);
     string cleanString(string input);
-    void addString(string &input, vector<string> inputVector);
+    void addString(string &input, vector<string> &inputVector);
 
     // parse preprocessed file
     Program parseProgram(vector<Line> programLines);
@@ -71,13 +91,4 @@ public:
     bool isSemiColon(string input);
     bool isInteger(string input);
     bool isName(string input);
-
-    // modifiers
-    void addToVarLst(Variable var);
-    void addToConstLst(ConstantValue constVal);
-
-    // getters
-    vector<Variable> getVarLst();
-    vector<ConstantValue> getConstLst();
-    Program getProgram();
 };

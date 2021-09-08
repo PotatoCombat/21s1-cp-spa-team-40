@@ -1,9 +1,16 @@
-#include "source_processor/Parser.h"
+//#include "source_processor/Parser.h"
+#include "../include/source_processor/Parser.h"
 
-#include "common/model/statement/AssignStatement.h"
-#include "common/model/statement/CallStatement.h"
-#include "common/model/statement/PrintStatement.h"
-#include "common/model/statement/ReadStatement.h"
+// #include "common/model/statement/AssignStatement.h"
+// #include "common/model/statement/CallStatement.h"
+// #include "common/model/statement/PrintStatement.h"
+// #include "common/model/statement/ReadStatement.h"
+
+#include "../../common/include/common/model/statement/AssignStatement.h"
+#include "../../common/include/common/model/statement/CallStatement.h"
+#include "../../common/include/common/model/statement/PrintStatement.h"
+#include "../../common/include/common/model/statement/ReadStatement.h"
+#include "../../common/src/model/Factor.cpp"
 
 #include <algorithm>
 #include <iostream>
@@ -33,7 +40,7 @@ vector<Line> Parser::parseFile(fstream &file) {
 }
 
 vector<string> Parser::parseLine(string input) {
-    vector<string> inputLine;
+    vector<string> inputLine = {};
     string currString = "";
     for (int i = 0; i < input.size(); i++) {
         char curr = input.at(i);
@@ -61,7 +68,7 @@ vector<string> Parser::parseLine(string input) {
     return inputLine;
 }
 
-void Parser::addString(string &input, vector<string> inputVector) {
+void Parser::addString(string &input, vector<string> &inputVector) {
     if (!input.empty()) {
         inputVector.push_back(input);
     }
@@ -76,14 +83,14 @@ string Parser::cleanString(string input) {
 // parse preprocessed file
 
 Program Parser::parseProgram(vector<Line> programLines) {
-    this->program = Program();
+    Program program = Program();
     Procedure currProc("");
     for (int i = 0; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         if (currIndex == 0) {
             if (!currProc.getName().empty()) {
-                this->program.addToProcLst(currProc);
+                program.addToProcLst(currProc);
             }
             currProc = parseProcedure(currContent);
         } else {
@@ -92,8 +99,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             currProc.addToStmtLst(stmt);
         }
     }
-    this->program.addToProcLst(currProc);
-    return this->program;
+    program.addToProcLst(currProc);
+    return program;
 }
 
 Statement Parser::parseStatement(vector<string> content, int index,
@@ -308,14 +315,3 @@ bool Parser::isName(string input) {
     }
     return true;
 }
-
-// modifiers
-void Parser::addToVarLst(Variable var) { this->varLst.push_back(var); }
-void Parser::addToConstLst(ConstantValue constVal) {
-    this->constLst.push_back(constVal);
-}
-
-// getters
-vector<Variable> Parser::getVarLst() { return this->varLst; }
-vector<ConstantValue> Parser::getConstLst() { return this->constLst; }
-Program Parser::getProgram() { return this->program; }

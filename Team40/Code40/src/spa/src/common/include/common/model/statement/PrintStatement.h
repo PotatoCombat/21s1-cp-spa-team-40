@@ -1,5 +1,7 @@
-#include "common/model/Variable.h"
-#include "common/model/statement/Statement.h"
+// #include "common/model/Variable.h"
+// #include "common/model/statement/Statement.h"
+#include "../Variable.h"
+#include "Statement.h"
 
 class PrintStatement : public Statement {
 private:

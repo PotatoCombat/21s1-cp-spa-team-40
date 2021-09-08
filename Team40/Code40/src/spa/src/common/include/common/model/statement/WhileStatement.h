@@ -1,5 +1,7 @@
-#include "common/model/statement/Statement.h"
-#include "common/model/condition/Condition.h"
+//#include "common/model/statement/Statement.h"
+#include "Statement.h"
+//#include "common/model/condition/Condition.h"
+#include "../condition/Condition.h"
 #include <string>
 #include <vector>
 
