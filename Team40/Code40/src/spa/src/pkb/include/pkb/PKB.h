@@ -30,17 +30,40 @@ public:
 
     virtual StmtIndex insertStmt(Statement *statement);
 
-    // stmt2 follows stmt1. This also adds to FollowStarTable
-    virtual bool insertFollows(StmtIndex stmt1, StmtIndex stmt2);
-    virtual StmtIndex getFollowingStmt(StmtIndex stmt);
-    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
-    // checks if stmt2 follows stmt1
-    virtual bool follows(StmtIndex stmt1, StmtIndex stmt2);
+    // =========================================================================
+    // Source Processor
+    // =========================================================================
 
+    /// Stores the relationship Follows(stmt1, stmt2), and updates * relationships.
+    virtual void insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt);
+
+    // =========================================================================
+    // Query Processor
+    // =========================================================================
+
+    // Follows =================================================================
+
+    /// Selects s such that Follows(stmt, s).
+    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there is none.
+    virtual StmtIndex getFollowingStmt(StmtIndex stmt);
+
+    /// Selects s such that Follows*(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there are none.
     virtual set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
+
+    /// Selects s such that Follows(s, stmt).
+    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there is none.
+    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
+
+    /// Selects s such that Follows*(s, stmt).
+    /// \return all stmt#no that fit the relationship, or an empty set if there are none.
     virtual set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
-    // checks if stmt2 follows* stmt1
-    virtual bool followsStar(StmtIndex stmt1, StmtIndex stmt2);
+
+    /// Selects BOOLEAN such that Follows(stmt1, stmt2).
+    virtual bool follows(StmtIndex precedingStmt, StmtIndex followingStmt);
+
+    /// Selects BOOLEAN such that Follows*(stmt1, stmt2).
+    virtual bool followsStar(StmtIndex precedingStmt, StmtIndex followingStmt);
 
     // stmt2 is parent of stmt1. This also adds to ParentStarTable
     virtual bool insertParent(StmtIndex stmt1, StmtIndex stmt2);

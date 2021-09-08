@@ -2,22 +2,36 @@
 
 FollowsTable::FollowsTable() = default;
 
-bool FollowsTable::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
-  followsMap[stmt1] = stmt2;
-  followedByMap[stmt2] = stmt1;
-  return true;
+void FollowsTable::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
+    followsMap[stmt1] = stmt2;
+    followedByMap[stmt2] = stmt1;
 }
+
 StmtIndex FollowsTable::getFollowingStmt(StmtIndex stmt) {
-  return followsMap.at(stmt);
+    auto result = followsMap.find(stmt);
+    if (result == followsMap.end())
+    {
+        return InvalidStmtIndex;
+    }
+    return result->second;
 }
 
 StmtIndex FollowsTable::getPrecedingStmt(StmtIndex stmt) {
-  return followedByMap.at(stmt);
+    auto result = followedByMap.find(stmt);
+    if (result == followedByMap.end())
+    {
+        return InvalidStmtIndex;
+    }
+    return result->second;
 }
 
-//Follows*(stmt1, stmt2)
+// Follows*(stmt1, stmt2)
 bool FollowsTable::follows(StmtIndex stmt1, StmtIndex stmt2) {
-  StmtIndex followsIndex = followsMap.at(stmt1);
-  return followsIndex == stmt2;
+    auto result = followsMap.find(stmt1);
+    if (result == followsMap.end())
+    {
+        return false;
+    }
+    StmtIndex followsIndex = result->second;
+    return followsIndex == stmt2;
 }
-

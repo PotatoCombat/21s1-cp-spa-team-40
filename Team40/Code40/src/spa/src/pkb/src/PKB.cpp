@@ -26,34 +26,43 @@ StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-// stmt2 follows stmt1. This also adds to FollowStarTable
-bool PKB::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
-    followsStarTable.insertFollowsStar(stmt1, stmt2);
-    return followsTable.insertFollows(stmt1, stmt2);
+// =============================================================================
+// Source Processor
+// =============================================================================
+
+void PKB::insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt) {
+    followsTable.insertFollows(precedingStmt, followingStmt);
+    followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
+
+// =============================================================================
+// Query Processor
+// =============================================================================
+
+// Follows =====================================================================
 
 StmtIndex PKB::getFollowingStmt(StmtIndex stmt) {
     return followsTable.getFollowingStmt(stmt);
-}
-
-StmtIndex PKB::getPrecedingStmt(StmtIndex stmt) {
-    return followsTable.getPrecedingStmt(stmt);
-}
-
-bool PKB::follows(StmtIndex stmt1, StmtIndex stmt2) {
-    return followsTable.follows(stmt1, stmt2);
 }
 
 set<StmtIndex> PKB::getFollowingStarStmts(StmtIndex stmt) {
     return followsStarTable.getFollowingStarStmts(stmt);
 }
 
+StmtIndex PKB::getPrecedingStmt(StmtIndex stmt) {
+    return followsTable.getPrecedingStmt(stmt);
+}
+
 set<StmtIndex> PKB::getPrecedingStarStmts(StmtIndex stmt) {
     return followsStarTable.getPrecedingStarStmts(stmt);
 }
 
-bool PKB::followsStar(StmtIndex stmt1, StmtIndex stmt2) {
-    return followsStarTable.followsStar(stmt1, stmt2);
+bool PKB::follows(StmtIndex precedingStmt, StmtIndex followingStmt) {
+    return followsTable.follows(precedingStmt, followingStmt);
+}
+
+bool PKB::followsStar(StmtIndex precedingStmt, StmtIndex followingStmt) {
+    return followsStarTable.followsStar(precedingStmt, followingStmt);
 }
 
 bool PKB::insertParent(StmtIndex stmt1, StmtIndex stmt2) {
