@@ -2,57 +2,88 @@
 
 UsesTable::UsesTable() = default;
 
-bool UsesTable::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
-  if (stmtUsesVarsMap.count(stmt) == 0) {
-    stmtUsesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
-  }
-  stmtUsesVarsMap[stmt].insert(var);
+void UsesTable::insertProcUsingVar(ProcIndex proc, VarIndex var) {
+    auto search1 = procsUsingVarMap.find(var);
+    if (search1 == procsUsingVarMap.end()) {
+        procsUsingVarMap[var] = { proc };
+    }
+    else {
+        search1->second.insert(proc);
+    }
 
-  if (varUsedByStmtsMap.count(var) == 0) {
-    varUsedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
-  }
-  varUsedByStmtsMap[var].insert(stmt);
-  return true;
+    auto search2 = varsUsedByProcMap.find(proc);
+    if (search2 == varsUsedByProcMap.end()) {
+        varsUsedByProcMap[proc] = { var };
+    }
+    else {
+        search2->second.insert(var);
+    }
 }
 
-bool UsesTable::insertProcUsingVar(ProcIndex proc, VarIndex var) {
-  if (procUsesVarsMap.count(proc) == 0) {
-    procUsesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
-  }
-  procUsesVarsMap[proc].insert(var);
+void UsesTable::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
+    auto search1 = stmtsUsingVarMap.find(var);
+    if (search1 == stmtsUsingVarMap.end()) {
+        stmtsUsingVarMap[var] = { stmt };
+    }
+    else {
+        search1->second.insert(stmt);
+    }
 
-  if (varUsedByProcsMap.count(var) == 0) {
-    varUsedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
-  }
-  varUsedByProcsMap[var].insert(proc);
-  return true;
-}
-
-set<VarIndex> UsesTable::getVarsUsedByStmt(StmtIndex stmt) {
-  return stmtUsesVarsMap.at(stmt);
-}
-
-set<StmtIndex> UsesTable::getStmtsUsingVar(VarIndex var) {
-  return varUsedByStmtsMap.at(var);
-}
-
-set<VarIndex> UsesTable::getVarsUsedByProc(ProcIndex proc) {
-  return procUsesVarsMap.at(proc);
+    auto search2 = varsUsedByStmtMap.find(stmt);
+    if (search2 == varsUsedByStmtMap.end()) {
+        varsUsedByStmtMap[stmt] = { var };
+    }
+    else {
+        search2->second.insert(var);
+    }
 }
 
 set<ProcIndex> UsesTable::getProcsUsingVar(VarIndex var) {
-  return varUsedByProcsMap.at(var);
+    auto result = procsUsingVarMap.find(var);
+    if (result == procsUsingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given stmt uses given var
-bool UsesTable::stmtUses(StmtIndex stmt, VarIndex var) {
-  set<VarIndex> varIndexes = stmtUsesVarsMap[stmt];
-  return varIndexes.find(var) != varIndexes.end();
+set<StmtIndex> UsesTable::getStmtsUsingVar(VarIndex var) {
+    auto result = stmtsUsingVarMap.find(var);
+    if (result == stmtsUsingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given proc uses given var
+set<VarIndex> UsesTable::getVarsUsedByProc(ProcIndex proc) {
+    auto result = varsUsedByProcMap.find(proc);
+    if (result == varsUsedByProcMap.end()) {
+        return {};
+    }
+    return result->second;
+}
+
+set<VarIndex> UsesTable::getVarsUsedByStmt(StmtIndex stmt) {
+    auto result = varsUsedByStmtMap.find(stmt);
+    if (result == varsUsedByStmtMap.end()) {
+        return {};
+    }
+    return result->second;
+}
+
 bool UsesTable::procUses(ProcIndex proc, VarIndex var) {
-  set<VarIndex> varIndexes = procUsesVarsMap[proc];
-  return varIndexes.find(var) != varIndexes.end();
+    auto result = varsUsedByProcMap.find(proc);
+    if (result == varsUsedByProcMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
 
+bool UsesTable::stmtUses(StmtIndex stmt, VarIndex var) {
+    auto result = varsUsedByStmtMap.find(stmt);
+    if (result == varsUsedByStmtMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
+}

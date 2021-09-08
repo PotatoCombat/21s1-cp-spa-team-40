@@ -48,6 +48,14 @@ void PKB::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
     modifiesTable.insertStmtModifyingVar(stmt, var);
 }
 
+void PKB::insertProcUsingVar(ProcIndex proc, VarIndex var) {
+    usesTable.insertProcUsingVar(proc, var);
+}
+
+void PKB::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
+    usesTable.insertStmtUsingVar(stmt, var);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -130,15 +138,10 @@ bool PKB::stmtModifies(StmtIndex stmt, VarIndex var) {
     return modifiesTable.stmtModifies(stmt, var);
 }
 
-bool PKB::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
-    return usesTable.insertStmtUsingVar(stmt, var);
-}
+// Uses ========================================================================
 
-bool PKB::insertProcUsingVar(StmtIndex stmt, VarIndex var) {
-    return usesTable.insertProcUsingVar(stmt, var);
-}
-set<VarIndex> PKB::getVarsUsedByStmt(StmtIndex stmt) {
-    return usesTable.getVarsUsedByStmt(stmt);
+set<ProcIndex> PKB::getProcsUsingVar(VarIndex var) {
+    return usesTable.getProcsUsingVar(var);
 }
 
 set<StmtIndex> PKB::getStmtsUsingVar(VarIndex var) {
@@ -149,14 +152,14 @@ set<VarIndex> PKB::getVarsUsedByProc(ProcIndex proc) {
     return usesTable.getVarsUsedByProc(proc);
 }
 
-set<ProcIndex> PKB::getProcsUsingVar(VarIndex var) {
-    return usesTable.getProcsUsingVar(var);
-}
-
-bool PKB::stmtUses(StmtIndex stmt, VarIndex var) {
-    return usesTable.stmtUses(stmt, var);
+set<VarIndex> PKB::getVarsUsedByStmt(StmtIndex stmt) {
+    return usesTable.getVarsUsedByStmt(stmt);
 }
 
 bool PKB::procUses(ProcIndex proc, VarIndex var) {
     return usesTable.procUses(proc, var);
+}
+
+bool PKB::stmtUses(StmtIndex stmt, VarIndex var) {
+    return usesTable.stmtUses(stmt, var);
 }
