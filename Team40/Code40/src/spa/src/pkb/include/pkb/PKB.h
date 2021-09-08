@@ -37,6 +37,9 @@ public:
     /// Stores the relationship Follows(stmt1, stmt2), and updates * relationships.
     virtual void insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt);
 
+    /// Stores the relationship Parent(stmt1, stmt2), and updates * relationships.
+    virtual void insertParent(StmtIndex parentStmt, StmtIndex childStmt);
+
     // =========================================================================
     // Query Processor
     // =========================================================================
@@ -65,17 +68,29 @@ public:
     /// Selects BOOLEAN such that Follows*(stmt1, stmt2).
     virtual bool followsStar(StmtIndex precedingStmt, StmtIndex followingStmt);
 
-    // stmt2 is parent of stmt1. This also adds to ParentStarTable
-    virtual bool insertParent(StmtIndex stmt1, StmtIndex stmt2);
-    virtual StmtIndex getParentStmt(StmtIndex stmt);
-    virtual StmtIndex getChildStmt(StmtIndex stmt);
-    // checks if stmt2 is parent of stmt1
-    virtual bool parent(StmtIndex stmt1, StmtIndex stmt2);
+    // Parent ==================================================================
 
+    /// Selects s such that Parent(s, stmt).
+    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there is none.
+    virtual StmtIndex getParentStmt(StmtIndex stmt);
+
+    /// Selects s such that Parent*(s, stmt).
+    /// \return all stmt#no that fit the relationship, or an empty set if there are none.
     virtual set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+
+    /// Selects s such that Parent(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there are none.
+    virtual set<StmtIndex> getChildStmts(StmtIndex stmt);
+
+    /// Selects s such that Parent*(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there are none.
     virtual set<StmtIndex> getChildStarStmts(StmtIndex stmt);
-    // checks if stmt2 is parent* of stmt1
-    virtual bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
+
+    /// Selects BOOLEAN such that Parent(stmt1, stmt2).
+    virtual bool parent(StmtIndex parentStmt, StmtIndex childStmt);
+
+    /// Selects BOOLEAN such that Parent*(stmt1, stmt2).
+    virtual bool parentStar(StmtIndex parentStmt, StmtIndex childStmt);
 
     virtual bool insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
     virtual bool insertProcModifyingVar(ProcIndex proc, VarIndex var);

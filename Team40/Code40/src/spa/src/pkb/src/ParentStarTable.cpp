@@ -2,52 +2,69 @@
 
 ParentStarTable::ParentStarTable() = default;
 
-//NOTE: stmt2 is parent of stmt1
-void ParentStarTable::insertIntoMaps(StmtIndex stmt1, StmtIndex stmt2) {
-  if (parentStarMap.count(stmt1) == 0) {
-    parentStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt1, {}));
-  }
-  parentStarMap[stmt1].insert(stmt2);
+// NOTE: stmt1 is parent of stmt2
+void ParentStarTable::insertParentStar(StmtIndex stmt1, StmtIndex stmt2) {
+    insertIntoMaps(stmt1, stmt2);
 
-  if (childStarMap.count(stmt2) == 0) {
-    childStarMap.insert(pair<StmtIndex, set<StmtIndex>>(stmt2, {}));
-  }
-  childStarMap[stmt2].insert(stmt1);
-}
-
-//NOTE: stmt2 is parent of stmt1
-bool ParentStarTable::insertParentStar(StmtIndex stmt1, StmtIndex stmt2) {
-  insertIntoMaps(stmt1, stmt2);
-
-  //Adding parent*(prevStmts, stmt2)
-  if (childStarMap.count(stmt1) > 0) {
-    for (const StmtIndex& prevStmt : childStarMap[stmt1]) {
-      insertIntoMaps(prevStmt, stmt2);
+    // Adding parent*(parentStmts, stmt2)
+    auto search1 = parentStarMap.find(stmt1);
+    if (search1 != parentStarMap.end()) {
+        for (const StmtIndex &parentStmt : search1->second) {
+            insertIntoMaps(parentStmt, stmt2);
+        }
     }
-  }
 
-  //Adding parent*(stmt1, nextStmts)
-  if (parentStarMap.count(stmt2) > 0) {
-    for (const StmtIndex& nextStmt : parentStarMap[stmt2]) {
-      insertIntoMaps(stmt1, nextStmt);
+    // Adding parent*(stmt1, childStmts)
+    auto search2 = childStarMap.find(stmt2);
+    if (search2 != childStarMap.end()) {
+        for (const StmtIndex &childStmt : search2->second) {
+            insertIntoMaps(stmt1, childStmt);
+        }
     }
-  }
-
-  return true;
 }
 
 set<StmtIndex> ParentStarTable::getParentStarStmts(StmtIndex stmt) {
-  return parentStarMap[stmt];
+    auto result = parentStarMap.find(stmt);
+    if (result == parentStarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
 set<StmtIndex> ParentStarTable::getChildStarStmts(StmtIndex stmt) {
-  return childStarMap[stmt];
+    auto result = childStarMap.find(stmt);
+    if (result == childStarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Parent*(stmt1, stmt2)
+// NOTE: stmt1 is parent of stmt2
 bool ParentStarTable::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
-  set<StmtIndex> parentIndexes = parentStarMap[stmt1];
-  return parentIndexes.find(stmt2) != parentIndexes.end();
+    auto result = parentStarMap.find(stmt2);
+    if (result == parentStarMap.end())
+    {
+        return false;
+    }
+    set<StmtIndex> parentIndices = result->second;
+    return parentIndices.find(stmt1) != parentIndices.end();
 }
 
+// NOTE: stmt1 is parent of stmt2
+void ParentStarTable::insertIntoMaps(StmtIndex stmt1, StmtIndex stmt2) {
+    auto search1 = parentStarMap.find(stmt2);
+    if (search1 == parentStarMap.end()) {
+        parentStarMap[stmt2] = { stmt1 };
+    }
+    else {
+        search1->second.insert(stmt1);
+    }
 
+    auto search2 = childStarMap.find(stmt1);
+    if (search2 == childStarMap.end()) {
+        childStarMap[stmt1] = { stmt2 };
+    }
+    else {
+        search2->second.insert(stmt2);
+    }
+}

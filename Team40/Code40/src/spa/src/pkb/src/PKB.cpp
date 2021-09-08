@@ -35,6 +35,11 @@ void PKB::insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt) {
     followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
 
+void PKB::insertParent(StmtIndex parentStmt, StmtIndex childStmt) {
+    parentTable.insertParent(parentStmt, childStmt);
+    parentStarTable.insertParentStar(parentStmt, childStmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -65,33 +70,30 @@ bool PKB::followsStar(StmtIndex precedingStmt, StmtIndex followingStmt) {
     return followsStarTable.followsStar(precedingStmt, followingStmt);
 }
 
-bool PKB::insertParent(StmtIndex stmt1, StmtIndex stmt2) {
-    parentStarTable.insertParentStar(stmt1, stmt2);
-    return parentStar(stmt1, stmt2);
-}
+// Parent ======================================================================
 
 StmtIndex PKB::getParentStmt(StmtIndex stmt) {
     return parentTable.getParentStmt(stmt);
-}
-
-StmtIndex PKB::getChildStmt(StmtIndex stmt) {
-    return parentTable.getChildStmt(stmt);
-}
-
-bool PKB::parent(StmtIndex stmt1, StmtIndex stmt2) {
-    return parentTable.parent(stmt1, stmt2);
 }
 
 set<StmtIndex> PKB::getParentStarStmts(StmtIndex stmt) {
     return parentStarTable.getParentStarStmts(stmt);
 }
 
+set<StmtIndex> PKB::getChildStmts(StmtIndex stmt) {
+    return parentTable.getChildStmts(stmt);
+}
+
 set<StmtIndex> PKB::getChildStarStmts(StmtIndex stmt) {
     return parentStarTable.getChildStarStmts(stmt);
 }
 
-bool PKB::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
-    return parentStarTable.parentStar(stmt1, stmt2);
+bool PKB::parent(StmtIndex parentStmt, StmtIndex childStmt) {
+    return parentTable.parent(parentStmt, childStmt);
+}
+
+bool PKB::parentStar(StmtIndex parentStmt, StmtIndex childStmt) {
+    return parentStarTable.parentStar(parentStmt, childStmt);
 }
 
 bool PKB::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {

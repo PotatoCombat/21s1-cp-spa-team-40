@@ -3,19 +3,29 @@
 #include "Abstractions.h"
 
 #include <map>
+#include <set>
 
 class ParentTable {
 
 public:
     ParentTable();
-    bool insertParent(StmtIndex stmt1, StmtIndex stmt2);
+
+    /// Stores Parent(stmt1, stmt2).
+    void insertParent(StmtIndex stmt1, StmtIndex stmt2);
+
+    /// Selects s such that Parent(s, stmt).
     StmtIndex getParentStmt(StmtIndex stmt);
-    StmtIndex getChildStmt(StmtIndex stmt);
+
+    /// Selects s such that Parent(stmt, s).
+    set<StmtIndex> getChildStmts(StmtIndex stmt);
+
+    /// Selects BOOLEAN such that Follows(stmt1, stmt2).
     bool parent(StmtIndex stmt1, StmtIndex stmt2);
 
 private:
-    //value is parent of key
+    /// Stores s such that Parent(s, stmt).
     map<StmtIndex, StmtIndex> parentMap;
-    //key is parent of value (value is child of key)
-    map<StmtIndex, StmtIndex> childMap;
+
+    /// Stores s such that Parent(stmt, s).
+    map<StmtIndex, set<StmtIndex>> childMap;
 };
