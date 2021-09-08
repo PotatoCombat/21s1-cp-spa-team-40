@@ -28,7 +28,6 @@ TestResultHelper testResultHelper = {
     vector<string>{"2", "3"}
 };
 
-
 TEST_CASE("Result: equals - all the same - returns true") {
 	Result result1;
     Result result2;
