@@ -7,6 +7,8 @@
 
 using namespace std;
 
+// TODO: maybe have a handler to handle different types of patterns
+
 class PatternClause {
 private:
     string syn;

@@ -14,6 +14,7 @@ public:
     Reference(string value);
 
     string getValue();
+    // TODO: try to not assign a value in cpp and make it completely virtual...?
     virtual ReferenceType getType();
     
     bool operator==(const Reference& other) const;

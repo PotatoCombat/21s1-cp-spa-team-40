@@ -12,7 +12,7 @@ string QueryTokenizer::trimString(string input) {
     if (back_w != string::npos && front_w != string::npos) {
         x = input.substr(front_w, back_w - front_w + 1);
     } else {
-        throw "Empty string";
+        throw "Empty string"; // TODO: Test
     }
     return x;
 }
@@ -64,13 +64,13 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
     try {
         declaration = trimString(declaration);
     } catch (const char *msg) {
-        throw "Empty declaration";
+        throw "Empty declaration";  // TODO: Test
     }
     string selectClause = queryString.substr(split + 1);
     try {
         selectClause = trimString(selectClause);
     } catch (const char *msg) {
-        throw "Empty select clause";
+        throw "Empty select clause";  // TODO: Test
     }
     return make_pair(declaration, selectClause);
 }
@@ -78,18 +78,18 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
 // return <designentity, syn>
 vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
-    // TODO handle ,
+    // TODO: handle ,
     vector<pair<string, string>> decl;
     string::iterator it;
     string::iterator itB;
     it = declaration.begin();
     itB = declaration.begin();
-    int found = 0;
+    // int found = 0;
     for (; it != declaration.end(); ++it) {
         if (*it == ';') {
             decl.push_back(splitDecl(trimString(string(itB, it))));
             itB = it + 1;
-            found = 1;
+            // found = 1;
         }
     }
     return decl;
@@ -101,6 +101,7 @@ string QueryTokenizer::tokenizeReturnEntity(string clause) {
     string partial;
 
     size_t selectKeyword = clause.find("Select"); // length 6
+    // TODO: Test truth for the following lines
     if (selectKeyword != string::npos) {
         partial = trimString(clause.substr(selectKeyword + 6));
     }

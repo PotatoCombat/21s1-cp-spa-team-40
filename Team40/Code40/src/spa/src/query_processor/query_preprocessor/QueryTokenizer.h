@@ -7,6 +7,7 @@ using namespace std;
 
 class QueryTokenizer {
 private:
+    // TODO: have the keywords "Select" etc stored as class constants
     string trimString(string input);
     pair<string, string> splitDecl(string input);
     tuple<string, string, string> splitBCB(string input);

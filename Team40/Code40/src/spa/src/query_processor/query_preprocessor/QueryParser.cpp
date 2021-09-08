@@ -1,10 +1,10 @@
 #include "QueryParser.h"
-#include <relation/FollowsRelation.h>
-#include <relation/FollowsStarRelation.h>
-#include <relation/ModifiesStatementRelation.h>
-#include <relation/ParentRelation.h>
-#include <relation/ParentStarRelation.h>
-#include <relation/UsesStatementRelation.h>
+#include "relation/FollowsRelation.h"
+#include "relation/FollowsStarRelation.h"
+#include "relation/ModifiesStatementRelation.h"
+#include "relation/ParentRelation.h"
+#include "relation/ParentStarRelation.h"
+#include "relation/UsesStatementRelation.h"
 
 QueryParser::QueryParser() = default;
 
