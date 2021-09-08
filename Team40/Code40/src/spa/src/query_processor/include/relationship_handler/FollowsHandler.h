@@ -7,7 +7,6 @@
 #include "Reference.h"
 #include "RelationshipHandler.h"
 #include "pkb/PKB.h"
-#include "Util.h"
 
 using namespace std;
 
