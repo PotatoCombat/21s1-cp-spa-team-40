@@ -34,7 +34,6 @@ void SPA::processSource(string filename) {
         // Program design entities
         // Program -> list of procedures -> contains a list of statements
         Program program = parser.parseProgram(programLines);
-        int test = 0; // to bypass debugger
     } else {
         cout << "No such file";
     }
@@ -44,5 +43,5 @@ void SPA::processSource(string filename) {
 int main() { // For testing on Fatin's machine only
     SPA spa;
     spa.processSource("C:\\Users\\Admin\\source\\repos\\21s1-cp-spa-team-"
-                      "40\\Team40\\Tests40\\Code1.txt");
+                      "40\\Team40\\Tests40\\Code2.txt");
 }

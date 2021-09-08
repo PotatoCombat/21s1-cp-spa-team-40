@@ -29,7 +29,10 @@ vector<Line> Parser::parseFile(fstream &file) {
         // The procedure definition does not receive an index.
         if (isProc(inputLine)) {
             stmtNum = 0;
-        } else if (!inputLine.empty()) {
+            // empty lines, "else" keywords on a line, curly brackets on a line
+            // do not receive an index
+        } else if (!inputLine.empty() && inputLine[0] != "}" &&
+                   inputLine[0] != "else") {
             stmtNum++;
         }
         if (!inputLine.empty()) {
@@ -62,7 +65,13 @@ vector<string> Parser::parseLine(string input) {
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                addString(currString, inputLine);
+                if (i < input.size() - 1) {
+                    if (!isalnum(input.at(i + 1))) {
+                        addString(currString, inputLine);
+                    }
+                } else {
+                    addString(currString, inputLine);
+                }
             }
         }
     }
@@ -95,8 +104,6 @@ Program Parser::parseProgram(vector<Line> programLines) {
             }
             currProc = parseProcedure(currContent);
         } else {
-            // empty lines, "else" keywords on a line, curly brackets on a line
-            // do not receive an index
             Statement stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
@@ -194,7 +201,7 @@ Statement Parser::parseWhileStatement(vector<string> content, int index,
 Statement Parser::parseIfStatement(vector<string> content, int index,
                                    vector<Line> programLines,
                                    int programIndex) {
-    vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
+    vector<string>::iterator ifItr = find(content.begin(), content.end(), "(");
     IfStatement stmt = IfStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
     vector<string> condLst(next(ifItr), endItr);
@@ -205,17 +212,16 @@ Statement Parser::parseIfStatement(vector<string> content, int index,
         vector<string> currContent = programLines[i].getContent();
         if (hasTerminator(currContent)) {
             terminator++;
+            continue;
         }
         if (currIndex == 0 || terminator == 2) {
             break;
         } else if (terminator == 0) {
-            Statement nestedStmt =
-                parseStatement(currContent, currIndex, programLines, i);
-            stmt.addThenStatement(nestedStmt);
+            stmt.addThenStatement(
+                parseStatement(currContent, currIndex, programLines, i));
         } else if (terminator == 1) {
-            Statement nestedStmt =
-                parseStatement(currContent, currIndex, programLines, i);
-            stmt.addElseStatement(nestedStmt);
+            stmt.addElseStatement(
+                parseStatement(currContent, currIndex, programLines, i));
         }
     }
     return stmt;
