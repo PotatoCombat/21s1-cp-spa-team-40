@@ -23,16 +23,12 @@ using namespace std;
 vector<Line> Parser::parseFile(fstream &file) {
     vector<Line> programLines = {};
     string input;
-    int stmtNum;
+    int stmtNum = 0;
     while (getline(file, input)) {
         vector<string> inputLine = parseLine(input);
         // The procedure definition does not receive an index.
-        if (isProc(inputLine)) {
-            stmtNum = 0;
-            // empty lines, "else" keywords on a line, curly brackets on a line
-            // do not receive an index
-        } else if (!inputLine.empty() && inputLine[0] != "}" &&
-                   inputLine[0] != "else") {
+        if (!inputLine.empty() && inputLine[0] != "}" &&
+            inputLine[0] != "else" && !isProc(inputLine)) {
             stmtNum++;
         }
         if (!inputLine.empty()) {
@@ -98,7 +94,7 @@ Program Parser::parseProgram(vector<Line> programLines) {
     for (int i = 0; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        if (currIndex == 0) {
+        if (isProc(currContent)) {
             if (!currProc.getName().empty()) {
                 program.addToProcLst(currProc);
             }
