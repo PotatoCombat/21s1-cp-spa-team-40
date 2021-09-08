@@ -16,7 +16,7 @@ private:
 	vector<string> resultList1;
 	vector<string> resultList2;
 public:
-	Result();
+	Result() : isValid(true), hasResult1(false), hasResult2(false), reference1(NULL), reference2(NULL) {}
 	void setValid(bool isValid);
 	bool isResultValid();
 	void setResultList1(Reference* reference, vector<string> resultList);
