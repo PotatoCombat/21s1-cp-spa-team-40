@@ -95,6 +95,7 @@ Program Parser::parseProgram(vector<Line> programLines) {
             Statement stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
+            throw ParseError
         }
     }
     this->program.addToProcLst(currProc);
@@ -149,7 +150,8 @@ Statement Parser::parseStatement(vector<string> content, int index,
         }
         return ifStmt;
     } else {
-        return Statement(index, StatementType::NONE);
+        // TODO: Implement a dedicated error type
+        throw runtime_error("Invalid statement!");
     }
 }
 
