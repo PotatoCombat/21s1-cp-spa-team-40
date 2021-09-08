@@ -1,50 +1,18 @@
 #pragma once
-
 #include "../../src/Line.cpp"
 #include "Line.h"
-
-// #include "common/model/ConstantValue.h"
-// #include "common/model/Procedure.h"
-// #include "common/model/Program.h"
-// #include "common/model/Variable.h"
-
-// #include "common/model/condition/Condition.h"
-
-// #include "common/model/expression/Expression.h"
-
-// #include "common/model/statement/IfStatement.h"
-// #include "common/model/statement/Statement.h"
-// #include "common/model/statement/WhileStatement.h"
-
-#include "../../../common/include/common/model/ConstantValue.h"
-#include "../../../common/include/common/model/Procedure.h"
-#include "../../../common/include/common/model/Program.h"
-#include "../../../common/include/common/model/Variable.h"
-
-#include "../../../common/include/common/model/condition/Condition.h"
-
-#include "../../../common/include/common/model/expression/Expression.h"
-
-#include "../../../common/include/common/model/statement/IfStatement.h"
-#include "../../../common/include/common/model/statement/Statement.h"
-#include "../../../common/include/common/model/statement/WhileStatement.h"
-
-#include "../../../common/src/model/ConstantValue.cpp"
-#include "../../../common/src/model/Procedure.cpp"
-#include "../../../common/src/model/Program.cpp"
-#include "../../../common/src/model/Variable.cpp"
-
-#include "../../../common/src/model/condition/Condition.cpp"
-
-#include "../../../common/src/model/expression/Expression.cpp"
-
-#include "../../../common/src/model/statement/Statement.cpp"
-
+#include "common/model/ConstantValue.h"
+#include "common/model/Procedure.h"
+#include "common/model/Program.h"
+#include "common/model/Variable.h"
+#include "common/model/condition/Condition.h"
+#include "common/model/expression/Expression.h"
+#include "common/model/statement/IfStatement.h"
+#include "common/model/statement/Statement.h"
+#include "common/model/statement/WhileStatement.h"
 #include <fstream>
 #include <string>
 #include <vector>
-
-using namespace std;
 
 class Parser {
 public:

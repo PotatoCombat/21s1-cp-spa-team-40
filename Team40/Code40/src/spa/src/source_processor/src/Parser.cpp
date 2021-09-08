@@ -1,17 +1,8 @@
-//#include "source_processor/Parser.h"
-#include "../include/source_processor/Parser.h"
-
-// #include "common/model/statement/AssignStatement.h"
-// #include "common/model/statement/CallStatement.h"
-// #include "common/model/statement/PrintStatement.h"
-// #include "common/model/statement/ReadStatement.h"
-
-#include "../../common/include/common/model/statement/AssignStatement.h"
-#include "../../common/include/common/model/statement/CallStatement.h"
-#include "../../common/include/common/model/statement/PrintStatement.h"
-#include "../../common/include/common/model/statement/ReadStatement.h"
-#include "../../common/src/model/Factor.cpp"
-
+#include "source_processor/Parser.h"
+#include "common/model/statement/AssignStatement.h"
+#include "common/model/statement/CallStatement.h"
+#include "common/model/statement/PrintStatement.h"
+#include "common/model/statement/ReadStatement.h"
 #include <algorithm>
 #include <iostream>
 #include <string>

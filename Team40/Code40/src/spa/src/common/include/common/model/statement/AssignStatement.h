@@ -1,14 +1,11 @@
-// #include "common/model/Variable.h"
-// #include "common/model/statement/Statement.h"
-#include "../Variable.h"
-#include "Statement.h"
+#include "common/model/Variable.h"
+#include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
 
 class AssignStatement : public Statement {
 private:
     Variable variable;
-    // No AST yet
     // Expression expression;
     vector<string> exprLst;
 

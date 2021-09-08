@@ -1,5 +1,4 @@
-//#include "common/model/statement/Statement.h"
-#include "../../../include/common/model/statement/Statement.h"
+#include "common/model/statement/Statement.h"
 
 // constructor
 Statement::Statement(int index, StatementType statementType)

@@ -1,6 +1,4 @@
-//#include "source_processor/Line.h"
-#include "../include/source_processor/Line.h"
-using namespace std;
+#include "source_processor/Line.h"
 
 Line::Line(int index, vector<string> content) {
     this->index = index;

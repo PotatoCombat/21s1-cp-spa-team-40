@@ -1,7 +1,5 @@
-// #include "common/model/Procedure.h"
-// #include "common/model/statement/Statement.h"
-#include "../Procedure.h"
-#include "Statement.h"
+#include "common/model/Procedure.h"
+#include "common/model/statement/Statement.h"
 
 class CallStatement : public Statement {
 private:
