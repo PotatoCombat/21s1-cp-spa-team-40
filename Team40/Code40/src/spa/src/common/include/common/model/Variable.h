@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
-
 #include "Factor.h"
-
+#include <string>
 using namespace std;
 
 class Variable : public Factor {

@@ -1,5 +1,6 @@
 #include "common/model/Procedure.h"
 #include "common/model/statement/Statement.h"
+using namespace std;
 
 class CallStatement : public Statement {
 private:

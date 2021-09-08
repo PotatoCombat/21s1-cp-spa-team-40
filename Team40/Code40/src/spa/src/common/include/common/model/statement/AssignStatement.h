@@ -2,6 +2,7 @@
 #include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
+using namespace std;
 
 class AssignStatement : public Statement {
 private:
