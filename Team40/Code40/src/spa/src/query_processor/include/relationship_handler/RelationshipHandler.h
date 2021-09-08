@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Relationship.h"
+#include "Relation.h"
 #include "pkb/PKB.h"
 
 class RelationshipHandler {
 protected:
-	Relationship* relationship;
+	Relation* relation;
     PKB* pkb;
-	RelationshipHandler(Relationship* relationship, PKB* pkb) {
-        this->relationship = relationship;
+	RelationshipHandler(Relation* relation, PKB* pkb) {
+        this->relation = relation;
         this->pkb = pkb;
 	}
 

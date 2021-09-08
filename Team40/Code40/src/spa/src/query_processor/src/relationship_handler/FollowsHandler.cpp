@@ -2,12 +2,12 @@
 
 Result FollowsHandler::eval() {
     Result result;
-	Entity* firstEntity = relationship->getFirstEntity();
-	Entity* secondEntity = relationship->getSecondEntity();
-	string firstStmt = firstEntity->getName();
-	string secondStmt = secondEntity->getName();
-	bool isFirstEntitySynonym = firstEntity->isSynonymEntity();
-	bool isSecondEntitySynonym = secondEntity->isSynonymEntity();
+	Reference* firstEntity = relation->getFirstReference();
+	Reference* secondEntity = relation->getSecondReference();
+	string firstStmt = firstEntity->getValue();
+	string secondStmt = secondEntity->getValue();
+	bool isFirstEntitySynonym = firstEntity->isSynonym();
+	bool isSecondEntitySynonym = secondEntity->isSynonym();
 
 	// Todo later: assert firstEntiy and secondEntity are stmts
 
@@ -34,7 +34,7 @@ Result FollowsHandler::eval() {
 	}
 
 	if (isFirstEntitySynonym && isSecondEntitySynonym &&
-		!(firstEntity->getName() == Entity::WILDCARD && secondEntity->getName() == Entity::WILDCARD)) {
+		!(firstEntity->getValue() == Reference::WILDCARD && secondEntity->getValue() == Reference::WILDCARD)) {
 		vector<string> firstStmtResults;
 		vector<string> secondStmtResults;
 		vector<int> precedingStmts = pkb->getAllStmts().asVector();
@@ -43,14 +43,16 @@ Result FollowsHandler::eval() {
 			if (followingStmt == -1) { // Todo: use variable instead of magic number
 				continue;   
 			}
-			if (firstEntity->getName() != Entity::WILDCARD) {
+			if (firstEntity->getValue() != Reference::WILDCARD) {
 				firstStmtResults.push_back(to_string(precedingStmt));
             }
-			if (secondEntity->getName() != Entity::WILDCARD) {
+			if (secondEntity->getValue() != Reference::WILDCARD) {
                 secondStmtResults.push_back(to_string(followingStmt));
             }
 		}
 		result.setResultList1(firstEntity, firstStmtResults);
 		result.setResultList2(secondEntity, secondStmtResults);
 	}
+
+	return result;
 }

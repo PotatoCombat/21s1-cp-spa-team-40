@@ -3,25 +3,25 @@
 QueryEvaluator::QueryEvaluator(PKB pkb) { this->pkb = pkb; }
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
-    Entity* returnEntity = query.getReturnEntity();
-    vector<Entity *> entities = query.getEntities();
-    vector<Relationship *> relationships = query.getRelationships();
+    Reference* returnEntity = query.getReturnReference();
+    vector<Reference *> entities = query.getReferences(); // TODO: placeholder for now, need to change
+    vector<Relation *> relationships = query.getRelations();
     vector<vector<string>> results(entities.size(), vector<string>());
     vector<bool> entitiesAppearInQuery(entities.size(), false);
     bool allQueryReturnsTrue = true;
 
-    for (vector<Relationship *>::iterator it = relationships.begin();
+    for (vector<Relation *>::iterator it = relationships.begin();
          it != relationships.end(); ++it) {
     
     } 
 
-    for (Relationship *relationship : relationships) {
+    for (Relation *relationship : relationships) {
         Result tempResult;
 
         RelationshipHandler *relationshipHandler;
 
         // TODO: add more handlers for relationshipType later
-        if (relationship->getRelationshipType() == RelationshipType::FOLLOWS) {
+        if (relationship->getType() == RelationType::FOLLOWS) {
             FollowsHandler followsHandler(relationship, &pkb);
             relationshipHandler = &followsHandler;
         }
@@ -32,12 +32,12 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         if (tempResult.hasResultList1()) {
             combineResult(results, entities, tempResult.getResultList1(),
-                          tempResult.getEntity1(), entitiesAppearInQuery);
+                          tempResult.getReference1(), entitiesAppearInQuery);
         }
 
         if (tempResult.hasResultList2()) {
             combineResult(results, entities, tempResult.getResultList2(),
-                          tempResult.getEntity2(), entitiesAppearInQuery);
+                          tempResult.getReference2(), entitiesAppearInQuery);
         }
     }
 
@@ -61,8 +61,8 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     return results[resultIndex];
 }
 
-void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Entity *> &entities,
-                                   vector<string> result, Entity* entity, vector<bool> &entitiesAppearInQuery) {
+void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Reference *> &entities,
+                                   vector<string> result, Reference* entity, vector<bool> &entitiesAppearInQuery) {
     int index = -1;
     for (int i = 0; i < entities.size(); i++) {
         if (entities[i]->equals(*entity)) {

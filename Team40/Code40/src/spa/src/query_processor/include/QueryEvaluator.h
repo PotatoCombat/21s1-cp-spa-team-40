@@ -6,8 +6,8 @@
 #include <iterator>
 
 #include "model/Query.h"
-#include "model/entity/Entity.h"
-#include "model/relationship/Relationship.h"
+#include "model/reference/Reference.h"
+#include "model/relation/Relation.h"
 #include "pkb/PKB.h"
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
@@ -20,8 +20,8 @@ class QueryEvaluator {
 private:
     PKB pkb;
 
-    void combineResult(vector<vector<string>> &results, vector<Entity *> &entities, vector<string> result,
-                       Entity* entity, vector<bool> &entitiesAppearInQuery);  
+    void combineResult(vector<vector<string>> &results, vector<Reference *> &entities, vector<string> result,
+                       Reference* entity, vector<bool> &entitiesAppearInQuery);  
 
 public:
     QueryEvaluator(PKB pkb);

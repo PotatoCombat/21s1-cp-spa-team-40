@@ -3,27 +3,24 @@
 #include <string>
 #include <vector>
 
-#include "entity/Entity.h"
-#include "relationship/Relationship.h"
+#include "reference/Reference.h"
+#include "relation/Relation.h"
 
 using namespace std;
 
-// typedef vector<Entity> LIST_OF_ENTITY;
-
 class Query {
 private:
-    vector<Entity *> entityList;
-    vector<Relationship *> relationshipList;
-    Entity *returnEntity;
+    vector<Relation *> relationList;
+    Reference *returnReference;
 
 public:
     Query();
-    void setReturnEntity(Entity *entity);
-    Entity *getReturnEntity();
 
-    void addEntity(Entity *entity);
-    vector<Entity *> getEntities();
+    vector<Reference *> getReferences();
 
-    void addRelationship(Relationship *relationship);
-    vector<Relationship *> getRelationships();
+    void setReturnReference(Reference *reference);
+    Reference *getReturnReference();
+
+    void addRelation(Relation *relation);
+    vector<Relation *> getRelations();
 };
