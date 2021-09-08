@@ -4,7 +4,7 @@ QueryEvaluator::QueryEvaluator(PKB pkb) { this->pkb = pkb; }
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     Reference* returnEntity = query.getReturnReference();
-    vector<Reference *> entities = query.getReferences(); // TODO: placeholder for now, need to change
+    vector<Reference *> entities = query.getReferences();
     vector<Relation *> relationships = query.getRelations();
     vector<vector<string>> results(entities.size(), vector<string>());
     vector<bool> referenceAppearInClauses(entities.size(), false);
@@ -36,8 +36,16 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         }
     }
 
+    // returns empty result if one of the boolean clauses returns false
     if (!allQueryReturnsTrue) {
         return vector<string>();
+    }
+
+    // returns empty result if one of the references has no matching result
+    for (int i = 0; i < entities.size(); i++) {
+        if (referenceAppearInClauses[i] && results[i].empty()) {
+            return vector<string>();
+        }
     }
 
     int resultIndex = -1;

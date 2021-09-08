@@ -7,13 +7,23 @@ Result FollowsHandler::eval() {
 	string firstStmt = firstReference->getValue();
 	string secondStmt = secondReference->getValue();
 
-	// Todo later: assert firstEntiy and secondReference are stmts
-	// Todo: use variable instead of magic number
+    // Todo: handle stmts by different design enity types
+    // Todo: assert relationType is follows
+	// Todo: assert firstEntiy and secondReference are stmts
+	// Todo: use variable instead of magic number -1
 
 	// WILDCARD WILDCARD
 	if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        return result;
+        vector<int> allStmts = pkb->getAllStmts().asVector();
+        for (auto stmt : allStmts) {
+            if (pkb->getFollowingStmt(stmt) != -1) {
+                result.setValid(true);
+                return result;
+            }
+        }
+        result.setValid(false);
+        return result;  
 	}
 
 	/// CONSTANT CONSTANT
@@ -33,7 +43,7 @@ Result FollowsHandler::eval() {
 	// WILDCARD CONSTANT
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getPrecedingStmt(stoi(secondStmt) != -1));
+        result.setValid(pkb->getPrecedingStmt(stoi(secondStmt)) != -1);
         return result;
 	}
 
