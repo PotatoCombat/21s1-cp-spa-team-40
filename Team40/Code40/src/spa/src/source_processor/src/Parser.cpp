@@ -95,7 +95,6 @@ Program Parser::parseProgram(vector<Line> programLines) {
             Statement stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
-            throw ParseError
         }
     }
     this->program.addToProcLst(currProc);

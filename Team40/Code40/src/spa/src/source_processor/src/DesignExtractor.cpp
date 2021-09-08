@@ -7,7 +7,6 @@ using namespace std;
 DesignExtractor::DesignExtractor(PKB pkb) : pkb(pkb) {}
 
 void DesignExtractor::handleProgram(Program program) {
-    PKB pkb = PKB();
     for (Procedure proc : program.getProcLst()) {
         handleProcedure(&proc);
     }
@@ -18,9 +17,26 @@ void DesignExtractor::handleProcedure(Procedure *procedure) {
     for (Statement statement : procedure->getStmtLst()) {
         handleStatement(&statement);
     }
-    // 3. Tie-up
 }
 
 void DesignExtractor::handleStatement(Statement *statement) {
-    pkb.insertStmt(statement);
+    switch (statement->getStatementType()) {
+    case StatementType::ASSIGN:
+        handleAssignStatement(statement);
+    case StatementType::CALL:
+    case StatementType::IF:
+    case StatementType::READ:
+    case StatementType::PRINT:
+    case StatementType::WHILE:
+    default:
+        throw runtime_error("Invalid StatementType!");
+    }
+}
+
+void DesignExtractor::handleAssignStatement(Statement *assignStatement) {
+    Statement *stmt = assignStatement;
+    StmtIndex stmtIdx = pkb.insertStmt(stmt);
+    Variable var = assignStatement->getVariable();
+    VarIndex varIdx = pkb.insertVar(&var);
+    pkb.insertStmtModifyingVar(stmtIdx, varIdx);
 }
