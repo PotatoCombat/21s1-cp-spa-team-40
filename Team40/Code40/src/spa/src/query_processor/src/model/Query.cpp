@@ -1,21 +1,22 @@
 #include "Query.h"
 
 Query::Query() {
-    vector<Entity *> entityList;
-    vector<Relationship *> relationshipList;
-    Entity *returnEntity;
+    vector<Relation *> relationList;
+    Reference *returnReference;
 }
 
-Entity* Query::getReturnEntity() { return returnEntity; }
-
-void Query::setReturnEntity(Entity *entity) { returnEntity = entity; }
-
-void Query::addEntity(Entity *entity) { entityList.push_back(entity); }
-
-vector<Entity *> Query::getEntities() { return entityList; }
-
-void Query::addRelationship(Relationship *relationship) {
-    relationshipList.push_back(relationship);
+vector<Reference *> Query::getReferences() {
+    return vector<Reference *>(); // TODO: remove later
 }
 
-vector<Relationship *> Query::getRelationships() { return relationshipList; }
+void Query::setReturnReference(Reference *reference) {
+    this->returnReference = reference;
+}
+
+Reference *Query::getReturnReference() { return this->returnReference; }
+
+void Query::addRelation(Relation *relation) {
+    relationList.push_back(relation);
+}
+
+vector<Relation *> Query::getRelations() { return this->relationList; }

@@ -4,8 +4,8 @@ Result::Result() {
 	isValid = true;
 	hasResult1 = false;
 	hasResult2 = false;
-	entity1 = NULL;
-	entity2 = NULL;
+	reference1 = NULL;
+	reference2 = NULL;
 }
 
 void Result::setValid(bool isValid) {
@@ -13,13 +13,13 @@ void Result::setValid(bool isValid) {
 }
 
 
-void Result::setResultList1(Entity* entity, vector<string> resultList) {
-	entity1 = entity;
+void Result::setResultList1(Reference* reference, vector<string> resultList) {
+	reference1 = reference;
 	resultList1 = resultList;
 }
 
-void Result::setResultList2(Entity* entity, vector<string> resultList) {
-	entity2 = entity;
+void Result::setResultList2(Reference* reference, vector<string> resultList) {
+	reference2 = reference;
 	resultList2 = resultList;
 }
 
@@ -27,17 +27,17 @@ bool Result::isResultValid() {
 	return isValid;
 }
 
-Entity* Result::getEntity1() {
-	return entity1;
+Reference* Result::getReference1() {
+	return reference1;
 }
 
-Entity* Result::getEntity2() {
-	return entity2;
+Reference* Result::getReference2() {
+	return reference2;
 }
 
-bool Result::hasResultList1() { return getEntity1() != NULL; }
+bool Result::hasResultList1() { return getReference1() != NULL; }
 
-bool Result::hasResultList2() { return getEntity2() != NULL; }
+bool Result::hasResultList2() { return getReference2() != NULL; }
 
 vector<string> Result::getResultList1() {
 	return resultList1;
@@ -61,14 +61,14 @@ bool Result::equals(Result& other) {
 	}
 
 	if (this->hasResultList1()) {
-		if (!(this->getEntity1()->equals(*(other.getEntity1())) &&
+		if (!(this->getReference1()->equals(*(other.getReference1())) &&
 			this->getResultList1() == other.getResultList1())) {
             return false;
 		}
 	}
 
 	if (this->hasResultList2()) {
-		if (!(this->getEntity2()->equals(*(other.getEntity2())) &&
+		if (!(this->getReference2()->equals(*(other.getReference2())) &&
 			this->getResultList2() == other.getResultList2())) {
 			return false;
 		}
