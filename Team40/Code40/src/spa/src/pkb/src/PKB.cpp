@@ -40,6 +40,14 @@ void PKB::insertParent(StmtIndex parentStmt, StmtIndex childStmt) {
     parentStarTable.insertParentStar(parentStmt, childStmt);
 }
 
+void PKB::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
+    modifiesTable.insertProcModifyingVar(proc, var);
+}
+
+void PKB::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
+    modifiesTable.insertStmtModifyingVar(stmt, var);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -96,15 +104,10 @@ bool PKB::parentStar(StmtIndex parentStmt, StmtIndex childStmt) {
     return parentStarTable.parentStar(parentStmt, childStmt);
 }
 
-bool PKB::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
-    return modifiesTable.insertStmtModifyingVar(stmt, var);
-}
+// Modifies ====================================================================
 
-bool PKB::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
-    return modifiesTable.insertProcModifyingVar(proc, var);
-}
-set<VarIndex> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
-    return modifiesTable.getVarsModifiedByStmt(stmt);
+set<ProcIndex> PKB::getProcsModifyingVar(VarIndex var) {
+    return modifiesTable.getProcsModifyingVar(var);
 }
 
 set<StmtIndex> PKB::getStmtsModifyingVar(VarIndex var) {
@@ -115,16 +118,16 @@ set<VarIndex> PKB::getVarsModifiedByProc(ProcIndex proc) {
     return modifiesTable.getVarsModifiedByProc(proc);
 }
 
-set<ProcIndex> PKB::getProcsModifyingVar(VarIndex var) {
-    return modifiesTable.getProcsModifyingVar(var);
-}
-
-bool PKB::stmtModifies(StmtIndex stmt, VarIndex var) {
-    return modifiesTable.stmtModifies(stmt, var);
+set<VarIndex> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
+    return modifiesTable.getVarsModifiedByStmt(stmt);
 }
 
 bool PKB::procModifies(ProcIndex proc, VarIndex var) {
     return modifiesTable.procModifies(proc, var);
+}
+
+bool PKB::stmtModifies(StmtIndex stmt, VarIndex var) {
+    return modifiesTable.stmtModifies(stmt, var);
 }
 
 bool PKB::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {

@@ -40,6 +40,12 @@ public:
     /// Stores the relationship Parent(stmt1, stmt2), and updates * relationships.
     virtual void insertParent(StmtIndex parentStmt, StmtIndex childStmt);
 
+    /// Stores the relationship Modifies(proc, var).
+    virtual void insertProcModifyingVar(ProcIndex proc, VarIndex var);
+
+    /// Stores the relationship Modifies(stmt, var).
+    virtual void insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
+
     // =========================================================================
     // Query Processor
     // =========================================================================
@@ -92,14 +98,29 @@ public:
     /// Selects BOOLEAN such that Parent*(stmt1, stmt2).
     virtual bool parentStar(StmtIndex parentStmt, StmtIndex childStmt);
 
-    virtual bool insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
-    virtual bool insertProcModifyingVar(ProcIndex proc, VarIndex var);
-    virtual set<VarIndex> getVarsModifiedByStmt(StmtIndex stmt);
-    virtual set<StmtIndex> getStmtsModifyingVar(VarIndex var);
-    virtual set<VarIndex> getVarsModifiedByProc(ProcIndex proc);
+    // Modifies ================================================================
+
+    /// Selects p such that Modifies(p, var), where p is a Procedure.
+    /// \return stmt#no that fits the relationship, or an empty set there are none.
     virtual set<ProcIndex> getProcsModifyingVar(VarIndex var);
-    virtual bool stmtModifies(StmtIndex stmt, VarIndex var);
+
+    /// Selects s such that Modifies(s, var), where s is a Statement.
+    /// \return stmt#no that fits the relationship, or an empty set there are none.
+    virtual set<StmtIndex> getStmtsModifyingVar(VarIndex var);
+
+    /// Selects v such that Modifies(proc, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are none.
+    virtual set<VarIndex> getVarsModifiedByProc(ProcIndex proc);
+
+    /// Selects v such that Modifies(stmt, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are none.
+    virtual set<VarIndex> getVarsModifiedByStmt(StmtIndex stmt);
+
+    /// Selects BOOLEAN such that Modifies(proc, var).
     virtual bool procModifies(ProcIndex proc, VarIndex var);
+
+    /// Selects BOOLEAN such that Modifies(stmt, var).
+    virtual bool stmtModifies(StmtIndex stmt, VarIndex var);
 
     virtual bool insertStmtUsingVar(StmtIndex stmt, VarIndex var);
     virtual bool insertProcUsingVar(ProcIndex proc, VarIndex var);
