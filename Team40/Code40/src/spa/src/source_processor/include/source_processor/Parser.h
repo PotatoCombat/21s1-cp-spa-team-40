@@ -1,5 +1,4 @@
 #pragma once
-#include "../../src/Line.cpp"
 #include "Line.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
