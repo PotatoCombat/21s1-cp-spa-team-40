@@ -4,10 +4,8 @@
 
 using namespace std;
 
-typedef string Statement;
 typedef string Var;
 typedef string Const;
-typedef string Procedure;
 typedef string Pattern;
 
 typedef int VarIndex;

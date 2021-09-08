@@ -2,39 +2,31 @@
 
 using namespace std;
 
-Iterator<VarIndex> PKB::getAllVars() {
-    return varTable.getIndices();
-}
+Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
 
-Iterator<ConstIndex> PKB::getAllConsts() {
-    return constTable.getIndices();
-}
+Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
 
-Iterator<ProcIndex> PKB::getAllProcs() {
-    return procTable.getIndices();
-}
+Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
 
-Iterator<StmtIndex> PKB::getAllStmts() {
-    return statementTable.getIndices();
-}
+Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
-VarIndex PKB::insertVar(Var variable) {
+VarIndex PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
-ConstIndex PKB::insertConst(Const constant) {
+ConstIndex PKB::insertConst(Const *constant) {
     return constTable.insert(constant);
 }
 
-ProcIndex PKB::insertProc(Procedure procedure) {
+ProcIndex PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-StmtIndex PKB::insertStmt(Statement statement) {
+StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-//stmt2 follows stmt1. This also adds to FollowStarTable
+// stmt2 follows stmt1. This also adds to FollowStarTable
 bool PKB::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
     followsStarTable.insertFollowsStar(stmt1, stmt2);
     return followsTable.insertFollows(stmt1, stmt2);
