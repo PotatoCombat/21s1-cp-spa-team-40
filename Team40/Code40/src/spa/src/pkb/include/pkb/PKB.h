@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "Abstractions.h"
 #include "EntityTable.h"
 #include "FollowsStarTable.h"
 #include "FollowsTable.h"
@@ -18,21 +17,14 @@ using namespace std;
 
 class PKB {
 public:
-    virtual Iterator<VarIndex> getAllVars();
-    virtual Iterator<ConstIndex> getAllConsts();
-    virtual Iterator<ProcIndex> getAllProcs();
-
-    virtual Iterator<StmtIndex> getAllStmts();
-
-    virtual VarIndex insertVar(Variable *variable);
-    virtual ConstIndex insertConst(Const *constant);
-    virtual ProcIndex insertProc(Procedure *procedure);
-
-    virtual StmtIndex insertStmt(Statement *statement);
-
     // =========================================================================
     // Source Processor
     // =========================================================================
+
+    virtual ProcIndex insertProc(Procedure *procedure);
+    virtual StmtIndex insertStmt(Statement *statement);
+    virtual VarIndex insertVar(Variable *variable);
+    virtual ConstIndex insertConst(Const *constant);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
@@ -58,6 +50,11 @@ public:
     // =========================================================================
     // Query Processor
     // =========================================================================
+
+    virtual Iterator<ProcIndex> getAllProcs();
+    virtual Iterator<StmtIndex> getAllStmts();
+    virtual Iterator<VarIndex> getAllVars();
+    virtual Iterator<ConstIndex> getAllConsts();
 
     // Follows =================================================================
 
@@ -172,17 +169,15 @@ public:
     virtual bool stmtUses(StmtIndex stmt, VarIndex var);
 
 private:
+    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
+    typedef StatementTable<Statement, StmtIndex> StatementTable;
     typedef EntityTable<Variable, VarIndex> VarTable;
     typedef EntityTable<Const, ConstIndex> ConstTable;
-    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
 
-    typedef StatementTable<Statement, StmtIndex> StatementTable;
-
+    ProcedureTable procTable;
+    StatementTable statementTable;
     VarTable varTable;
     ConstTable constTable;
-    ProcedureTable procTable;
-
-    StatementTable statementTable;
 
     FollowsTable followsTable;
     FollowsStarTable followsStarTable;

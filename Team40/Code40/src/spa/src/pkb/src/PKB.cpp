@@ -2,21 +2,9 @@
 
 using namespace std;
 
-Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
-
-Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
-
-Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
-
-Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
-
-VarIndex PKB::insertVar(Variable *variable) {
-    return varTable.insert(variable);
-}
-
-ConstIndex PKB::insertConst(Const *constant) {
-    return constTable.insert(constant);
-}
+// =============================================================================
+// Source Processor
+// =============================================================================
 
 ProcIndex PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
@@ -26,9 +14,13 @@ StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-// =============================================================================
-// Source Processor
-// =============================================================================
+VarIndex PKB::insertVar(Variable *variable) {
+    return varTable.insert(variable);
+}
+
+ConstIndex PKB::insertConst(Const *constant) {
+    return constTable.insert(constant);
+}
 
 void PKB::insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt) {
     followsTable.insertFollows(precedingStmt, followingStmt);
@@ -59,6 +51,14 @@ void PKB::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
 // =============================================================================
 // Query Processor
 // =============================================================================
+
+Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
+
+Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
+
+Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
+
+Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
 
 // Follows =====================================================================
 
