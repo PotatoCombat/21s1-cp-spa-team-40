@@ -9,14 +9,12 @@ using namespace std;
 class Result {
 private:
 	bool isValid; // false if a True/False returns false, true otherwise
-    bool hasResult1;
-    bool hasResult2;
 	Reference* reference1;
 	Reference* reference2;
 	vector<string> resultList1;
 	vector<string> resultList2;
 public:
-	Result() : isValid(true), hasResult1(false), hasResult2(false), reference1(NULL), reference2(NULL) {}
+	Result() : isValid(true), reference1(NULL), reference2(NULL) {}
 	void setValid(bool isValid);
 	bool isResultValid();
 	void setResultList1(Reference* reference, vector<string> resultList);
