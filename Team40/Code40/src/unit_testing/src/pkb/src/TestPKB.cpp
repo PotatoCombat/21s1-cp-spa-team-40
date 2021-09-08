@@ -13,6 +13,7 @@ public:
     static vector<Statement> createStatements();
     static vector<Procedure> createProcs();
     static vector<int> createIndices();
+    static vector<Variable> createVariables();
 };
 
 vector<string> TestPKB::createItems() {
@@ -30,6 +31,12 @@ vector<Statement> TestPKB::createStatements() {
                              Statement(2, StatementType::IF)};
 }
 
+vector<Variable> TestPKB::createVariables() {
+    return vector<Variable>{Variable(0, "var_name_1"),
+                            Variable(0, "var_name_1"),
+                            Variable(0, "var_name_1")};
+}
+
 vector<int> TestPKB::createIndices() { return vector<int>{0, 1, 2}; }
 
 TEST_CASE("PKB: ctor") {
@@ -43,8 +50,8 @@ TEST_CASE("PKB: ctor") {
 TEST_CASE("PKB: insertVar/getAllVars") {
     PKB pkb;
 
-    vector<Var> items = TestPKB::createItems();
-    for (Var i : items) {
+    vector<Variable> vars = TestPKB::createVariables();
+    for (Variable i : vars) {
         pkb.insertVar(&i);
     }
 

@@ -10,7 +10,9 @@ Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
-VarIndex PKB::insertVar(Var *variable) { return varTable.insert(variable); }
+VarIndex PKB::insertVar(Variable *variable) {
+    return varTable.insert(variable);
+}
 
 ConstIndex PKB::insertConst(Const *constant) {
     return constTable.insert(constant);

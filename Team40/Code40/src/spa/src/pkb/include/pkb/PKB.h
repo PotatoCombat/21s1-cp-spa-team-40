@@ -11,6 +11,7 @@
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "common/model/Procedure.h"
+#include "common/model/Variable.h"
 #include "common/model/statement/Statement.h"
 
 using namespace std;
@@ -23,7 +24,7 @@ public:
 
     virtual Iterator<StmtIndex> getAllStmts();
 
-    virtual VarIndex insertVar(Var *variable);
+    virtual VarIndex insertVar(Variable *variable);
     virtual ConstIndex insertConst(Const *constant);
     virtual ProcIndex insertProc(Procedure *procedure);
 
@@ -72,7 +73,7 @@ public:
     virtual bool procUses(ProcIndex proc, VarIndex var);
 
 private:
-    typedef EntityTable<Var, VarIndex> VarTable;
+    typedef EntityTable<Variable, VarIndex> VarTable;
     typedef EntityTable<Const, ConstIndex> ConstTable;
     typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
 
