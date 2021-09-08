@@ -31,7 +31,8 @@ public:
     // parse file input
     vector<Line> parseFile(fstream &file);
     vector<string> parseLine(string input);
-    string clean(string input);
+    string cleanString(string input);
+    void addString(string &input, vector<string> inputVector);
 
     // parse preprocessed file
     Program parseProgram(vector<Line> programLines);

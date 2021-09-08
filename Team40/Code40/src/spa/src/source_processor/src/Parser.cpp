@@ -37,43 +37,38 @@ vector<string> Parser::parseLine(string input) {
     string currString = "";
     for (int i = 0; i < input.size(); i++) {
         char curr = input.at(i);
-        currString = clean(currString);
-
+        currString = cleanString(currString);
         if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
-            if (currString.length() != 0) {
-                if (!currString.empty()) {
-                    inputLine.push_back(currString);
-                }
-                currString = "";
-            }
+            // push back previous string before special character
+            addString(currString, inputLine);
             currString.push_back(curr);
-
+            // check if operator has an additional character
             if (i < input.size() - 1) {
                 char next = input.at(i + 1);
-                if (isOperator(next)) {
+                if (isOperator(next) && isOperator(curr)) {
                     currString.push_back(next);
                     i++;
                 }
             }
-            if (!currString.empty()) {
-                inputLine.push_back(currString);
-            }
-            currString = "";
-
+            addString(currString, inputLine);
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                if (!currString.empty()) {
-                    inputLine.push_back(currString);
-                }
-                currString = "";
+                addString(currString, inputLine);
             }
         }
     }
     return inputLine;
 }
 
-string Parser::clean(string input) {
+void Parser::addString(string &input, vector<string> inputVector) {
+    if (!input.empty()) {
+        inputVector.push_back(input);
+    }
+    input = "";
+}
+
+string Parser::cleanString(string input) {
     input.erase(remove(input.begin(), input.end(), ' '), input.end());
     return input;
 }
@@ -101,7 +96,6 @@ Program Parser::parseProgram(vector<Line> programLines) {
     return this->program;
 }
 
-// TODO: Add pointers to program design entities (procedure, variable, constant)
 Statement Parser::parseStatement(vector<string> content, int index,
                                  vector<Line> programLines, int programIndex) {
     if (isReadStmt(content)) {
