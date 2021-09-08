@@ -5,19 +5,23 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-StmtIndex ExtractionContext::getParentStatement() { return parentStatement; }
+optional<StmtIndex> ExtractionContext::getParentStatement() {
+    return parentStatement;
+}
 
 void ExtractionContext::setParentStatement(StmtIndex stmtIndex) {
     parentStatement = stmtIndex;
 }
 
-StmtIndex ExtractionContext::getPrevStatement() { return prevStatement; }
+optional<StmtIndex> ExtractionContext::getPrevStatement() {
+    return prevStatement;
+}
 
 void ExtractionContext::setPrevStatement(StmtIndex stmtIndex) {
     prevStatement = stmtIndex;
 }
 
-ProcIndex ExtractionContext::getCurrentProc() { return currentProc; }
+optional<ProcIndex> ExtractionContext::getCurrentProc() { return currentProc; }
 
 void ExtractionContext::setCurrentProc(ProcIndex procIndex) {
     currentProc = procIndex;
