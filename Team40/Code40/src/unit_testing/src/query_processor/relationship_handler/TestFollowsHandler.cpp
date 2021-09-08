@@ -1,9 +1,6 @@
 #include "FollowsHandler.h"
 #include "../test_util/PKBStub.h"
 #include "Result.h"
-#include "NamedStatement.h"
-#include "SynonymStatement.h"
-#include "FollowsRelation.h"
 #include "Reference.h"
 
 #include "catch.hpp"

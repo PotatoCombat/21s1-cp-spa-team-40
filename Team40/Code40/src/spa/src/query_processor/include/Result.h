@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "model/reference/Reference.h"
+#include "model/Reference.h"
 
 using namespace std;
 

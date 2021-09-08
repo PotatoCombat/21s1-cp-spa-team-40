@@ -6,8 +6,8 @@ Result FollowsHandler::eval() {
 	Reference* secondEntity = relation->getSecondReference();
 	string firstStmt = firstEntity->getValue();
 	string secondStmt = secondEntity->getValue();
-	bool isFirstEntitySynonym = firstEntity->isSynonym();
-	bool isSecondEntitySynonym = secondEntity->isSynonym();
+	bool isFirstEntitySynonym = true;//firstEntity->isSynonym();
+	bool isSecondEntitySynonym = true;//secondEntity->isSynonym();
 
 	// Todo later: assert firstEntiy and secondEntity are stmts
 

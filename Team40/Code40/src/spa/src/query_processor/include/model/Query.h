@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "reference/Reference.h"
-#include "relation/Relation.h"
+#include "Reference.h"
+#include "Relation.h"
 
 using namespace std;
 

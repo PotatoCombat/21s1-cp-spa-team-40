@@ -17,12 +17,13 @@ enum class RelationType {
 
 class Relation {
 private:
+    RelationType type;
     Reference *first;
     Reference *second;
 
 public:
-    Relation(Reference *first, Reference *second);
+    Relation(RelationType type, Reference *first, Reference *second);
     Reference *getFirstReference();
     Reference *getSecondReference();
-    virtual RelationType getType() = 0;
+    RelationType getType();
 };

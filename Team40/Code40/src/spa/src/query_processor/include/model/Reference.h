@@ -17,17 +17,24 @@ enum class DesignEntityType {
     CALL
 };
 
+enum class ReferenceType {
+    SYNONYM,
+    CONSTANT, 
+    WILDCARD
+};
+
 class Reference {
 private:
+    DesignEntityType deType;
+    ReferenceType refType;
     string value;
-    DesignEntityType type;
-
+    
 public:
     static const string WILDCARD;
 
-    Reference(string value, DesignEntityType type);
+    Reference(DesignEntityType deType, ReferenceType refType, string value);
     string getValue();
-    DesignEntityType getType();
-    virtual bool isSynonym() = 0;
+    DesignEntityType getDeType();
+    ReferenceType getRefType();
     bool equals(Reference &other);
 };
