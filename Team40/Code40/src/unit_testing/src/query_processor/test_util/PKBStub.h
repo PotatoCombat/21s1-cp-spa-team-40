@@ -21,4 +21,8 @@ public:
     set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
     set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
     bool followsStar(StmtIndex stmt1, StmtIndex stmt2);
+
+    StmtIndex getParentStmt(StmtIndex stmt);
+    set<StmtIndex> getChildStmts(StmtIndex stmt);
+    bool parent(StmtIndex stmt1, StmtIndex stmt2);
 };

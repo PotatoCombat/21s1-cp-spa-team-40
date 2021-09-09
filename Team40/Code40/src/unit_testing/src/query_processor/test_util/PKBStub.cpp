@@ -37,3 +37,17 @@ bool PKBStub::followsStar(StmtIndex stmt1, StmtIndex stmt2) {
     set<int> followingStarStmts = getFollowingStarStmts(stmt1);
     return followingStarStmts.find(stmt2) != followingStarStmts.end();
 }
+
+StmtIndex PKBStub::getParentStmt(StmtIndex stmt) {
+    vector<int> parentStmts = {-1, -1, -1, -1, 4, 4, 6, 6, 4, 4, 4, -1};
+    return parentStmts[stmt - 1];
+}
+
+set<StmtIndex> PKBStub::getChildStmts(StmtIndex stmt) {
+    vector<set<int>> childStmtsList = {{}, {}, {}, {5, 6, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}, {}, {}};
+    return childStmtsList[stmt - 1];
+}
+
+bool PKBStub::parent(StmtIndex stmt1, StmtIndex stmt2) {
+    return getParentStmt(stmt2) == stmt1;
+}
