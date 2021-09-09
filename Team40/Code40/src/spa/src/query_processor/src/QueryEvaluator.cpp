@@ -55,7 +55,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         }
     }
 
-    if (referenceAppearInClauses[resultIndex] = false) {
+    if (!referenceAppearInClauses[resultIndex]) {
         vector<string> result;
         toString(pkb->getAllStmts().asVector(), result); 
         return result;
@@ -87,7 +87,7 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Refer
     }
 }
 
-void QueryEvaluator::toString(vector<int> vectorIn, vector<string> vectorOut) {
+void QueryEvaluator::toString(vector<int> &vectorIn, vector<string> &vectorOut) {
     transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
               [](int i) { return std::to_string(i); });
 }

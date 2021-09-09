@@ -9,8 +9,14 @@
 
 using namespace std;
 
-PKBStub pkbStub;
-PKBStub2 pkbStubNoFollows;
+struct TestFollowsHandler {
+    static PKBStub pkbStub;
+    static PKBStub2 pkbStubNoFollows;
+};
+
+PKBStub TestFollowsHandler::pkbStub = PKBStub();
+PKBStub2 TestFollowsHandler::pkbStubNoFollows = PKBStub2();
+
 
 TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source has follows") {
     Result expectedResult;
@@ -19,7 +25,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source has follows") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -32,7 +38,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source does not have follo
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStubNoFollows);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -45,7 +51,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB does not return -1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -58,7 +64,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB returns -1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "3");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -71,7 +77,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT WILDCARD - has stmt following CONSTAN
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -84,7 +90,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT WILDCARD - no stmt following CONSTANT
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -97,7 +103,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD CONSTANT - has stmt preceding CONSTAN
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -110,7 +116,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD CONSTANT - no stmt preceding CONSTANT
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -120,7 +126,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM CONSTANT - returns non-empty resultLis
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -135,7 +141,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM CONSTANT - returns empty resultList1")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -150,7 +156,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT SYNONYM - returns non-empty resultLis
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -165,7 +171,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT SYNONYM - returns empty resultList2")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -180,7 +186,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM WILDCARD - returns non-empty resultLis
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -195,7 +201,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM WILDCARD - returns empty resultList1")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStubNoFollows);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -210,7 +216,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD SYNONYM - returns non-empty resultLis
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -225,7 +231,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD SYNONYM - returns empty resultList2")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStubNoFollows);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -240,7 +246,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM SYNONYM - returns non-empty resultList
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -257,7 +263,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD SYNONYM - returns empty resultList1, 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Relation followsRelation(RelationType::FOLLOWS, &stmt1, &stmt2);
-    FollowsHandler handler(&followsRelation, &pkbStubNoFollows);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;

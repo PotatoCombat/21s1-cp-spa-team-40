@@ -22,7 +22,7 @@ private:
     void combineResult(vector<vector<string>> &results, vector<Reference *> &references, vector<string> result,
                        Reference* reference, vector<bool> &entitiesAppearInQuery);  
 
-    void toString(vector<int> vectorIn, vector<string> vectorOut);
+    void toString(vector<int> &vectorIn, vector<string> &vectorOut);
 
 public:
     QueryEvaluator(PKB* pkb);
