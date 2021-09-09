@@ -18,5 +18,8 @@ public:
 
     bool getValue();
 
-    virtual Relation *getRelation();
+    virtual Relation *getRelation() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType.");
+    };
 };

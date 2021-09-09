@@ -6,7 +6,3 @@ Condition::Condition(ConditionType condType, bool value)
 ConditionType Condition::getConditionType() { return this->condType; }
 
 bool Condition::getValue() { return this->value; }
-
-Relation *Condition::getRelation() {
-    throw runtime_error("This method is not available for this ConditionType.");
-}
