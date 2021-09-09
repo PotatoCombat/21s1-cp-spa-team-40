@@ -21,8 +21,7 @@ private:
     bool isWildcard(string val);
 
 public:
-    QueryParser();
+    QueryParser() = default;
     Reference parseDeclaration(DeclPair declaration);
     Relation parseRelation(RelTuple clause, vector<Reference> &declList);
-    // PatternClause parsePatternClause(PatTuple clause);
 };

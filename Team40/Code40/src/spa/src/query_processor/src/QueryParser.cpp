@@ -1,7 +1,5 @@
 #include "QueryParser.h"
 
-QueryParser::QueryParser() = default;
-
 Reference QueryParser::parseDeclaration(DeclPair declaration) {
     DesignEntityType type = deHelper.getType(declaration.first);
     string syn = declaration.second;
