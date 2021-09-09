@@ -2,22 +2,60 @@
 
 #include "Reference.h"
 
-using namespace std;
+struct TestReference {
+    static const string VALUE;
+    static const string OTHER_VALUE;
+    static const DesignEntityType ASSIGN_TYPE;
+    static const DesignEntityType VAR_TYPE;
+    static const ReferenceType SYN_TYPE;
+    static const ReferenceType CONST_TYPE;
+    static Reference createReference();
+    static Reference createOtherReference();
+};
 
+const string TestReference::VALUE = "a1";
+const string TestReference::OTHER_VALUE = "v";
+const DesignEntityType TestReference::ASSIGN_TYPE = DesignEntityType::ASSIGN;
+const DesignEntityType TestReference::VAR_TYPE = DesignEntityType::VARIABLE;
+const ReferenceType TestReference::SYN_TYPE = ReferenceType::SYNONYM;
+const ReferenceType TestReference::CONST_TYPE = ReferenceType::CONSTANT;
 
-TEST_CASE("Reference: equals") { 
-    Reference ref1(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x");
-    Reference ref2(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x");
-    Reference ref3(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x2");
-    Reference ref4(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM, "x");
-    Reference ref5(DesignEntityType::STMT, ReferenceType::CONSTANT, "x");
+Reference TestReference::createReference() {
+    return Reference(ASSIGN_TYPE, SYN_TYPE, VALUE);
+}
 
-    // all match
-    REQUIRE(ref1.equals(ref2));
-    // different value
-    REQUIRE(!ref1.equals(ref3));
-    // different reference type
-    REQUIRE(!ref1.equals(ref4));
-    // different design entity type
-    REQUIRE(!ref1.equals(ref5));
+Reference TestReference::createOtherReference() {
+    return Reference(VAR_TYPE, CONST_TYPE, OTHER_VALUE);
+}
+
+TEST_CASE("Reference: get methods") {
+    Reference ref = TestReference::createReference();
+    
+    SECTION("test correct attributes") {
+        REQUIRE(ref.getValue() == TestReference::VALUE);
+        REQUIRE(ref.getDeType() == TestReference::ASSIGN_TYPE);
+        REQUIRE(ref.getRefType() == TestReference::SYN_TYPE);
+    }
+
+    SECTION("test incorrect attributes") {
+        REQUIRE(ref.getValue() != TestReference::OTHER_VALUE);
+        REQUIRE(ref.getDeType() != TestReference::VAR_TYPE);
+        REQUIRE(ref.getRefType() != TestReference::CONST_TYPE);
+    }
+}
+
+TEST_CASE("Reference: equals") {
+    Reference ref = TestReference::createReference();
+
+    SECTION("test equals") {
+        Reference refSame = TestReference::createReference();
+        REQUIRE(ref.equals(refSame));
+    }
+    
+    SECTION("test not equals") {
+        // semantically wrong but just for testing purposes :)
+        Reference refDiffRefType = Reference(
+            TestReference::ASSIGN_TYPE, TestReference::CONST_TYPE, TestReference::VALUE);
+        REQUIRE(!ref.equals(refDiffRefType));
+    }
 }

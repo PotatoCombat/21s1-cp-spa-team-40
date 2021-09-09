@@ -1,7 +1,7 @@
 #pragma once
 
 #include "QueryEvaluator.h"
-#include "query_preprocessor/QueryPreprocessor.h"
+#include "QueryPreprocessor.h"
 #include <algorithm>
 #include <iterator>
 #include <list>
