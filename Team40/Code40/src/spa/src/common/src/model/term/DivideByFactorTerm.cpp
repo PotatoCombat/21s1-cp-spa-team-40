@@ -10,3 +10,5 @@ int DivideByFactorTerm::getValue() {
     }
     return value;
 }
+
+Term *DivideByFactorTerm::getTerm() { return term; }

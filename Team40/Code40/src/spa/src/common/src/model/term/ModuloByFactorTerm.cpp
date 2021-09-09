@@ -10,3 +10,5 @@ int ModuloByFactorTerm::getValue() {
     }
     return value;
 }
+
+Term *ModuloByFactorTerm::getTerm() { return term; }

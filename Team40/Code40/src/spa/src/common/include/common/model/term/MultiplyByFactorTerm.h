@@ -10,4 +10,5 @@ private:
 public:
     MultiplyByFactorTerm(Term *term, Factor *factor);
     int getValue() override;
+    Term *getTerm() override;
 };

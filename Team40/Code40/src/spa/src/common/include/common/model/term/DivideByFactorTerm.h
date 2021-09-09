@@ -10,4 +10,5 @@ private:
 public:
     DivideByFactorTerm(Term *term, Factor *factor);
     int getValue() override;
+    Term *getTerm() override;
 };

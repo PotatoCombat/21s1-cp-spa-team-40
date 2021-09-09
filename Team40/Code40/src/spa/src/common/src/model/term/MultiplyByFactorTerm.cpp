@@ -11,3 +11,5 @@ int MultiplyByFactorTerm::getValue() {
     }
     return value;
 }
+
+Term *MultiplyByFactorTerm::getTerm() { return term; }
