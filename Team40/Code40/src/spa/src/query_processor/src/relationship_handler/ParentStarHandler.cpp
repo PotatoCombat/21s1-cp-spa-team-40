@@ -36,7 +36,7 @@ Result ParentStarHandler::eval() {
     // CONSTANT WILDCARD
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        result.setValid(pkb->getChildStarStmts(stoi(firstStmt)).size() > 0);
+        result.setValid(pkb->getChildStmts(stoi(firstStmt)).size() > 0);
         return result;
     }
 
