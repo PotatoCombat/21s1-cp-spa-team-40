@@ -31,7 +31,7 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
 
     vector<Relation> relList;
     for (auto x : suchThatString) {
-        Relation rel = parser.parseSuchThatClause(x);
+        Relation rel = parser.parseSuchThatClause(x, refList);
         relList.push_back(rel);
         q.addRelation(&rel);
     }

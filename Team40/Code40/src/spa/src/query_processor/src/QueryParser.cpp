@@ -2,56 +2,48 @@
 
 QueryParser::QueryParser() = default;
 
-Reference QueryParser::parseDeclaration(pair<string, string> declaration) {
-    string designEntity = declaration.first;
+Reference QueryParser::parseDeclaration(DeclTuple declaration) {
+    DesignEntityType type = deTypeHelper.getType(declaration.first);
     string syn = declaration.second;
-    DesignEntityType type;
-    if (designEntity == "stmt") {
-        type = DesignEntityType::STMT;
-    } else if (designEntity == "assign") {
-        type = DesignEntityType::ASSIGN;
-    } else if (designEntity == "variable") {
-        type = DesignEntityType::VARIABLE;
-    } else if (designEntity == "constant") {
-        type = DesignEntityType::CONSTANT;
-    } else if (designEntity == "procedure") {
-        type = DesignEntityType::PROCEDURE;
-    } else if (designEntity == "read") {
-        type = DesignEntityType::READ;
-    } else if (designEntity == "print") {
-        type = DesignEntityType::PRINT;
-    } else if (designEntity == "while") {
-        type = DesignEntityType::WHILE;
-    } else if (designEntity == "if") {
-        type = DesignEntityType::IF;
-    } else if (designEntity == "call") {
-        type = DesignEntityType::CALL;
-    } else {
-        throw "error";
-    }
     return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
-    string relation = get<0>(clause);
-    string ref1 = get<1>(clause); // need information about type from declaration parser monkaS
-    string ref2 = get<2>(clause); // need information about type from declaration parser monkaS
-    Reference r1 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref1);
-    Reference r2 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref2);
+Relation QueryParser::parseSuchThatClause(RelTuple clause,
+                                          vector<Reference> &declList) {
+    // see if reference in list
+    // if reference in list, use that reference
+    string rel = get<0>(clause);
+    string ref1 = get<1>(clause);
+    string ref2 = get<2>(clause);
 
-    RelationType type;
+    RelationType type = relTypeHelper.getType(rel);
 
-    if (relation == "Follows") {
-        type = RelationType::FOLLOWS;
-    } else if (relation == "Follows*") {
-        type = RelationType::FOLLOWS_T;
-    } else {
-        throw "Error";
+    Reference r1;
+    Reference r2;
+
+    auto it1 = find_if(declList.begin(), declList.end(), 
+        [&ref1](Reference& ref) { return ref.getValue() == ref1; });
+    auto it2 = find_if(declList.begin(), declList.end(),
+        [&ref2](Reference& ref) { return ref.getValue() == ref2; });
+
+    if (it1 != declList.end()) {
+        r1 = *it1;
+    } else { // either a undeclared synonym, number, quoted expression, or _
+        r1 = Reference(); // TODO
     }
+
+    if (it2 != declList.end()) {
+        r1 = *it2;
+    }
+    else { // either a undeclared synonym, number, quoted expression, or _
+        r1 = Reference(); // TODO
+    }
+
     return Relation(type, &r1, &r2);
 }
 
-//PatternClause QueryParser::parsePatternClause(tuple<string, string, string> clause) {
+// PatternClause QueryParser::parsePatternClause(tuple<string, string, string>
+// clause) {
 //    vector<PatternClause> cl;
 //    for (auto &it : clause) {
 //        // parse by syn '(' Ref1 ',' Ref2 ')'
@@ -64,4 +56,3 @@ Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) 
 //    }
 //    return cl;
 //}
-

@@ -1,19 +1,9 @@
 #pragma once
 
 #include "Reference.h"
+#include "RelationType.h"
 
 using namespace std;
-
-enum class RelationType {
-    FOLLOWS,
-    FOLLOWS_T,
-    PARENT,
-    PARENT_T,
-    MODIFIES_S,
-    MODIFIES_P,
-    USES_S,
-    USES_P
-};
 
 class Relation {
 private:
@@ -22,6 +12,7 @@ private:
     Reference *second;
 
 public:
+    Relation() = default;
     Relation(RelationType type, Reference *first, Reference *second);
     Reference *getFirstReference();
     Reference *getSecondReference();

@@ -21,6 +21,7 @@ private:
 public:
     static const string WILDCARD;
 
+    Reference() = default;
     Reference(DesignEntityType deType, ReferenceType refType, string value);
     string getValue();
     DesignEntityType getDeType();
