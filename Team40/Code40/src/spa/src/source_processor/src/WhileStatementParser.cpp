@@ -1,5 +1,4 @@
 #include "source_processor/WhileStatementParser.h"
-#include "common/model/statement/WhileStatement.h"
 #include "source_processor/Parser.h"
 #include <algorithm>
 
@@ -15,6 +14,11 @@ Statement WhileStatementParser::parseWhileStatement() {
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     vector<string> condLst(next(next(whileItr)), prev(endItr));
     stmt.setCondLst(condLst);
+    parseChildStatements(stmt);
+    return stmt;
+}
+
+void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
@@ -27,5 +31,4 @@ Statement WhileStatementParser::parseWhileStatement() {
             stmt.addStatement(nestedStmt);
         }
     }
-    return stmt;
 }

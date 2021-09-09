@@ -1,5 +1,4 @@
 #include "source_processor/IfStatementParser.h"
-#include "common/model/statement/IfStatement.h"
 #include "source_processor/Parser.h"
 #include <algorithm>
 
@@ -15,6 +14,11 @@ Statement IfStatementParser::parseIfStatement() {
         find(content.begin(), content.end(), "then");
     vector<string> condLst(next(next(ifItr)), prev(endItr));
     stmt.setCondLst(condLst);
+    parseChildStatements(stmt);
+    return stmt;
+}
+
+void IfStatementParser::parseChildStatements(IfStatement &stmt) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
@@ -34,5 +38,4 @@ Statement IfStatementParser::parseIfStatement() {
             stmt.addElseStatement(nestedStmt);
         }
     }
-    return stmt;
 }

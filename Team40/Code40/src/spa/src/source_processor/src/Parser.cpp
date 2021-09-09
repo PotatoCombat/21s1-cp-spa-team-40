@@ -41,29 +41,40 @@ vector<string> Parser::parseLine(string input) {
             // push back previous string before special character
             addString(currString, inputLine);
             currString.push_back(curr);
-            // check if operator has an additional character
-            if (i < input.size() - 1) {
-                char next = input.at(i + 1);
-                if (isOperator(next) && isOperator(curr)) {
-                    currString.push_back(next);
-                    i++;
-                }
-            }
-            addString(currString, inputLine);
+            parseSymbol(input, i, curr, currString, inputLine);
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                if (i < input.size() - 1) {
-                    if (!isalnum(input.at(i + 1))) {
-                        addString(currString, inputLine);
-                    }
-                } else {
-                    addString(currString, inputLine);
-                }
+                parseKeyword(input, i, currString, inputLine);
             }
         }
     }
     return inputLine;
+}
+
+void Parser::parseSymbol(string input, int &i, char curr, string &currString,
+                         vector<string> &inputLine) {
+    // check if operator has an additional character
+    if (i < input.size() - 1) {
+        char next = input.at(i + 1);
+        if (isOperator(next) && isOperator(curr)) {
+            currString.push_back(next);
+            i++;
+        }
+    }
+    addString(currString, inputLine);
+}
+
+void Parser::parseKeyword(string input, int &i, string &currString,
+                          vector<string> &inputLine) {
+    // check if keyword has an additional character
+    if (i < input.size() - 1) {
+        if (!isalnum(input.at(i + 1))) {
+            addString(currString, inputLine);
+        }
+    } else {
+        addString(currString, inputLine);
+    }
 }
 
 void Parser::addString(string &input, vector<string> &inputVector) {
@@ -143,7 +154,7 @@ bool Parser::isKeyword(string input) {
            input == "procedure";
 }
 
-// special characters
+// special symbols
 
 bool Parser::isOperator(char input) { // logical, comparison, artihmetic and
                                       // assignment (they all overlap)

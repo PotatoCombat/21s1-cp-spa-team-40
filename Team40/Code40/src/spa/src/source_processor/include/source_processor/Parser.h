@@ -17,6 +17,10 @@ public:
     // parse file input
     vector<Line> parseFile(fstream &file);
     vector<string> parseLine(string input);
+    void parseSymbol(string input, int &index, char curr, string &currString,
+                     vector<string> &inputLine);
+    void parseKeyword(string input, int &index, string &currString,
+                      vector<string> &inputLine);
     string cleanString(string input);
     void addString(string &input, vector<string> &inputVector);
 
