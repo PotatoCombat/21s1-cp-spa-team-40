@@ -41,8 +41,19 @@ TEST_CASE("EntityTable: insert/getEntity/getIndex") {
     table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex("hello") == 0);
+    REQUIRE(table.getIndex(&test) == 0);
     REQUIRE(table.getEntity(0) == &test);
+}
+
+TEST_CASE("EntityTable: invalid Entity") {
+    auto table = TestEntityTable::createTable();
+    REQUIRE(table.getEntity(4) == NULL);
+}
+
+TEST_CASE("EntityTable: invalid Index") {
+    auto table = TestEntityTable::createTable();
+    string test = "goodbye";
+    REQUIRE(table.getIndex(&test) == InvalidIndex);
 }
 
 TEST_CASE("EntityTable: getIndices") {
