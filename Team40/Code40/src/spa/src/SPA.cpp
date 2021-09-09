@@ -1,8 +1,7 @@
 #include "spa/SPA.h"
+#include "source_processor/DesignExtractor.h"
 
-#include "common/model/ConstantValue.h"
 #include "common/model/Program.h"
-#include "common/model/Variable.h"
 
 #include "source_processor/Line.h"
 
@@ -20,6 +19,9 @@ void SPA::processSource(string filename) {
         // Program design entities
         // Program -> list of procedures -> contains a list of statements
         Program program = parser.parseProgram(programLines);
+        PKB pkb = PKB();
+        DesignExtractor designExtractor(pkb);
+        designExtractor.handleProgram(program);
         // vector<Variable> varLst = parser.getVarLst();
         // vector<ConstantValue> constLst = parser.getConstLst();
         int test = 0; // to bypass debugger

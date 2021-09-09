@@ -149,7 +149,8 @@ Statement Parser::parseStatement(vector<string> content, int index,
         }
         return ifStmt;
     } else {
-        return Statement(index, StatementType::NONE);
+        // TODO: Implement a dedicated error type
+        throw runtime_error("Invalid statement!");
     }
 }
 
