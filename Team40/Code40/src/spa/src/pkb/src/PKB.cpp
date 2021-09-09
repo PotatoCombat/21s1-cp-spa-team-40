@@ -40,7 +40,7 @@ VarIndex PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
-ConstIndex PKB::insertConst(Const *constant) {
+ConstIndex PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 

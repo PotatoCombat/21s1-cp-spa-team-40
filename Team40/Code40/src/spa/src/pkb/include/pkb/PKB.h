@@ -11,6 +11,7 @@
 #include "UsesTable.h"
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
+#include "common/model/ConstantValue.h"
 #include "common/model/statement/Statement.h"
 
 using namespace std;
@@ -24,7 +25,7 @@ public:
     virtual ProcIndex insertProc(Procedure *procedure);
     virtual StmtIndex insertStmt(Statement *statement);
     virtual VarIndex insertVar(Variable *variable);
-    virtual ConstIndex insertConst(Const *constant);
+    virtual ConstIndex insertConst(ConstantValue *constant);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
@@ -172,7 +173,7 @@ public:
 private:
     typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
     typedef EntityTable<Variable, VarIndex> VarTable;
-    typedef EntityTable<Const, ConstIndex> ConstTable;
+    typedef EntityTable<ConstantValue, ConstIndex> ConstTable;
 
     typedef StatementTable<Statement, StmtIndex> StatementTable;
 
