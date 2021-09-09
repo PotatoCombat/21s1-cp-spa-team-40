@@ -5,10 +5,9 @@
 
 class MultiplyByFactorTerm : public Term {
 private:
-    Factor factor;
     Term *term;
 
 public:
-    MultiplyByFactorTerm(Term *term, Factor factor);
+    MultiplyByFactorTerm(Term *term, Factor *factor);
     int getValue() override;
 };
