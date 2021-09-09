@@ -37,7 +37,13 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         }
 
         if (relationship->getType() == RelationType::MODIFIES_S) {
-        
+            ModifiesStmtHandler modifiesStmtHandler(relationship, pkb);
+            relationshipHandler = &modifiesStmtHandler;
+        }
+
+        if (relationship->getType() == RelationType::USES_S) {
+            UsesStmtHandler usesStmtHandler(relationship, pkb);
+            relationshipHandler = &usesStmtHandler;
         }
 
         // eval and combine result
