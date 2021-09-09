@@ -1,5 +1,4 @@
 #include "QueryPreprocessor.h"
-#include "../model/Query.h"
 
 QueryPreprocessor::QueryPreprocessor() {}
 
@@ -13,29 +12,28 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
     // vector<tuple<string, string, string>> patternString = tokenizer.tokenizePatternClause(parts.second);
 
     Query q;
-    q.SetReturnEntity(&SynonymEntity(retString));
-
-    //vector<Declaration> decl;
+    
+    vector<Reference> refList;
     for (auto x : declString) {
-        Declaration d = parser.parseDeclaration(x);
-        //decl.push_back(d);
-        q.AddEntity(&SynonymEntity(d.getSynonym()));
+        Reference r = parser.parseDeclaration(x);
+        refList.push_back(r);
+    }
+    
+    int found = 0;
+    for (auto x : refList) {
+        if (retString == x.getValue()) {
+            q.setReturnReference(&x);
+        }
+    }
+    if (!found) {
+        throw "Return entity undeclared";
     }
 
-    //vector<SuchThatClause> stCl;
+    vector<Relation> relList;
     for (auto x : suchThatString) {
-        SuchThatClause cl = parser.parseSuchThatClause(x);
-        //stCl.push_back(cl);
-        Entity e1 = Entity(cl.getRelation().getFirstReference().getValue());
-        Entity e2 = Entity(cl.getRelation().getSecondReference().getValue());
-        Relationship* ship;
-        if (cl.getRelation().getRelationType() == RelationType::FOLLOWS) {
-            FollowsRelationship fls(&e1, &e2);
-            ship = &fls;
-        } else {
-            throw "Query: error making relationship object";
-        }
-        q.AddRelationship(ship);
+        Relation rel = parser.parseSuchThatClause(x);
+        relList.push_back(rel);
+        q.addRelation(&rel);
     }
 
     // vector<PatternClause> ptCl;

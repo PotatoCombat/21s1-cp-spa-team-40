@@ -1,13 +1,13 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 #include <vector>
 
 using namespace std;
 
 class QueryTokenizer {
 private:
-    // TODO: have the keywords "Select" etc stored as class constants
     const string KEYWORD_SELECT = "Select";
     const string KEYWORD_SUCH_THAT = "such that";
     const string KEYWORD_PATTERN = "pattern";
@@ -16,6 +16,8 @@ private:
     const char L_BRACKET = '(';
     const char COMMA = ',';
     const char R_BRACKET = ')';
+
+    // helper methods
     string trimString(string input);
     pair<string, string> splitDecl(string input);
     tuple<string, string, string> splitBCB(string input);

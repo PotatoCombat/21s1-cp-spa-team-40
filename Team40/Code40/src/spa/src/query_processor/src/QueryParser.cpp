@@ -2,7 +2,7 @@
 
 QueryParser::QueryParser() = default;
 
-Declaration QueryParser::parseDeclaration(pair<string, string> declaration) {
+Reference QueryParser::parseDeclaration(pair<string, string> declaration) {
     string designEntity = declaration.first;
     string syn = declaration.second;
     DesignEntityType type;
@@ -27,28 +27,28 @@ Declaration QueryParser::parseDeclaration(pair<string, string> declaration) {
     } else if (designEntity == "call") {
         type = DesignEntityType::CALL;
     } else {
-        type = DesignEntityType::UNKNOWN;
+        throw "error";
     }
-    return Declaration(syn, type);
+    return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-SuchThatClause QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
+Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
     string relation = get<0>(clause);
-    string ref1 = get<1>(clause);
-    string ref2 = get<2>(clause);
+    string ref1 = get<1>(clause); // need information about type from declaration parser monkaS
+    string ref2 = get<2>(clause); // need information about type from declaration parser monkaS
+    Reference r1 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref1);
+    Reference r2 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref2);
 
-    //Relation *rel;
+    RelationType type;
 
     if (relation == "Follows") {
-        FollowsRelation r(ref1, ref2);
-        return SuchThatClause(r);
+        type = RelationType::FOLLOWS;
     } else if (relation == "Follows*") {
-        FollowsStarRelation r(ref1, ref2);
-        return SuchThatClause(r);
+        type = RelationType::FOLLOWS_T;
     } else {
-        Relation r(ref1, ref2, RelationType::UNKNOWN);
-        return SuchThatClause(r);
+        throw "Error";
     }
+    return Relation(type, &r1, &r2);
 }
 
 //PatternClause QueryParser::parsePatternClause(tuple<string, string, string> clause) {

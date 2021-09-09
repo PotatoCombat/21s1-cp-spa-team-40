@@ -1,15 +1,14 @@
 #pragma once
 
-#include "clause/PatternClause.h"
-#include "clause/SelectClause.h"
-#include "clause/SuchThatClause.h"
+#include "Reference.h"
+#include "Relation.h"
 
 using namespace std;
 
 class QueryParser {
 public:
     QueryParser();
-    Declaration parseDeclaration(pair<string, string> declaration);
-    SuchThatClause parseSuchThatClause(tuple<string, string, string> clause);
+    Reference parseDeclaration(pair<string, string> declaration);
+    Relation parseSuchThatClause(tuple<string, string, string> clause);
     //PatternClause parsePatternClause(tuple<string, string, string> clause);
 };
