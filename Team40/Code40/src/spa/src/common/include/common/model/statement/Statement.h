@@ -31,7 +31,7 @@ public:
     }
 
     // Overriden by: PrintStatement, ReadStatement, AssignStatement
-    virtual Variable getVariable() {
+    virtual Variable *getVariable() {
         throw runtime_error(
             "This method is not implemented for this StatementType.");
     };

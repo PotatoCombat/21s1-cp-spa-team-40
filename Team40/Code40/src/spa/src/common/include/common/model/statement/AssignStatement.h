@@ -7,18 +7,18 @@ using namespace std;
 
 class AssignStatement : public Statement {
 private:
-    Variable variable;
+    Variable *variable;
     Expression *expression;
     vector<string> exprLst;
 
 public:
-    AssignStatement(int index, Variable variable, Expression *expression);
+    AssignStatement(int index, Variable *variable, Expression *expression);
 
-    AssignStatement(int index, Variable variable);
+    AssignStatement(int index, Variable *variable);
 
     void setExprLst(vector<string> exprLst);
 
-    Variable getVariable() override;
+    Variable *getVariable() override;
 
     Expression *getExpression() override;
 };

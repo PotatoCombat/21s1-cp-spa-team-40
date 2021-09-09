@@ -4,11 +4,10 @@ using namespace std;
 
 class PrintStatement : public Statement {
 private:
-    Variable variable;
+    Variable *variable;
 
 public:
-    PrintStatement(int index, Variable variable)
-        : variable(variable), Statement(index, StatementType::PRINT) {}
+    PrintStatement(int index, Variable *variable);
 
-    Variable getVariable() { return this->variable; }
+    Variable *getVariable() override;
 };
