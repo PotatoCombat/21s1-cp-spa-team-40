@@ -90,6 +90,10 @@ StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
     // TODO: handle condition
     ExtractionContext::getInstance().setParentStatement(stmtIndex);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
+        handleStatement(statement);
+    }
+    for (Statement *statement : ifStatement->getElseStmtLst()) {
+        handleStatement(statement);
     }
     ExtractionContext::getInstance().unsetParentStatement();
     return stmtIndex;

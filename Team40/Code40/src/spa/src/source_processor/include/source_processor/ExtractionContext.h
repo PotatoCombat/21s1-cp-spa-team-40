@@ -1,7 +1,8 @@
 #pragma once
 
-#include <optional>
 #include "pkb/Abstractions.h"
+#include <optional>
+#include <vector>
 
 using namespace std;
 
@@ -11,9 +12,9 @@ private:
     optional<ProcIndex> currentProc;
     optional<StmtIndex> prevStatement;
     optional<StmtIndex> currentStatement;
-    optional<StmtIndex> parentStatement;
-    optional<StmtIndex> modifyingStatement;
-    optional<StmtIndex> usingStatement;
+    vector<StmtIndex> parentStatements;
+    vector<StmtIndex> modifyingStatements;
+    vector<StmtIndex> usingStatements;
 
     ExtractionContext() = default;
 
