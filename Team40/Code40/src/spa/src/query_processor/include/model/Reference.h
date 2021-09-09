@@ -2,20 +2,9 @@
 
 #include <string>
 
-using namespace std;
+#include "DesignEntityType.h"
 
-enum DesignEntityType {
-    STMT,
-    ASSIGN,
-    VARIABLE,
-    CONSTANT,
-    PROCEDURE,
-    READ,
-    PRINT,
-    WHILE,
-    IF,
-    CALL
-};
+using namespace std;
 
 enum class ReferenceType {
     SYNONYM,
