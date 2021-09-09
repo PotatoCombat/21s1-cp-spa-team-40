@@ -18,8 +18,21 @@ public:
 
     bool getValue();
 
+    // Overriden by: SingleCondition
     virtual Relation *getRelation() {
         throw runtime_error(
             "This method is not implemented for this ConditionType.");
     };
+
+    // Overriden by: NotCondition, AndCondition, OrCondition
+    virtual Condition *getPrimaryCondition() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType");
+    }
+
+    // Overriden by: AndCondition, OrCondition
+    virtual Condition *getSecondaryCondition() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType");
+    }
 };

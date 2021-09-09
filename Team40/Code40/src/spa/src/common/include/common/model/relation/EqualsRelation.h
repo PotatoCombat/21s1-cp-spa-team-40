@@ -1,0 +1,8 @@
+//
+// Created by Wallace Lim on 9/9/21.
+//
+
+#ifndef AUTOTESTER_EQUALSRELATION_H
+#define AUTOTESTER_EQUALSRELATION_H
+
+#endif // AUTOTESTER_EQUALSRELATION_H

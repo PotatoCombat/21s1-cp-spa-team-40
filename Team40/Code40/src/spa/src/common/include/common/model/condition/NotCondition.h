@@ -4,8 +4,9 @@
 
 class NotCondition : public Condition {
 private:
-    Condition *cond;
+    Condition *condition;
 
 public:
-    NotCondition(Condition *cond);
+    explicit NotCondition(Condition *condition);
+    Condition *getPrimaryCondition() override;
 };
