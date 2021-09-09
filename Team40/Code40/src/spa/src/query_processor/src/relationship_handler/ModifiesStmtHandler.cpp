@@ -15,9 +15,9 @@ Result ModifiesStmtHandler::eval() {
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        vector<int> allStmts = pkb->getAllStmts().asVector();
-        for (auto stmt : allStmts) {
-            if (pkb->getFollowingStmt(stmt) != -1) {
+        vector<string> allVars = pkb->getAllVars().asVector();
+        for (auto var : allVars) {
+            if (pkb->getStmtsModifyingVar(var).size() > 0) {
                 result.setValid(true);
                 return result;
             }
@@ -29,69 +29,71 @@ Result ModifiesStmtHandler::eval() {
     /// CONSTANT CONSTANT
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->followsStar(stoi(firstValue), stoi(secondValue)));
+        result.setValid(pkb->stmtModifies(stoi(firstValue), secondValue));
         return result;
     }
 
     // CONSTANT WILDCARD
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        result.setValid(pkb->getFollowingStmt(stoi(firstValue)) != -1);
+        result.setValid(pkb->getVarsModifiedByStmt(stoi(firstValue)).size() > 0);
         return result;
     }
 
     // WILDCARD CONSTANT
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getPrecedingStmt(stoi(secondValue)) != -1);
+        result.setValid(pkb->getStmtsModifyingVar(secondValue).size() > 0);
         return result;
     }
 
     // SYNONYM CONSTANT
     if (firstReference->getRefType() == ReferenceType::SYNONYM &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        vector<string> firstStmtResults;
-        set<int> precedingStarStmts =
-            pkb->getPrecedingStarStmts(stoi(secondValue));
-        for (auto precedingStarStmt : precedingStarStmts) {
-            firstStmtResults.push_back(to_string(precedingStarStmt));
+        vector<string> stmtResults;
+        set<int> stmts = pkb->getStmtsModifyingVar(secondValue);
+        for (auto stmt : stmts) {
+            stmtResults.push_back(to_string(stmt));
         }
-        result.setResultList1(firstReference, firstStmtResults);
+        result.setResultList1(firstReference, stmtResults);
         return result;
     }
 
     // CONSTANT SYNONYM
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::SYNONYM) {
-        vector<string> secondStmtResults;
-        set<int> followingStarStmts =
-            pkb->getFollowingStarStmts(stoi(firstValue));
-        for (auto followingStarStmt : followingStarStmts) {
-            secondStmtResults.push_back(to_string(followingStarStmt));
+        vector<string> varResults;
+        set<string> vars = pkb->getVarsModifiedByStmt(stoi(firstValue));
+        for (auto var : vars) {
+            varResults.push_back(var);
         }
-        result.setResultList2(secondReference, secondStmtResults);
+        result.setResultList2(secondReference, varResults);
         return result;
     }
 
     // NEITHER IS CONSTANT
-    vector<string> firstStmtResults;
-    vector<string> secondStmtResults;
-    vector<int> precedingStmts = pkb->getAllStmts().asVector();
-    for (int precedingStmt : precedingStmts) {
-        int followingStmt = pkb->getFollowingStmt(precedingStmt);
-        if (followingStmt == -1) {
+    vector<string> stmtResults;
+    vector<string> varResults;
+    vector<int> stmts = pkb->getAllStmts().asVector();
+    for (int stmt : stmts) {
+        vector<string> vars = pkb->getVarsModifiedByStmt(stmt);
+        if (vars.size() == 0) {
             continue;
         }
-        firstStmtResults.push_back(to_string(precedingStmt));
-        secondStmtResults.push_back(to_string(followingStmt));
+        stmtResults.push_back(to_string(stmt));
+        for (auto var : vars) {
+            if (find(varResults.begin(), varResults.end(), var) == varResults.end()) {
+                varResults.push_back(var);
+            }
+        }
     }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList1(firstReference, firstStmtResults);
+        result.setResultList1(firstReference, stmtResults);
     }
 
     if (secondReference->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList2(secondReference, secondStmtResults);
+        result.setResultList2(secondReference, varResults);
     }
 
     return result;
