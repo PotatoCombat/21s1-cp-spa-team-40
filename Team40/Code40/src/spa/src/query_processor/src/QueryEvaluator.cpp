@@ -21,6 +21,11 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
             relationshipHandler = &followsHandler;
         }
 
+        if (relationship->getType() == RelationType::FOLLOWS_T) {
+            FollowsStarHandler followsStarHandler(relationship, pkb);
+            relationshipHandler = &followsStarHandler;
+        }
+
         // eval and combine result
         tempResult = relationshipHandler->eval();
         allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();

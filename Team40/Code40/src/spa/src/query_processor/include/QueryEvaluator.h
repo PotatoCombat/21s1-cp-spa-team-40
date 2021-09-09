@@ -12,6 +12,7 @@
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
+#include "relationship_handler/FollowsStarHandler.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ private:
     PKB* pkb;
 
     void combineResult(vector<vector<string>> &results, vector<Reference *> &references, vector<string> result,
-                       Reference* reference, vector<bool> &entitiesAppearInQuery);  
+                       Reference* reference, vector<bool> &referenceAppearInClauses);  
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);
 

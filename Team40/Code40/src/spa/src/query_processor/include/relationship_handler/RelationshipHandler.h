@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Relation.h"
+#include "Result.h"
 #include "pkb/PKB.h"
 
 class RelationshipHandler {
