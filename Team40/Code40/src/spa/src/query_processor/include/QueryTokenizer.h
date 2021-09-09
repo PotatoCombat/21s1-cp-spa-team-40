@@ -24,8 +24,8 @@ private:
     const char SEMICOLON = ';';
 
     // helpers
-    DesignEntityTypeHelper deHelper;
-    RelationTypeHelper refHelper;
+    DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
+    RelationTypeHelper relHelper = RelationTypeHelper();
     string trim(string input);
     string trimL(string input);
     string trimR(string input);
