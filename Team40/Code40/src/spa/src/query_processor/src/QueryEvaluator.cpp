@@ -1,6 +1,6 @@
 #include "QueryEvaluator.h"
 
-QueryEvaluator::QueryEvaluator(PKB pkb) { this->pkb = pkb; }
+QueryEvaluator::QueryEvaluator(PKB* pkb) { this->pkb = pkb; }
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     Reference* returnEntity = query.getReturnReference();
@@ -17,7 +17,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         // TODO: add more handlers for relationshipType later
         if (relationship->getType() == RelationType::FOLLOWS) {
-            FollowsHandler followsHandler(relationship, &pkb);
+            FollowsHandler followsHandler(relationship, pkb);
             relationshipHandler = &followsHandler;
         }
 
@@ -57,7 +57,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
     if (referenceAppearInClauses[resultIndex] = false) {
         vector<string> result;
-        toString(pkb.getAllStmts().asVector(), result); 
+        toString(pkb->getAllStmts().asVector(), result); 
         return result;
     }
 
