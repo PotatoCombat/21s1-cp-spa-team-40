@@ -16,8 +16,7 @@ protected:
     // constructor
 
 public:
-    Expression(ExpressionType expressionType, int value);
-    Expression(ExpressionType expressionType);
+    explicit Expression(ExpressionType expressionType);
 
     // getters
     ExpressionType getExpressionType();
