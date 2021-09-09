@@ -1,5 +1,4 @@
 #include "QueryTokenizer.h"
-// #include <cstring> // am i able to use c libraries? :(
 
 string QueryTokenizer::trimString(string input) {
     // char* split = strrchr(*(this->query), delimiter);
@@ -17,7 +16,7 @@ string QueryTokenizer::trimString(string input) {
     return x;
 }
 
-pair<string, string> QueryTokenizer::splitDecl(string input) {
+DeclTuple QueryTokenizer::splitDecl(string input) {
     string whitespace = " ";
     size_t w_pos = input.find(whitespace);
     if (w_pos == string::npos) {
@@ -76,10 +75,10 @@ pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
 }
 
 // return <designentity, syn>
-vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declaration) {
+vector<DeclTuple> QueryTokenizer::tokenizeDeclaration(string declaration) {
     // split by ;
     // TODO: handle ,
-    vector<pair<string, string>> decl;
+    vector<DeclTuple> decl;
     string::iterator it;
     string::iterator itB;
     it = declaration.begin();
@@ -113,12 +112,12 @@ string QueryTokenizer::tokenizeReturnEntity(string clause) {
     return re;
 }
 
-vector<tuple<string, string, string>> QueryTokenizer::tokenizeSuchThatClause(string clause) {
+vector<RelTuple> QueryTokenizer::tokenizeSuchThatClause(string clause) {
     string result;
     size_t suchThatPos = clause.find("such that"); // length 9
     
     if (suchThatPos == string::npos) {
-        return vector<tuple<string, string, string>>();
+        return vector<RelTuple>();
     }
 
     result = trimString(clause.substr(suchThatPos + 9));
@@ -131,30 +130,31 @@ vector<tuple<string, string, string>> QueryTokenizer::tokenizeSuchThatClause(str
         }
     }
 
-    tuple<string, string, string> tup = splitBCB(result);
+    RelTuple tup = splitBCB(result);
 
-    return vector<tuple<string, string, string>>{tup};
+    return vector<RelTuple>{tup};
 }
 
-vector<tuple<string, string, string>> QueryTokenizer::tokenizePatternClause(string clause) {
-    string result;
-    size_t patternPos = clause.find("pattern");    // length 7
-
-    if (patternPos == string::npos) {
-        return vector<tuple<string, string, string>>();
-    }
-
-    result = trimString(clause.substr(patternPos + 9));
-
-    size_t suchThatPos = clause.find("such that"); // length 9
-
-    if (suchThatPos != string::npos) {
-        if (suchThatPos > patternPos) {
-            result = trimString(result.substr(0, suchThatPos));
-        }
-    }
-
-    tuple<string, string, string> tup = splitBCB(result);
-
-    return vector<tuple<string, string, string>>{tup};
-}
+//vector<PatTuple> QueryTokenizer::tokenizePatternClause(string clause) {
+//    string result;
+//    size_t patternPos = clause.find("pattern");    // length 7
+//
+//    if (patternPos == string::npos) {
+//        return vector<PatTuple>();
+//    }
+//
+//    result = trimString(clause.substr(patternPos + 9));
+//
+//    size_t suchThatPos = clause.find("such that"); // length 9
+//
+//    if (suchThatPos != string::npos) {
+//        if (suchThatPos > patternPos) {
+//            result = trimString(result.substr(0, suchThatPos));
+//        }
+//    }
+//
+//    tuple<string, string, string> strings = splitBCB(result);
+//    PatTuple tup = strings;
+//
+//    return vector<PatTuple>{tup};
+//}

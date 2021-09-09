@@ -4,6 +4,8 @@
 #include <tuple>
 #include <vector>
 
+#include "Abstractions.h"
+
 using namespace std;
 
 class QueryTokenizer {
@@ -19,16 +21,16 @@ private:
 
     // helper methods
     string trimString(string input);
-    pair<string, string> splitDecl(string input);
-    tuple<string, string, string> splitBCB(string input);
+    DeclTuple splitDecl(string input);
+    RelTuple splitBCB(string input);
 
 public:
     QueryTokenizer() {}
 
     pair<string, string> splitIntoParts(string queryString);
 
-    vector<pair<string, string>> tokenizeDeclaration(string declaration);
+    vector<DeclTuple> tokenizeDeclaration(string declaration);
     string tokenizeReturnEntity(string clause);
-    vector<tuple<string, string, string>> tokenizeSuchThatClause(string clause);
-    vector<tuple<string, string, string>> tokenizePatternClause(string clause);
+    vector<RelTuple> tokenizeSuchThatClause(string clause);
+    vector<PatTuple> tokenizePatternClause(string clause);
 };
