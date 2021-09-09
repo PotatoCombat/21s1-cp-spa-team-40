@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Abstractions.h"
+#include "common/model/statement/Statement.h"
 
 #include <map>
 #include <set>
@@ -9,16 +10,25 @@ class ParentStarTable {
 
 public:
     ParentStarTable();
-    bool insertParentStar(StmtIndex stmt1, StmtIndex stmt2);
+
+    /// Stores Parent*(stmt1, stmt2).
+    void insertParentStar(Statement *stmt1, Statement *stmt2);
+
+    /// Selects s such that Parent*(s, stmt).
     set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+
+    /// Selects s such that Parent*(stmt, s).
     set<StmtIndex> getChildStarStmts(StmtIndex stmt);
+
+    /// Selects BOOLEAN such that Parent*(stmt1, stmt2).
     bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
 
 private:
-    //value is parent of key (value contains all parents of key)
+    /// Stores s such that Parent*(s, stmt).
     map<StmtIndex, set<StmtIndex>> parentStarMap;
-    //value is child of key (value contains all children of key)
+
+    /// Stores s such that Parent*(stmt, s).
     map<StmtIndex, set<StmtIndex>> childStarMap;
+
     void insertIntoMaps(StmtIndex stmt1, StmtIndex stmt2);
 };
-
