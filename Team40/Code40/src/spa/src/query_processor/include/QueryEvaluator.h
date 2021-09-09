@@ -12,7 +12,6 @@
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
-#include "Util.h"
 
 using namespace std;
 
@@ -20,8 +19,10 @@ class QueryEvaluator {
 private:
     PKB pkb;
 
-    void combineResult(vector<vector<string>> &results, vector<Reference *> &entities, vector<string> result,
-                       Reference* entity, vector<bool> &entitiesAppearInQuery);  
+    void combineResult(vector<vector<string>> &results, vector<Reference *> &references, vector<string> result,
+                       Reference* reference, vector<bool> &entitiesAppearInQuery);  
+
+    void toString(vector<int> vectorIn, vector<string> vectorOut);
 
 public:
     QueryEvaluator(PKB pkb);

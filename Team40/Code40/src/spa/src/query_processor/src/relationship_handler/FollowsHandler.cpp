@@ -2,57 +2,95 @@
 
 Result FollowsHandler::eval() {
     Result result;
-	Reference* firstEntity = relation->getFirstReference();
-	Reference* secondEntity = relation->getSecondReference();
-	string firstStmt = firstEntity->getValue();
-	string secondStmt = secondEntity->getValue();
-	bool isFirstEntitySynonym = true;//firstEntity->isSynonym();
-	bool isSecondEntitySynonym = true;//secondEntity->isSynonym();
+	Reference* firstReference = relation->getFirstReference();
+	Reference* secondReference = relation->getSecondReference();
+	string firstStmt = firstReference->getValue();
+	string secondStmt = secondReference->getValue();
 
-	// Todo later: assert firstEntiy and secondEntity are stmts
+    // Todo: handle stmts by different design enity types
+    // Todo: assert relationType is follows
+	// Todo: assert firstEntiy and secondReference are stmts
+	// Todo: use variable instead of magic number -1
 
-	if (!isFirstEntitySynonym &&  !isSecondEntitySynonym) {
-		result.setValid(pkb->follows(stoi(firstStmt), stoi(secondStmt)));
+	// WILDCARD WILDCARD
+	if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+        secondReference->getRefType() == ReferenceType::WILDCARD) {
+        vector<int> allStmts = pkb->getAllStmts().asVector();
+        for (auto stmt : allStmts) {
+            if (pkb->getFollowingStmt(stmt) != -1) {
+                result.setValid(true);
+                return result;
+            }
+        }
+        result.setValid(false);
+        return result;  
 	}
-        
-	if (isFirstEntitySynonym && !isSecondEntitySynonym) {
+
+	/// CONSTANT CONSTANT
+    if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+        secondReference->getRefType() == ReferenceType::CONSTANT) {
+		result.setValid(pkb->follows(stoi(firstStmt), stoi(secondStmt)));
+        return result;
+    }
+
+	// CONSTANT WILDCARD
+    if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+        secondReference->getRefType() == ReferenceType::WILDCARD) {
+        result.setValid(pkb->getFollowingStmt(stoi(firstStmt)) != -1);
+        return result;
+	}
+
+	// WILDCARD CONSTANT
+    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+        secondReference->getRefType() == ReferenceType::CONSTANT) {
+        result.setValid(pkb->getPrecedingStmt(stoi(secondStmt)) != -1);
+        return result;
+	}
+
+	// SYNONYM CONSTANT
+	if (firstReference->getRefType() == ReferenceType::SYNONYM && 
+		secondReference->getRefType() == ReferenceType::CONSTANT) {
 		vector<string> firstStmtResults;
         int precedingStmt = pkb->getPrecedingStmt(stoi(secondStmt));
-        if (precedingStmt != -1) { // Todo: use variable instead of magic number
+        if (precedingStmt != -1) {
             firstStmtResults.push_back(to_string(precedingStmt));
         }
-		result.setResultList1(firstEntity,firstStmtResults);
+		result.setResultList1(firstReference,firstStmtResults);
+        return result;
 	}
 
-	if (!isFirstEntitySynonym && isSecondEntitySynonym) {
+	// CONSTANT SYNONYM
+	if (firstReference->getRefType() == ReferenceType::CONSTANT 
+		&& secondReference->getRefType() == ReferenceType::SYNONYM) {
 		vector<string> secondStmtResults;
         int followingStmt = pkb->getFollowingStmt(stoi(firstStmt));
-        if (followingStmt != -1) { // Todo: use variable instead of magic number
+        if (followingStmt != -1) {
             secondStmtResults.push_back(to_string(followingStmt));
 		}
-		result.setResultList2(secondEntity, secondStmtResults);
+		result.setResultList2(secondReference, secondStmtResults);
+		return result;
 	}
 
-	if (isFirstEntitySynonym && isSecondEntitySynonym &&
-		!(firstEntity->getValue() == Reference::WILDCARD && secondEntity->getValue() == Reference::WILDCARD)) {
-		vector<string> firstStmtResults;
-		vector<string> secondStmtResults;
-		vector<int> precedingStmts = pkb->getAllStmts().asVector();
-		for (int precedingStmt : precedingStmts) {
-			int followingStmt = pkb->getFollowingStmt(precedingStmt);
-			if (followingStmt == -1) { // Todo: use variable instead of magic number
-				continue;   
-			}
-			if (firstEntity->getValue() != Reference::WILDCARD) {
-				firstStmtResults.push_back(to_string(precedingStmt));
-            }
-			if (secondEntity->getValue() != Reference::WILDCARD) {
-                secondStmtResults.push_back(to_string(followingStmt));
-            }
-		}
-		result.setResultList1(firstEntity, firstStmtResults);
-		result.setResultList2(secondEntity, secondStmtResults);
-	}
+	// NEITHER IS CONSTANT
+    vector<string> firstStmtResults;
+    vector<string> secondStmtResults;
+    vector<int> precedingStmts = pkb->getAllStmts().asVector();
+    for (int precedingStmt : precedingStmts) {
+        int followingStmt = pkb->getFollowingStmt(precedingStmt);
+        if (followingStmt == -1) {
+            continue;
+        }
+        firstStmtResults.push_back(to_string(precedingStmt));
+        secondStmtResults.push_back(to_string(followingStmt));
+    }
+
+    if (firstReference->getRefType() != ReferenceType::WILDCARD) {
+        result.setResultList1(firstReference, firstStmtResults);
+    }
+
+    if (secondReference->getRefType() != ReferenceType::WILDCARD) {
+        result.setResultList2(secondReference, secondStmtResults);
+    }
 
 	return result;
 }

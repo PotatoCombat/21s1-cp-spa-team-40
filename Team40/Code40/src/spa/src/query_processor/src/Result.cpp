@@ -1,13 +1,5 @@
 #include "Result.h"
 
-Result::Result() {
-	isValid = true;
-	hasResult1 = false;
-	hasResult2 = false;
-	reference1 = NULL;
-	reference2 = NULL;
-}
-
 void Result::setValid(bool isValid) {
 	this->isValid = isValid;
 }
