@@ -14,8 +14,7 @@ Relation QueryParser::parseRelation(RelTuple clause,
 
     RelationType relT = relHelper.getType(rel);
 
-    Reference r1;
-    Reference r2;
+    vector<Reference> x;
 
     auto it1 = find_if(declList.begin(), declList.end(), 
         [&ref1](Reference& ref) { return ref.getValue() == ref1; });
@@ -23,22 +22,22 @@ Relation QueryParser::parseRelation(RelTuple clause,
         [&ref2](Reference& ref) { return ref.getValue() == ref2; });
 
     if (it1 != declList.end()) {
-        r1 = *it1;
+        x.push_back(*it1);
     } else {
         ReferenceType refT = checkRefType(ref1);
         DesignEntityType deT = relHelper.chooseDeType1(relT);
-        r1 = Reference(deT, refT, ref1);
+        x.push_back(Reference(deT, refT, ref1));
     }
 
     if (it2 != declList.end()) {
-        r2 = *it2;
+        x.push_back(*it2);
     } else {
         ReferenceType refT = checkRefType(ref2);
         DesignEntityType deT = relHelper.chooseDeType2(relT);
-        r2 = Reference(deT, refT, ref1);
+        x.push_back(Reference(deT, refT, ref2));
     }
 
-    return Relation(relT, &r1, &r2);
+    return Relation(relT, &x[0], &x[1]);
 }
 
 // helper methods
