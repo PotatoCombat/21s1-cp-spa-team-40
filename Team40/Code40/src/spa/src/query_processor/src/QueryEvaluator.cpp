@@ -36,6 +36,11 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
             relationshipHandler = &parentStarHandler;
         }
 
+        if (relationship->getType() == RelationType::MODIFIES_P) {
+            ModifiesProcHandler modifiesProcHandler(relationship, pkb);
+            relationshipHandler = &modifiesProcHandler;
+        }
+
         if (relationship->getType() == RelationType::MODIFIES_S) {
             ModifiesStmtHandler modifiesStmtHandler(relationship, pkb);
             relationshipHandler = &modifiesStmtHandler;
