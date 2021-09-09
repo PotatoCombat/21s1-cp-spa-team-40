@@ -41,6 +41,11 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
             relationshipHandler = &modifiesStmtHandler;
         }
 
+        if (relationship->getType() == RelationType::USES_P) {
+            UsesProcHandler usesProcHandler(relationship, pkb);
+            relationshipHandler = &usesProcHandler;
+        }
+
         if (relationship->getType() == RelationType::USES_S) {
             UsesStmtHandler usesStmtHandler(relationship, pkb);
             relationshipHandler = &usesStmtHandler;

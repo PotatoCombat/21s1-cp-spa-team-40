@@ -18,6 +18,7 @@
 #include "relationship_handler/ModifiesStmtHandler.h"
 #include "relationship_handler/ParentHandler.h"
 #include "relationship_handler/ParentStarHandler.h"
+#include "relationship_handler/UsesProcHandler.h"
 #include "relationship_handler/UsesStmtHandler.h"
 
 using namespace std;
