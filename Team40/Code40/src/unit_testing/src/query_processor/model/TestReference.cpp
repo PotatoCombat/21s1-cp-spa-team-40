@@ -4,29 +4,20 @@
 
 using namespace std;
 
-struct TestReferenceHelper {
-    Reference ref1;
-    Reference ref2;
-    Reference ref3;
-    Reference ref4;
-    Reference ref5;
-};
-
-TestReferenceHelper testReferenceHelper = {
-    Reference(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x"),
-    Reference(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x"),
-    Reference(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x2"),
-    Reference(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM, "x"),
-    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "x")
-};
 
 TEST_CASE("Reference: equals") { 
+    Reference ref1(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x");
+    Reference ref2(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x");
+    Reference ref3(DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "x2");
+    Reference ref4(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM, "x");
+    Reference ref5(DesignEntityType::STMT, ReferenceType::CONSTANT, "x");
+
     // all match
-    REQUIRE(testReferenceHelper.ref1.equals(testReferenceHelper.ref2));
+    REQUIRE(ref1.equals(ref2));
     // different value
-    REQUIRE(!testReferenceHelper.ref1.equals(testReferenceHelper.ref3));
+    REQUIRE(!ref1.equals(ref3));
     // different reference type
-    REQUIRE(!testReferenceHelper.ref1.equals(testReferenceHelper.ref4));
+    REQUIRE(!ref1.equals(ref4));
     // different design entity type
-    REQUIRE(!testReferenceHelper.ref1.equals(testReferenceHelper.ref5));
+    REQUIRE(!ref1.equals(ref5));
 }
