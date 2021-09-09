@@ -85,13 +85,21 @@ StmtIndex DesignExtractor::handleCallStatement(Statement *callStatement) {
 }
 
 StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
+    // 0. Insert statement into PKB
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
-    Condition *condition = ifStatement->getCondition();
-    // TODO: handle condition
+
+    // 1. Handle condition
+    ExtractionContext::getInstance().setUsingStatement(stmtIndex);
+    handleCondition(ifStatement->getCondition());
+    ExtractionContext::getInstance().unsetUsingStatement();
+
     ExtractionContext::getInstance().setParentStatement(stmtIndex);
+    // 2. Handle THEN statements
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         handleStatement(statement);
     }
+
+    // 3. Handle ELSE statements
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         handleStatement(statement);
     }
@@ -114,37 +122,34 @@ void DesignExtractor::handleCondition(Condition *condition) {
 }
 
 void DesignExtractor::handleSingleCondition(SingleCondition *singleCondition) {
-    Relation *relation = singleCondition->getRelation();
-    handleRelation(relation);
-    // TODO
+    handleRelation(singleCondition->getRelation());
 }
 
 void DesignExtractor::handleNotCondition(NotCondition *notCondition) {
-    Condition *condition = notCondition->getPrimaryCondition();
-
-    handleCondition(condition);
+    handleCondition(notCondition->getPrimaryCondition());
 }
 
 void DesignExtractor::handleBinaryCondition(Condition *binaryCondition) {
-    Condition *condition1 = binaryCondition->getPrimaryCondition();
-    Condition *condition2 = binaryCondition->getSecondaryCondition();
-
-    handleCondition(condition1);
-    handleCondition(condition2);
+    handleCondition(binaryCondition->getPrimaryCondition());
+    handleCondition(binaryCondition->getSecondaryCondition());
 }
 
 void DesignExtractor::handleRelation(Relation *relation) {
-    Factor *leftFactor = relation->getLeftFactor();
-    Factor *rightFactor = relation->getRightFactor();
-    // TODO
+    handleFactor(relation->getLeftFactor());
+    handleFactor(relation->getRightFactor());
 }
 
 void DesignExtractor::handleExpression(Expression *expression) {
     // TODO
     switch (expression->getExpressionType()) {
     case ExpressionType::SINGLE_TERM:
+        handleSingleTermExpression(
+            dynamic_cast<SingleTermExpression *>(expression));
+        break;
     case ExpressionType::SUBTRACT_TERMS:
+        // TODO: handle
     case ExpressionType::SUM_TERMS:
+        // TODO: handle
     default:
         throw runtime_error("Invalid ExpressionType.");
     }

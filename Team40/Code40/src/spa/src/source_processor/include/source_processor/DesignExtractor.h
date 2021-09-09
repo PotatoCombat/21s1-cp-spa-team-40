@@ -5,6 +5,7 @@
 #include "common/model/Program.h"
 #include "common/model/condition/NotCondition.h"
 #include "common/model/condition/SingleCondition.h"
+#include "common/model/expression/SingleTermExpression.h"
 #include "common/model/statement/AssignStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/term/Term.h"
@@ -15,7 +16,7 @@ class DesignExtractor {
     PKB pkb;
 
 public:
-    DesignExtractor(PKB pkb);
+    explicit DesignExtractor(PKB pkb);
 
     // Program
     void handleProgram(Program program);
