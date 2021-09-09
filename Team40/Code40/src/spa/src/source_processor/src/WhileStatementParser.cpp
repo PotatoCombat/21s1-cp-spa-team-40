@@ -10,10 +10,10 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 
 Statement WhileStatementParser::parseWhileStatement() {
     vector<string>::iterator whileItr =
-        find(content.begin(), content.end(), "(");
+        find(content.begin(), content.end(), "while");
     WhileStatement stmt = WhileStatement(index);
-    vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
-    vector<string> condLst(next(whileItr), endItr);
+    vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
+    vector<string> condLst(next(next(whileItr)), prev(endItr));
     stmt.setCondLst(condLst);
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();

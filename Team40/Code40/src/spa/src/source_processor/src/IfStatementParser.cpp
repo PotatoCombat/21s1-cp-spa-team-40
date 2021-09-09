@@ -9,10 +9,11 @@ IfStatementParser::IfStatementParser(vector<string> content, int index,
     : StatementParser(content, index, programLines, programIndex){};
 
 Statement IfStatementParser::parseIfStatement() {
-    vector<string>::iterator ifItr = find(content.begin(), content.end(), "(");
+    vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     IfStatement stmt = IfStatement(index);
-    vector<string>::iterator endItr = find(content.begin(), content.end(), ")");
-    vector<string> condLst(next(ifItr), endItr);
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), "then");
+    vector<string> condLst(next(next(ifItr)), prev(endItr));
     stmt.setCondLst(condLst);
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
