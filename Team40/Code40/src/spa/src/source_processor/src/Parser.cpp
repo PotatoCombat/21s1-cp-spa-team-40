@@ -3,7 +3,7 @@
 #include "source_processor/CallStatementParser.h"
 #include "source_processor/IfStatementParser.h"
 #include "source_processor/PrintStatementParser.h"
-//#include "source_processor/ProcedureParser.h"
+#include "source_processor/ProcedureParser.h"
 #include "source_processor/ReadStatementParser.h"
 #include "source_processor/StatementParser.h"
 #include "source_processor/WhileStatementParser.h"
@@ -91,6 +91,7 @@ Program Parser::parseProgram(vector<Line> programLines) {
                 program.addToProcLst(currProc);
             }
             // ProcedureParser procParser(currContent);
+            // currProc = procParser.parseProcedure();
             currProc = parseProcedure(currContent);
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
