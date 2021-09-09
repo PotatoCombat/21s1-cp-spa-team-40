@@ -1,4 +1,5 @@
 #pragma once
+#include "common/model/relation/Relation.h"
 
 enum class ConditionType { SINGLE, AND, OR, NOT };
 
@@ -16,4 +17,6 @@ public:
     ConditionType getConditionType();
 
     bool getValue();
+
+    virtual Relation *getRelation();
 };

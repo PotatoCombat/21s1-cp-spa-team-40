@@ -5,17 +5,17 @@ using namespace std;
 
 class IfStatement : public Statement {
 private:
-    // Condition cond;
+    Condition *cond;
     vector<Statement> thenStmtLst;
     vector<Statement> elseStmtLst;
     vector<string> condLst;
 
 public:
-    // IfStatement(int index, Condition cond)
-    //     : cond(cond), Statement(index, StatementType::IF) {
-    //     this->thenStmtLst = {};
-    //     this->elseStmtLst = {};
-    // }
+    IfStatement(int index, Condition *cond)
+        : cond(cond), Statement(index, StatementType::IF) {
+        this->thenStmtLst = {};
+        this->elseStmtLst = {};
+    }
 
     IfStatement(int index) : Statement(index, StatementType::IF) {
         this->thenStmtLst = {};
@@ -30,11 +30,11 @@ public:
         this->elseStmtLst.push_back(statement);
     }
 
-    void setCondLst(vector<string> condLst) { this->condLst = condLst; }
+    void setCondLst(vector<string> condLst) { condLst = condLst; }
 
-    // Condition getCondition() { return this->cond; }
+    Condition *getCondition() { return cond; }
 
-    vector<Statement> getThenStmtLst() { return this->thenStmtLst; }
+    vector<Statement> getThenStmtLst() { return thenStmtLst; }
 
-    vector<Statement> getElseStmtLst() { return this->elseStmtLst; }
+    vector<Statement> getElseStmtLst() { return elseStmtLst; }
 };
