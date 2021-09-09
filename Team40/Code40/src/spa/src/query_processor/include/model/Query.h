@@ -19,7 +19,8 @@ private:
 public:
     Query();
     vector<Reference *> getReferences();
-    void setReturnReference(Reference *reference); // returnReference must have ReferenceType::SYNONYM
+    // returnReference must have ReferenceType::SYNONYM, should only be called once for each query object
+    void setReturnReference(Reference *reference); 
     Reference *getReturnReference();
     void addRelation(Relation *relation);
     vector<Relation *> getRelations();
