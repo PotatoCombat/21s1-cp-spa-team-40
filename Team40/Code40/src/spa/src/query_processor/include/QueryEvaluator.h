@@ -13,6 +13,7 @@
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
 #include "relationship_handler/FollowsStarHandler.h"
+#include "relationship_handler/ModifiesStmtHandler.h"
 #include "relationship_handler/ParentHandler.h"
 #include "relationship_handler/ParentStarHandler.h"
 

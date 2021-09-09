@@ -51,3 +51,18 @@ set<StmtIndex> PKBStub::getChildStmts(StmtIndex stmt) {
 bool PKBStub::parent(StmtIndex stmt1, StmtIndex stmt2) {
     return getParentStmt(stmt2) == stmt1;
 }
+
+set<StmtIndex> PKBStub::getParentStarStmts(StmtIndex stmt) {
+    vector<set<int>> parentStarStmtsList = {{}, {}, {}, {}, {4}, {4}, {4, 6}, {4, 6}, {4}, {4}, {4}, {}};
+    return parentStarStmtsList[stmt - 1];
+}
+
+set<StmtIndex> PKBStub::getChildStarStmts(StmtIndex stmt) {
+    vector<set<int>> childStarStmtsList = {{}, {}, {}, {5, 6, 7, 8, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}};
+    return childStarStmtsList[stmt - 1];
+}
+
+bool PKBStub::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
+    set<int> childStarStmts = getChildStarStmts(stmt1);
+    return find(childStarStmts.begin(), childStarStmts.end(), stmt2) != childStarStmts.end();
+}

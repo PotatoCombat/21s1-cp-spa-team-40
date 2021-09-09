@@ -25,4 +25,8 @@ public:
     StmtIndex getParentStmt(StmtIndex stmt);
     set<StmtIndex> getChildStmts(StmtIndex stmt);
     bool parent(StmtIndex stmt1, StmtIndex stmt2);
+
+    set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+    set<StmtIndex> getChildStarStmts(StmtIndex stmt);
+    bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
 };
