@@ -9,8 +9,6 @@
 #include "source_processor/WhileStatementParser.h"
 #include <algorithm>
 #include <iostream>
-#include <string>
-#include <vector>
 
 // parse file input
 
@@ -93,7 +91,7 @@ Program Parser::parseProgram(vector<Line> programLines) {
                 program.addToProcLst(currProc);
             }
             ProcedureParser procParser(currContent);
-            Procedure currProc = procParser.parseProcedure();
+            currProc = procParser.parseProcedure();
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
             Statement stmt =

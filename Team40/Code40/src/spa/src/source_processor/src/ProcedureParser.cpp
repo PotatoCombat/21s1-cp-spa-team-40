@@ -1,5 +1,4 @@
 #include "source_processor/ProcedureParser.h"
-#include "common/model/Procedure.h"
 #include <algorithm>
 
 Procedure ProcedureParser::parseProcedure() {

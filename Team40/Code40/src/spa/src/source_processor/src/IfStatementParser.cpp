@@ -19,8 +19,8 @@ Statement IfStatementParser::parseIfStatement() {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         Parser parser;
-        Statement nestedStmt =
-            parser.parseStatement(currContent, currIndex, programLines, programIndex);
+        Statement nestedStmt = parser.parseStatement(
+            currContent, currIndex, programLines, programIndex);
         if (hasTerminator(currContent)) {
             terminator++;
             continue;
