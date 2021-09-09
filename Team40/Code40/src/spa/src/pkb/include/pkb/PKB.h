@@ -52,11 +52,14 @@ public:
     // Query Processor
     // =========================================================================
 
-    virtual Iterator<ProcIndex> getAllProcs();
+    // virtual Iterator<ProcIndex> getAllProcs();
+    virtual Iterator<string> getAllProcs();
     virtual Iterator<StmtIndex> getAllStmts();
     virtual Iterator<StmtIndex> getAllStmts(StatementType type);
-    virtual Iterator<VarIndex> getAllVars();
-    virtual Iterator<ConstIndex> getAllConsts();
+    // virtual Iterator<VarIndex> getAllVars();
+    virtual Iterator<string> getAllVars();
+    // virtual Iterator<ConstIndex> getAllConsts();
+    virtual Iterator<string> getAllConsts();
 
     // Follows =================================================================
 

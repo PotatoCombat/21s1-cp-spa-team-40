@@ -5,10 +5,12 @@
 #include <algorithm>
 #include <iterator>
 
+#include "common/model/statement/Statement.h"
+#include "pkb/PKB.h"
+
 #include "model/Query.h"
 #include "model/Reference.h"
 #include "model/Relation.h"
-#include "pkb/PKB.h"
 #include "Result.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"

@@ -82,6 +82,38 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
     if (!referenceAppearInClauses[resultIndex]) {
         vector<string> result;
+        if (returnReference->getDeType() == DesignEntityType::PROCEDURE) {
+            result = pkb->getAllProcs().asVector();
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::VARIABLE) {
+            result = pkb->getAllVars().asVector();
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
+            result = pkb->getAllConsts().asVector();
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
+            toString(pkb->getAllStmts(StatementType::ASSIGN).asVector(), result);
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::CALL) {
+            toString(pkb->getAllStmts(StatementType::CALL).asVector(), result);
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::IF) {
+            toString(pkb->getAllStmts(StatementType::IF).asVector(), result);
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::PRINT) {
+            toString(pkb->getAllStmts(StatementType::PRINT).asVector(), result);
+            return result;
+        }
+        if (returnReference->getDeType() == DesignEntityType::READ) {
+            toString(pkb->getAllStmts(StatementType::READ).asVector(), result);
+            return result;
+        }
         toString(pkb->getAllStmts().asVector(), result); 
         return result;
     }
