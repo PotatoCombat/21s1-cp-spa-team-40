@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Abstractions.h"
+#include "common/model/Procedure.h"
+#include "common/model/statement/Statement.h"
+#include "common/model/Variable.h"
 
 #include <map>
 #include <set>
@@ -11,39 +14,39 @@ public:
     ModifiesTable();
 
     /// Stores Modifies(proc, var).
-    void insertProcModifyingVar(ProcIndex proc, VarIndex var);
+    void insertProcModifyingVar(Procedure *proc, Variable *var);
 
     /// Stores Modifies(stmt, var).
-    void insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
+    void insertStmtModifyingVar(Statement *stmt, Variable *var);
 
     /// Selects p such that Modifies(p, var), where p is a Procedure.
-    set<ProcIndex> getProcsModifyingVar(VarIndex var);
+    set<ProcName> getProcsModifyingVar(VarName var);
 
     /// Selects s such that Modifies(s, var), where s is a Statement.
-    set<StmtIndex> getStmtsModifyingVar(VarIndex var);
+    set<StmtIndex> getStmtsModifyingVar(VarName var);
 
     /// Selects v such that Modifies(proc, v), where v is a Variable.
-    set<VarIndex> getVarsModifiedByProc(ProcIndex proc);
+    set<VarName> getVarsModifiedByProc(ProcName proc);
 
     /// Selects v such that Modifies(stmt, v), where v is a Variable.
-    set<VarIndex> getVarsModifiedByStmt(StmtIndex stmt);
+    set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
 
     /// Selects BOOLEAN such that Modifies(proc, var).
-    bool procModifies(ProcIndex proc, VarIndex var);
+    bool procModifies(ProcName proc, VarName var);
 
     /// Selects BOOLEAN such that Modifies(stmt, var).
-    bool stmtModifies(StmtIndex stmt, VarIndex var);
+    bool stmtModifies(StmtIndex stmt, VarName var);
 
 private:
     /// Stores p such that Modifies(p, v), where p is a Procedure.
-    map<VarIndex, set<ProcIndex>> procsModifyingVarMap;
+    map<VarName, set<ProcName>> procsModifyingVarMap;
 
     /// Stores s such that Modifies(s, v), where s is a Statement.
-    map<VarIndex, set<StmtIndex>> stmtsModifyingVarMap;
+    map<VarName, set<StmtIndex>> stmtsModifyingVarMap;
 
     /// Stores v such that Modifies(p, v), where v is a Variable.
-    map<ProcIndex, set<VarIndex>> varsModifiedByProcMap;
+    map<ProcName, set<VarName>> varsModifiedByProcMap;
 
     /// Stores v such that Modifies(s, v), where v is a Variable.
-    map<StmtIndex, set<VarIndex>> varsModifiedByStmtMap;
+    map<StmtIndex, set<VarName>> varsModifiedByStmtMap;
 };

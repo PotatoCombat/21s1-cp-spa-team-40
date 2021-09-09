@@ -54,19 +54,19 @@ void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
     parentStarTable.insertParentStar(parentStmt, childStmt);
 }
 
-void PKB::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
+void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
     modifiesTable.insertProcModifyingVar(proc, var);
 }
 
-void PKB::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
+void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
     modifiesTable.insertStmtModifyingVar(stmt, var);
 }
 
-void PKB::insertProcUsingVar(ProcIndex proc, VarIndex var) {
+void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
     usesTable.insertProcUsingVar(proc, var);
 }
 
-void PKB::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
+void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
@@ -155,52 +155,52 @@ bool PKB::parentStar(StmtIndex parentStmt, StmtIndex childStmt) {
 
 // Modifies ====================================================================
 
-set<ProcIndex> PKB::getProcsModifyingVar(VarIndex var) {
+set<ProcName> PKB::getProcsModifyingVar(VarName var) {
     return modifiesTable.getProcsModifyingVar(var);
 }
 
-set<StmtIndex> PKB::getStmtsModifyingVar(VarIndex var) {
+set<StmtIndex> PKB::getStmtsModifyingVar(VarName var) {
     return modifiesTable.getStmtsModifyingVar(var);
 }
 
-set<VarIndex> PKB::getVarsModifiedByProc(ProcIndex proc) {
+set<VarName> PKB::getVarsModifiedByProc(ProcName proc) {
     return modifiesTable.getVarsModifiedByProc(proc);
 }
 
-set<VarIndex> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
+set<VarName> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
     return modifiesTable.getVarsModifiedByStmt(stmt);
 }
 
-bool PKB::procModifies(ProcIndex proc, VarIndex var) {
+bool PKB::procModifies(ProcName proc, VarName var) {
     return modifiesTable.procModifies(proc, var);
 }
 
-bool PKB::stmtModifies(StmtIndex stmt, VarIndex var) {
+bool PKB::stmtModifies(StmtIndex stmt, VarName var) {
     return modifiesTable.stmtModifies(stmt, var);
 }
 
 // Uses ========================================================================
 
-set<ProcIndex> PKB::getProcsUsingVar(VarIndex var) {
+set<ProcName> PKB::getProcsUsingVar(VarName var) {
     return usesTable.getProcsUsingVar(var);
 }
 
-set<StmtIndex> PKB::getStmtsUsingVar(VarIndex var) {
+set<StmtIndex> PKB::getStmtsUsingVar(VarName var) {
     return usesTable.getStmtsUsingVar(var);
 }
 
-set<VarIndex> PKB::getVarsUsedByProc(ProcIndex proc) {
+set<VarName> PKB::getVarsUsedByProc(ProcName proc) {
     return usesTable.getVarsUsedByProc(proc);
 }
 
-set<VarIndex> PKB::getVarsUsedByStmt(StmtIndex stmt) {
+set<VarName> PKB::getVarsUsedByStmt(StmtIndex stmt) {
     return usesTable.getVarsUsedByStmt(stmt);
 }
 
-bool PKB::procUses(ProcIndex proc, VarIndex var) {
+bool PKB::procUses(ProcName proc, VarName var) {
     return usesTable.procUses(proc, var);
 }
 
-bool PKB::stmtUses(StmtIndex stmt, VarIndex var) {
+bool PKB::stmtUses(StmtIndex stmt, VarName var) {
     return usesTable.stmtUses(stmt, var);
 }
