@@ -90,9 +90,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             if (!currProc.getName().empty()) {
                 program.addToProcLst(currProc);
             }
-            // ProcedureParser procParser(currContent);
-            // currProc = procParser.parseProcedure();
-            currProc = parseProcedure(currContent);
+            ProcedureParser procParser(currContent);
+            currProc = procParser.parseProcedure();
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
             Statement stmt =
@@ -102,14 +101,6 @@ Program Parser::parseProgram(vector<Line> programLines) {
     }
     program.addToProcLst(currProc);
     return program;
-}
-
-Procedure Parser::parseProcedure(vector<string> content) {
-    vector<string>::iterator procItr =
-        find(content.begin(), content.end(), "procedure");
-    string proc_name = *next(procItr);
-    Procedure proc = Procedure(proc_name);
-    return proc;
 }
 
 Statement Parser::parseStatement(vector<string> content, int index,

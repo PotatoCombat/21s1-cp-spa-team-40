@@ -22,7 +22,6 @@ public:
 
     // parse preprocessed file
     Program parseProgram(vector<Line> programLines);
-    Procedure parseProcedure(vector<string> content);
     Statement parseStatement(vector<string> content, int index,
                              vector<Line> programLines, int programIndex);
 
