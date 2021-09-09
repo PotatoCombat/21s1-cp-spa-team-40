@@ -1,8 +1,9 @@
-//
-// Created by Wallace Lim on 9/9/21.
-//
+#include "common/model/Factor.h"
+#include "common/model/relation/Relation.h"
 
-#ifndef AUTOTESTER_EQUALSRELATION_H
-#define AUTOTESTER_EQUALSRELATION_H
+class EqualsRelation : public Relation {
 
-#endif // AUTOTESTER_EQUALSRELATION_H
+public:
+    EqualsRelation(Factor *leftFactor, Factor *rightFactor);
+    bool getValue() override;
+};

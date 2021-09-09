@@ -3,6 +3,8 @@
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
+#include "common/model/condition/NotCondition.h"
+#include "common/model/condition/SingleCondition.h"
 #include "common/model/statement/AssignStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/term/Term.h"
@@ -30,8 +32,8 @@ public:
 
     // Condition
     void handleCondition(Condition *condition);
-    void handleSingleCondition(Condition *singleCondition);
-    void handleNotCondition(Condition *notCondition);
+    void handleSingleCondition(SingleCondition *singleCondition);
+    void handleNotCondition(NotCondition *notCondition);
     void handleBinaryCondition(Condition *binaryCondition);
 
     // Relation

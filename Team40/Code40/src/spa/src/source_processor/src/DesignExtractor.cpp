@@ -102,21 +102,35 @@ StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
 void DesignExtractor::handleCondition(Condition *condition) {
     switch (condition->getConditionType()) {
     case ConditionType::SINGLE:
-        handleSingleCondition(condition);
+        handleSingleCondition(dynamic_cast<SingleCondition *>(condition));
     case ConditionType::AND:
     case ConditionType::OR:
         handleBinaryCondition(condition);
     case ConditionType::NOT:
-        handleNotCondition(condition);
+        handleNotCondition(dynamic_cast<NotCondition *>(condition));
     default:
         throw runtime_error("Invalid ConditionType.");
     }
 }
 
-void DesignExtractor::handleSingleCondition(Condition *singleCondition) {
+void DesignExtractor::handleSingleCondition(SingleCondition *singleCondition) {
     Relation *relation = singleCondition->getRelation();
     handleRelation(relation);
     // TODO
+}
+
+void DesignExtractor::handleNotCondition(NotCondition *notCondition) {
+    Condition *condition = notCondition->getPrimaryCondition();
+
+    handleCondition(condition);
+}
+
+void DesignExtractor::handleBinaryCondition(Condition *binaryCondition) {
+    Condition *condition1 = binaryCondition->getPrimaryCondition();
+    Condition *condition2 = binaryCondition->getSecondaryCondition();
+
+    handleCondition(condition1);
+    handleCondition(condition2);
 }
 
 void DesignExtractor::handleRelation(Relation *relation) {

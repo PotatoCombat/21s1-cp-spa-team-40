@@ -9,7 +9,8 @@ FactorType Factor::getFactorType() { return factorType; }
 
 int Factor::getValue() const {
     if (!hasComputedValue) {
-        throw runtime_error("This factor does not have a value.");
+        return 0; // STUB
+        //        throw runtime_error("This factor does not have a value.");
     }
     return value;
 }

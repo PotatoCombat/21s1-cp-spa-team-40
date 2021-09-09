@@ -2,7 +2,7 @@
 file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
 # Extend the executable with the path to your unit test files.
-add_executable(unit_testing ${catch_main})
+add_executable(unit_testing ${catch_main} src/source_processor/TestDesignExtractor.cpp)
 
 # Add the relative path to your unit test files to be included in the build.
 add_subdirectory(src/common)

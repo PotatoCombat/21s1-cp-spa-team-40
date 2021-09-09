@@ -1,11 +1,8 @@
-#include "common/model/Factor.h"
-#include "common/model/relation/Relation.h"
+#include "common/model/relation/EqualsRelation.h"
 
-class EqualsRelation : public Relation {
-public:
-    EqualsRelation(Factor *leftFactor, Factor *rightFactor)
-        : Relation(RelationType::EQUALS, leftFactor, rightFactor){};
-    bool getValue() {
-        return getLeftFactor()->getValue() == getRightFactor()->getValue();
-    }
-};
+EqualsRelation::EqualsRelation(Factor *leftFactor, Factor *rightFactor)
+    : Relation(RelationType::EQUALS, leftFactor, rightFactor){};
+
+bool EqualsRelation::getValue() {
+    return getLeftFactor()->getValue() == getRightFactor()->getValue();
+}

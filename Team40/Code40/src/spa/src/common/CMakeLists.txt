@@ -8,7 +8,7 @@ file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/term/*.cpp"
         )
 
-add_library(common ${srcs})
+add_library(common ${srcs} include/common/model/relation/EqualsRelation.h)
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(common PUBLIC include)
