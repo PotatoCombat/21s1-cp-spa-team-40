@@ -26,5 +26,5 @@ public:
     Reference *getFirstReference();
     Reference *getSecondReference();
     RelationType getType();
-    bool equals(Relation *other);
+    bool equals(Relation &other);
 };
