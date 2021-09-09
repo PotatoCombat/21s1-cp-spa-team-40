@@ -37,16 +37,16 @@ public:
     virtual void insertParent(Statement *parentStmt, Statement *childStmt);
 
     /// Stores the relationship Modifies(proc, var).
-    virtual void insertProcModifyingVar(ProcIndex proc, VarIndex var);
+    virtual void insertProcModifyingVar(Procedure *proc, Variable *var);
 
     /// Stores the relationship Modifies(stmt, var).
-    virtual void insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
+    virtual void insertStmtModifyingVar(Statement *stmt, Variable *var);
 
     /// Stores the relationship Uses(proc, var).
-    virtual void insertProcUsingVar(ProcIndex proc, VarIndex var);
+    virtual void insertProcUsingVar(Procedure *proc, Variable *var);
 
     /// Stores the relationship Uses(stmt, var).
-    virtual void insertStmtUsingVar(StmtIndex stmt, VarIndex var);
+    virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
     // =========================================================================
     // Query Processor
@@ -119,56 +119,56 @@ public:
     /// Selects p such that Modifies(p, var), where p is a Procedure.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<ProcIndex> getProcsModifyingVar(VarIndex var);
+    virtual set<ProcName> getProcsModifyingVar(VarName var);
 
     /// Selects s such that Modifies(s, var), where s is a Statement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getStmtsModifyingVar(VarIndex var);
+    virtual set<StmtIndex> getStmtsModifyingVar(VarName var);
 
     /// Selects v such that Modifies(proc, v), where v is a Variable.
     /// \return all stmt#no that fit the relationship, or an empty set there are
     /// none.
-    virtual set<VarIndex> getVarsModifiedByProc(ProcIndex proc);
+    virtual set<VarName> getVarsModifiedByProc(ProcName proc);
 
     /// Selects v such that Modifies(stmt, v), where v is a Variable.
     /// \return all stmt#no that fit the relationship, or an empty set there are
     /// none.
-    virtual set<VarIndex> getVarsModifiedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
 
     /// Selects BOOLEAN such that Modifies(proc, var).
-    virtual bool procModifies(ProcIndex proc, VarIndex var);
+    virtual bool procModifies(ProcName proc, VarName var);
 
     /// Selects BOOLEAN such that Modifies(stmt, var).
-    virtual bool stmtModifies(StmtIndex stmt, VarIndex var);
+    virtual bool stmtModifies(StmtIndex stmt, VarName var);
 
     // Uses ====================================================================
 
     /// Selects p such that Uses(p, var), where p is a Procedure.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<ProcIndex> getProcsUsingVar(VarIndex var);
+    virtual set<ProcName> getProcsUsingVar(VarName var);
 
     /// Selects s such that Uses(s, var), where s is a Statement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getStmtsUsingVar(VarIndex var);
+    virtual set<StmtIndex> getStmtsUsingVar(VarName var);
 
     /// Selects v such that Uses(proc, v), where v is a Variable.
     /// \return all stmt#no that fit the relationship, or an empty set there are
     /// none.
-    virtual set<VarIndex> getVarsUsedByProc(ProcIndex proc);
+    virtual set<VarName> getVarsUsedByProc(ProcName proc);
 
     /// Selects v such that Uses(stmt, v), where v is a Variable.
     /// \return all stmt#no that fit the relationship, or an empty set there are
     /// none.
-    virtual set<VarIndex> getVarsUsedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsUsedByStmt(StmtIndex stmt);
 
     /// Selects BOOLEAN such that Uses(proc, var).
-    virtual bool procUses(ProcIndex proc, VarIndex var);
+    virtual bool procUses(ProcName proc, VarName var);
 
     /// Selects BOOLEAN such that Uses(stmt, var).
-    virtual bool stmtUses(StmtIndex stmt, VarIndex var);
+    virtual bool stmtUses(StmtIndex stmt, VarName var);
 
 private:
     typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
