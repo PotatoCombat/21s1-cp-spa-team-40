@@ -1,5 +1,6 @@
 #include "source_processor/IfStatementParser.h"
 #include "common/model/statement/IfStatement.h"
+#include "source_processor/Parser.h"
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index,
@@ -17,9 +18,9 @@ Statement IfStatementParser::parseIfStatement() {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        StatementParser stmtParser =
-            StatementParser(currContent, currIndex, programLines, i);
-        Statement nestedStmt = stmtParser.parseStatement();
+        Parser parser;
+        Statement nestedStmt =
+            parser.parseStatement(currContent, currIndex, programLines, programIndex);
         if (hasTerminator(currContent)) {
             terminator++;
             continue;
@@ -33,8 +34,4 @@ Statement IfStatementParser::parseIfStatement() {
         }
     }
     return stmt;
-}
-
-bool IfStatementParser::hasTerminator(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "}") != inputLine.end();
 }

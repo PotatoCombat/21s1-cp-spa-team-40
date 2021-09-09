@@ -3,6 +3,7 @@
 #include "source_processor/CallStatementParser.h"
 #include "source_processor/IfStatementParser.h"
 #include "source_processor/PrintStatementParser.h"
+#include "source_processor/ProcedureParser.h"
 #include "source_processor/ReadStatementParser.h"
 #include "source_processor/StatementParser.h"
 #include "source_processor/WhileStatementParser.h"
@@ -91,7 +92,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             if (!currProc.getName().empty()) {
                 program.addToProcLst(currProc);
             }
-            currProc = parseProcedure(currContent);
+            ProcedureParser procParser(currContent);
+            Procedure currProc = procParser.parseProcedure();
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
             Statement stmt =
@@ -101,14 +103,6 @@ Program Parser::parseProgram(vector<Line> programLines) {
     }
     program.addToProcLst(currProc);
     return program;
-}
-
-Procedure Parser::parseProcedure(vector<string> content) {
-    vector<string>::iterator procItr =
-        find(content.begin(), content.end(), "procedure");
-    string proc_name = *next(procItr);
-    Procedure proc = Procedure(proc_name);
-    return proc;
 }
 
 Statement Parser::parseStatement(vector<string> content, int index,
@@ -151,10 +145,6 @@ bool Parser::isKeyword(string input) {
            input == "procedure";
 }
 
-bool Parser::hasTerminator(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "}") != inputLine.end();
-}
-
 // special characters
 
 bool Parser::isOperator(char input) { // logical, comparison, artihmetic and
@@ -195,19 +185,11 @@ bool Parser::isRoundBracket(string input) {
 bool Parser::isSemiColon(string input) { return input == ";"; }
 
 bool Parser::isInteger(string input) {
-    for (char &ch : input) {
-        if (!isdigit(ch)) {
-            return false;
-        }
-    }
-    return true;
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isdigit(c)); }) == input.end();
 }
 
 bool Parser::isName(string input) {
-    for (char &ch : input) {
-        if (!isalnum(ch)) {
-            return false;
-        }
-    }
-    return true;
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isalnum(c)); }) == input.end();
 }

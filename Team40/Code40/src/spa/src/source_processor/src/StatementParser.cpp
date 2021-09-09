@@ -29,3 +29,7 @@ bool StatementParser::isIfStmt(vector<string> inputLine) {
 bool StatementParser::isAssignStmt(vector<string> inputLine) {
     return find(inputLine.begin(), inputLine.end(), "=") != inputLine.end();
 }
+
+bool StatementParser::hasTerminator(vector<string> inputLine) {
+    return find(inputLine.begin(), inputLine.end(), "}") != inputLine.end();
+}

@@ -28,7 +28,6 @@ public:
     // special keywords
     bool isProc(vector<string> inputLine);
     bool isKeyword(string input);
-    bool hasTerminator(vector<string> inputLine);
 
     // special characters
     bool isBracket(char input);
