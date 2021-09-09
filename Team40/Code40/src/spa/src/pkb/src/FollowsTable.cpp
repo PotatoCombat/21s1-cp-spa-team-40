@@ -2,9 +2,9 @@
 
 FollowsTable::FollowsTable() = default;
 
-void FollowsTable::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
-    followsMap[stmt1] = stmt2;
-    followedByMap[stmt2] = stmt1;
+void FollowsTable::insertFollows(Statement *stmt1, Statement *stmt2) {
+    followsMap[stmt1->getIndex()] = stmt2->getIndex();
+    followedByMap[stmt2->getIndex()] = stmt1->getIndex();
 }
 
 StmtIndex FollowsTable::getFollowingStmt(StmtIndex stmt) {

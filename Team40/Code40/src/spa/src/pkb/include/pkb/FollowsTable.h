@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Abstractions.h"
+#include "common/model/statement/Statement.h"
 #include <map>
 
 class FollowsTable {
@@ -9,7 +10,7 @@ public:
     FollowsTable();
 
     /// Stores Follows(stmt1, stmt2).
-    void insertFollows(StmtIndex stmt1, StmtIndex stmt2);
+    void insertFollows(Statement *stmt1, Statement *stmt2);
 
     /// Selects s such that Follows(stmt, s).
     StmtIndex getFollowingStmt(StmtIndex stmt);

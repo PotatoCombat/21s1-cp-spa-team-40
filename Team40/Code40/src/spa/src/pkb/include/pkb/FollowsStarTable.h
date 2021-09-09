@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Abstractions.h"
+#include "common/model/statement/Statement.h"
 
 #include <map>
 #include <set>
@@ -11,7 +12,7 @@ public:
     FollowsStarTable();
 
     /// Stores Follows*(stmt1, stmt2).
-    void insertFollowsStar(StmtIndex stmt1, StmtIndex stmt2);
+    void insertFollowsStar(Statement *stmt1, Statement *stmt2);
 
     /// Selects s such that Follows*(stmt, s).
     set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);

@@ -29,8 +29,8 @@ public:
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
-    virtual void insertFollows(StmtIndex precedingStmt,
-                               StmtIndex followingStmt);
+    virtual void insertFollows(Statement *precedingStmt,
+                               Statement *followingStmt);
 
     /// Stores the relationship Parent(stmt1, stmt2), and updates *
     /// relationships.

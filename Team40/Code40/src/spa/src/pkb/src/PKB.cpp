@@ -44,7 +44,7 @@ ConstIndex PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
-void PKB::insertFollows(StmtIndex precedingStmt, StmtIndex followingStmt) {
+void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
     followsTable.insertFollows(precedingStmt, followingStmt);
     followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
