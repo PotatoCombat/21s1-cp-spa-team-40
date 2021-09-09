@@ -22,20 +22,13 @@ StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-<<<<<<< HEAD
-void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
-    followsTable.insertFollows(precedingStmt, followingStmt);
-    followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
-=======
 Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
     return statementTable.getStmt(stmtIndex);
 }
 
-// stmt2 follows stmt1. This also adds to FollowStarTable
-bool PKB::insertFollows(StmtIndex stmt1, StmtIndex stmt2) {
-    followsStarTable.insertFollowsStar(stmt1, stmt2);
-    return followsTable.insertFollows(stmt1, stmt2);
->>>>>>> 5f854ab (Implement getStmtByIndex in PKB)
+void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
+    followsTable.insertFollows(precedingStmt, followingStmt);
+    followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
 
 void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {

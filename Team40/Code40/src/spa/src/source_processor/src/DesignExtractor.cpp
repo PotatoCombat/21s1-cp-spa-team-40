@@ -47,23 +47,31 @@ void DesignExtractor::handleContextualRelationships(StmtIndex stmtIndex) {
     optional<StmtIndex> parentStmtIndex =
         ExtractionContext::getInstance().getParentStatement();
 
-// TODO: Fix extractors to work with Statement objects
-//    if (prevStmtIndex.has_value()) {
-//        pkb.insertFollows(prevStmtIndex.value(), stmtIndex);
-//    }
-//    if (parentStmtIndex.has_value()) {
-//        pkb.insertParent(parentStmtIndex.value(), stmtIndex);
-//    }
+    // TODO: Fix extractors to work with Statement objects
+    //    if (prevStmtIndex.has_value()) {
+    //        pkb.insertFollows(prevStmtIndex.value(), stmtIndex);
+    //    }
+    //    if (parentStmtIndex.has_value()) {
+    //        pkb.insertParent(parentStmtIndex.value(), stmtIndex);
+    //    }
 
     ExtractionContext::getInstance().setPrevStatement(stmtIndex);
 }
 
 StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(assignStatement);
-    Variable var = assignStatement->getVariable();
-    VarIndex varIdx = pkb.insertVar(&var);
-    //TODO: Use new API
-    //pkb.insertStmtModifyingVar(stmtIndex, varIdx);
+    Variable *var = assignStatement->getVariable();
+    VarIndex varIdx = pkb.insertVar(var);
+    pkb.insertStmtModifyingVar(assignStatement, var);
+
+    ExtractionContext::getInstance().setModifyingStatement(stmtIndex);
+    handleVariable(assignStatement->getVariable());
+    ExtractionContext::getInstance().unsetModifyingStatement();
+
+    ExtractionContext::getInstance().setUsingStatement(stmtIndex);
+    handleExpression(assignStatement->getExpression());
+    ExtractionContext::getInstance().unsetUsingStatement();
+
     return stmtIndex;
 }
 
@@ -74,6 +82,107 @@ StmtIndex DesignExtractor::handleCallStatement(Statement *callStatement) {
 
 StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
-    Condition cond = ifStatement->getCondExpr();
+    Condition *condition = ifStatement->getCondition();
     return stmtIndex;
+}
+
+void DesignExtractor::handleCondition(Condition *condition) {
+    switch (condition->getConditionType()) {
+    case ConditionType::SINGLE:
+        handleSingleCondition(condition);
+    case ConditionType::AND:
+    case ConditionType::OR:
+        handleBinaryCondition(condition);
+    case ConditionType::NOT:
+        handleNotCondition(condition);
+    default:
+        throw runtime_error("Invalid ConditionType.");
+    }
+}
+
+void DesignExtractor::handleSingleCondition(Condition *singleCondition) {
+    Relation *relation = singleCondition->getRelation();
+    handleRelation(relation);
+    // TODO
+}
+
+void DesignExtractor::handleRelation(Relation *relation) {
+    Factor *leftFactor = relation->getLeftFactor();
+    Factor *rightFactor = relation->getRightFactor();
+    // TODO
+}
+
+void DesignExtractor::handleExpression(Expression *expression) {
+    // TODO
+    switch (expression->getExpressionType()) {
+    case ExpressionType::SINGLE_TERM:
+    case ExpressionType::SUBTRACT_TERMS:
+    case ExpressionType::SUM_TERMS:
+    default:
+        throw runtime_error("Invalid ExpressionType.");
+    }
+}
+
+void DesignExtractor::handleSingleTermExpression(
+    Expression *singleTermExpression) {
+    // TODO
+}
+
+void DesignExtractor::handleTerm(Term *term) {
+    switch (term->getTermType()) {
+    case TermType::SINGLE_FACTOR:
+        handleSingleFactorTerm(term);
+    case TermType::MULTIPLY_TERM_BY_FACTOR:
+    case TermType::DIVIDE_TERM_BY_FACTOR:
+    case TermType::MODULO_TERM_BY_FACTOR:
+        handleMultiFactorTerm(term);
+    default:
+        throw runtime_error("Invalid TermType.");
+    }
+}
+
+void DesignExtractor::handleSingleFactorTerm(Term *singleFactorTerm) {
+    handleFactor(singleFactorTerm->getFactor());
+}
+
+void DesignExtractor::handleMultiFactorTerm(Term *multiFactorTerm) {
+    handleFactor(multiFactorTerm->getFactor());
+    handleTerm(multiFactorTerm->getTerm());
+}
+
+void DesignExtractor::handleFactor(Factor *factor) {
+    switch (factor->getFactorType()) {
+    case FactorType::EXPRESSION:
+        handleExpression(dynamic_cast<Expression *>(factor));
+    case FactorType::VARIABLE:
+        handleVariable(dynamic_cast<Variable *>(factor));
+    case FactorType::CONSTANT:
+        // TODO
+    default:
+        throw runtime_error("Invalid FactorType.");
+    }
+}
+
+VarIndex DesignExtractor::handleVariable(Variable *variable) {
+    VarIndex varIndex = pkb.insertVar(variable);
+
+    optional<StmtIndex> usingStmtIndex =
+        ExtractionContext::getInstance().getUsingStatement();
+    if (usingStmtIndex.has_value()) {
+        Statement *usingStmt = pkb.getStmtByIndex(usingStmtIndex.value());
+        pkb.insertStmtUsingVar(usingStmt, variable);
+    }
+
+    optional<StmtIndex> modifyingStmtIndex =
+        ExtractionContext::getInstance().getModifyingStatement();
+    if (modifyingStmtIndex.has_value()) {
+        Statement *modifyingStmt =
+            pkb.getStmtByIndex(modifyingStmtIndex.value());
+        pkb.insertStmtModifyingVar(modifyingStmt, variable);
+    }
+    return varIndex;
+}
+
+ConstIndex DesignExtractor::handleConstantValue(ConstantValue *constantValue) {
+    return pkb.insertConst(constantValue);
 }
