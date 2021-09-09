@@ -1,5 +1,7 @@
+#pragma once
+
 #include <optional>
-#include <pkb/Abstractions.h>
+#include "pkb/Abstractions.h"
 
 class ExtractionContext {
 private:

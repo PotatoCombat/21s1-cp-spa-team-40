@@ -2,58 +2,88 @@
 
 ModifiesTable::ModifiesTable() = default;
 
-bool ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
-  if (stmtModifiesVarsMap.count(stmt) == 0) {
-    stmtModifiesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
-  }
-  stmtModifiesVarsMap[stmt].insert(var);
+void ModifiesTable::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
+    auto search1 = procsModifyingVarMap.find(var);
+    if (search1 == procsModifyingVarMap.end()) {
+        procsModifyingVarMap[var] = { proc };
+    }
+    else {
+        search1->second.insert(proc);
+    }
 
-  if (varModifiedByStmtsMap.count(var) == 0) {
-    varModifiedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
-  }
-  varModifiedByStmtsMap[var].insert(stmt);
-  return true;
+    auto search2 = varsModifiedByProcMap.find(proc);
+    if (search2 == varsModifiedByProcMap.end()) {
+        varsModifiedByProcMap[proc] = { var };
+    }
+    else {
+        search2->second.insert(var);
+    }
 }
 
-bool ModifiesTable::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
-  if (procModifiesVarsMap.count(proc) == 0) {
-    procModifiesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
-  }
-  procModifiesVarsMap[proc].insert(var);
+void ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
+    auto search1 = stmtsModifyingVarMap.find(var);
+    if (search1 == stmtsModifyingVarMap.end()) {
+        stmtsModifyingVarMap[var] = { stmt };
+    }
+    else {
+        search1->second.insert(stmt);
+    }
 
-  if (varModifiedByProcsMap.count(var) == 0) {
-    varModifiedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
-  }
-  varModifiedByProcsMap[var].insert(proc);
-  return true;
-}
-
-set<VarIndex> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
-  return stmtModifiesVarsMap.at(stmt);
-}
-
-set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
-  return varModifiedByStmtsMap.at(var);
-}
-
-set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
-  return procModifiesVarsMap.at(proc);
+    auto search2 = varsModifiedByStmtMap.find(stmt);
+    if (search2 == varsModifiedByStmtMap.end()) {
+        varsModifiedByStmtMap[stmt] = { var };
+    }
+    else {
+        search2->second.insert(var);
+    }
 }
 
 set<ProcIndex> ModifiesTable::getProcsModifyingVar(VarIndex var) {
-  return varModifiedByProcsMap.at(var);
+    auto result = procsModifyingVarMap.find(var);
+    if (result == procsModifyingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given stmt uses given var
-bool ModifiesTable::stmtModifies(StmtIndex stmt, VarIndex var) {
-  set<VarIndex> varIndexes = stmtModifiesVarsMap[stmt];
-  return varIndexes.find(var) != varIndexes.end();
+set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
+    auto result = stmtsModifyingVarMap.find(var);
+    if (result == stmtsModifyingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given proc uses given var
+set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
+    auto result = varsModifiedByProcMap.find(proc);
+    if (result == varsModifiedByProcMap.end()) {
+        return {};
+    }
+    return result->second;
+}
+
+set<VarIndex> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
+    auto result = varsModifiedByStmtMap.find(stmt);
+    if (result == varsModifiedByStmtMap.end()) {
+        return {};
+    }
+    return result->second;
+}
+
 bool ModifiesTable::procModifies(ProcIndex proc, VarIndex var) {
-  set<VarIndex> varIndexes = procModifiesVarsMap[proc];
-  return varIndexes.find(var) != varIndexes.end();
+    auto result = varsModifiedByProcMap.find(proc);
+    if (result == varsModifiedByProcMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
 
-
+bool ModifiesTable::stmtModifies(StmtIndex stmt, VarIndex var) {
+    auto result = varsModifiedByStmtMap.find(stmt);
+    if (result == varsModifiedByStmtMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
+}

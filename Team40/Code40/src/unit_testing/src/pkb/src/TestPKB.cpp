@@ -14,6 +14,7 @@ public:
     static vector<Procedure> createProcs();
     static vector<int> createIndices();
     static vector<Variable> createVariables();
+    static vector<ConstantValue> createConstants();
 };
 
 vector<string> TestPKB::createItems() {
@@ -35,6 +36,12 @@ vector<Variable> TestPKB::createVariables() {
     return vector<Variable>{Variable(0, "var_name_1"),
                             Variable(0, "var_name_1"),
                             Variable(0, "var_name_1")};
+}
+
+vector<ConstantValue> TestPKB::createConstants() {
+    return vector<ConstantValue>{ConstantValue(1),
+                            ConstantValue(2),
+                            ConstantValue(3)};
 }
 
 vector<int> TestPKB::createIndices() { return vector<int>{0, 1, 2}; }
@@ -66,8 +73,8 @@ TEST_CASE("PKB: insertVar/getAllVars") {
 TEST_CASE("PKB: insertConst/getAllConsts") {
     PKB pkb;
 
-    vector<Const> items = TestPKB::createItems();
-    for (Const i : items) {
+    vector<ConstantValue> items = TestPKB::createConstants();
+    for (ConstantValue i : items) {
         pkb.insertConst(&i);
     }
 

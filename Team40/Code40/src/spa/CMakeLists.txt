@@ -5,6 +5,7 @@ add_library(spa ${srcs})
 add_subdirectory(src/common)
 add_subdirectory(src/pkb)
 add_subdirectory(src/source_processor)
+add_subdirectory(src/query_processor)
 
 target_include_directories(spa PUBLIC include)
 
@@ -12,4 +13,5 @@ target_link_libraries(spa
         common
         pkb
         source_processor
+        query_processor
         )

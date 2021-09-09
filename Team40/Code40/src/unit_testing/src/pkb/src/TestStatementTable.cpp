@@ -45,6 +45,17 @@ TEST_CASE("StatementTable: insert/getStmt/getIndex") {
     REQUIRE(table.getStmt(1) == &test);
 }
 
+TEST_CASE("EntityTable: invalid Statement") {
+    auto table = TestStatementTable::createTable();
+    REQUIRE(table.getStmt(4) == NULL);
+}
+
+TEST_CASE("EntityTable: invalid Index") {
+    auto table = TestStatementTable::createTable();
+    string test = "goodbye";
+    REQUIRE(table.getIndex(&test) == InvalidIndex);
+}
+
 TEST_CASE("StatementTable: getIndices") {
     auto table = TestStatementTable::createTable();
 

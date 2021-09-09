@@ -2,8 +2,6 @@
 
 using namespace std;
 
-#include "pkb/PKB.h"
-
 DesignExtractor::DesignExtractor(PKB pkb) : pkb(pkb) {}
 
 void DesignExtractor::handleProgram(Program program) {
@@ -49,12 +47,13 @@ void DesignExtractor::handleContextualRelationships(StmtIndex stmtIndex) {
     optional<StmtIndex> parentStmtIndex =
         ExtractionContext::getInstance().getParentStatement();
 
-    if (prevStmtIndex.has_value()) {
-        pkb.insertFollows(prevStmtIndex.value(), stmtIndex);
-    }
-    if (parentStmtIndex.has_value()) {
-        pkb.insertParent(parentStmtIndex.value(), stmtIndex);
-    }
+// TODO: Fix extractors to work with Statement objects
+//    if (prevStmtIndex.has_value()) {
+//        pkb.insertFollows(prevStmtIndex.value(), stmtIndex);
+//    }
+//    if (parentStmtIndex.has_value()) {
+//        pkb.insertParent(parentStmtIndex.value(), stmtIndex);
+//    }
 
     ExtractionContext::getInstance().setPrevStatement(stmtIndex);
 }
