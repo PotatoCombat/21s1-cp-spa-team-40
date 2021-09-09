@@ -2,43 +2,47 @@
 
 ModifiesTable::ModifiesTable() = default;
 
-void ModifiesTable::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
-    auto search1 = procsModifyingVarMap.find(var);
+void ModifiesTable::insertProcModifyingVar(Procedure *proc, Variable *var) {
+    VarName varName = var->getName();
+    ProcName procName = proc->getName();
+    auto search1 = procsModifyingVarMap.find(varName);
     if (search1 == procsModifyingVarMap.end()) {
-        procsModifyingVarMap[var] = { proc };
+        procsModifyingVarMap[varName] = { procName };
     }
     else {
-        search1->second.insert(proc);
+        search1->second.insert(procName);
     }
 
-    auto search2 = varsModifiedByProcMap.find(proc);
+    auto search2 = varsModifiedByProcMap.find(procName);
     if (search2 == varsModifiedByProcMap.end()) {
-        varsModifiedByProcMap[proc] = { var };
+        varsModifiedByProcMap[procName] = { varName };
     }
     else {
-        search2->second.insert(var);
+        search2->second.insert(varName);
     }
 }
 
-void ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
-    auto search1 = stmtsModifyingVarMap.find(var);
+void ModifiesTable::insertStmtModifyingVar(Statement *stmt, Variable *var) {
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = var->getName();
+    auto search1 = stmtsModifyingVarMap.find(varName);
     if (search1 == stmtsModifyingVarMap.end()) {
-        stmtsModifyingVarMap[var] = { stmt };
+        stmtsModifyingVarMap[varName] = { stmtIndex };
     }
     else {
-        search1->second.insert(stmt);
+        search1->second.insert(stmtIndex);
     }
 
-    auto search2 = varsModifiedByStmtMap.find(stmt);
+    auto search2 = varsModifiedByStmtMap.find(stmtIndex);
     if (search2 == varsModifiedByStmtMap.end()) {
-        varsModifiedByStmtMap[stmt] = { var };
+        varsModifiedByStmtMap[stmtIndex] = { varName };
     }
     else {
-        search2->second.insert(var);
+        search2->second.insert(varName);
     }
 }
 
-set<ProcIndex> ModifiesTable::getProcsModifyingVar(VarIndex var) {
+set<ProcName> ModifiesTable::getProcsModifyingVar(VarName var) {
     auto result = procsModifyingVarMap.find(var);
     if (result == procsModifyingVarMap.end()) {
         return {};
@@ -46,7 +50,7 @@ set<ProcIndex> ModifiesTable::getProcsModifyingVar(VarIndex var) {
     return result->second;
 }
 
-set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
+set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarName var) {
     auto result = stmtsModifyingVarMap.find(var);
     if (result == stmtsModifyingVarMap.end()) {
         return {};
@@ -54,7 +58,7 @@ set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
     return result->second;
 }
 
-set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
+set<VarName> ModifiesTable::getVarsModifiedByProc(ProcName proc) {
     auto result = varsModifiedByProcMap.find(proc);
     if (result == varsModifiedByProcMap.end()) {
         return {};
@@ -62,7 +66,7 @@ set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
     return result->second;
 }
 
-set<VarIndex> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
+set<VarName> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
     auto result = varsModifiedByStmtMap.find(stmt);
     if (result == varsModifiedByStmtMap.end()) {
         return {};
@@ -70,7 +74,7 @@ set<VarIndex> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
     return result->second;
 }
 
-bool ModifiesTable::procModifies(ProcIndex proc, VarIndex var) {
+bool ModifiesTable::procModifies(ProcName proc, VarName var) {
     auto result = varsModifiedByProcMap.find(proc);
     if (result == varsModifiedByProcMap.end()) {
         return false;
@@ -79,7 +83,7 @@ bool ModifiesTable::procModifies(ProcIndex proc, VarIndex var) {
     return vars.find(var) != vars.end();
 }
 
-bool ModifiesTable::stmtModifies(StmtIndex stmt, VarIndex var) {
+bool ModifiesTable::stmtModifies(StmtIndex stmt, VarName var) {
     auto result = varsModifiedByStmtMap.find(stmt);
     if (result == varsModifiedByStmtMap.end()) {
         return false;
