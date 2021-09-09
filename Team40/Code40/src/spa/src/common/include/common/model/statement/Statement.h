@@ -48,13 +48,13 @@ public:
     }
 
     // Overriden by: IfStatement, WhileStatement
-    virtual vector<Statement> getThenStmtLst() {
+    virtual vector<Statement *> getThenStmtLst() {
         throw runtime_error(
             "This method is not implemented for this StatementType.");
     }
 
     // Overriden by: IfStatement
-    virtual vector<Statement> getElseStmtLst() {
+    virtual vector<Statement *> getElseStmtLst() {
         throw runtime_error(
             "This method is not implemented for this StatementType.");
     }

@@ -19,6 +19,8 @@ void ExtractionContext::setParentStatement(StmtIndex stmtIndex) {
     parentStatement = stmtIndex;
 }
 
+void ExtractionContext::unsetParentStatement() { parentStatement = NULL; }
+
 optional<StmtIndex> ExtractionContext::getPrevStatement() {
     return prevStatement;
 }

@@ -11,7 +11,7 @@ WhileStatement::WhileStatement(int index, Condition *cond)
     this->stmtLst = {};
 }
 
-void WhileStatement::addStatement(Statement statement) {
+void WhileStatement::addStatement(Statement *statement) {
     this->stmtLst.push_back(statement);
 }
 
@@ -21,4 +21,4 @@ void WhileStatement::setCondLst(vector<string> condLst) {
 
 Condition *WhileStatement::getCondition() { return cond; }
 
-vector<Statement> WhileStatement::getThenStmtLst() { return stmtLst; }
+vector<Statement *> WhileStatement::getThenStmtLst() { return stmtLst; }

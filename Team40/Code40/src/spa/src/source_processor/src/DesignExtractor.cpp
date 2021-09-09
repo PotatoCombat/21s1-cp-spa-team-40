@@ -34,6 +34,7 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
     case StatementType::READ:
     case StatementType::PRINT:
     case StatementType::WHILE:
+        // TODO: note to unset prev, and set parent
     default:
         throw runtime_error("Invalid StatementType!");
     }
@@ -42,18 +43,21 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
 }
 
 void DesignExtractor::handleContextualRelationships(StmtIndex stmtIndex) {
+    Statement *statement = pkb.getStmtByIndex(stmtIndex);
     optional<StmtIndex> prevStmtIndex =
         ExtractionContext::getInstance().getPrevStatement();
+    if (prevStmtIndex.has_value()) {
+        Statement *prevStmt = pkb.getStmtByIndex(prevStmtIndex.value());
+        pkb.insertFollows(prevStmt, statement);
+    }
+
     optional<StmtIndex> parentStmtIndex =
         ExtractionContext::getInstance().getParentStatement();
 
-    // TODO: Fix extractors to work with Statement objects
-    //    if (prevStmtIndex.has_value()) {
-    //        pkb.insertFollows(prevStmtIndex.value(), stmtIndex);
-    //    }
-    //    if (parentStmtIndex.has_value()) {
-    //        pkb.insertParent(parentStmtIndex.value(), stmtIndex);
-    //    }
+    if (parentStmtIndex.has_value()) {
+        Statement *parentStmt = pkb.getStmtByIndex(parentStmtIndex.value());
+        pkb.insertParent(parentStmt, statement);
+    }
 
     ExtractionContext::getInstance().setPrevStatement(stmtIndex);
 }
@@ -83,6 +87,11 @@ StmtIndex DesignExtractor::handleCallStatement(Statement *callStatement) {
 StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
     Condition *condition = ifStatement->getCondition();
+    // TODO: handle condition
+    ExtractionContext::getInstance().setParentStatement(stmtIndex);
+    for (Statement *statement : ifStatement->getThenStmtLst()) {
+    }
+    ExtractionContext::getInstance().unsetParentStatement();
     return stmtIndex;
 }
 
@@ -157,7 +166,7 @@ void DesignExtractor::handleFactor(Factor *factor) {
     case FactorType::VARIABLE:
         handleVariable(dynamic_cast<Variable *>(factor));
     case FactorType::CONSTANT:
-        // TODO
+        handleConstantValue(dynamic_cast<ConstantValue *>(factor));
     default:
         throw runtime_error("Invalid FactorType.");
     }

@@ -7,7 +7,7 @@ using namespace std;
 class WhileStatement : public Statement {
 private:
     Condition *cond;
-    vector<Statement> stmtLst;
+    vector<Statement *> stmtLst;
     vector<string> condLst;
 
 public:
@@ -17,12 +17,12 @@ public:
     WhileStatement(int index);
 
     // adder
-    void addStatement(Statement statement);
+    void addStatement(Statement *statement);
 
     void setCondLst(vector<string> condLst);
 
     // getters
     Condition *getCondition() override;
 
-    vector<Statement> getThenStmtLst() override;
+    vector<Statement *> getThenStmtLst() override;
 };

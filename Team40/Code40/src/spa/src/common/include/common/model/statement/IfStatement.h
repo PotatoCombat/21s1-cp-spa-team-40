@@ -6,8 +6,8 @@ using namespace std;
 class IfStatement : public Statement {
 private:
     Condition *cond;
-    vector<Statement> thenStmtLst;
-    vector<Statement> elseStmtLst;
+    vector<Statement *> thenStmtLst;
+    vector<Statement *> elseStmtLst;
     vector<string> condLst;
 
 public:
@@ -15,14 +15,14 @@ public:
 
     IfStatement(int index);
 
-    void addThenStatement(Statement statement);
-    void addElseStatement(Statement statement);
+    void addThenStatement(Statement *statement);
+    void addElseStatement(Statement *statement);
 
     void setCondLst(vector<string> condLst);
 
     Condition *getCondition() override;
 
-    vector<Statement> getThenStmtLst() override;
+    vector<Statement *> getThenStmtLst() override;
 
-    vector<Statement> getElseStmtLst() override;
+    vector<Statement *> getElseStmtLst() override;
 };

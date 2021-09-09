@@ -22,9 +22,6 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    optional<StmtIndex> getParentStatement();
-    void setParentStatement(StmtIndex stmtIndex);
-
     optional<ProcIndex> getCurrentProc();
     void setCurrentProc(ProcIndex procIndex);
 
@@ -33,6 +30,10 @@ public:
 
     optional<StmtIndex> getCurrentStatement();
     void setCurrentStatement(StmtIndex stmtIndex);
+
+    optional<StmtIndex> getParentStatement();
+    void setParentStatement(StmtIndex stmtIndex);
+    void unsetParentStatement();
 
     optional<StmtIndex> getModifyingStatement();
     void setModifyingStatement(StmtIndex stmtIndex);

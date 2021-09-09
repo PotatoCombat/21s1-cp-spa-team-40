@@ -52,5 +52,6 @@ public:
     // Variable
     VarIndex handleVariable(Variable *variable);
 
+    // ConstantValue
     ConstIndex handleConstantValue(ConstantValue *constantValue);
 };
