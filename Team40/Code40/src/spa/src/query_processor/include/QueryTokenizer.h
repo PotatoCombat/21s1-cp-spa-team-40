@@ -18,9 +18,12 @@ private:
     const char L_BRACKET = '(';
     const char COMMA = ',';
     const char R_BRACKET = ')';
+    const char SEMICOLON = ';';
 
     // helper methods
     string trimString(string input);
+    string trimLString(string input);
+    string trimRString(string input);
     DeclTuple splitDecl(string input);
     RelTuple splitBCB(string input);
 
@@ -28,6 +31,8 @@ public:
     QueryTokenizer() {}
 
     pair<string, string> splitIntoParts(string queryString);
+
+    tuple<vector<DeclTuple>, string, vector<RelTuple>, vector<PatTuple>> tokenize(string input);
 
     vector<DeclTuple> tokenizeDeclaration(string declaration);
     string tokenizeReturnEntity(string clause);

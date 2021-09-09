@@ -8,10 +8,8 @@ Reference QueryParser::parseDeclaration(DeclTuple declaration) {
     return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Relation QueryParser::parseSuchThatClause(RelTuple clause,
+Relation QueryParser::parseRelation(RelTuple clause,
                                           vector<Reference> &declList) {
-    // see if reference in list
-    // if reference in list, use that reference
     string rel = get<0>(clause);
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);

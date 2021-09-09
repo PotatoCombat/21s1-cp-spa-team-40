@@ -1,15 +1,13 @@
 #include "QueryPreprocessor.h"
 
-QueryPreprocessor::QueryPreprocessor() {}
-
 Query QueryPreprocessor::preprocessQuery(const string input) {
     pair<string, string> parts = tokenizer.splitIntoParts(input);
-    vector<pair<string, string>> declString =
+    vector<DeclTuple> declString =
         tokenizer.tokenizeDeclaration(parts.first);
     string retString = tokenizer.tokenizeReturnEntity(parts.second);
-    vector<tuple<string, string, string>> suchThatString =
+    vector<RelTuple> suchThatString =
         tokenizer.tokenizeSuchThatClause(parts.second);
-    // vector<tuple<string, string, string>> patternString = tokenizer.tokenizePatternClause(parts.second);
+    // vector<PatTuple> patternString = tokenizer.tokenizePatternClause(parts.second);
 
     Query q;
     
@@ -31,7 +29,7 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
 
     vector<Relation> relList;
     for (auto x : suchThatString) {
-        Relation rel = parser.parseSuchThatClause(x, refList);
+        Relation rel = parser.parseRelation(x, refList);
         relList.push_back(rel);
         q.addRelation(&rel);
     }

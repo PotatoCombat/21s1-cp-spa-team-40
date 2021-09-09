@@ -16,6 +16,6 @@ private:
 public:
     QueryParser();
     Reference parseDeclaration(DeclTuple declaration);
-    Relation parseSuchThatClause(RelTuple clause, vector<Reference> &declList);
+    Relation parseRelation(RelTuple clause, vector<Reference> &declList);
     // PatternClause parsePatternClause(PatTuple clause);
 };
