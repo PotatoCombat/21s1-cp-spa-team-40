@@ -3,6 +3,7 @@
 #include "common/model/Variable.h"
 #include "common/model/condition/Condition.h"
 #include <vector>
+#include <stdexcept>
 
 enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
