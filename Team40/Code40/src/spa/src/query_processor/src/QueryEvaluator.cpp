@@ -1,13 +1,13 @@
 #include "QueryEvaluator.h"
 
-QueryEvaluator::QueryEvaluator(PKB pkb) { this->pkb = pkb; }
+QueryEvaluator::QueryEvaluator(PKB* pkb) { this->pkb = pkb; }
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
-    Reference* returnEntity = query.getReturnReference();
-    vector<Reference *> entities = query.getReferences();
+    Reference* returnReference = query.getReturnReference();
+    vector<Reference *> references = query.getReferences();
     vector<Relation *> relationships = query.getRelations();
-    vector<vector<string>> results(entities.size(), vector<string>());
-    vector<bool> referenceAppearInClauses(entities.size(), false);
+    vector<vector<string>> results(references.size(), vector<string>());
+    vector<bool> referenceAppearInClauses(references.size(), false);
     bool allQueryReturnsTrue = true;
 
     for (Relation *relationship : relationships) {
@@ -17,8 +17,13 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         // TODO: add more handlers for relationshipType later
         if (relationship->getType() == RelationType::FOLLOWS) {
-            FollowsHandler followsHandler(relationship, &pkb);
+            FollowsHandler followsHandler(relationship, pkb);
             relationshipHandler = &followsHandler;
+        }
+
+        if (relationship->getType() == RelationType::FOLLOWS_T) {
+            FollowsStarHandler followsStarHandler(relationship, pkb);
+            relationshipHandler = &followsStarHandler;
         }
 
         // eval and combine result
@@ -26,12 +31,12 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();
 
         if (tempResult.hasResultList1()) {
-            combineResult(results, entities, tempResult.getResultList1(),
+            combineResult(results, references, tempResult.getResultList1(),
                           tempResult.getReference1(), referenceAppearInClauses);
         }
 
         if (tempResult.hasResultList2()) {
-            combineResult(results, entities, tempResult.getResultList2(),
+            combineResult(results, references, tempResult.getResultList2(),
                           tempResult.getReference2(), referenceAppearInClauses);
         }
     }
@@ -42,22 +47,22 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 
     // returns empty result if one of the references has no matching result
-    for (int i = 0; i < entities.size(); i++) {
+    for (int i = 0; i < references.size(); i++) {
         if (referenceAppearInClauses[i] && results[i].empty()) {
             return vector<string>();
         }
     }
 
     int resultIndex = -1;
-    for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->equals(*returnEntity)) {
+    for (int i = 0; i < references.size(); i++) {
+        if (references[i]->equals(*returnReference)) {
             resultIndex = i;
         }
     }
 
-    if (referenceAppearInClauses[resultIndex] = false) {
+    if (!referenceAppearInClauses[resultIndex]) {
         vector<string> result;
-        toString(pkb.getAllStmts().asVector(), result); 
+        toString(pkb->getAllStmts().asVector(), result); 
         return result;
     }
 
@@ -65,7 +70,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 }
 
 void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Reference *> &references,
-                                   vector<string> result, Reference* reference, vector<bool> &entitiesAppearInQuery) {
+                                   vector<string> result, Reference* reference, vector<bool> &referenceAppearInClauses) {
     int index = -1;
     for (int i = 0; i < references.size(); i++) {
         if (references[i]->equals(*reference)) {
@@ -73,9 +78,9 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Refer
         }
     }
 
-    if (entitiesAppearInQuery[index] == false) {
+    if (referenceAppearInClauses[index] == false) {
         results[index] = result;
-        entitiesAppearInQuery[index] = true;
+        referenceAppearInClauses[index] = true;
     } else {
         vector<string> filteredResult;
         for (string element : results[index]) {
@@ -87,7 +92,7 @@ void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Refer
     }
 }
 
-void QueryEvaluator::toString(vector<int> vectorIn, vector<string> vectorOut) {
+void QueryEvaluator::toString(vector<int> &vectorIn, vector<string> &vectorOut) {
     transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
               [](int i) { return std::to_string(i); });
 }
