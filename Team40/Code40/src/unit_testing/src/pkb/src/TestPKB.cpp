@@ -39,9 +39,8 @@ vector<Variable> TestPKB::createVariables() {
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
-    return vector<ConstantValue>{ConstantValue(1),
-                            ConstantValue(2),
-                            ConstantValue(3)};
+    return vector<ConstantValue>{ConstantValue(0), ConstantValue(1),
+                                 ConstantValue(2)};
 }
 
 vector<int> TestPKB::createIndices() { return vector<int>{0, 1, 2}; }
@@ -72,8 +71,8 @@ TEST_CASE("PKB: insertVar/getAllVars") {
 TEST_CASE("PKB: insertConst/getAllConsts") {
     PKB pkb;
 
-    vector<ConstantValue> consts = TestPKB::createConstants();
-    for (ConstantValue i : consts) {
+    vector<ConstantValue> items = TestPKB::createConstants();
+    for (ConstantValue i : items) {
         pkb.insertConst(&i);
     }
 

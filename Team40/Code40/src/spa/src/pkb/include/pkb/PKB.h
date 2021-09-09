@@ -12,9 +12,9 @@
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "VarTable.h"
+#include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
-#include "common/model/ConstantValue.h"
 #include "common/model/statement/Statement.h"
 
 using namespace std;
@@ -30,6 +30,7 @@ public:
     virtual ConstIndex insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);
+    virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
@@ -145,6 +146,11 @@ public:
 
     /// Selects BOOLEAN such that Modifies(proc, var).
     virtual bool procModifies(ProcName proc, VarName var);
+
+private:
+    typedef EntityTable<Variable, VarIndex> VarTable;
+    typedef EntityTable<ConstantValue, ConstIndex> ConstTable;
+    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
 
     /// Selects BOOLEAN such that Modifies(stmt, var).
     virtual bool stmtModifies(StmtIndex stmt, VarName var);
