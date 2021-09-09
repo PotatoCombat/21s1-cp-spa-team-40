@@ -49,7 +49,7 @@ void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
     followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
 
-void PKB::insertParent(StmtIndex parentStmt, StmtIndex childStmt) {
+void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
     parentTable.insertParent(parentStmt, childStmt);
     parentStarTable.insertParentStar(parentStmt, childStmt);
 }

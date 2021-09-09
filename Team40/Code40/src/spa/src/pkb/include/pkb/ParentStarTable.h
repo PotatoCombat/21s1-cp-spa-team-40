@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Abstractions.h"
+#include "common/model/statement/Statement.h"
 
 #include <map>
 #include <set>
@@ -11,7 +12,7 @@ public:
     ParentStarTable();
 
     /// Stores Parent*(stmt1, stmt2).
-    void insertParentStar(StmtIndex stmt1, StmtIndex stmt2);
+    void insertParentStar(Statement *stmt1, Statement *stmt2);
 
     /// Selects s such that Parent*(s, stmt).
     set<StmtIndex> getParentStarStmts(StmtIndex stmt);

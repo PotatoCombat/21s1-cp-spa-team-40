@@ -34,7 +34,7 @@ public:
 
     /// Stores the relationship Parent(stmt1, stmt2), and updates *
     /// relationships.
-    virtual void insertParent(StmtIndex parentStmt, StmtIndex childStmt);
+    virtual void insertParent(Statement *parentStmt, Statement *childStmt);
 
     /// Stores the relationship Modifies(proc, var).
     virtual void insertProcModifyingVar(ProcIndex proc, VarIndex var);
