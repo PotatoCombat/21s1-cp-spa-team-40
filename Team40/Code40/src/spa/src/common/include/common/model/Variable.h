@@ -12,5 +12,5 @@ public:
     Variable(string name);
 
     // getter
-    string getName();
+    string getName() override;
 };

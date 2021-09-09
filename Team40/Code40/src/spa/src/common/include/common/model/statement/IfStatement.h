@@ -11,30 +11,18 @@ private:
     vector<string> condLst;
 
 public:
-    IfStatement(int index, Condition *cond)
-        : cond(cond), Statement(index, StatementType::IF) {
-        this->thenStmtLst = {};
-        this->elseStmtLst = {};
-    }
+    IfStatement(int index, Condition *cond);
 
-    IfStatement(int index) : Statement(index, StatementType::IF) {
-        this->thenStmtLst = {};
-        this->elseStmtLst = {};
-        this->condLst = {};
-    }
+    IfStatement(int index);
 
-    void addThenStatement(Statement statement) {
-        this->thenStmtLst.push_back(statement);
-    }
-    void addElseStatement(Statement statement) {
-        this->elseStmtLst.push_back(statement);
-    }
+    void addThenStatement(Statement statement);
+    void addElseStatement(Statement statement);
 
-    void setCondLst(vector<string> condLst) { condLst = condLst; }
+    void setCondLst(vector<string> condLst);
 
-    Condition *getCondition() { return cond; }
+    Condition *getCondition() override;
 
-    vector<Statement> getThenStmtLst() { return thenStmtLst; }
+    vector<Statement> getThenStmtLst() override;
 
-    vector<Statement> getElseStmtLst() { return elseStmtLst; }
+    vector<Statement> getElseStmtLst() override;
 };

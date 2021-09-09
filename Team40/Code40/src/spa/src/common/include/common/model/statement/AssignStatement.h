@@ -1,4 +1,5 @@
 #include "common/model/Variable.h"
+#include "common/model/expression/Expression.h"
 #include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
@@ -7,24 +8,17 @@ using namespace std;
 class AssignStatement : public Statement {
 private:
     Variable variable;
-    // Expression expression;
+    Expression *expression;
     vector<string> exprLst;
 
 public:
-    // AssignStatement(int index, Variable variable, Expression expression)
-    //     : variable(variable), expression(expression),
-    //       Statement(index, StatementType::ASSIGN) {}
+    AssignStatement(int index, Variable variable, Expression *expression);
 
-    AssignStatement(int index, Variable variable)
-        : variable(variable), Statement(index, StatementType::ASSIGN) {
-        exprLst = {};
-    }
+    AssignStatement(int index, Variable variable);
 
-    void setExprLst(vector<string> exprLst) { this->exprLst = exprLst; }
+    void setExprLst(vector<string> exprLst);
 
-    Variable getVariable() { return this->variable; }
+    Variable getVariable() override;
 
-    // Expression getExpression() { return this->expression; }
-
-    StatementType getStatementType() { return StatementType::ASSIGN; }
+    Expression *getExpression() override;
 };
