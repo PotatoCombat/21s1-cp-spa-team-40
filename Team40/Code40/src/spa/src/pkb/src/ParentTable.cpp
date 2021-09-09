@@ -17,7 +17,7 @@ void ParentTable::insertParent(StmtIndex stmt1, StmtIndex stmt2) {
 StmtIndex ParentTable::getParentStmt(StmtIndex stmt) {
     auto result = parentMap.find(stmt);
     if (result == parentMap.end()) {
-        return InvalidStmtIndex;
+        return InvalidIndex;
     }
     return result->second;
 }

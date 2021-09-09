@@ -11,7 +11,7 @@ StmtIndex FollowsTable::getFollowingStmt(StmtIndex stmt) {
     auto result = followsMap.find(stmt);
     if (result == followsMap.end())
     {
-        return InvalidStmtIndex;
+        return InvalidIndex;
     }
     return result->second;
 }
@@ -20,7 +20,7 @@ StmtIndex FollowsTable::getPrecedingStmt(StmtIndex stmt) {
     auto result = followedByMap.find(stmt);
     if (result == followedByMap.end())
     {
-        return InvalidStmtIndex;
+        return InvalidIndex;
     }
     return result->second;
 }

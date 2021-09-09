@@ -2,8 +2,6 @@
 
 using namespace std;
 
-#include "pkb/PKB.h"
-
 DesignExtractor::DesignExtractor(PKB pkb) : pkb(pkb) {}
 
 void DesignExtractor::handleProgram(Program program) {

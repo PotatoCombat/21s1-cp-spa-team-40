@@ -59,7 +59,7 @@ public:
     // Follows =================================================================
 
     /// Selects s such that Follows(stmt, s).
-    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
     /// is none.
     virtual StmtIndex getFollowingStmt(StmtIndex stmt);
 
@@ -69,7 +69,7 @@ public:
     virtual set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
 
     /// Selects s such that Follows(s, stmt).
-    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
     /// is none.
     virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
 
@@ -87,7 +87,7 @@ public:
     // Parent ==================================================================
 
     /// Selects s such that Parent(s, stmt).
-    /// \return stmt#no that fits the relationship, or InvalidStmtIndex if there
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
     /// is none.
     virtual StmtIndex getParentStmt(StmtIndex stmt);
 
