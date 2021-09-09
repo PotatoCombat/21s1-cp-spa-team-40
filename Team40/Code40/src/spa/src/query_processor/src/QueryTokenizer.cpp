@@ -13,8 +13,8 @@ pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     return make_pair(firstHalf, secondHalf);
 }
 
-string tokenizeReturn(string input, string &remaining) {
-    size_t first_w = QueryTokenizer::findFirstWhitespace(input);
+string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
+    size_t first_w = findFirstWhitespace(input);
     string sub;
     string rem;
 
@@ -25,9 +25,9 @@ string tokenizeReturn(string input, string &remaining) {
     }
 
     sub = input.substr(0, first_w);
-    rem = QueryTokenizer::trimL(input.substr(first_w + 1));
+    rem = trimL(input.substr(first_w + 1));
 
-    if (sub != "Select") {
+    if (sub != KEYWORD_SELECT) {
         throw "error"; // no return identifier
     }
 
@@ -72,11 +72,7 @@ void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) 
     return;
 }
 
-void tokenizeClause(string input, vector<RelTuple>& rels, vector<PatTuple>& pats) {
-    const string KEYWORD_SUCH_THAT = "such that";
-    const string KEYWORD_PATTERN = "pattern";
-    const char R_BRACKET = ')';
-
+void QueryTokenizer::tokenizeClause(string input, vector<RelTuple>& rels, vector<PatTuple>& pats) {
     size_t first_b = input.find(R_BRACKET); // find the first close bracket
 
     if (first_b == string::npos) {
@@ -87,19 +83,18 @@ void tokenizeClause(string input, vector<RelTuple>& rels, vector<PatTuple>& pats
     string rem = trimL(input.substr(first_b + 1));
 
     RelTuple relT;
-    splitBCB(sub, relT);
+    splitBCBRel(sub, relT);
 
     PatTuple patT;
-    splitBCB(sub, patT);
+    //splitBCBRel(sub, patT);
 
     rels.push_back(relT);
-    pats.push_back(patT);
+    //pats.push_back(patT);
     return;
 }
 
 // helper functions
 string QueryTokenizer::trim(string input) {
-    const string WHITESPACE_SET = " \n\t\r";
     size_t front_w = input.find_first_not_of(WHITESPACE_SET);
     size_t back_w = input.find_last_not_of(WHITESPACE_SET);
     if (back_w != string::npos && front_w != string::npos) {
@@ -110,7 +105,6 @@ string QueryTokenizer::trim(string input) {
 }
 
 string QueryTokenizer::trimL(string input) {
-    const string WHITESPACE_SET = " \n\t\r";
     size_t front_w = input.find_first_not_of(WHITESPACE_SET);
     if (front_w != string::npos) {
         return input.substr(front_w);
@@ -119,7 +113,6 @@ string QueryTokenizer::trimL(string input) {
 }
 
 string QueryTokenizer::trimR(string input) {
-    const string WHITESPACE_SET = " \n\t\r";
     size_t back_w = input.find_last_not_of(WHITESPACE_SET);
     if (back_w != string::npos) {
         return input.substr(back_w);
@@ -128,8 +121,6 @@ string QueryTokenizer::trimR(string input) {
 }
 
 void QueryTokenizer::splitComma(string input, vector<string> &vec) {
-    const char COMMA = ',';
-
     string rem = input;
 
     size_t split = rem.find(COMMA);
@@ -147,22 +138,15 @@ void QueryTokenizer::splitComma(string input, vector<string> &vec) {
 }
 
 size_t QueryTokenizer::findFirstWhitespace(string input) {
-    const string WHITESPACE_SET = " \n\t\r";
     size_t first_w = input.find_first_of(WHITESPACE_SET);
     return first_w;
 }
 
-template<typename T> 
-void QueryTokenizer::splitBCB(string input, T& vec) {
-    const char L_BRACKET = '(';
-    const char COMMA = ',';
-    const char R_BRACKET = ')';
-    const string WHITESPACE_SET = " \n\t\r";
-
+void QueryTokenizer::splitBCBRel(string input, RelTuple tup) {
     // check count
     int l_c = count(input.begin(), input.end(), L_BRACKET);
     int r_c = count(input.begin(), input.end(), R_BRACKET);
-    int c_c = count(input.begin(), input.end(), R_BRACKET);
+    int c_c = count(input.begin(), input.end(), COMMA);
 
     if (!(l_c == 1 && r_c == 1 && c_c == 1)) {
         throw "error"; // unmatched ( , ) syntax
@@ -180,7 +164,7 @@ void QueryTokenizer::splitBCB(string input, T& vec) {
     string a1 = trim(input.substr(l_b + 1, c));
     string a2 = trim(input.substr(c + 1));
 
-    vec = make_tuple(key, a1, a2);
+    tup = make_tuple(key, a1, a2);
     
     return;
 }

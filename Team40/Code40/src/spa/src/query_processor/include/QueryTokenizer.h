@@ -23,16 +23,15 @@ private:
     const char R_BRACKET = ')';
     const char SEMICOLON = ';';
 
+    // helpers
     DesignEntityTypeHelper deHelper;
     RelationTypeHelper refHelper;
-
-    // helpers
-    static string trim(string input);
-    static string trimL(string input);
-    static string trimR(string input);
-    static void splitComma(string input, vector<string> &vec);
-    static size_t findFirstWhitespace(string input);
-    template<typename T> static void splitBCB(string input, T& vec);
+    string trim(string input);
+    string trimL(string input);
+    string trimR(string input);
+    void splitComma(string input, vector<string> &vec);
+    size_t findFirstWhitespace(string input);
+    void splitBCBRel(string input, RelTuple tup);
 
 public:
     QueryTokenizer() = default;
