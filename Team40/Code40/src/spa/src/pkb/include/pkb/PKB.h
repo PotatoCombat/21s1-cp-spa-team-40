@@ -53,6 +53,7 @@ public:
 
     virtual Iterator<ProcIndex> getAllProcs();
     virtual Iterator<StmtIndex> getAllStmts();
+    virtual Iterator<StmtIndex> getAllStmts(StatementType type);
     virtual Iterator<VarIndex> getAllVars();
     virtual Iterator<ConstIndex> getAllConsts();
 
@@ -170,14 +171,24 @@ public:
 
 private:
     typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
-    typedef StatementTable<Statement, StmtIndex> StatementTable;
     typedef EntityTable<Variable, VarIndex> VarTable;
     typedef EntityTable<Const, ConstIndex> ConstTable;
 
+    typedef StatementTable<Statement, StmtIndex> StatementTable;
+
     ProcedureTable procTable;
-    StatementTable statementTable;
+
     VarTable varTable;
     ConstTable constTable;
+
+    StatementTable statementTable;
+
+    vector<StmtIndex> assignStatements;
+    vector<StmtIndex> readStatements;
+    vector<StmtIndex> printStatements;
+    vector<StmtIndex> ifStatements;
+    vector<StmtIndex> whileStatements;
+    vector<StmtIndex> callStatements;
 
     FollowsTable followsTable;
     FollowsStarTable followsStarTable;
