@@ -1,5 +1,11 @@
 #include "source_processor/Parser.h"
+#include "source_processor/AssignStatementParser.h"
+#include "source_processor/CallStatementParser.h"
+#include "source_processor/IfStatementParser.h"
+#include "source_processor/PrintStatementParser.h"
+#include "source_processor/ReadStatementParser.h"
 #include "source_processor/StatementParser.h"
+#include "source_processor/WhileStatementParser.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -88,9 +94,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             currProc = parseProcedure(currContent);
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
-            StatementParser stmtParser =
-                StatementParser(currContent, currIndex, programLines, i);
-            Statement stmt = stmtParser.parseStatement();
+            Statement stmt =
+                parseStatement(currContent, currIndex, programLines, i);
             currProc.addToStmtLst(stmt);
         }
     }
@@ -104,6 +109,33 @@ Procedure Parser::parseProcedure(vector<string> content) {
     string proc_name = *next(procItr);
     Procedure proc = Procedure(proc_name);
     return proc;
+}
+
+Statement Parser::parseStatement(vector<string> content, int index,
+                                 vector<Line> programLines, int programIndex) {
+    StatementParser stmtParser(content, index, programLines, programIndex);
+    if (stmtParser.isReadStmt(content)) {
+        ReadStatementParser readParser(content, index);
+        return readParser.parseReadStatement();
+    } else if (stmtParser.isPrintStmt(content)) {
+        PrintStatementParser printParser(content, index);
+        return printParser.parsePrintStatement();
+    } else if (stmtParser.isCallStmt(content)) {
+        CallStatementParser callParser(content, index);
+        return callParser.parseCallStatement();
+    } else if (stmtParser.isAssignStmt(content)) {
+        AssignStatementParser assignParser(content, index);
+        return assignParser.parseAssignStatement();
+    } else if (stmtParser.isWhileStmt(content)) {
+        WhileStatementParser whileParser(content, index, programLines,
+                                         programIndex);
+        return whileParser.parseWhileStatement();
+    } else if (stmtParser.isIfStmt(content)) {
+        IfStatementParser ifParser(content, index, programLines, programIndex);
+        return ifParser.parseIfStatement();
+    } else {
+        return Statement(0, StatementType::NONE);
+    }
 }
 
 // special keywords
