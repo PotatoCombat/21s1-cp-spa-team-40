@@ -15,11 +15,10 @@ Result UsesStmtHandler::eval() {
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        vector<string> allVars = pkb->getAllVars().asVector();
-        for (auto var : allVars) {
-            if (pkb->getStmtsUsingVar(var).size() > 0) {
+        vector<int> allStmts = pkb->getAllStmts().asVector();
+        for (auto stmt : allStmts) {
+            if (pkb->getVarsUsedByStmt(stmt).size() > 0) {
                 result.setValid(true);
-                return result;
             }
         }
         result.setValid(false);
@@ -76,7 +75,7 @@ Result UsesStmtHandler::eval() {
     vector<string> varResults;
     vector<int> stmts = pkb->getAllStmts().asVector();
     for (int stmt : stmts) {
-        vector<string> vars = pkb->getVarsUsedByStmt(stmt);
+        set<string> vars = pkb->getVarsUsedByStmt(stmt);
         if (vars.size() == 0) {
             continue;
         }
