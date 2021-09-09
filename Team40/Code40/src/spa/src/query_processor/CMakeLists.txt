@@ -3,8 +3,8 @@
 file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/query_preprocessor/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/relationship_handler/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/parser/*.cpp"
         )
 
 add_library(query_processor ${srcs})
@@ -13,8 +13,8 @@ add_library(query_processor ${srcs})
 target_include_directories(query_processor PUBLIC
         include
         include/model
-        include/query_preprocessor
         include/relationship_handler
+        include/parser
         )
 
 target_link_libraries(query_processor pkb)
