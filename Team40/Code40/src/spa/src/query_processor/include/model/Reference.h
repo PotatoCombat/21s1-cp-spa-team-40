@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum class DesignEntityType {
+enum DesignEntityType {
     STMT,
     ASSIGN,
     VARIABLE,
