@@ -74,32 +74,32 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
 // Query Processor
 // =============================================================================
 
-Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
-
-Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
-
-Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
-    switch (type) {
-    case StatementType::ASSIGN:
-        return {assignStatements};
-    case StatementType::READ:
-        return {readStatements};
-    case StatementType::PRINT:
-        return {printStatements};
-    case StatementType::IF:
-        return {ifStatements};
-    case StatementType::WHILE:
-        return {whileStatements};
-    case StatementType::CALL:
-        return {callStatements};
-    default:
-        throw runtime_error("Cannot fetch an iterator of statements of an unknown statement type");
-    }
-}
-
-Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
-
-Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
+//Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
+//
+//Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
+//
+//Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
+//    switch (type) {
+//    case StatementType::ASSIGN:
+//        return {assignStatements};
+//    case StatementType::READ:
+//        return {readStatements};
+//    case StatementType::PRINT:
+//        return {printStatements};
+//    case StatementType::IF:
+//        return {ifStatements};
+//    case StatementType::WHILE:
+//        return {whileStatements};
+//    case StatementType::CALL:
+//        return {callStatements};
+//    default:
+//        throw runtime_error("Cannot fetch an iterator of statements of an unknown statement type");
+//    }
+//}
+//
+//Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
+//
+//Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
 
 // Follows =====================================================================
 
