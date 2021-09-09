@@ -31,6 +31,11 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
             relationshipHandler = &parentHandler;
         }
 
+        if (relationship->getType() == RelationType::PARENT_T) {
+            ParentStarHandler parentStarHandler(relationship, pkb);
+            relationshipHandler = &parentStarHandler;
+        }
+
         // eval and combine result
         tempResult = relationshipHandler->eval();
         allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();

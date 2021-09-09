@@ -14,6 +14,7 @@
 #include "relationship_handler/FollowsHandler.h"
 #include "relationship_handler/FollowsStarHandler.h"
 #include "relationship_handler/ParentHandler.h"
+#include "relationship_handler/ParentStarHandler.h"
 
 using namespace std;
 
