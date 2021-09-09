@@ -1,43 +1,59 @@
 #include "QueryPreprocessor.h"
 
 Query QueryPreprocessor::preprocessQuery(const string input) {
-    pair<string, string> parts = tokenizer.splitIntoParts(input);
-    vector<DeclTuple> declString =
-        tokenizer.tokenizeDeclaration(parts.first);
-    string retString = tokenizer.tokenizeReturnEntity(parts.second);
-    vector<RelTuple> suchThatString =
-        tokenizer.tokenizeSuchThatClause(parts.second);
-    // vector<PatTuple> patternString = tokenizer.tokenizePatternClause(parts.second);
+    try {
+        pair<string, string> parts = tokenizer.separateDeclaration(input);
+        
+        Query q;
+        
+        vector<DeclPair> declString;
+        tokenizer.tokenizeDeclaration(parts.first, declString);
 
-    Query q;
-    
-    vector<Reference> refList;
-    for (auto x : declString) {
-        Reference r = parser.parseDeclaration(x);
-        refList.push_back(r);
-    }
-    
-    int found = 0;
-    for (auto x : refList) {
-        if (retString == x.getValue()) {
-            q.setReturnReference(&x);
+        vector<Reference> refList;
+        for (auto x : declString) {
+            Reference r = parser.parseDeclaration(x);
+            refList.push_back(r);
         }
-    }
-    if (!found) {
-        throw "Return entity undeclared";
-    }
 
-    vector<Relation> relList;
-    for (auto x : suchThatString) {
-        Relation rel = parser.parseRelation(x, refList);
-        relList.push_back(rel);
-        q.addRelation(&rel);
+        string clauses;
+        string retString = tokenizer.tokenizeReturn(parts.second, clauses);
+
+        int found = 0;
+        for (auto x : refList) {
+            if (retString == x.getValue()) {
+                q.setReturnReference(&x);
+                found = 1;
+            }
+        }
+        if (!found) {
+            throw "error"; // undeclared return
+        }
+
+        if (clauses.size() == 0) {
+            return q;
+        }
+
+        // has clauses
+        vector<RelTuple> relString;
+        vector<PatTuple> patString;
+
+        tokenizer.tokenizeClause(clauses, relString, patString);
+
+
+        vector<Relation> relList;
+        for (auto x : relString) {
+            Relation rel = parser.parseRelation(x, refList);
+            relList.push_back(rel);
+            q.addRelation(&rel);
+        }
+
+        /*vector<Pattern> ptCl;
+        for (auto x : patternString) {
+        ptCl.push_back(parser.parsePatternClause(x));
+        }*/
+
+        return q;
+    } catch (const char *msg) {
+        throw "invalid query";
     }
-
-    // vector<PatternClause> ptCl;
-    // for (auto x : patternString) {
-    //    ptCl.push_back(parser.parsePatternClause(x));
-    //}
-
-    return q;
 }

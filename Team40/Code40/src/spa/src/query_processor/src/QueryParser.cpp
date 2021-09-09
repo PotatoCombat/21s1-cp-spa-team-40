@@ -2,19 +2,19 @@
 
 QueryParser::QueryParser() = default;
 
-Reference QueryParser::parseDeclaration(DeclTuple declaration) {
-    DesignEntityType type = deTypeHelper.getType(declaration.first);
+Reference QueryParser::parseDeclaration(DeclPair declaration) {
+    DesignEntityType type = deHelper.getType(declaration.first);
     string syn = declaration.second;
     return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
 Relation QueryParser::parseRelation(RelTuple clause,
-                                          vector<Reference> &declList) {
+                                    vector<Reference> &declList) {
     string rel = get<0>(clause);
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
-    RelationType type = relTypeHelper.getType(rel);
+    RelationType relT = relHelper.getType(rel);
 
     Reference r1;
     Reference r2;
@@ -26,31 +26,55 @@ Relation QueryParser::parseRelation(RelTuple clause,
 
     if (it1 != declList.end()) {
         r1 = *it1;
-    } else { // either a undeclared synonym, number, quoted expression, or _
-        r1 = Reference(); // TODO
+    } else {
+        ReferenceType refT = checkRefType(ref1);
+        DesignEntityType deT = relHelper.chooseDeType1(relT);
+        r1 = Reference(deT, refT, ref1);
     }
 
     if (it2 != declList.end()) {
-        r1 = *it2;
-    }
-    else { // either a undeclared synonym, number, quoted expression, or _
-        r1 = Reference(); // TODO
+        r2 = *it2;
+    } else {
+        ReferenceType refT = checkRefType(ref2);
+        DesignEntityType deT = relHelper.chooseDeType2(relT);
+        r2 = Reference(deT, refT, ref1);
     }
 
-    return Relation(type, &r1, &r2);
+    return Relation(relT, &r1, &r2);
 }
 
-// PatternClause QueryParser::parsePatternClause(tuple<string, string, string>
-// clause) {
-//    vector<PatternClause> cl;
-//    for (auto &it : clause) {
-//        // parse by syn '(' Ref1 ',' Ref2 ')'
-//        vector<string> tokens = tokenizeClause(it);
-//        string syn = tokens[0];
-//        EntityReference ref = EntityReference(tokens[1]);
-//        Expression expr = Expression(tokens[2]);
-//
-//        cl.push_back(PatternClause(syn, ref, expr));
-//    }
-//    return cl;
-//}
+// helper methods
+
+ReferenceType QueryParser::checkRefType(string val) {
+    if (isWildcard(val)) {
+        return ReferenceType::WILDCARD;
+    } else if (isInteger(val)) {
+        return ReferenceType::CONSTANT;
+    } else if (isNamedSynonym(val)) {
+        return ReferenceType::CONSTANT;
+    }
+    return ReferenceType::SYNONYM;
+}
+
+bool QueryParser::isInteger(string val) {
+    return all_of(val.begin(), val.end(), isdigit);
+}
+
+// " "
+bool QueryParser::isNamedSynonym(string val) {
+    int c = count(val.begin(), val.end(), '"');
+
+    if (c != 2) {
+        return false;
+    }
+    
+    size_t pos1 = val.find_first_of('"');
+    size_t pos2 = val.find_last_of('"');
+
+    return pos1 == 0 && pos2 == val.size() - 1;
+}
+
+// _
+bool QueryParser::isWildcard(string val) {
+    return val == "_";
+}

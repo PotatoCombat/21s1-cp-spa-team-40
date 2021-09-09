@@ -14,6 +14,6 @@ typedef string RelArg;
 typedef string PatIdent;
 typedef string PatArg;
 
-typedef pair<DeclType, DeclValue> DeclTuple;
+typedef pair<DeclType, DeclValue> DeclPair;
 typedef tuple<RelType, RelArg, RelArg> RelTuple;
 typedef pair<PatIdent, vector<PatArg>> PatTuple;

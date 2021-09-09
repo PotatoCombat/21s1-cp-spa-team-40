@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "Abstractions.h"
 #include "DesignEntityTypeHelper.h"
 #include "Reference.h"
@@ -10,12 +12,17 @@ using namespace std;
 
 class QueryParser {
 private:
-    DesignEntityTypeHelper deTypeHelper;
-    RelationTypeHelper relTypeHelper;
+    DesignEntityTypeHelper deHelper;
+    RelationTypeHelper relHelper;
+
+    ReferenceType checkRefType(string val);
+    bool isInteger(string val);
+    bool isNamedSynonym(string val);
+    bool isWildcard(string val);
 
 public:
     QueryParser();
-    Reference parseDeclaration(DeclTuple declaration);
+    Reference parseDeclaration(DeclPair declaration);
     Relation parseRelation(RelTuple clause, vector<Reference> &declList);
     // PatternClause parsePatternClause(PatTuple clause);
 };

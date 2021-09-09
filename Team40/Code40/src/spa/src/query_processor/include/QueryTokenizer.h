@@ -5,6 +5,8 @@
 #include <vector>
 
 #include "Abstractions.h"
+#include "DesignEntityTypeHelper.h"
+#include "RelationTypeHelper.h"
 
 using namespace std;
 
@@ -13,6 +15,7 @@ private:
     const string KEYWORD_SELECT = "Select";
     const string KEYWORD_SUCH_THAT = "such that";
     const string KEYWORD_PATTERN = "pattern";
+
     const string WHITESPACE_SET = " \n\t\r";
     const char WHITESPACE = ' ';
     const char L_BRACKET = '(';
@@ -20,22 +23,22 @@ private:
     const char R_BRACKET = ')';
     const char SEMICOLON = ';';
 
-    // helper methods
-    string trimString(string input);
-    string trimLString(string input);
-    string trimRString(string input);
-    DeclTuple splitDecl(string input);
-    RelTuple splitBCB(string input);
+    DesignEntityTypeHelper deHelper;
+    RelationTypeHelper refHelper;
+
+    // helpers
+    static string trim(string input);
+    static string trimL(string input);
+    static string trimR(string input);
+    static void splitComma(string input, vector<string> &vec);
+    static size_t findFirstWhitespace(string input);
+    template<typename T> static void splitBCB(string input, T& vec);
 
 public:
-    QueryTokenizer() {}
+    QueryTokenizer() = default;
 
-    pair<string, string> splitIntoParts(string queryString);
-
-    tuple<vector<DeclTuple>, string, vector<RelTuple>, vector<PatTuple>> tokenize(string input);
-
-    vector<DeclTuple> tokenizeDeclaration(string declaration);
-    string tokenizeReturnEntity(string clause);
-    vector<RelTuple> tokenizeSuchThatClause(string clause);
-    vector<PatTuple> tokenizePatternClause(string clause);
+    pair<string, string> separateDeclaration(string input);
+    string tokenizeReturn(string input, string &remaining);
+    void tokenizeDeclaration(string input, vector<DeclPair> &decls);
+    void tokenizeClause(string input, vector<RelTuple> &rels, vector<PatTuple> &pats);
 };
