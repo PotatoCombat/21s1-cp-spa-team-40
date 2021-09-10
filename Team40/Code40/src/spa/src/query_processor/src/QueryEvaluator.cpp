@@ -142,6 +142,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         return results[resultIndex];
     } catch (RelationHandlerError &e) {
         // to be implemented later
+        return vector<string>{};
     }
 }
 

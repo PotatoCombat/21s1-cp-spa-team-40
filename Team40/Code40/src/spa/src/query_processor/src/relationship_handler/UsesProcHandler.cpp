@@ -7,9 +7,8 @@ Result UsesProcHandler::eval() {
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
-    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw RelationHandlerError("UsesProcHandler: first argument cannot be wildcard");
-    }
+    // assertions
+    validate();
 
     /// CONSTANT CONSTANT
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
@@ -74,4 +73,25 @@ Result UsesProcHandler::eval() {
     }
 
     return result;
+}
+
+void UsesProcHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
+        throw RelationHandlerError("UsesProcHandler: first argument must be procedure type");
+    }
+
+    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("UsesProcHandler: second argument must be variable type");
+    }
+
+    if (relation->getType() != RelationType::USES_P) {
+        throw RelationHandlerError("UsesProcHandler: relation type must be USES_P");
+    }
+
+    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
+        throw RelationHandlerError("UsesProcHandler: first argument cannot be wildcard");
+    }
+
 }

@@ -12,6 +12,9 @@ Result ParentHandler::eval() {
     // Todo: assert firstEntiy and secondReference are stmts
     // Todo: use variable instead of magic number -1
 
+    // assertions
+    validate();
+
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
@@ -95,4 +98,22 @@ Result ParentHandler::eval() {
     }
 
     return result;
+}
+
+void ParentHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ParentHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ParentHandler: second argument must be statement type");
+    }
+
+    if (relation->getType() != RelationType::PARENT) {
+        throw RelationHandlerError("ParentHandler: relation type must be PARENT");
+    }
 }

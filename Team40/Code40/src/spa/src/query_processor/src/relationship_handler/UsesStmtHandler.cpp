@@ -7,9 +7,8 @@ Result UsesStmtHandler::eval() {
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
-    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw RelationHandlerError("UsesStmtHandler: first argument cannot be wildcard");
-    }
+    // assertions
+    validate();
 
     /// CONSTANT CONSTANT
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
@@ -74,4 +73,25 @@ Result UsesStmtHandler::eval() {
     }
 
     return result;
+}
+
+void UsesStmtHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ModifiesStmtHandler: first argument must be statememt type");
+    }
+
+    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ModifiesStmtHandler: second argument must be variable type");
+    }
+
+    if (relation->getType() != RelationType::USES_S) {
+        throw RelationHandlerError("ModifiesStmtHandler: relation type must be USES_S");
+    }
+
+    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
+        throw RelationHandlerError("UsesStmtHandler: first argument cannot be wildcard");
+    }
 }
