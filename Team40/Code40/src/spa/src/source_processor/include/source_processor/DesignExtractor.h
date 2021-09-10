@@ -6,6 +6,8 @@
 #include "common/model/condition/NotCondition.h"
 #include "common/model/condition/SingleCondition.h"
 #include "common/model/expression/SingleTermExpression.h"
+#include "common/model/expression/SubtractTermsExpression.h"
+#include "common/model/expression/SumTermsExpression.h"
 #include "common/model/statement/AssignStatement.h"
 #include "common/model/statement/CallStatement.h"
 #include "common/model/statement/Statement.h"
@@ -46,7 +48,11 @@ public:
 
     // Expression
     void extractExpression(Expression *expression);
-    void extractSingleTermExpression(Expression *singleTermExpression);
+    void
+    extractSingleTermExpression(SingleTermExpression *singleTermExpression);
+    void extractSubtractTermsExpression(
+        SubtractTermsExpression *subtractTermsExpression);
+    void extractSumTermsExpression(SumTermsExpression *sumTermsExpression);
 
     // Term
     void extractTerm(Term *term);

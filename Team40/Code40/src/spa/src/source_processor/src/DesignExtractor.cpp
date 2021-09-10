@@ -131,24 +131,39 @@ void DesignExtractor::extractRelation(Relation *relation) {
 }
 
 void DesignExtractor::extractExpression(Expression *expression) {
-    // TODO
     switch (expression->getExpressionType()) {
     case ExpressionType::SINGLE_TERM:
         extractSingleTermExpression(
             dynamic_cast<SingleTermExpression *>(expression));
         break;
     case ExpressionType::SUBTRACT_TERMS:
-        // TODO: extract
+        extractSubtractTermsExpression(
+            dynamic_cast<SubtractTermsExpression *>(expression));
+        break;
     case ExpressionType::SUM_TERMS:
-        // TODO: extract
+        extractSumTermsExpression(
+            dynamic_cast<SumTermsExpression *>(expression));
+        break;
     default:
         throw runtime_error("Invalid ExpressionType.");
     }
 }
 
 void DesignExtractor::extractSingleTermExpression(
-    Expression *singleTermExpression) {
-    extractTerm(singleTermExpression->get)
+    SingleTermExpression *singleTermExpression) {
+    extractTerm(singleTermExpression->getTerm());
+}
+
+void DesignExtractor::extractSubtractTermsExpression(
+    SubtractTermsExpression *subtractTermsExpression) {
+    extractExpression(subtractTermsExpression->getExpression());
+    extractTerm(subtractTermsExpression->getTerm());
+}
+
+void DesignExtractor::extractSumTermsExpression(
+    SumTermsExpression *sumTermsExpression) {
+    extractExpression(sumTermsExpression->getExpression());
+    extractTerm(sumTermsExpression->getTerm());
 }
 
 void DesignExtractor::extractTerm(Term *term) {
