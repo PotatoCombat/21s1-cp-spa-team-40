@@ -4,12 +4,13 @@
 
 using namespace std;
 
+typedef int ProcIndex;
 typedef int VarIndex;
 typedef int ConstIndex;
-typedef int ProcIndex;
-typedef int StmtIndex;
 
-typedef string VarName;
 typedef string ProcName;
+typedef string VarName;
+typedef string ConstName;
 
+typedef int StmtIndex;
 constexpr int InvalidIndex = -1;
