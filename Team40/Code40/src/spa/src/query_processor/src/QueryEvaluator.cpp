@@ -142,6 +142,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         return results[resultIndex];
     } catch (ClauseHandlerError &e) {
         // to be implemented later
+        return vector<string>{};
     }
 }
 

@@ -13,6 +13,9 @@
 using namespace std;
 
 class ModifiesProcHandler : public ClauseHandler {
+private:
+    void validate();
+
 public:
     ModifiesProcHandler(Clause *clause, PKB *pkb)
         : ClauseHandler(clause, pkb) {}

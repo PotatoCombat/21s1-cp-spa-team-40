@@ -13,6 +13,9 @@
 using namespace std;
 
 class ModifiesStmtHandler : public ClauseHandler {
+private:
+    void validate();
+
 public:
     ModifiesStmtHandler(Clause *clause, PKB *pkb)
         : ClauseHandler(clause, pkb) {}
