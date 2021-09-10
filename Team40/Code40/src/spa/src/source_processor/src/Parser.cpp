@@ -16,15 +16,47 @@ vector<Line> Parser::parseFile(fstream &file) {
     vector<Line> programLines = {};
     string input;
     int stmtNum = 0;
+    vector<string> currString = {};
+    vector<string> nextString = {};
     while (getline(file, input)) {
-        vector<string> inputLine = parseLine(input);
-        // The procedure definition does not receive an index.
-        if (!inputLine.empty() && inputLine[0] != "}" &&
-            inputLine[0] != "else" && !isProc(inputLine)) {
+        currString = nextString;
+        nextString = {};
+        for (int i = 0; i < currString.size(); i++) {
+            string curr = currString[i];
+            if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
+                currString.push_back(curr);
+                nextString = vector<string>(currString.begin() + i + 1,
+                                            currString.end());
+                break;
+            }
+            currString.push_back(curr);
+        }
+        if (!currString.empty() && currString[0] != "}" &&
+            currString[0] != "else" && !isProc(currString)) {
             stmtNum++;
         }
-        if (!inputLine.empty()) {
-            Line curr = Line(stmtNum, inputLine);
+        if (!currString.empty()) {
+            Line curr = Line(stmtNum, currString);
+            programLines.push_back(curr);
+        }
+        currString = {};
+        vector<string> inputLine = parseLine(input);
+        for (int i = 0; i < inputLine.size(); i++) {
+            string curr = inputLine[i];
+            if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
+                currString.push_back(curr);
+                nextString =
+                    vector<string>(inputLine.begin() + i + 1, inputLine.end());
+                break;
+            }
+            currString.push_back(curr);
+        }
+        if (!currString.empty() && currString[0] != "}" &&
+            currString[0] != "else" && !isProc(currString)) {
+            stmtNum++;
+        }
+        if (!currString.empty()) {
+            Line curr = Line(stmtNum, currString);
             programLines.push_back(curr);
         }
     }

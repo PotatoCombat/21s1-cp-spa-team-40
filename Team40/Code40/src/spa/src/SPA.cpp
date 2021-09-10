@@ -13,10 +13,10 @@ void SPA::processSource(string filename) {
     file.open(filename, ios::in);
     if (file.is_open()) {
         vector<Line> programLines = parser.parseFile(file);
-        Program program = programParser.parseProgram(programLines);
-        PKB pkb = PKB();
-        DesignExtractor designExtractor(pkb);
-        designExtractor.handleProgram(program);
+        //Program program = programParser.parseProgram(programLines);
+        //PKB pkb = PKB();
+        //DesignExtractor designExtractor(pkb);
+        //designExtractor.handleProgram(program);
         // vector<Variable> varLst = parser.getVarLst();
         // vector<ConstantValue> constLst = parser.getConstLst();
         int test = 0; // to bypass debugger
