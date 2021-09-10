@@ -7,4 +7,6 @@ class ConstantValue : public Factor {
 
 public:
     explicit ConstantValue(int value);
+
+    int getValue();
 };

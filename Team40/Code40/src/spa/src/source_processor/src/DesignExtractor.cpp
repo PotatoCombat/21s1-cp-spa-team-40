@@ -34,7 +34,8 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     StmtIndex stmtIndex;
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
-        stmtIndex = extractAssignStatement(statement);
+        stmtIndex =
+            extractAssignStatement(dynamic_cast<AssignStatement *>(statement));
         break;
     case StatementType::CALL:
         stmtIndex =
@@ -61,7 +62,8 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
+StmtIndex
+DesignExtractor::extractAssignStatement(AssignStatement *assignStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(assignStatement);
 
     // Handle LHS
@@ -79,9 +81,32 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
 }
 
 StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
-    // TODO: Add all modified / used vars to this statement once topo-sort of
-    // Procedures is done
-    return pkb.insertStmt(callStatement);
+    StmtIndex stmtIndex = pkb.insertStmt(callStatement);
+
+    /// TODO: Topologically sort all Procedures, so that Procedures are
+    /// guaranteed to be extracted before they are called,
+    /// and call statements are transitively handled
+
+    Procedure procedure = callStatement->getProcedure();
+
+    set<VarName> modifiedVarNames =
+        pkb.getVarsModifiedByProc(procedure.getName());
+    if (!modifiedVarNames.empty()) {
+        for (VarName modifiedVarName : modifiedVarNames) {
+            Variable *modifiedVar = pkb.getVarByName(modifiedVarName);
+            extractModifiesRelationship(modifiedVar);
+        }
+    }
+
+    set<VarName> usedVarNames = pkb.getVarsUsedByProc(procedure.getName());
+    if (!usedVarNames.empty()) {
+        for (VarName usedVarName : usedVarNames) {
+            Variable *usedVar = pkb.getVarByName(usedVarName);
+            extractUsesRelationship(usedVar);
+        }
+    }
+
+    return stmtIndex;
 }
 
 StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {

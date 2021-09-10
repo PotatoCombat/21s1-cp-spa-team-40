@@ -27,6 +27,7 @@ public:
 
     virtual ProcIndex insertProc(Procedure *procedure);
     virtual VarIndex insertVar(Variable *variable);
+    virtual Variable *getVarByName(VarName varName);
     virtual ConstIndex insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);

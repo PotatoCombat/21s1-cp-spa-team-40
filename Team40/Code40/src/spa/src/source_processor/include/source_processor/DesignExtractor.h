@@ -36,7 +36,7 @@ public:
 
     // Statement
     StmtIndex extractStatement(Statement *statement);
-    StmtIndex extractAssignStatement(Statement *assignStatement);
+    StmtIndex extractAssignStatement(AssignStatement *assignStatement);
     StmtIndex extractCallStatement(CallStatement *callStatement);
     StmtIndex extractIfStatement(IfStatement *ifStatement);
     StmtIndex extractPrintStatement(PrintStatement *printStatement);
