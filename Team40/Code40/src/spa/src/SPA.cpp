@@ -1,10 +1,7 @@
 #include "spa/SPA.h"
-#include "source_processor/DesignExtractor.h"
-
 #include "common/model/Program.h"
-
+#include "source_processor/DesignExtractor.h"
 #include "source_processor/Line.h"
-
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -16,9 +13,7 @@ void SPA::processSource(string filename) {
     file.open(filename, ios::in);
     if (file.is_open()) {
         vector<Line> programLines = parser.parseFile(file);
-        // Program design entities
-        // Program -> list of procedures -> contains a list of statements
-        Program program = parser.parseProgram(programLines);
+        Program program = programParser.parseProgram(programLines);
         PKB pkb = PKB();
         DesignExtractor designExtractor(pkb);
         designExtractor.handleProgram(program);
@@ -29,10 +24,4 @@ void SPA::processSource(string filename) {
         cout << "No such file";
     }
     file.close();
-}
-
-int main() { // For testing on Fatin's machine only
-    SPA spa;
-    spa.processSource("C:\\Users\\Admin\\source\\repos\\21s1-cp-spa-team-"
-                      "40\\Team40\\Tests40\\Code2.txt");
 }

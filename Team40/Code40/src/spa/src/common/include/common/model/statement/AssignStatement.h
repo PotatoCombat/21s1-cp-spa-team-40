@@ -2,11 +2,11 @@
 #include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
+using namespace std;
 
 class AssignStatement : public Statement {
 private:
     Variable variable;
-    // No AST yet
     // Expression expression;
     vector<string> exprLst;
 

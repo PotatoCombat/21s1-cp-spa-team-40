@@ -1,5 +1,6 @@
 #include "common/model/Variable.h"
 #include "common/model/statement/Statement.h"
+using namespace std;
 
 class ReadStatement : public Statement {
 private:

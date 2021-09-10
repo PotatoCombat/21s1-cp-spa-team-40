@@ -1,5 +1,4 @@
 #include "source_processor/Line.h"
-using namespace std;
 
 Line::Line(int index, vector<string> content) {
     this->index = index;

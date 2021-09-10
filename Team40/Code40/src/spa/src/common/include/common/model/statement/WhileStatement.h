@@ -1,12 +1,11 @@
-#include "common/model/statement/Statement.h"
 #include "common/model/condition/Condition.h"
+#include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
-
 using namespace std;
+
 class WhileStatement : public Statement {
 private:
-    // No AST yet
     // Condition cond;
     vector<Statement> stmtLst;
     vector<string> condLst;
