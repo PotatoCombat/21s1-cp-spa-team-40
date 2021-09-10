@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 
 #include "pkb/Abstractions.h"
 #include "pkb/Iterator.h"
@@ -16,4 +17,8 @@ public:
     StmtIndex getFollowingStmt(StmtIndex stmt);
     StmtIndex getPrecedingStmt(StmtIndex stmt);
     bool follows(StmtIndex stmt1, StmtIndex stmt2);
+
+    StmtIndex getParentStmt(StmtIndex stmt);
+    set<StmtIndex> getChildStmts(StmtIndex stmt);
+    bool parent(StmtIndex stmt1, StmtIndex stmt2);
 };
