@@ -11,8 +11,6 @@ protected:
 public:
     // constructor
     Statement(int index, StatementType statementType);
-    Statement(StatementType statementType);
-    Statement();
 
     // getters
     int getIndex();
