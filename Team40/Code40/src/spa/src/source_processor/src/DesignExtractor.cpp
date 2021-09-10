@@ -4,19 +4,34 @@ using namespace std;
 
 DesignExtractor::DesignExtractor(PKB pkb) : pkb(pkb) {}
 
-void DesignExtractor::handleProgram(Program program) {
+void DesignExtractor::extractEntities(Program program) {
     for (Procedure proc : program.getProcLst()) {
         handleProcedure(&proc);
     }
 }
 
+void DesignExtractor::extractRelationships(Program program) {
+    extractFollowsRelationship(std::move(program));
+    extractParentsRelationship(std::move(program));
+}
+
+void DesignExtractor::extractFollowsRelationship(Program program) {
+    FollowsExtractor extractor(pkb);
+    extractor.handleProgram(std::move(program));
+}
+
+void DesignExtractor::extractParentsRelationship(Program program) {
+    ParentsExtractor extractor(pkb);
+    extractor.handleProgram(std::move(program));
+}
+
 ProcIndex DesignExtractor::handleProcedure(Procedure *procedure) {
     ProcIndex procIndex = pkb.insertProc(procedure);
-    ExtractionContext::getInstance().setCurrentProc(procIndex);
+    ExtractionContext::getInstance().getProcedureContext().push(procedure);
     for (Statement statement : procedure->getStmtLst()) {
         handleStatement(&statement);
     }
-    ExtractionContext::getInstance().unsetCurrentProc();
+    ExtractionContext::getInstance().getProcedureContext().pop(procedure);
     return procIndex;
 }
 
@@ -45,25 +60,14 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
     return stmtIndex;
 }
 
-void DesignExtractor::handleFollowsRelationship(StmtIndex stmtIndex) {
-    Statement *statement = pkb.getStmtByIndex(stmtIndex);
-    optional<StmtIndex> prevStmtIndex =
-        ExtractionContext::getInstance().getPrevStatement();
-    if (prevStmtIndex.has_value()) {
-        Statement *prevStmt = pkb.getStmtByIndex(prevStmtIndex.value());
-        pkb.insertFollows(prevStmt, statement);
-        ExtractionContext::getInstance().unsetPrevStatement();
-    }
-    ExtractionContext::getInstance().setPrevStatement(stmtIndex);
-}
-
 void DesignExtractor::handleParentRelationship(StmtIndex stmtIndex) {
     Statement *statement = pkb.getStmtByIndex(stmtIndex);
-    optional<StmtIndex> parentStmtIndex =
-        ExtractionContext::getInstance().getParentStatement();
-    if (parentStmtIndex.has_value()) {
-        Statement *parentStmt = pkb.getStmtByIndex(parentStmtIndex.value());
-        pkb.insertParent(parentStmt, statement);
+    vector<Statement *> parentStatements =
+        ExtractionContext::getInstance().getParentContext().getAllEntities();
+    if (!parentStatements.empty()) {
+        for (Statement *parent : parentStatements) {
+            pkb.insertParent(parent, statement);
+        }
     }
 }
 

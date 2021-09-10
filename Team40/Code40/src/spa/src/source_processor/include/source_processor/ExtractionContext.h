@@ -1,6 +1,8 @@
 #pragma once
 
+#include "common/model/Procedure.h"
 #include "pkb/Abstractions.h"
+#include "source_processor/EntityContext.h"
 #include <optional>
 #include <vector>
 
@@ -9,12 +11,11 @@ using namespace std;
 class ExtractionContext {
 private:
     static ExtractionContext *instance;
-    optional<ProcIndex> currentProc;
-    optional<StmtIndex> prevStatement;
-    optional<StmtIndex> currentStatement;
-    vector<StmtIndex> parentStatements;
-    vector<StmtIndex> modifyingStatements;
-    vector<StmtIndex> usingStatements;
+    const EntityContext<Procedure> procedureContext;
+    const EntityContext<Statement> parentContext;
+    const EntityContext<Statement> followsContext;
+    const EntityContext<Statement> modifiesContext;
+    const EntityContext<Statement> usesContext;
 
     ExtractionContext() = default;
 
@@ -23,27 +24,9 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    optional<ProcIndex> getCurrentProc();
-    void setCurrentProc(ProcIndex procIndex);
-    void unsetCurrentProc();
-
-    optional<StmtIndex> getPrevStatement();
-    void setPrevStatement(StmtIndex stmtIndex);
-    void unsetPrevStatement();
-
-    optional<StmtIndex> getCurrentStatement();
-    void setCurrentStatement(StmtIndex stmtIndex);
-    void unsetCurrentStatement();
-
-    optional<StmtIndex> getParentStatement();
-    void setParentStatement(StmtIndex stmtIndex);
-    void unsetParentStatement();
-
-    optional<StmtIndex> getModifyingStatement();
-    void setModifyingStatement(StmtIndex stmtIndex);
-    void unsetModifyingStatement();
-
-    optional<StmtIndex> getUsingStatement();
-    void setUsingStatement(StmtIndex stmtIndex);
-    void unsetUsingStatement();
+    EntityContext<Procedure> getProcedureContext();
+    EntityContext<Statement> getFollowsContext();
+    EntityContext<Statement> getModifiesContext();
+    EntityContext<Statement> getParentContext();
+    EntityContext<Statement> getUsesContext();
 };

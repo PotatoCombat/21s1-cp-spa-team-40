@@ -12,6 +12,8 @@
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
 #include "source_processor/ExtractionContext.h"
+#include "source_processor/FollowsExtractor.h"
+#include "source_processor/ParentsExtractor.h"
 
 class DesignExtractor {
     PKB pkb;
@@ -20,18 +22,21 @@ public:
     explicit DesignExtractor(PKB pkb);
 
     // Program
-    void handleProgram(Program program);
+    void extractEntities(Program program);
+    void extractRelationships(Program program);
+    void extractFollowsRelationship(Program program);
+    void extractParentsRelationship(Program program);
 
     // Procedure
     ProcIndex handleProcedure(Procedure *program);
 
     // Statement
+    void handleStatementList(vector<Statement *> statement);
     StmtIndex handleStatement(Statement *statement);
     StmtIndex handleAssignStatement(Statement *assignStatement);
     StmtIndex handleCallStatement(CallStatement *callStatement);
     StmtIndex handleIfStatement(Statement *ifStatement);
     void handleParentRelationship(StmtIndex stmtIndex);
-    void handleFollowsRelationship(StmtIndex stmtIndex);
 
     // Condition
     void handleCondition(Condition *condition);
