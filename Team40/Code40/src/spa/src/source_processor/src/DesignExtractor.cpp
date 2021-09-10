@@ -62,7 +62,8 @@ StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(assignStatement);
     Variable var = assignStatement->getVariable();
     VarIndex varIdx = pkb.insertVar(&var);
-    pkb.insertStmtModifyingVar(stmtIndex, varIdx);
+    //TODO: Use new API
+    //pkb.insertStmtModifyingVar(stmtIndex, varIdx);
     return stmtIndex;
 }
 
