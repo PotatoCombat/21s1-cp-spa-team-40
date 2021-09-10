@@ -54,7 +54,9 @@ Result ParentStarHandler::eval() {
         vector<string> firstStmtResults;
         set<int> parentStarStmts = pkb->getParentStarStmts(stoi(secondStmt));
         for (auto parentStarStmt : parentStarStmts) {
-            firstStmtResults.push_back(to_string(parentStarStmt));
+            if (isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(parentStarStmt))) {
+                firstStmtResults.push_back(to_string(parentStarStmt));
+            }
         }
         result.setResultList1(firstReference, firstStmtResults);
         return result;
@@ -66,7 +68,9 @@ Result ParentStarHandler::eval() {
         vector<string> secondStmtResults;
         set<int> childStarStmts = pkb->getChildStarStmts(stoi(firstStmt));
         for (auto childStarStmt : childStarStmts) {
-            secondStmtResults.push_back(to_string(childStarStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStarStmt))) {
+                secondStmtResults.push_back(to_string(childStarStmt));
+            }
         }
         result.setResultList2(secondReference, secondStmtResults);
         return result;
@@ -75,15 +79,30 @@ Result ParentStarHandler::eval() {
    // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> parentStmts = pkb->getAllStmts().asVector();
+    vector<int> parentStmts;
+    if (firstReference->getDeType() == DesignEntityType::STMT) {
+        parentStmts = pkb->getAllStmts().asVector();
+    } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
+        parentStmts = pkb->getAllStmts(firstStmtType).asVector();
+    }
     for (int parentStmt : parentStmts) {
         set<int> childStmts = pkb->getChildStmts(parentStmt);
         if (childStmts.size() == 0) {
             continue;
         }
-        firstStmtResults.push_back(to_string(parentStmt));
+
+        bool hasMatchingChild = false;
+
         for (auto childStmt : childStmts) {
-            secondStmtResults.push_back(to_string(childStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+                hasMatchingChild = true;
+            }
+        }
+
+        if (hasMatchingChild) {
+            firstStmtResults.push_back(to_string(parentStmt));
         }
     }
 

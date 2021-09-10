@@ -8,8 +8,6 @@ Result ParentHandler::eval() {
     string secondStmt = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-    // Todo: assert firstEntiy and secondReference are stmts
     // Todo: use variable instead of magic number -1
 
     // assertions
@@ -55,7 +53,8 @@ Result ParentHandler::eval() {
         secondReference->getRefType() == ReferenceType::CONSTANT) {
         vector<string> firstStmtResults;
         int parentStmt = pkb->getParentStmt(stoi(secondStmt));
-        if (parentStmt != -1) {
+        if (parentStmt != -1 &&
+            isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(parentStmt))) {
             firstStmtResults.push_back(to_string(parentStmt));
         }
         result.setResultList1(firstReference, firstStmtResults);
@@ -68,7 +67,9 @@ Result ParentHandler::eval() {
         vector<string> secondStmtResults;
         set<int> childStmts = pkb->getChildStmts(stoi(firstStmt));
         for (auto childStmt : childStmts) {
-            secondStmtResults.push_back(to_string(childStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+            }
         }
         result.setResultList2(secondReference, secondStmtResults);
         return result;
@@ -77,16 +78,31 @@ Result ParentHandler::eval() {
     // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> parentStmts = pkb->getAllStmts().asVector();
+    vector<int> parentStmts;
+    if (firstReference->getDeType() == DesignEntityType::STMT) {
+        parentStmts = pkb->getAllStmts().asVector();
+    } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
+        parentStmts = pkb->getAllStmts(firstStmtType).asVector();
+    }
+
     for (int parentStmt : parentStmts) {
         set<int> childStmts = pkb->getChildStmts(parentStmt);
         if (childStmts.size() == 0) {
             continue;
         }
-        firstStmtResults.push_back(to_string(parentStmt));
+        bool hasMatchingChild = false;
+        
         for (auto childStmt : childStmts) {
-            secondStmtResults.push_back(to_string(childStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+                hasMatchingChild = true;
+            }
         }  
+
+        if (hasMatchingChild) {
+            firstStmtResults.push_back(to_string(parentStmt));
+        }
     }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
