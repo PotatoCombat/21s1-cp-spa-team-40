@@ -1,5 +1,5 @@
 #include "source_processor/IfStatementParser.h"
-#include "source_processor/Parser.h"
+#include "source_processor/ProgramParser.h"
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index,
@@ -23,7 +23,7 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        Parser parser;
+        ProgramParser parser;
         Statement nestedStmt = parser.parseStatement(
             currContent, currIndex, programLines, programIndex);
         if (hasTerminator(currContent)) {

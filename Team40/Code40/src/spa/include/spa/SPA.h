@@ -1,13 +1,14 @@
 #pragma once
 //#include "pkb/PKB.h"
 #include "source_processor/Parser.h"
+#include "source_processor/ProgramParser.h"
 #include <string>
-using namespace std;
 
 class SPA {
 private:
     // PKB pkb;
     Parser parser;
+    ProgramParser programParser;
 
 public:
     void processSource(string filename);

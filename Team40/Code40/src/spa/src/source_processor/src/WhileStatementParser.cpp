@@ -1,5 +1,5 @@
 #include "source_processor/WhileStatementParser.h"
-#include "source_processor/Parser.h"
+#include "source_processor/ProgramParser.h"
 #include <algorithm>
 
 WhileStatementParser::WhileStatementParser(vector<string> content, int index,
@@ -25,7 +25,7 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
         if (currIndex == 0 || hasTerminator(currContent)) {
             break;
         } else {
-            Parser parser;
+            ProgramParser parser;
             Statement nestedStmt = parser.parseStatement(
                 currContent, currIndex, programLines, programIndex);
             stmt.addStatement(nestedStmt);

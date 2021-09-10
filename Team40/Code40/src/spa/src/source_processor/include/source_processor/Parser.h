@@ -24,16 +24,11 @@ public:
     string cleanString(string input);
     void addString(string &input, vector<string> &inputVector);
 
-    // parse preprocessed file
-    Program parseProgram(vector<Line> programLines);
-    Statement parseStatement(vector<string> content, int index,
-                             vector<Line> programLines, int programIndex);
-
     // special keywords
     bool isProc(vector<string> inputLine);
     bool isKeyword(string input);
 
-    // special characters
+    // special symbols
     bool isBracket(char input);
     bool isOperator(char input);
     bool isSemiColon(char input);
