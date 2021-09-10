@@ -42,7 +42,7 @@ TEST_CASE("QueryEvaluator: all clauses return true - returns all statements") {
     Reference s_const3(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Relation follows2(RelationType::FOLLOWS, stmt_sym1, s_const3);
     
-    query.setReturnReference(s);
+    query.setReturnReference(&s);
     query.addRelation(&follows);
     query.addRelation(&follows2);
 
@@ -108,7 +108,7 @@ TEST_CASE("QueryEvaluator: multiple matching elements between results - returns 
     Relation follows(RelationType::FOLLOWS, s1, s);
     Relation follows2(RelationType::FOLLOWS, s, s2); 
     
-    query.setReturnReference(s);
+    query.setReturnReference(&s);
     query.addRelation(&follows);
     query.addRelation(&follows2);
 
