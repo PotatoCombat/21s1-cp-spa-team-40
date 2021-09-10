@@ -13,6 +13,9 @@
 using namespace std;
 
 class ModifiesProcHandler : public RelationshipHandler {
+private:
+    void validate();
+
 public:
     ModifiesProcHandler(Relation *relationship, PKB *pkb)
         : RelationshipHandler(relationship, pkb) {}

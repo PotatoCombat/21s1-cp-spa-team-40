@@ -11,19 +11,7 @@ Result FollowsStarHandler::eval() {
     // Todo: use variable instead of magic number -1
 
     // assertions
-    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
-        firstReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw RelationHandlerError("FollowsStarHandler: first argument must be statement type");
-    }
-
-    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
-        secondReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw RelationHandlerError("FollowsStarHandler: second argument must be statement type");
-    }
-
-    if (relation->getType() != RelationType::FOLLOWS_T) {
-        throw RelationHandlerError("FollowsStarHandler: relation type must be FOLLOWS_T");
-    }
+    validate();
 
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
@@ -106,4 +94,22 @@ Result FollowsStarHandler::eval() {
     }
 
     return result;
+}
+
+void FollowsStarHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("FollowsStarHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("FollowsStarHandler: second argument must be statement type");
+    }
+
+    if (relation->getType() != RelationType::FOLLOWS_T) {
+        throw RelationHandlerError("FollowsStarHandler: relation type must be FOLLOWS_T");
+    }
 }

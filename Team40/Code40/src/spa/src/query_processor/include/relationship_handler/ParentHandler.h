@@ -14,6 +14,9 @@
 using namespace std;
 
 class ParentHandler : public RelationshipHandler {
+private:
+    void validate();
+
 public:
     ParentHandler(Relation *relationship, PKB *pkb)
         : RelationshipHandler(relationship, pkb) {}

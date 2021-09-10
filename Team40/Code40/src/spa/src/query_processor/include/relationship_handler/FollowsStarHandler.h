@@ -13,6 +13,9 @@
 using namespace std;
 
 class FollowsStarHandler : public RelationshipHandler {
+private:
+    void validate();
+
 public:
     FollowsStarHandler(Relation *relationship, PKB *pkb)
         : RelationshipHandler(relationship, pkb) {}

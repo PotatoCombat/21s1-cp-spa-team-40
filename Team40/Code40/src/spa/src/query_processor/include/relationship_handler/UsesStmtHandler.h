@@ -13,6 +13,9 @@
 using namespace std;
 
 class UsesStmtHandler : public RelationshipHandler {
+private:
+    void validate();
+
 public:
     UsesStmtHandler(Relation *relationship, PKB *pkb)
         : RelationshipHandler(relationship, pkb) {}

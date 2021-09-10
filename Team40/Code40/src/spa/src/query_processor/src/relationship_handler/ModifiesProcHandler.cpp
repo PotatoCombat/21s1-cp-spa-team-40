@@ -8,21 +8,7 @@ Result ModifiesProcHandler::eval() {
     string secondValue = secondReference->getValue();
 
     // assertions
-    if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
-        throw RelationHandlerError("ModifiesProcHandler: first argument must be procedure type");
-    }
-
-    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
-        throw RelationHandlerError("ModifiesProcHandler: second argument must be variable type");
-    }
-
-    if (relation->getType() != RelationType::MODIFIES_P) {
-        throw RelationHandlerError("ModifiesProcHandler: relation type must be MODIFIES_P");
-    }
-
-    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw RelationHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
-    }
+    validate();
 
     /// CONSTANT CONSTANT
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
@@ -87,4 +73,24 @@ Result ModifiesProcHandler::eval() {
     }
 
     return result;
+}
+
+void ModifiesProcHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
+        throw RelationHandlerError("ModifiesProcHandler: first argument must be procedure type");
+    }
+
+    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ModifiesProcHandler: second argument must be variable type");
+    }
+
+    if (relation->getType() != RelationType::MODIFIES_P) {
+        throw RelationHandlerError("ModifiesProcHandler: relation type must be MODIFIES_P");
+    }
+
+    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
+        throw RelationHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
+    }
 }

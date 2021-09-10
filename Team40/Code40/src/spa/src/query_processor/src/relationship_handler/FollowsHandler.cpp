@@ -11,19 +11,8 @@ Result FollowsHandler::eval() {
 	// Todo: use variable instead of magic number -1
 
     // assertions
-    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
-        firstReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw RelationHandlerError("FollowsHandler: first argument must be statement type");
-    }
+    validate();
 
-    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
-        secondReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw RelationHandlerError("FollowsHandler: second argument must be statement type");
-    }
-
-    if (relation->getType() != RelationType::FOLLOWS) {
-        throw RelationHandlerError("FollowsHandler: relation type must be FOLLOWS");
-    }
 
     StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
     StatementType secondStmtType = desTypeToStmtType(secondReference->getDeType());
@@ -34,8 +23,7 @@ Result FollowsHandler::eval() {
         vector<int> allStmts = pkb->getAllStmts().asVector();
         
         for (auto stmt : allStmts) {
-            int followingStmt = pkb->getFollowingStmt(stmt);
-            if (followingStmt != -1) {
+            if (pkb->getFollowingStmt(stmt) != -1) {
                 result.setValid(true);
                 return result;
             }
@@ -122,4 +110,22 @@ Result FollowsHandler::eval() {
     }
 
 	return result;
+}
+
+void FollowsHandler::validate() {
+    Reference *firstReference = relation->getFirstReference();
+    Reference *secondReference = relation->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("FollowsHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("FollowsHandler: second argument must be statement type");
+    }
+
+    if (relation->getType() != RelationType::FOLLOWS) {
+        throw RelationHandlerError("FollowsHandler: relation type must be FOLLOWS");
+    }
 }
