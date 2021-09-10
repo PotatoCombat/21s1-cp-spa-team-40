@@ -6,15 +6,15 @@ using namespace std;
 // Source Processor
 // =============================================================================
 
-ProcIndex PKB::insertProc(Procedure *procedure) {
+void PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-VarIndex PKB::insertVar(Variable *variable) {
+void PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
-ConstIndex PKB::insertConst(ConstantValue *constant) {
+void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
@@ -49,11 +49,11 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
 }
 
 Procedure* PKB::getProcByName(ProcName proc) {
-    return procTable.getProcByName(proc);
+    return procTable.getEntity(proc);
 }
 
 Variable* PKB::getVarByName(VarName var) {
-    return varTable.getVarByName(var);
+    return varTable.getEntity(var);
 }
 
 // =============================================================================

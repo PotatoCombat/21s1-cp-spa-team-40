@@ -25,9 +25,9 @@ public:
     // Source Processor
     // =========================================================================
 
-    virtual ProcIndex insertProc(Procedure *procedure);
-    virtual VarIndex insertVar(Variable *variable);
-    virtual ConstIndex insertConst(ConstantValue *constant);
+    virtual void insertProc(Procedure *procedure);
+    virtual void insertVar(Variable *variable);
+    virtual void insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);
 
