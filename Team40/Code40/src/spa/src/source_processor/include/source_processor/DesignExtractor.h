@@ -11,7 +11,10 @@
 #include "common/model/statement/AssignStatement.h"
 #include "common/model/statement/CallStatement.h"
 #include "common/model/statement/IfStatement.h"
+#include "common/model/statement/PrintStatement.h"
+#include "common/model/statement/ReadStatement.h"
 #include "common/model/statement/Statement.h"
+#include "common/model/statement/WhileStatement.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
 #include "source_processor/ExtractionContext.h"
@@ -36,6 +39,9 @@ public:
     StmtIndex extractAssignStatement(Statement *assignStatement);
     StmtIndex extractCallStatement(CallStatement *callStatement);
     StmtIndex extractIfStatement(IfStatement *ifStatement);
+    StmtIndex extractPrintStatement(PrintStatement *printStatement);
+    StmtIndex extractReadStatement(ReadStatement *readStatement);
+    StmtIndex extractWhileStatement(WhileStatement *whileStatement);
 
     // Condition
     void extractCondition(Condition *condition);

@@ -41,12 +41,20 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
             extractCallStatement(dynamic_cast<CallStatement *>(statement));
         break;
     case StatementType::IF:
-        stmtIndex = extractIfStatement(statement);
+        stmtIndex = extractIfStatement(dynamic_cast<IfStatement *>(statement));
+        break;
+    case StatementType::PRINT:
+        stmtIndex =
+            extractPrintStatement(dynamic_cast<PrintStatement *>(statement));
         break;
     case StatementType::READ:
-    case StatementType::PRINT:
+        stmtIndex =
+            extractReadStatement(dynamic_cast<ReadStatement *>(statement));
+        break;
     case StatementType::WHILE:
-        // TODO: note to unset prev, and set parent
+        stmtIndex =
+            extractWhileStatement(dynamic_cast<WhileStatement *>(statement));
+        break;
     default:
         throw runtime_error("Invalid StatementType!");
     }
@@ -82,10 +90,11 @@ StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().getUsesContext().push(ifStatement);
+    ExtractionContext::getInstance().getParentContext().push(ifStatement);
     extractCondition(ifStatement->getCondition());
     ExtractionContext::getInstance().getUsesContext().pop(ifStatement);
 
+    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
     // 2. Handle THEN statements
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
@@ -95,6 +104,46 @@ StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
+    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
+    return stmtIndex;
+}
+
+StmtIndex DesignExtractor::extractReadStatement(ReadStatement *readStatement) {
+    StmtIndex stmtIndex = pkb.insertStmt(readStatement);
+    ExtractionContext::getInstance().getModifiesContext().push(readStatement);
+    extractVariable(readStatement->getVariable());
+    extractModifiesRelationship(readStatement->getVariable());
+    ExtractionContext::getInstance().getModifiesContext().pop(readStatement);
+    return stmtIndex;
+}
+
+StmtIndex
+DesignExtractor::extractPrintStatement(PrintStatement *printStatement) {
+    StmtIndex stmtIndex = pkb.insertStmt(printStatement);
+    ExtractionContext::getInstance().getUsesContext().push(printStatement);
+    extractVariable(printStatement->getVariable());
+    extractUsesRelationship(printStatement->getVariable());
+    ExtractionContext::getInstance().getModifiesContext().pop(printStatement);
+    return stmtIndex;
+}
+
+StmtIndex
+DesignExtractor::extractWhileStatement(WhileStatement *whileStatement) {
+    // 0. Insert statement into PKB
+    StmtIndex stmtIndex = pkb.insertStmt(whileStatement);
+
+    // 1. Handle condition
+    ExtractionContext::getInstance().getUsesContext().push(whileStatement);
+    extractCondition(whileStatement->getCondition());
+    ExtractionContext::getInstance().getUsesContext().pop(whileStatement);
+
+    // 2. Handle THEN statements
+    ExtractionContext::getInstance().getParentContext().push(whileStatement);
+    for (Statement *statement : whileStatement->getThenStmtLst()) {
+        extractStatement(statement);
+    }
+    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
+
     return stmtIndex;
 }
 
