@@ -8,20 +8,38 @@ ExtractionContext &ExtractionContext::getInstance() {
 optional<ProcIndex> ExtractionContext::getCurrentProc() { return currentProc; }
 
 void ExtractionContext::setCurrentProc(ProcIndex procIndex) {
+    if (currentProc.has_value()) {
+        throw runtime_error(
+            "Trying to overwrite an existing Procedure's context");
+    }
     currentProc = procIndex;
 }
 
+void ExtractionContext::unsetCurrentProc() { currentProc = NULL; }
+
 void ExtractionContext::setPrevStatement(StmtIndex stmtIndex) {
+    if (prevStatement.has_value()) {
+        throw runtime_error(
+            "Trying to overwrite an existing Statement's context");
+    }
     prevStatement = stmtIndex;
 }
+
+void ExtractionContext::unsetPrevStatement() { prevStatement = NULL; }
 
 optional<StmtIndex> ExtractionContext::getCurrentStatement() {
     return currentStatement;
 }
 
 void ExtractionContext::setCurrentStatement(StmtIndex stmtIndex) {
+    if (currentStatement.has_value()) {
+        throw runtime_error(
+            "Trying to overwrite an existing Statement's context");
+    }
     currentStatement = stmtIndex;
 }
+
+void ExtractionContext::unsetCurrentStatement() { currentStatement = NULL; }
 
 optional<StmtIndex> ExtractionContext::getParentStatement() {
     if (parentStatements.empty()) {

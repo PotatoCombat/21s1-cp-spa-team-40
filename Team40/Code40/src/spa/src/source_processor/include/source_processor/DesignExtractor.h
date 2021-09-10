@@ -7,6 +7,7 @@
 #include "common/model/condition/SingleCondition.h"
 #include "common/model/expression/SingleTermExpression.h"
 #include "common/model/statement/AssignStatement.h"
+#include "common/model/statement/CallStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
@@ -27,9 +28,10 @@ public:
     // Statement
     StmtIndex handleStatement(Statement *statement);
     StmtIndex handleAssignStatement(Statement *assignStatement);
-    StmtIndex handleCallStatement(Statement *callStatement);
+    StmtIndex handleCallStatement(CallStatement *callStatement);
     StmtIndex handleIfStatement(Statement *ifStatement);
-    void handleContextualRelationships(StmtIndex stmtIndex);
+    void handleParentRelationship(StmtIndex stmtIndex);
+    void handleFollowsRelationship(StmtIndex stmtIndex);
 
     // Condition
     void handleCondition(Condition *condition);

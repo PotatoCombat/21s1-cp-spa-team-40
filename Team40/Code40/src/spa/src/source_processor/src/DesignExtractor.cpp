@@ -16,6 +16,7 @@ ProcIndex DesignExtractor::handleProcedure(Procedure *procedure) {
     for (Statement statement : procedure->getStmtLst()) {
         handleStatement(&statement);
     }
+    ExtractionContext::getInstance().unsetCurrentProc();
     return procIndex;
 }
 
@@ -26,7 +27,8 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
         stmtIndex = handleAssignStatement(statement);
         break;
     case StatementType::CALL:
-        stmtIndex = handleCallStatement(statement);
+        stmtIndex =
+            handleCallStatement(dynamic_cast<CallStatement *>(statement));
         break;
     case StatementType::IF:
         stmtIndex = handleIfStatement(statement);
@@ -38,28 +40,31 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
     default:
         throw runtime_error("Invalid StatementType!");
     }
-    handleContextualRelationships(stmtIndex);
+    handleFollowsRelationship(stmtIndex);
+    handleParentRelationship(stmtIndex);
     return stmtIndex;
 }
 
-void DesignExtractor::handleContextualRelationships(StmtIndex stmtIndex) {
+void DesignExtractor::handleFollowsRelationship(StmtIndex stmtIndex) {
     Statement *statement = pkb.getStmtByIndex(stmtIndex);
     optional<StmtIndex> prevStmtIndex =
         ExtractionContext::getInstance().getPrevStatement();
     if (prevStmtIndex.has_value()) {
         Statement *prevStmt = pkb.getStmtByIndex(prevStmtIndex.value());
         pkb.insertFollows(prevStmt, statement);
+        ExtractionContext::getInstance().unsetPrevStatement();
     }
+    ExtractionContext::getInstance().setPrevStatement(stmtIndex);
+}
 
+void DesignExtractor::handleParentRelationship(StmtIndex stmtIndex) {
+    Statement *statement = pkb.getStmtByIndex(stmtIndex);
     optional<StmtIndex> parentStmtIndex =
         ExtractionContext::getInstance().getParentStatement();
-
     if (parentStmtIndex.has_value()) {
         Statement *parentStmt = pkb.getStmtByIndex(parentStmtIndex.value());
         pkb.insertParent(parentStmt, statement);
     }
-
-    ExtractionContext::getInstance().setPrevStatement(stmtIndex);
 }
 
 StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
@@ -68,10 +73,12 @@ StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
     VarIndex varIdx = pkb.insertVar(var);
     pkb.insertStmtModifyingVar(assignStatement, var);
 
+    // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(stmtIndex);
     handleVariable(assignStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement();
 
+    // Handle RHS
     ExtractionContext::getInstance().setUsingStatement(stmtIndex);
     handleExpression(assignStatement->getExpression());
     ExtractionContext::getInstance().unsetUsingStatement();
@@ -79,9 +86,10 @@ StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::handleCallStatement(Statement *callStatement) {
-    StmtIndex stmtIndex = pkb.insertStmt(callStatement);
-    return stmtIndex;
+StmtIndex DesignExtractor::handleCallStatement(CallStatement *callStatement) {
+    // TODO: Add all modified / used vars to this statement once topo-sort of
+    // Procedures is done
+    return pkb.insertStmt(callStatement);
 }
 
 StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {

@@ -25,12 +25,15 @@ public:
 
     optional<ProcIndex> getCurrentProc();
     void setCurrentProc(ProcIndex procIndex);
+    void unsetCurrentProc();
 
     optional<StmtIndex> getPrevStatement();
     void setPrevStatement(StmtIndex stmtIndex);
+    void unsetPrevStatement();
 
     optional<StmtIndex> getCurrentStatement();
     void setCurrentStatement(StmtIndex stmtIndex);
+    void unsetCurrentStatement();
 
     optional<StmtIndex> getParentStatement();
     void setParentStatement(StmtIndex stmtIndex);
