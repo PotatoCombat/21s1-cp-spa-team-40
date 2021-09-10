@@ -40,6 +40,81 @@ vector<DeclPair> TestQueryTokenizer::createDecls() {
     return vector<DeclPair>{p1, p2, p3};
 }
 
+TEST_CASE("QueryTokenizer: separateDeclaration") {
+    QueryTokenizer tokenizer;
+    string expectedD = TestQueryTokenizer::DECL1;
+    string expectedC = TestQueryTokenizer::CLAUSE1;
+
+    SECTION("test standard") {
+        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY1);
+        REQUIRE(actual.first == expectedD);
+        REQUIRE(actual.second == expectedC);
+    }
+
+    SECTION("test no whitespace") {
+        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY_NO_WHITESPACE);
+        REQUIRE(actual.first == expectedD);
+        REQUIRE(actual.second == expectedC);
+    }
+
+    SECTION("test newline") {
+        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY_NEWLINE);
+        REQUIRE(actual.first == expectedD);
+        REQUIRE(actual.second == expectedC);
+    }
+}
+
+TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
+    QueryTokenizer tokenizer;
+    vector<DeclPair> vec;
+    vector<DeclPair> expected = TestQueryTokenizer::createDecls();
+
+    SECTION("test standard") {
+        tokenizer.tokenizeDeclaration(TestQueryTokenizer::DECL1, vec);
+        REQUIRE(get<0>(vec[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(vec[0]) == get<1>(expected[0]));
+        REQUIRE(get<0>(vec[1]) == get<0>(expected[1]));
+        REQUIRE(get<1>(vec[1]) == get<1>(expected[1]));
+        REQUIRE(get<0>(vec[2]) == get<0>(expected[2]));
+        REQUIRE(get<1>(vec[2]) == get<1>(expected[2]));
+    }
+}
+
+TEST_CASE("QueryTokenizer: tokenizeReturn") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test standard") {
+        string remaining;
+        string actual = tokenizer.tokenizeReturn(TestQueryTokenizer::CLAUSE1, remaining);
+        string expected1 = "s";
+        string expected2 = "such that Follows(s, p1)";
+        REQUIRE(actual == expected1);
+        REQUIRE(remaining == expected2);
+    }
+
+    SECTION("test no Select") {
+        string remaining;
+        REQUIRE_THROWS(tokenizer.tokenizeReturn(" s such that Parent(x, y)", remaining));
+        REQUIRE_THROWS(tokenizer.tokenizeReturn("select s such that Parent(x, y)", remaining));
+    }
+}
+
+TEST_CASE("QueryTokenizer: tokenizeClause") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test only one such that clause") {
+        string input = "such that Follows(s, p1)";
+        vector<RelTuple> rel;
+        vector<PatTuple> pat;
+        vector<RelTuple> expected = vector<RelTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+}
+
 //TEST_CASE("QueryTokenizer: trim") {
 //    QueryTokenizer tokenizer;
 //    string input = "    \t\n\n       some thing\n   ";
@@ -137,78 +212,3 @@ vector<DeclPair> TestQueryTokenizer::createDecls() {
 //        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in12, tup), "error");
 //    }
 //}
-
-TEST_CASE("QueryTokenizer: separateDeclaration") {
-    QueryTokenizer tokenizer;
-    string expectedD = TestQueryTokenizer::DECL1;
-    string expectedC = TestQueryTokenizer::CLAUSE1;
-
-    SECTION("test standard") {
-        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY1);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
-    }
-
-    SECTION("test no whitespace") {
-        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY_NO_WHITESPACE);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
-    }
-
-    SECTION("test newline") {
-        pair<string, string> actual = tokenizer.separateDeclaration(TestQueryTokenizer::QUERY_NEWLINE);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
-    }
-}
-
-TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
-    QueryTokenizer tokenizer;
-    vector<DeclPair> vec;
-    vector<DeclPair> expected = TestQueryTokenizer::createDecls();
-
-    SECTION("test standard") {
-        tokenizer.tokenizeDeclaration(TestQueryTokenizer::DECL1, vec);
-        REQUIRE(get<0>(vec[0]) == get<0>(expected[0]));
-        REQUIRE(get<1>(vec[0]) == get<1>(expected[0]));
-        REQUIRE(get<0>(vec[1]) == get<0>(expected[1]));
-        REQUIRE(get<1>(vec[1]) == get<1>(expected[1]));
-        REQUIRE(get<0>(vec[2]) == get<0>(expected[2]));
-        REQUIRE(get<1>(vec[2]) == get<1>(expected[2]));
-    }
-}
-
-TEST_CASE("QueryTokenizer: tokenizeReturn") {
-    QueryTokenizer tokenizer;
-
-    SECTION("test standard") {
-        string remaining;
-        string actual = tokenizer.tokenizeReturn(TestQueryTokenizer::CLAUSE1, remaining);
-        string expected1 = "s";
-        string expected2 = "such that Follows(s, p1)";
-        REQUIRE(actual == expected1);
-        REQUIRE(remaining == expected2);
-    }
-
-    SECTION("test no Select") {
-        string remaining;
-        REQUIRE_THROWS(tokenizer.tokenizeReturn(" s such that Parent(x, y)", remaining));
-        REQUIRE_THROWS(tokenizer.tokenizeReturn("select s such that Parent(x, y)", remaining));
-    }
-}
-
-TEST_CASE("QueryTokenizer: tokenizeClause") {
-    QueryTokenizer tokenizer;
-
-    SECTION("test only one such that clause") {
-        string input = "such that Follows(s, p1)";
-        vector<RelTuple> rel;
-        vector<PatTuple> pat;
-        vector<RelTuple> expected = vector<RelTuple>{ make_tuple("Follows", "s", "p1") };
-        tokenizer.tokenizeClause(input, rel, pat);
-        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
-        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
-        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
-        REQUIRE(pat.size() == 0);
-    }
-}

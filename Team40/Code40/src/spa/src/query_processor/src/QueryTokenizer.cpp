@@ -1,5 +1,4 @@
 #include "QueryTokenizer.h"
-#include <iostream>
 
 pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     size_t split = input.rfind(SEMICOLON);
@@ -99,7 +98,6 @@ void QueryTokenizer::tokenizeClause(string input, vector<RelTuple>& rels, vector
     st = rem.find(KEYWORD_SUCH_THAT);
     if (st != string::npos) {
         // TODO: check whether such that or such thatsomething
-        cout << st << " " << sub << "       " << rem;
         string stclause = trim(rem.substr(KEYWORD_SUCH_THAT.size() + 1));
         splitBCBRel(stclause, relT);
     }
