@@ -1,5 +1,6 @@
 #pragma once
 #include "common/model/Factor.h"
+#include "common/model/term/Term.h"
 
 enum class ExpressionType {
     SINGLE_TERM,
@@ -10,14 +11,11 @@ enum class ExpressionType {
 class Expression : public Factor {
 private:
     ExpressionType expressionType;
-    bool hasComputedValue; // Used for lazy initialization of value
 
 protected:
-    // constructor
-
-public:
     explicit Expression(ExpressionType expressionType);
 
+public:
     // getters
     ExpressionType getExpressionType();
 };

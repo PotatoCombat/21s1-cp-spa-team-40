@@ -3,4 +3,4 @@
 Expression::Expression(ExpressionType expressionType)
     : expressionType(expressionType), Factor(FactorType::EXPRESSION) {}
 
-ExpressionType Expression::getExpressionType() { return this->expressionType; }
+ExpressionType Expression::getExpressionType() { return expressionType; }
