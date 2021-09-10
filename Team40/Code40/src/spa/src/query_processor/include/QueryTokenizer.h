@@ -26,12 +26,7 @@ private:
     // helpers
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
     RelationTypeHelper relHelper = RelationTypeHelper();
-    string trim(string input);
-    string trimL(string input);
-    string trimR(string input);
-    void splitComma(string input, vector<string> &vec);
-    size_t findFirstWhitespace(string input);
-    void splitBCBRel(string input, RelTuple tup);
+    
 
 public:
     QueryTokenizer() = default;
@@ -40,4 +35,11 @@ public:
     string tokenizeReturn(string input, string &remaining);
     void tokenizeDeclaration(string input, vector<DeclPair> &decls);
     void tokenizeClause(string input, vector<RelTuple> &rels, vector<PatTuple> &pats);
+
+    string trim(string input);
+    string trimL(string input);
+    string trimR(string input);
+    void splitComma(string input, vector<string> &vec);
+    size_t findFirstWhitespace(string input);
+    void splitBCBRel(string input, RelTuple &tup);
 };
