@@ -11,11 +11,11 @@ private:
     PKB pkb;
 
 public:
-    FollowsExtractor(PKB pkb);
+    explicit FollowsExtractor(PKB pkb);
     // Program
-    void handleProgram(Program program);
+    void extract(Program program);
 
     // Statement
-    void handleStatement(Statement *statement);
-    void handleStatementList(const vector<Statement *> &statementList);
+    void extractStatement(Statement *statement);
+    void extractStatementList(const vector<Statement *> &statementList);
 };

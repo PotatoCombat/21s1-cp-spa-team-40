@@ -4,26 +4,26 @@ FollowsExtractor::FollowsExtractor(PKB pkb)
     : pkb(std::move(pkb)),
       ctx(ExtractionContext::getInstance().getFollowsContext()){};
 
-void FollowsExtractor::handleProgram(Program program) {
+void FollowsExtractor::extract(Program program) {
     for (Procedure procedure : program.getProcLst()) {
         statementLists.push_back(procedure.getStmtLst());
     }
     while (!statementLists.empty()) {
         vector<Statement *> statementList = statementLists.back();
-        handleStatementList(statementList);
+        extractStatementList(statementList);
         statementLists.pop_back();
     }
 }
 
-void FollowsExtractor::handleStatementList(
+void FollowsExtractor::extractStatementList(
     const vector<Statement *> &statementList) {
     for (Statement *statement : statementList) {
-        handleStatement(statement);
+        extractStatement(statement);
     }
     ctx.clear();
 }
 
-void FollowsExtractor::handleStatement(Statement *statement) {
+void FollowsExtractor::extractStatement(Statement *statement) {
     for (Statement *prev : ctx.getAllEntities()) {
         pkb.insertFollows(prev, statement);
     }

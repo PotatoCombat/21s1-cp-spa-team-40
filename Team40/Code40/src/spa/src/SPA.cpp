@@ -16,7 +16,7 @@ void SPA::processSource(string filename) {
         Program program = programParser.parseProgram(programLines);
         PKB pkb = PKB();
         DesignExtractor designExtractor(pkb);
-        designExtractor.handleProgram(program);
+        designExtractor.extract(program);
         // vector<Variable> varLst = parser.getVarLst();
         // vector<ConstantValue> constLst = parser.getConstLst();
         int test = 0; // to bypass debugger

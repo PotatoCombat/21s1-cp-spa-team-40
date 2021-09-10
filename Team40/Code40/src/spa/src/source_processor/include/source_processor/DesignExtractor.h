@@ -22,48 +22,45 @@ public:
     explicit DesignExtractor(PKB pkb);
 
     // Program
-    void extractEntities(Program program);
-    void extractRelationships(const Program &program);
-    void extractFollowsRelationship(Program program);
-    void extractParentsRelationship(Program program);
+    void extract(Program program);
+    void extractDepthFirst(Program program);
+    void extractBreadthFirst(Program program);
 
     // Procedure
-    ProcIndex handleProcedure(Procedure *program);
+    ProcIndex extractProcedure(Procedure *program);
 
     // Statement
-    void handleStatementList(vector<Statement *> statement);
-    StmtIndex handleStatement(Statement *statement);
-    StmtIndex handleAssignStatement(Statement *assignStatement);
-    StmtIndex handleCallStatement(CallStatement *callStatement);
-    StmtIndex handleIfStatement(Statement *ifStatement);
-    void handleParentRelationship(StmtIndex stmtIndex);
+    StmtIndex extractStatement(Statement *statement);
+    StmtIndex extractAssignStatement(Statement *assignStatement);
+    StmtIndex extractCallStatement(CallStatement *callStatement);
+    StmtIndex extractIfStatement(Statement *ifStatement);
 
     // Condition
-    void handleCondition(Condition *condition);
-    void handleSingleCondition(SingleCondition *singleCondition);
-    void handleNotCondition(NotCondition *notCondition);
-    void handleBinaryCondition(Condition *binaryCondition);
+    void extractCondition(Condition *condition);
+    void extractSingleCondition(SingleCondition *singleCondition);
+    void extractNotCondition(NotCondition *notCondition);
+    void extractBinaryCondition(Condition *binaryCondition);
 
     // Relation
-    void handleRelation(Relation *relation);
+    void extractRelation(Relation *relation);
 
     // Expression
-    void handleExpression(Expression *expression);
-    void handleSingleTermExpression(Expression *singleTermExpression);
+    void extractExpression(Expression *expression);
+    void extractSingleTermExpression(Expression *singleTermExpression);
 
     // Term
-    void handleTerm(Term *term);
-    void handleSingleFactorTerm(Term *singleFactorTerm);
-    void handleMultiFactorTerm(Term *multiFactorTerm);
+    void extractTerm(Term *term);
+    void extractSingleFactorTerm(Term *singleFactorTerm);
+    void extractMultiFactorTerm(Term *multiFactorTerm);
 
     // Factor
-    void handleFactor(Factor *factor);
+    void extractFactor(Factor *factor);
 
     // Variable
-    VarIndex handleVariable(Variable *variable);
-    void handleModifiesRelationship(Variable *variable);
-    void handleUsesRelationship(Variable *variable);
+    VarIndex extractVariable(Variable *variable);
+    void extractModifiesRelationship(Variable *variable);
+    void extractUsesRelationship(Variable *variable);
 
     // ConstantValue
-    ConstIndex handleConstantValue(ConstantValue *constantValue);
+    ConstIndex extractConstantValue(ConstantValue *constantValue);
 };
