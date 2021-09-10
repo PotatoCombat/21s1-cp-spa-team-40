@@ -1,7 +1,7 @@
 #include "Query.h"
 
 Query::Query() {
-    vector<Relation *> relationList;
+    vector<Clause *> clauseList;
     Reference *returnReference = NULL;
     vector<Reference *> referenceList;
 }
@@ -15,8 +15,8 @@ void Query::setReturnReference(Reference *reference) {
 
 Reference *Query::getReturnReference() { return this->returnReference; }
 
-void Query::addRelation(Relation *relation) {
-    relationList.push_back(relation);
+void Query::addClause(Clause *relation) {
+    clauseList.push_back(relation);
     addReference(relation->getFirstReference());
     addReference(relation->getSecondReference());
 }
@@ -34,4 +34,4 @@ void Query::addReference(Reference* reference) {
     referenceList.push_back(reference);
 }
 
-vector<Relation *> Query::getRelations() { return this->relationList; }
+vector<Clause *> Query::getClauses() { return this->clauseList; }

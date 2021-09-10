@@ -8,7 +8,7 @@ struct TestQueryTokenizer {
     static const string CLAUSE1;
     static const string QUERY_NO_WHITESPACE;
     static const string QUERY_NEWLINE;
-    static bool compareTuples(RelTuple r1, RelTuple r2);
+    static bool compareTuples(ClsTuple r1, ClsTuple r2);
     static vector<DeclPair> createDecls();
 };
 
@@ -27,7 +27,7 @@ const string TestQueryTokenizer::QUERY_NO_WHITESPACE =
 const string TestQueryTokenizer::QUERY_NEWLINE =
     "stmt s; assign a; print p1;\n\nSelect s such that Follows(s, p1)";
 
-bool TestQueryTokenizer::compareTuples(RelTuple r1, RelTuple r2) {
+bool TestQueryTokenizer::compareTuples(ClsTuple r1, ClsTuple r2) {
     return get<0>(r1) == get<0>(r2) 
         && get<1>(r1) == get<1>(r2) 
         && get<2>(r1) == get<2>(r2);
@@ -104,9 +104,9 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
 
     SECTION("test only one such that clause") {
         string input = "such that Follows(s, p1)";
-        vector<RelTuple> rel;
+        vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<RelTuple> expected = vector<RelTuple>{ make_tuple("Follows", "s", "p1") };
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
         tokenizer.tokenizeClause(input, rel, pat);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
@@ -177,8 +177,8 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
 
 //TEST_CASE("QueryTokenizer: splitBCBRel") {
 //    QueryTokenizer tokenizer;
-//    RelTuple tup;
-//    RelTuple correct = make_tuple("Follows", "name", "nextline");
+//    ClsTuple tup;
+//    ClsTuple correct = make_tuple("Follows", "name", "nextline");
 //    string in1 = "Follows(name, nextline)";
 //    string in2 = "Follows ( name , nextline )";
 //    string in3 = "Follows(, )";

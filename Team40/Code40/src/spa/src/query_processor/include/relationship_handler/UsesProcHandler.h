@@ -3,20 +3,21 @@
 #include <string>
 #include <vector>
 
-#include "Clause.h"
-#include "Result.h"
 #include "Reference.h"
+#include "Clause.h"
 #include "ClauseHandler.h"
 #include "ClauseHandlerError.h"
+#include "Result.h"
 #include "pkb/PKB.h"
 
 using namespace std;
 
-class FollowsHandler : public ClauseHandler {
+class UsesProcHandler : public ClauseHandler {
 private:
     void validate();
 
 public:
-    FollowsHandler(Clause *clause, PKB* pkb) : ClauseHandler(clause, pkb) {}
-	Result eval();
+    UsesProcHandler(Clause *clause, PKB *pkb)
+        : ClauseHandler(clause, pkb) {}
+    Result eval();
 };

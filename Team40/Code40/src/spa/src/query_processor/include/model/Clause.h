@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Reference.h"
-#include "RelationType.h"
+#include "ClauseType.h"
 
 using namespace std;
 
-class Relation {
+class Clause {
 private:
-    RelationType type;
+    ClauseType type;
     Reference first;
     Reference second;
 
 public:
-    Relation(RelationType type, Reference first, Reference second);
+    Clause(ClauseType type, Reference first, Reference second);
     Reference *getFirstReference();
     Reference *getSecondReference();
-    RelationType getType();
-    bool equals(Relation &other);
+    ClauseType getType();
+    bool equals(Clause &other);
 };

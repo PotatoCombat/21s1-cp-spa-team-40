@@ -32,16 +32,16 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         }
 
         // has clauses
-        vector<RelTuple> relString;
+        vector<ClsTuple> relString;
         vector<PatTuple> patString;
 
         tokenizer.tokenizeClause(clauses, relString, patString);
 
-        vector<Relation> relList;
+        vector<Clause> relList;
         for (auto x : relString) {
-            Relation rel = parser.parseRelation(x, refList);
+            Clause rel = parser.parseClause(x, refList);
             relList.push_back(rel);
-            q.addRelation(&rel);
+            q.addClause(&rel);
         }
 
         return;

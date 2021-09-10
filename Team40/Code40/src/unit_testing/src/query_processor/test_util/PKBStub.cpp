@@ -7,6 +7,27 @@ Iterator<StmtIndex> PKBStub::getAllStmts() {
     return iter;
 }
 
+Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
+    vector<int> allStmts = getAllStmts().asVector();
+    vector<int> filteredStmts;
+    for (auto stmt : allStmts) {
+        if (getStmtType(stmt) == stmtType) {
+            filteredStmts.push_back(stmt);
+        }
+    }
+    Iterator<StmtIndex> iter(filteredStmts);
+    return iter;
+}
+
+StatementType PKBStub::getStmtType(StmtIndex stmt) {
+    vector<StatementType> stmtTypes{
+        StatementType::ASSIGN, StatementType::ASSIGN, StatementType::ASSIGN,
+        StatementType::WHILE,  StatementType::ASSIGN, StatementType::IF,
+        StatementType::ASSIGN, StatementType::ASSIGN, StatementType::ASSIGN,
+        StatementType::CALL,   StatementType::ASSIGN, StatementType::CALL};
+    return stmtTypes[stmt - 1];
+}
+
 StmtIndex PKBStub::getFollowingStmt(StmtIndex stmt) {
     vector<int> followingStmts{2, 3, 4, 12, 6, 9, -1, -1, 10, 11, -1, -1};
     return followingStmts[stmt - 1];
@@ -36,4 +57,33 @@ set<StmtIndex> PKBStub::getPrecedingStarStmts(StmtIndex stmt) {
 bool PKBStub::followsStar(StmtIndex stmt1, StmtIndex stmt2) {
     set<int> followingStarStmts = getFollowingStarStmts(stmt1);
     return followingStarStmts.find(stmt2) != followingStarStmts.end();
+}
+
+StmtIndex PKBStub::getParentStmt(StmtIndex stmt) {
+    vector<int> parentStmts = {-1, -1, -1, -1, 4, 4, 6, 6, 4, 4, 4, -1};
+    return parentStmts[stmt - 1];
+}
+
+set<StmtIndex> PKBStub::getChildStmts(StmtIndex stmt) {
+    vector<set<int>> childStmtsList = {{}, {}, {}, {5, 6, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}, {}, {}};
+    return childStmtsList[stmt - 1];
+}
+
+bool PKBStub::parent(StmtIndex stmt1, StmtIndex stmt2) {
+    return getParentStmt(stmt2) == stmt1;
+}
+
+set<StmtIndex> PKBStub::getParentStarStmts(StmtIndex stmt) {
+    vector<set<int>> parentStarStmtsList = {{}, {}, {}, {}, {4}, {4}, {4, 6}, {4, 6}, {4}, {4}, {4}, {}};
+    return parentStarStmtsList[stmt - 1];
+}
+
+set<StmtIndex> PKBStub::getChildStarStmts(StmtIndex stmt) {
+    vector<set<int>> childStarStmtsList = {{}, {}, {}, {5, 6, 7, 8, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}};
+    return childStarStmtsList[stmt - 1];
+}
+
+bool PKBStub::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
+    set<int> childStarStmts = getChildStarStmts(stmt1);
+    return find(childStarStmts.begin(), childStarStmts.end(), stmt2) != childStarStmts.end();
 }

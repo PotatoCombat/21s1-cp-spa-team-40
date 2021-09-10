@@ -5,14 +5,22 @@
 #include <algorithm>
 #include <iterator>
 
+#include "pkb/PKB.h"
+
 #include "model/Query.h"
 #include "model/Reference.h"
-#include "model/Relation.h"
-#include "pkb/PKB.h"
+#include "model/Clause.h"
 #include "Result.h"
-#include "relationship_handler/RelationshipHandler.h"
+#include "relationship_handler/ClauseHandlerError.h"
+#include "relationship_handler/ClauseHandler.h"
 #include "relationship_handler/FollowsHandler.h"
 #include "relationship_handler/FollowsStarHandler.h"
+#include "relationship_handler/ModifiesProcHandler.h"
+#include "relationship_handler/ModifiesStmtHandler.h"
+#include "relationship_handler/ParentHandler.h"
+#include "relationship_handler/ParentStarHandler.h"
+#include "relationship_handler/UsesProcHandler.h"
+#include "relationship_handler/UsesStmtHandler.h"
 
 using namespace std;
 

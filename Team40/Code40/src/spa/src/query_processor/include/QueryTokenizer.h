@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "Abstractions.h"
+#include "ClauseTypeHelper.h"
 #include "DesignEntityTypeHelper.h"
-#include "RelationTypeHelper.h"
 
 using namespace std;
 
@@ -25,13 +25,13 @@ private:
 
     // helpers
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
-    RelationTypeHelper relHelper = RelationTypeHelper();
+    ClauseTypeHelper clsHelper = ClauseTypeHelper();
     string trim(string input);
     string trimL(string input);
     string trimR(string input);
-    void splitComma(string input, vector<string>& vec);
+    void splitComma(string input, vector<string> &vec);
     size_t findFirstWhitespace(string input);
-    void splitBCBRel(string input, RelTuple& tup);
+    void splitBCBRel(string input, ClsTuple &tup);
 
 public:
     QueryTokenizer() = default;
@@ -39,5 +39,6 @@ public:
     pair<string, string> separateDeclaration(string input);
     string tokenizeReturn(string input, string &remaining);
     void tokenizeDeclaration(string input, vector<DeclPair> &decls);
-    void tokenizeClause(string input, vector<RelTuple> &rels, vector<PatTuple> &pats);
+    void tokenizeClause(string input, vector<ClsTuple> &rels,
+                        vector<PatTuple> &pats);
 };

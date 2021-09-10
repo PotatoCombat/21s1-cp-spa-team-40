@@ -1,5 +1,5 @@
 #include "Reference.h"
-#include "Relation.h"
+#include "Clause.h"
 #include "QueryEvaluator.h"
 #include "Query.h"
 #include "test_util/PKBStub.h"
@@ -22,10 +22,10 @@ TEST_CASE("QueryEvaluator: one clause returns false - returns empty result") {
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Reference s2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
-    Relation follows(RelationType::FOLLOWS, s1, s2);
+    Clause follows(ClauseType::FOLLOWS, s1, s2);
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
+    query.addClause(&follows);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
@@ -37,14 +37,14 @@ TEST_CASE("QueryEvaluator: all clauses return true - returns all statements") {
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference s_const1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference s_const2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
-    Relation follows(RelationType::FOLLOWS, s_const1, s_const2);
+    Clause follows(ClauseType::FOLLOWS, s_const1, s_const2);
     Reference stmt_sym1(DesignEntityType::STMT, ReferenceType::SYNONYM, "k");
     Reference s_const3(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
-    Relation follows2(RelationType::FOLLOWS, stmt_sym1, s_const3);
+    Clause follows2(ClauseType::FOLLOWS, stmt_sym1, s_const3);
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
-    query.addRelation(&follows2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
@@ -56,10 +56,10 @@ TEST_CASE("QueryEvaluator: one clause return empty list - returns empty list") {
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt_sym1(DesignEntityType::STMT, ReferenceType::SYNONYM, "k");
     Reference s_const3(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation follows(RelationType::FOLLOWS, stmt_sym1, s_const3);
+    Clause follows(ClauseType::FOLLOWS, stmt_sym1, s_const3);
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
+    query.addClause(&follows);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStubNoFollows);
     vector<string> actual = evaluator.evaluateQuery(query);
@@ -71,12 +71,12 @@ TEST_CASE("QueryEvaluator: no intersection between results - returns empty list"
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference s2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
-    Relation follows(RelationType::FOLLOWS, s1, s);
-    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    Clause follows(ClauseType::FOLLOWS, s1, s);
+    Clause follows2(ClauseType::FOLLOWS, s, s2); 
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
-    query.addRelation(&follows2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
@@ -88,12 +88,12 @@ TEST_CASE("QueryEvaluator: 1 matching element between results - returns the inte
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation follows(RelationType::FOLLOWS, s1, s);
-    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    Clause follows(ClauseType::FOLLOWS, s1, s);
+    Clause follows2(ClauseType::FOLLOWS, s, s2); 
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
-    query.addRelation(&follows2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
@@ -105,12 +105,12 @@ TEST_CASE("QueryEvaluator: multiple matching elements between results - returns 
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference s1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation follows(RelationType::FOLLOWS, s1, s);
-    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    Clause follows(ClauseType::FOLLOWS, s1, s);
+    Clause follows2(ClauseType::FOLLOWS, s, s2); 
     
     query.setReturnReference(&s);
-    query.addRelation(&follows);
-    query.addRelation(&follows2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);

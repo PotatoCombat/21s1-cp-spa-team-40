@@ -8,12 +8,12 @@ using namespace std;
 typedef string DeclType;
 typedef string DeclValue;
 
-typedef string RelType;
-typedef string RelArg;
+typedef string ClsType;
+typedef string ClsArg;
 
 typedef string PatIdent;
 typedef string PatArg;
 
 typedef pair<DeclType, DeclValue> DeclPair;
-typedef tuple<RelType, RelArg, RelArg> RelTuple;
+typedef tuple<ClsType, ClsArg, ClsArg> ClsTuple;
 typedef pair<PatIdent, vector<PatArg>> PatTuple;

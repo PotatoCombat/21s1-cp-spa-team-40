@@ -1,19 +1,20 @@
 #pragma once
 
 #include <algorithm>
+#include <vector>
 
 #include "Abstractions.h"
+#include "Clause.h"
+#include "ClauseTypeHelper.h"
 #include "DesignEntityTypeHelper.h"
 #include "Reference.h"
-#include "Relation.h"
-#include "RelationTypeHelper.h"
 
 using namespace std;
 
 class QueryParser {
 private:
     DesignEntityTypeHelper deHelper;
-    RelationTypeHelper relHelper;
+    ClauseTypeHelper clsHelper;
 
     ReferenceType checkRefType(string val);
     bool isInteger(string val);
@@ -23,6 +24,5 @@ private:
 public:
     QueryParser() = default;
     Reference parseDeclaration(DeclPair declaration);
-    Relation parseRelation(RelTuple clause, vector<Reference> &declList);
-    // PatternClause parsePatternClause(PatTuple clause);
+    Clause parseClause(ClsTuple clause, vector<Reference>& declList);
 };

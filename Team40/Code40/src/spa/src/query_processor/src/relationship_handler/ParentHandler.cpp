@@ -1,11 +1,11 @@
-#include "FollowsStarHandler.h"
+#include "ParentHandler.h"
 
-Result FollowsStarHandler::eval() {
+Result ParentHandler::eval() {
     Result result;
     Reference *firstReference = clause->getFirstReference();
     Reference *secondReference = clause->getSecondReference();
-    string firstValue = firstReference->getValue();
-    string secondValue = secondReference->getValue();
+    string firstStmt = firstReference->getValue();
+    string secondStmt = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
     // Todo: use variable instead of magic number -1
@@ -18,7 +18,7 @@ Result FollowsStarHandler::eval() {
         secondReference->getRefType() == ReferenceType::WILDCARD) {
         vector<int> allStmts = pkb->getAllStmts().asVector();
         for (auto stmt : allStmts) {
-            if (pkb->getFollowingStmt(stmt) != -1) {
+            if (pkb->getParentStmt(stmt) != -1) {
                 result.setValid(true);
                 return result;
             }
@@ -30,21 +30,21 @@ Result FollowsStarHandler::eval() {
     /// CONSTANT CONSTANT
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->followsStar(stoi(firstValue), stoi(secondValue)));
+        result.setValid(pkb->parent(stoi(firstStmt), stoi(secondStmt)));
         return result;
     }
 
     // CONSTANT WILDCARD
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        result.setValid(pkb->getFollowingStmt(stoi(firstValue)) != -1);
+        result.setValid(pkb->getChildStmts(stoi(firstStmt)).size() > 0);
         return result;
     }
 
     // WILDCARD CONSTANT
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getPrecedingStmt(stoi(secondValue)) != -1);
+        result.setValid(pkb->getParentStmt(stoi(secondStmt)) != -1);
         return result;
     }
 
@@ -52,11 +52,10 @@ Result FollowsStarHandler::eval() {
     if (firstReference->getRefType() == ReferenceType::SYNONYM &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
         vector<string> firstStmtResults;
-        set<int> precedingStarStmts = pkb->getPrecedingStarStmts(stoi(secondValue));
-        for (auto precedingStarStmt : precedingStarStmts) {
-            if (isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(precedingStarStmt))) {
-                firstStmtResults.push_back(to_string(precedingStarStmt));
-            }
+        int parentStmt = pkb->getParentStmt(stoi(secondStmt));
+        if (parentStmt != -1 &&
+            isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(parentStmt))) {
+            firstStmtResults.push_back(to_string(parentStmt));
         }
         result.setResultList1(firstReference, firstStmtResults);
         return result;
@@ -66,10 +65,10 @@ Result FollowsStarHandler::eval() {
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::SYNONYM) {
         vector<string> secondStmtResults;
-        set<int> followingStarStmts = pkb->getFollowingStarStmts(stoi(firstValue));
-        for (auto followingStarStmt : followingStarStmts) {
-            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStarStmt))) {
-                secondStmtResults.push_back(to_string(followingStarStmt));
+        set<int> childStmts = pkb->getChildStmts(stoi(firstStmt));
+        for (auto childStmt : childStmts) {
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
             }
         }
         result.setResultList2(secondReference, secondStmtResults);
@@ -79,21 +78,31 @@ Result FollowsStarHandler::eval() {
     // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> precedingStmts;
+    vector<int> parentStmts;
     if (firstReference->getDeType() == DesignEntityType::STMT) {
-        precedingStmts = pkb->getAllStmts().asVector();
+        parentStmts = pkb->getAllStmts().asVector();
     } else {
         StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-        precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
+        parentStmts = pkb->getAllStmts(firstStmtType).asVector();
     }
-    for (int precedingStmt : precedingStmts) {
-        int followingStmt = pkb->getFollowingStmt(precedingStmt);
-        if (followingStmt == -1 ||
-            !isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
+
+    for (int parentStmt : parentStmts) {
+        set<int> childStmts = pkb->getChildStmts(parentStmt);
+        if (childStmts.size() == 0) {
             continue;
         }
-        firstStmtResults.push_back(to_string(precedingStmt));
-        secondStmtResults.push_back(to_string(followingStmt));
+        bool hasMatchingChild = false;
+        
+        for (auto childStmt : childStmts) {
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+                hasMatchingChild = true;
+            }
+        }  
+
+        if (hasMatchingChild) {
+            firstStmtResults.push_back(to_string(parentStmt));
+        }
     }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
@@ -107,20 +116,20 @@ Result FollowsStarHandler::eval() {
     return result;
 }
 
-void FollowsStarHandler::validate() {
+void ParentHandler::validate() {
     Reference *firstReference = clause->getFirstReference();
     Reference *secondReference = clause->getSecondReference();
     if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
         firstReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("FollowsStarHandler: first argument must be statement type");
+        throw ClauseHandlerError("ParentHandler: first argument must be statement type");
     }
 
     if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
         secondReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("FollowsStarHandler: second argument must be statement type");
+        throw ClauseHandlerError("ParentHandler: second argument must be statement type");
     }
 
-    if (clause->getType() != ClauseType::FOLLOWS_T) {
-        throw ClauseHandlerError("FollowsStarHandler: relation type must be FOLLOWS_T");
+    if (clause->getType() != ClauseType::PARENT) {
+        throw ClauseHandlerError("ParentHandler: relation type must be PARENT");
     }
 }

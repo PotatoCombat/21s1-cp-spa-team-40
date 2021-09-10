@@ -6,13 +6,13 @@ Reference QueryParser::parseDeclaration(DeclPair declaration) {
     return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Relation QueryParser::parseRelation(RelTuple clause,
+Clause QueryParser::parseClause(ClsTuple clause,
                                     vector<Reference> &declList) {
     string rel = get<0>(clause);
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
-    RelationType relT = relHelper.getType(rel);
+    ClauseType relT = clsHelper.getType(rel);
 
     vector<Reference> x;
 
@@ -25,7 +25,7 @@ Relation QueryParser::parseRelation(RelTuple clause,
         x.push_back(*it1);
     } else {
         ReferenceType refT = checkRefType(ref1);
-        DesignEntityType deT = relHelper.chooseDeType1(relT);
+        DesignEntityType deT = clsHelper.chooseDeType1(relT);
         x.push_back(Reference(deT, refT, ref1));
     }
 
@@ -33,11 +33,11 @@ Relation QueryParser::parseRelation(RelTuple clause,
         x.push_back(*it2);
     } else {
         ReferenceType refT = checkRefType(ref2);
-        DesignEntityType deT = relHelper.chooseDeType2(relT);
+        DesignEntityType deT = clsHelper.chooseDeType2(relT);
         x.push_back(Reference(deT, refT, ref2));
     }
 
-    return Relation(relT, x[0], x[1]);
+    return Clause(relT, x[0], x[1]);
 }
 
 // helper methods

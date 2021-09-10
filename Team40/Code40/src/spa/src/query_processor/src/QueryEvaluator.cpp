@@ -3,71 +3,147 @@
 QueryEvaluator::QueryEvaluator(PKB* pkb) { this->pkb = pkb; }
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
-    Reference* returnReference = query.getReturnReference();
-    vector<Reference *> references = query.getReferences();
-    vector<Relation *> relationships = query.getRelations();
-    vector<vector<string>> results(references.size(), vector<string>());
-    vector<bool> referenceAppearInClauses(references.size(), false);
-    bool allQueryReturnsTrue = true;
+    try {
+        Reference *returnReference = query.getReturnReference();
+        vector<Reference *> references = query.getReferences();
+        vector<Clause *> clauses = query.getClauses();
+        vector<vector<string>> results(references.size(), vector<string>());
+        vector<bool> referenceAppearInClauses(references.size(), false);
+        bool allQueryReturnsTrue = true;
 
-    for (Relation *relationship : relationships) {
-        Result tempResult;
+        for (Clause *clause : clauses) {
+            Result tempResult;
 
-        RelationshipHandler *relationshipHandler;
+            ClauseHandler *clauseHandler;
 
-        // TODO: add more handlers for relationshipType later
-        if (relationship->getType() == RelationType::FOLLOWS) {
-            FollowsHandler followsHandler(relationship, pkb);
-            relationshipHandler = &followsHandler;
+            // TODO: add more handlers for clauseType later
+            if (clause->getType() == ClauseType::FOLLOWS) {
+                FollowsHandler followsHandler(clause, pkb);
+                clauseHandler = &followsHandler;
+            }
+
+            if (clause->getType() == ClauseType::FOLLOWS_T) {
+                FollowsStarHandler followsStarHandler(clause, pkb);
+                clauseHandler = &followsStarHandler;
+            }
+
+            if (clause->getType() == ClauseType::PARENT) {
+                ParentHandler parentHandler(clause, pkb);
+                clauseHandler = &parentHandler;
+            }
+
+            if (clause->getType() == ClauseType::PARENT_T) {
+                ParentStarHandler parentStarHandler(clause, pkb);
+                clauseHandler = &parentStarHandler;
+            }
+
+            if (clause->getType() == ClauseType::MODIFIES_P) {
+                ModifiesProcHandler modifiesProcHandler(clause, pkb);
+                clauseHandler = &modifiesProcHandler;
+            }
+
+            if (clause->getType() == ClauseType::MODIFIES_S) {
+                ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
+                clauseHandler = &modifiesStmtHandler;
+            }
+
+            if (clause->getType() == ClauseType::USES_P) {
+                UsesProcHandler usesProcHandler(clause, pkb);
+                clauseHandler = &usesProcHandler;
+            }
+
+            if (clause->getType() == ClauseType::USES_S) {
+                UsesStmtHandler usesStmtHandler(clause, pkb);
+                clauseHandler = &usesStmtHandler;
+            }
+
+            // eval and combine result
+            tempResult = clauseHandler->eval();
+            allQueryReturnsTrue =
+                allQueryReturnsTrue && tempResult.isResultValid();
+
+            if (tempResult.hasResultList1()) {
+                combineResult(results, references, tempResult.getResultList1(),
+                              tempResult.getReference1(),
+                              referenceAppearInClauses);
+            }
+
+            if (tempResult.hasResultList2()) {
+                combineResult(results, references, tempResult.getResultList2(),
+                              tempResult.getReference2(),
+                              referenceAppearInClauses);
+            }
         }
 
-        if (relationship->getType() == RelationType::FOLLOWS_T) {
-            FollowsStarHandler followsStarHandler(relationship, pkb);
-            relationshipHandler = &followsStarHandler;
-        }
-
-        // eval and combine result
-        tempResult = relationshipHandler->eval();
-        allQueryReturnsTrue = allQueryReturnsTrue && tempResult.isResultValid();
-
-        if (tempResult.hasResultList1()) {
-            combineResult(results, references, tempResult.getResultList1(),
-                          tempResult.getReference1(), referenceAppearInClauses);
-        }
-
-        if (tempResult.hasResultList2()) {
-            combineResult(results, references, tempResult.getResultList2(),
-                          tempResult.getReference2(), referenceAppearInClauses);
-        }
-    }
-
-    // returns empty result if one of the boolean clauses returns false
-    if (!allQueryReturnsTrue) {
-        return vector<string>();
-    }
-
-    // returns empty result if one of the references has no matching result
-    for (int i = 0; i < references.size(); i++) {
-        if (referenceAppearInClauses[i] && results[i].empty()) {
+        // returns empty result if one of the boolean clauses returns false
+        if (!allQueryReturnsTrue) {
             return vector<string>();
         }
-    }
 
-    int resultIndex = -1;
-    for (int i = 0; i < references.size(); i++) {
-        if (references[i]->equals(*returnReference)) {
-            resultIndex = i;
+        // returns empty result if one of the references has no matching result
+        for (int i = 0; i < references.size(); i++) {
+            if (referenceAppearInClauses[i] && results[i].empty()) {
+                return vector<string>();
+            }
         }
-    }
 
-    if (!referenceAppearInClauses[resultIndex]) {
-        vector<string> result;
-        vector<StmtIndex> statements = pkb->getAllStmts().asVector();
-        toString(statements, result);
-        return result;
-    }
+        int resultIndex = -1;
+        for (int i = 0; i < references.size(); i++) {
+            if (references[i]->equals(*returnReference)) {
+                resultIndex = i;
+            }
+        }
 
-    return results[resultIndex];
+        if (!referenceAppearInClauses[resultIndex]) {
+            vector<string> result;
+
+            if (returnReference->getDeType() == DesignEntityType::PROCEDURE) {
+                result = pkb->getAllProcs().asVector();
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::VARIABLE) {
+                result = pkb->getAllVars().asVector();
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
+                toString(pkb->getAllConsts().asVector(), result);
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
+                toString(pkb->getAllStmts(StatementType::ASSIGN).asVector(),
+                         result);
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::CALL) {
+                toString(pkb->getAllStmts(StatementType::CALL).asVector(),
+                         result);
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::IF) {
+                toString(pkb->getAllStmts(StatementType::IF).asVector(),
+                         result);
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::PRINT) {
+                toString(pkb->getAllStmts(StatementType::PRINT).asVector(),
+                         result);
+                return result;
+            }
+            if (returnReference->getDeType() == DesignEntityType::READ) {
+                toString(pkb->getAllStmts(StatementType::READ).asVector(),
+                         result);
+                return result;
+            }
+            toString(pkb->getAllStmts().asVector(), result);
+
+            return result;
+        }
+
+        return results[resultIndex];
+    } catch (ClauseHandlerError &e) {
+        // to be implemented later
+        return vector<string>{};
+    }
 }
 
 void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Reference *> &references,

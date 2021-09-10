@@ -76,7 +76,7 @@ void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) 
     return;
 }
 
-void QueryTokenizer::tokenizeClause(string input, vector<RelTuple>& rels, vector<PatTuple>& pats) {
+void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& rels, vector<PatTuple>& pats) {
     size_t first_b = input.find(R_BRACKET); // find the first close bracket
 
     if (first_b == string::npos) {
@@ -86,26 +86,26 @@ void QueryTokenizer::tokenizeClause(string input, vector<RelTuple>& rels, vector
     string sub = input.substr(0, first_b + 1);
     string rem = trimL(input.substr(first_b + 1));
 
-    RelTuple relT;
+    ClsTuple clsT;
 
     size_t st = sub.find(KEYWORD_SUCH_THAT);
     if (st != string::npos) {
         // TODO: check whether such that or such thatsomething
         string stclause = trim(sub.substr(KEYWORD_SUCH_THAT.size() + 1));
-        splitBCBRel(stclause, relT);
+        splitBCBRel(stclause, clsT);
     }
 
     st = rem.find(KEYWORD_SUCH_THAT);
     if (st != string::npos) {
         // TODO: check whether such that or such thatsomething
         string stclause = trim(rem.substr(KEYWORD_SUCH_THAT.size() + 1));
-        splitBCBRel(stclause, relT);
+        splitBCBRel(stclause, clsT);
     }
 
     PatTuple patT;
     //splitBCBRel(sub, patT);
 
-    rels.push_back(relT);
+    rels.push_back(clsT);
     //pats.push_back(patT);
     return;
 }
@@ -159,7 +159,7 @@ size_t QueryTokenizer::findFirstWhitespace(string input) {
     return first_w;
 }
 
-void QueryTokenizer::splitBCBRel(string input, RelTuple &tup) {
+void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
     // check count
     int l_c = count(input.begin(), input.end(), L_BRACKET);
     int r_c = count(input.begin(), input.end(), R_BRACKET);

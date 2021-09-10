@@ -1,6 +1,6 @@
 #pragma once
 
-enum class RelationType {
+enum class ClauseType {
     FOLLOWS,
     FOLLOWS_T,
     PARENT,

@@ -5,14 +5,14 @@
 
 struct TestQueryParser {
     static const DeclPair DECL;
-    static const RelTuple REL;
+    static const ClsTuple REL;
     static const Reference REFERENCE;
-    static Relation createRelation();
+    static Clause createClause();
     static vector<Reference> createReferenceV();
 };
 
 const DeclPair TestQueryParser::DECL = make_pair("stmt", "s");
-const RelTuple TestQueryParser::REL = make_tuple("Follows*", "s", "4");
+const ClsTuple TestQueryParser::REL = make_tuple("Follows*", "s", "4");
 const Reference TestQueryParser::REFERENCE =
     Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
 
@@ -20,10 +20,10 @@ vector<Reference> TestQueryParser::createReferenceV() {
     return vector<Reference>{REFERENCE};
 }
 
-Relation TestQueryParser::createRelation() {
+Clause TestQueryParser::createClause() {
     Reference r1 = TestQueryParser::REFERENCE;
     Reference r2 = Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
-    return Relation(RelationType::FOLLOWS_T, r1, r2);
+    return Clause(ClauseType::FOLLOWS_T, r1, r2);
 }
 
 TEST_CASE("QP-QueryParser: parseDeclaration") {
@@ -40,11 +40,11 @@ TEST_CASE("QP-QueryParser: parseDeclaration") {
 TEST_CASE("QP-QueryParser: parseRelation") {
     QueryParser parser;
 
-    Relation expected = TestQueryParser::createRelation();
-    Relation actual = parser.parseRelation(TestQueryParser::REL, 
+    Clause expected = TestQueryParser::createClause();
+    Clause actual = parser.parseClause(TestQueryParser::REL, 
         TestQueryParser::createReferenceV());
 
-    REQUIRE(actual.getType() == RelationType::FOLLOWS_T);
+    REQUIRE(actual.getType() == ClauseType::FOLLOWS_T);
     REQUIRE(actual.getType() == expected.getType());
     REQUIRE(actual.getFirstReference()->getValue() ==
             expected.getFirstReference()->getValue());

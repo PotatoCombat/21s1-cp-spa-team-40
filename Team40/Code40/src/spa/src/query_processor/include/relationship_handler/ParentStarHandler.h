@@ -1,22 +1,24 @@
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
 
-#include "Clause.h"
-#include "Result.h"
 #include "Reference.h"
+#include "Clause.h"
 #include "ClauseHandler.h"
 #include "ClauseHandlerError.h"
+#include "Result.h"
 #include "pkb/PKB.h"
 
 using namespace std;
 
-class FollowsHandler : public ClauseHandler {
+class ParentStarHandler : public ClauseHandler {
 private:
     void validate();
 
 public:
-    FollowsHandler(Clause *clause, PKB* pkb) : ClauseHandler(clause, pkb) {}
-	Result eval();
+    ParentStarHandler(Clause *clause, PKB *pkb)
+        : ClauseHandler(clause, pkb) {}
+    Result eval();
 };
