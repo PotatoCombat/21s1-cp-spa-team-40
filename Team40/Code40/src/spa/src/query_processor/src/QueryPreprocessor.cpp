@@ -1,10 +1,8 @@
 #include "QueryPreprocessor.h"
 
-Query QueryPreprocessor::preprocessQuery(const string input) {
+void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     try {
         pair<string, string> parts = tokenizer.separateDeclaration(input);
-        
-        Query q;
         
         vector<DeclPair> declString;
         tokenizer.tokenizeDeclaration(parts.first, declString);
@@ -30,7 +28,7 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
         }
 
         if (clauses.size() == 0) {
-            return q;
+            return;
         }
 
         // has clauses
@@ -39,7 +37,6 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
 
         tokenizer.tokenizeClause(clauses, relString, patString);
 
-
         vector<Relation> relList;
         for (auto x : relString) {
             Relation rel = parser.parseRelation(x, refList);
@@ -47,12 +44,7 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
             q.addRelation(&rel);
         }
 
-        /*vector<Pattern> ptCl;
-        for (auto x : patternString) {
-        ptCl.push_back(parser.parsePatternClause(x));
-        }*/
-
-        return q;
+        return;
     } catch (const char *msg) {
         throw "invalid query";
     }
