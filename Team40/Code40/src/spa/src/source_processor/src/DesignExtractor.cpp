@@ -223,6 +223,7 @@ VarIndex DesignExtractor::handleVariable(Variable *variable) {
     return varIndex;
 }
 
+void DesignExtractor::handleUsesRelationship(Variable *variable) {}
 ConstIndex DesignExtractor::handleConstantValue(ConstantValue *constantValue) {
     return pkb.insertConst(constantValue);
 }

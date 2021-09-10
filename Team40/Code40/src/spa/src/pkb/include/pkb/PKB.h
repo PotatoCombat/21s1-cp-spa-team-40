@@ -147,11 +147,6 @@ public:
     /// Selects BOOLEAN such that Modifies(proc, var).
     virtual bool procModifies(ProcName proc, VarName var);
 
-private:
-    typedef EntityTable<Variable, VarIndex> VarTable;
-    typedef EntityTable<ConstantValue, ConstIndex> ConstTable;
-    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
-
     /// Selects BOOLEAN such that Modifies(stmt, var).
     virtual bool stmtModifies(StmtIndex stmt, VarName var);
 

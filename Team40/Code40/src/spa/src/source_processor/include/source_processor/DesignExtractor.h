@@ -56,6 +56,8 @@ public:
 
     // Variable
     VarIndex handleVariable(Variable *variable);
+    void handleModifiesRelationship(Variable *variable);
+    void handleUsesRelationship(Variable *variable);
 
     // ConstantValue
     ConstIndex handleConstantValue(ConstantValue *constantValue);
