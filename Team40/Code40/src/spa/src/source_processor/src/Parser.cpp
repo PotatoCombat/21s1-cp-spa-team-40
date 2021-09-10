@@ -28,7 +28,7 @@ vector<Line> Parser::parseFile(fstream &file) {
                 !isSemiColon(currString.back())) {
                 continue;
             }
-            if (currString[0] != "}" && currString[0] != "else" &&
+            if (currString.front() != "}" && currString.front() != "else" &&
                 !isProc(currString)) {
                 stmtNum++;
             }
@@ -46,7 +46,7 @@ vector<Line> Parser::parseFile(fstream &file) {
                     !isSemiColon(currString.back())) {
                     continue;
                 }
-                if (currString[0] != "}" && currString[0] != "else" &&
+                if (currString.front() != "}" && currString.front() != "else" &&
                     !isProc(currString)) {
                     stmtNum++;
                 }
