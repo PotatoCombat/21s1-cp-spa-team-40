@@ -14,3 +14,8 @@ bool Clause::equals(Clause &other) {
            this->getSecondReference()->equals(*(other.getSecondReference())) &&
            this->getType() == other.getType();
 }
+
+Clause::~Clause() {
+    //delete &first;
+    //delete &second;
+}

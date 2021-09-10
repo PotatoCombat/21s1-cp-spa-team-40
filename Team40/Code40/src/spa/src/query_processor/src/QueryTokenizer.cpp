@@ -76,7 +76,7 @@ void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) 
     return;
 }
 
-void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& rels, vector<PatTuple>& pats) {
+void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss, vector<PatTuple>& pats) {
     size_t first_b = input.find(R_BRACKET); // find the first close bracket
 
     if (first_b == string::npos) {
@@ -105,7 +105,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& rels, vector
     PatTuple patT;
     //splitBCBRel(sub, patT);
 
-    rels.push_back(clsT);
+    clss.push_back(clsT);
     //pats.push_back(patT);
     return;
 }

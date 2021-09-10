@@ -37,10 +37,10 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
         tokenizer.tokenizeClause(clauses, relString, patString);
 
-        vector<Clause> relList;
+        vector<Clause> clsList;
         for (auto x : relString) {
             Clause rel = parser.parseClause(x, refList);
-            relList.push_back(rel);
+            clsList.push_back(rel);
             q.addClause(&rel);
         }
 

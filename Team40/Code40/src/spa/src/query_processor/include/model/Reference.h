@@ -25,4 +25,5 @@ public:
     DesignEntityType getDeType();
     ReferenceType getRefType();
     bool equals(Reference &other);
+    ~Reference();
 };

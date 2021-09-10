@@ -39,6 +39,6 @@ public:
     pair<string, string> separateDeclaration(string input);
     string tokenizeReturn(string input, string &remaining);
     void tokenizeDeclaration(string input, vector<DeclPair> &decls);
-    void tokenizeClause(string input, vector<ClsTuple> &rels,
+    void tokenizeClause(string input, vector<ClsTuple> &clss,
                         vector<PatTuple> &pats);
 };

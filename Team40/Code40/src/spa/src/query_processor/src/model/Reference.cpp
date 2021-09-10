@@ -16,3 +16,5 @@ bool Reference::equals(Reference &other) {
         this->getDeType() == other.getDeType() &&
         this->getRefType() == other.getRefType();
 }
+
+Reference::~Reference() {}

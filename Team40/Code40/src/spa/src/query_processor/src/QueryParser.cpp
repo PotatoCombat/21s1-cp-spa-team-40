@@ -7,12 +7,12 @@ Reference QueryParser::parseDeclaration(DeclPair declaration) {
 }
 
 Clause QueryParser::parseClause(ClsTuple clause,
-                                    vector<Reference> &declList) {
-    string rel = get<0>(clause);
+                                vector<Reference> &declList) {
+    string cls = get<0>(clause);
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
-    ClauseType relT = clsHelper.getType(rel);
+    ClauseType clsT = clsHelper.getType(cls);
 
     vector<Reference> x;
 
@@ -22,22 +22,24 @@ Clause QueryParser::parseClause(ClsTuple clause,
         [&ref2](Reference& ref) { return ref.getValue() == ref2; });
 
     if (it1 != declList.end()) {
-        x.push_back(*it1);
+        Reference *r = new Reference(*it1);
+        x.push_back(*r);
     } else {
         ReferenceType refT = checkRefType(ref1);
-        DesignEntityType deT = clsHelper.chooseDeType1(relT);
+        DesignEntityType deT = clsHelper.chooseDeType1(clsT);
         x.push_back(Reference(deT, refT, ref1));
     }
 
     if (it2 != declList.end()) {
-        x.push_back(*it2);
+        Reference *r = new Reference(*it1);
+        x.push_back(*r);
     } else {
         ReferenceType refT = checkRefType(ref2);
-        DesignEntityType deT = clsHelper.chooseDeType2(relT);
+        DesignEntityType deT = clsHelper.chooseDeType2(clsT);
         x.push_back(Reference(deT, refT, ref2));
     }
 
-    return Clause(relT, x[0], x[1]);
+    return Clause(clsT, x[0], x[1]);
 }
 
 // helper methods
