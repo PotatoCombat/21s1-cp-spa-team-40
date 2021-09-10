@@ -16,6 +16,10 @@ public:
     /// Returns an iterator for all the procedure names stored in the table.
     Iterator<ProcName> getNames();
 
+    //Returns procedure with given procedure name
+    Procedure* getProcByName(ProcName proc);
+
 private:
     vector<ProcName> names;
+    map<ProcName, Procedure*> procMap;
 };

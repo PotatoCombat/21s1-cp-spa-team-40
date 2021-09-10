@@ -52,6 +52,12 @@ public:
     /// Stores the relationship Uses(stmt, var).
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
+    // Returns procedure with given procedure name.
+    virtual Procedure* getProcByName(ProcName proc);
+
+    // Returns variable with given var name.
+    virtual Variable* getVarByName(VarName var);
+
     // =========================================================================
     // Query Processor
     // =========================================================================

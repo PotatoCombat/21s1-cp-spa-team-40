@@ -16,6 +16,10 @@ public:
     /// Returns an iterator for all the variable names stored in the table.
     Iterator<VarName> getNames();
 
+    //Returns variable with given name
+    Variable* getVarByName(VarName var);
+
 private:
+    map<VarName, Variable*> varMap;
     vector<VarName> names;
 };

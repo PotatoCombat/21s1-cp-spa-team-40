@@ -48,6 +48,14 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
+Procedure* PKB::getProcByName(ProcName proc) {
+    return procTable.getProcByName(proc);
+}
+
+Variable* PKB::getVarByName(VarName var) {
+    return varTable.getVarByName(var);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
