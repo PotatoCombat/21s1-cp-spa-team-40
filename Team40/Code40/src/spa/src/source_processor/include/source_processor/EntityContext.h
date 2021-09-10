@@ -9,7 +9,7 @@ private:
 public:
     EntityContext() = default;
 
-    bool push(T *entity) { stack.push_back(entity); };
+    void push(T *entity) { stack.push_back(entity); };
 
     void pop(T *entity) {
         if (stack.empty()) {

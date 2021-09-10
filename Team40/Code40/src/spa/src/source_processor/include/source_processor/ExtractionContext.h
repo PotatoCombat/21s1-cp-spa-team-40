@@ -17,7 +17,8 @@ private:
     const EntityContext<Statement> modifiesContext;
     const EntityContext<Statement> usesContext;
 
-    ExtractionContext() = default;
+    // NOTE: Do not autofix to use default constructor here
+    ExtractionContext() {}
 
 public:
     ExtractionContext(ExtractionContext const &) = delete;

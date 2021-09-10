@@ -23,7 +23,7 @@ public:
 
     // Program
     void extractEntities(Program program);
-    void extractRelationships(Program program);
+    void extractRelationships(const Program &program);
     void extractFollowsRelationship(Program program);
     void extractParentsRelationship(Program program);
 

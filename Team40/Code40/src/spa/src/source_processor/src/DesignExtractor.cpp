@@ -10,9 +10,9 @@ void DesignExtractor::extractEntities(Program program) {
     }
 }
 
-void DesignExtractor::extractRelationships(Program program) {
-    extractFollowsRelationship(std::move(program));
-    extractParentsRelationship(std::move(program));
+void DesignExtractor::extractRelationships(const Program &program) {
+    extractFollowsRelationship(program);
+    extractParentsRelationship(program);
 }
 
 void DesignExtractor::extractFollowsRelationship(Program program) {
@@ -28,8 +28,8 @@ void DesignExtractor::extractParentsRelationship(Program program) {
 ProcIndex DesignExtractor::handleProcedure(Procedure *procedure) {
     ProcIndex procIndex = pkb.insertProc(procedure);
     ExtractionContext::getInstance().getProcedureContext().push(procedure);
-    for (Statement statement : procedure->getStmtLst()) {
-        handleStatement(&statement);
+    for (Statement *statement : procedure->getStmtLst()) {
+        handleStatement(statement);
     }
     ExtractionContext::getInstance().getProcedureContext().pop(procedure);
     return procIndex;
@@ -55,20 +55,7 @@ StmtIndex DesignExtractor::handleStatement(Statement *statement) {
     default:
         throw runtime_error("Invalid StatementType!");
     }
-    handleFollowsRelationship(stmtIndex);
-    handleParentRelationship(stmtIndex);
     return stmtIndex;
-}
-
-void DesignExtractor::handleParentRelationship(StmtIndex stmtIndex) {
-    Statement *statement = pkb.getStmtByIndex(stmtIndex);
-    vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getAllEntities();
-    if (!parentStatements.empty()) {
-        for (Statement *parent : parentStatements) {
-            pkb.insertParent(parent, statement);
-        }
-    }
 }
 
 StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
@@ -78,14 +65,14 @@ StmtIndex DesignExtractor::handleAssignStatement(Statement *assignStatement) {
     pkb.insertStmtModifyingVar(assignStatement, var);
 
     // Handle LHS
-    ExtractionContext::getInstance().setModifyingStatement(stmtIndex);
+    ExtractionContext::getInstance().getModifiesContext().push(assignStatement);
     handleVariable(assignStatement->getVariable());
-    ExtractionContext::getInstance().unsetModifyingStatement();
+    ExtractionContext::getInstance().getModifiesContext().pop(assignStatement);
 
     // Handle RHS
-    ExtractionContext::getInstance().setUsingStatement(stmtIndex);
+    ExtractionContext::getInstance().getModifiesContext().push(assignStatement);
     handleExpression(assignStatement->getExpression());
-    ExtractionContext::getInstance().unsetUsingStatement();
+    ExtractionContext::getInstance().getModifiesContext().pop(assignStatement);
 
     return stmtIndex;
 }
@@ -101,11 +88,10 @@ StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().setUsingStatement(stmtIndex);
+    ExtractionContext::getInstance().getUsesContext().push(ifStatement);
     handleCondition(ifStatement->getCondition());
-    ExtractionContext::getInstance().unsetUsingStatement();
+    ExtractionContext::getInstance().getUsesContext().pop(ifStatement);
 
-    ExtractionContext::getInstance().setParentStatement(stmtIndex);
     // 2. Handle THEN statements
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         handleStatement(statement);
@@ -115,7 +101,6 @@ StmtIndex DesignExtractor::handleIfStatement(Statement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         handleStatement(statement);
     }
-    ExtractionContext::getInstance().unsetParentStatement();
     return stmtIndex;
 }
 
@@ -210,19 +195,20 @@ void DesignExtractor::handleFactor(Factor *factor) {
 VarIndex DesignExtractor::handleVariable(Variable *variable) {
     VarIndex varIndex = pkb.insertVar(variable);
 
-    optional<StmtIndex> usingStmtIndex =
-        ExtractionContext::getInstance().getUsingStatement();
-    if (usingStmtIndex.has_value()) {
-        Statement *usingStmt = pkb.getStmtByIndex(usingStmtIndex.value());
-        pkb.insertStmtUsingVar(usingStmt, variable);
+    vector<Statement *> usingStatements =
+        ExtractionContext::getInstance().getUsesContext().getAllEntities();
+    if (!usingStatements.empty()) {
+        for (Statement *usingStatement : usingStatements) {
+            pkb.insertStmtUsingVar(usingStatement, variable);
+        }
     }
 
-    optional<StmtIndex> modifyingStmtIndex =
-        ExtractionContext::getInstance().getModifyingStatement();
-    if (modifyingStmtIndex.has_value()) {
-        Statement *modifyingStmt =
-            pkb.getStmtByIndex(modifyingStmtIndex.value());
-        pkb.insertStmtModifyingVar(modifyingStmt, variable);
+    vector<Statement *> modifyingStatements =
+        ExtractionContext::getInstance().getModifiesContext().getAllEntities();
+    if (!modifyingStatements.empty()) {
+        for (Statement *modifyingStatement : modifyingStatements) {
+            pkb.insertStmtModifyingVar(modifyingStatement, variable);
+        }
     }
     return varIndex;
 }
