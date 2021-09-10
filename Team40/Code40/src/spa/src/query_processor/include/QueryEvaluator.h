@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <iterator>
 
-#include "common/model/statement/Statement.h"
 #include "pkb/PKB.h"
 
 #include "model/Query.h"
