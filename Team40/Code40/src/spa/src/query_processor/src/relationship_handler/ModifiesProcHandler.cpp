@@ -7,6 +7,19 @@ Result ModifiesProcHandler::eval() {
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
+    // assertions
+    if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
+        throw RelationHandlerError("ModifiesProcHandler: first argument must be procedure type");
+    }
+
+    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ModifiesProcHandler: second argument must be variable type");
+    }
+
+    if (relation->getType() != RelationType::MODIFIES_P) {
+        throw RelationHandlerError("ModifiesProcHandler: relation type must be MODIFIES_P");
+    }
+
     if (firstReference->getRefType() == ReferenceType::WILDCARD) {
         throw RelationHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
     }

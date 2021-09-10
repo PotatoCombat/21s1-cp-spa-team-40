@@ -8,9 +8,22 @@ Result ParentStarHandler::eval() {
     string secondStmt = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-    // Todo: assert firstEntiy and secondReference are stmts
     // Todo: use variable instead of magic number -1
+
+    // assertions
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ParentStarHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw RelationHandlerError("ParentStarHandler: second argument must be statement type");
+    }
+
+    if (relation->getType() != RelationType::PARENT_T) {
+        throw RelationHandlerError("ParentStarHandler: relation type must be PARENT_T");
+    }
 
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
