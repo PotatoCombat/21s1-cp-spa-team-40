@@ -15,20 +15,17 @@ public:
 };
 
 vector<string> TestStatementTable::createItems() {
-    return vector<string> {"hello", "goodbye", "sayonara"};
+    return vector<string>{"hello", "goodbye", "sayonara"};
 }
 
-vector<int> TestStatementTable::createIndices() {
-    return vector<int> {1, 2, 3};
-}
+vector<int> TestStatementTable::createIndices() { return vector<int>{1, 2, 3}; }
 
 StatementTable<string, int> TestStatementTable::createTable() {
     StatementTable<string, int> table;
 
     auto items = TestStatementTable::createItems();
-    for (const auto& i : items)
-    {
-        table.insert(i);
+    for (string i : items) {
+        table.insert(&i);
     }
     return table;
 }
@@ -40,11 +37,12 @@ TEST_CASE("StatementTable: ctor") {
 
 TEST_CASE("StatementTable: insert/getStmt/getIndex") {
     StatementTable<string, int> table;
-    table.insert("hello");
+    string test = "hello";
+    table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex("hello") == 1);
-    REQUIRE(table.getStmt(1) == "hello");
+    REQUIRE(table.getIndex(&test) == 1);
+    REQUIRE(table.getStmt(1) == &test);
 }
 
 TEST_CASE("StatementTable: getIndices") {
@@ -53,8 +51,7 @@ TEST_CASE("StatementTable: getIndices") {
     vector<int> test = TestStatementTable::createIndices();
     vector<int> actual = table.getIndices().asVector();
 
-    for (int i = 0; i < actual.size(); i++)
-    {
+    for (int i = 0; i < actual.size(); i++) {
         REQUIRE(test.at(i) == actual.at(i));
     }
 }

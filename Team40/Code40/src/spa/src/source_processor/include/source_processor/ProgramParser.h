@@ -65,7 +65,7 @@ public:
                                        programIndex);
             return ifParser.parseIfStatement();
         } else {
-            return Statement(0, StatementType::NONE);
+            throw runtime_error("Invalid statement!");
         }
     }
 
