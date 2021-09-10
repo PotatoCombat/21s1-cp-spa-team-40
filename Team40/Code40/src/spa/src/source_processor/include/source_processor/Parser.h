@@ -16,6 +16,8 @@ class Parser {
 public:
     // parse file input
     vector<Line> parseFile(fstream &file);
+    vector<string> parseProgramLine(vector<string> inputLine,
+                                    vector<string> &nextString);
     vector<string> parseLine(string input);
     void parseSymbol(string input, int &index, char curr, string &currString,
                      vector<string> &inputLine);

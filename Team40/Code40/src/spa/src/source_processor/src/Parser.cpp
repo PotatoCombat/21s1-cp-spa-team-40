@@ -19,18 +19,8 @@ vector<Line> Parser::parseFile(fstream &file) {
     vector<string> currString = {};
     vector<string> nextString = {};
     while (getline(file, input)) {
-        currString = {};
         vector<string> inputLine = parseLine(input);
-        for (int i = 0; i < inputLine.size(); i++) {
-            string curr = inputLine[i];
-            if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
-                currString.push_back(curr);
-                nextString =
-                    vector<string>(inputLine.begin() + i + 1, inputLine.end());
-                break;
-            }
-            currString.push_back(curr);
-        }
+        currString = parseProgramLine(inputLine, nextString);
         if (!currString.empty() && currString[0] != "}" &&
             currString[0] != "else" && !isProc(currString)) {
             stmtNum++;
@@ -39,18 +29,8 @@ vector<Line> Parser::parseFile(fstream &file) {
             Line curr = Line(stmtNum, currString);
             programLines.push_back(curr);
         }
-        currString = {};
         while (nextString.size() > 0) {
-            for (int i = 0; i < nextString.size(); i++) {
-                string curr = nextString[i];
-                if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
-                    currString.push_back(curr);
-                    nextString = vector<string>(currString.begin() + i + 1,
-                                                currString.end());
-                    break;
-                }
-                currString.push_back(curr);
-            }
+            currString = parseProgramLine(nextString, nextString);
             if (!currString.empty() && currString[0] != "}" &&
                 currString[0] != "else" && !isProc(currString)) {
                 stmtNum++;
@@ -62,6 +42,21 @@ vector<Line> Parser::parseFile(fstream &file) {
         }
     }
     return programLines;
+}
+vector<string> Parser::parseProgramLine(vector<string> inputLine,
+                                        vector<string> &nextString) {
+    vector<string> currString = {};
+    for (int i = 0; i < inputLine.size(); i++) {
+        string curr = inputLine[i];
+        if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
+            currString.push_back(curr);
+            nextString =
+                vector<string>(inputLine.begin() + i + 1, inputLine.end());
+            break;
+        }
+        currString.push_back(curr);
+    }
+    return currString;
 }
 
 vector<string> Parser::parseLine(string input) {
