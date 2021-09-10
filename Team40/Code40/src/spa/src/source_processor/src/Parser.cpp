@@ -20,24 +20,39 @@ vector<Line> Parser::parseFile(fstream &file) {
     vector<string> nextString = {};
     while (getline(file, input)) {
         vector<string> inputLine = parseLine(input);
-        currString = parseProgramLine(inputLine, nextString);
-        if (!currString.empty() && currString[0] != "}" &&
-            currString[0] != "else" && !isProc(currString)) {
-            stmtNum++;
-        }
+        vector<string> nextSubString = parseProgramLine(inputLine, nextString);
+        currString.insert(currString.end(), nextSubString.begin(),
+                          nextSubString.end());
         if (!currString.empty()) {
-            Line curr = Line(stmtNum, currString);
-            programLines.push_back(curr);
-        }
-        while (nextString.size() > 0) {
-            currString = parseProgramLine(nextString, nextString);
-            if (!currString.empty() && currString[0] != "}" &&
-                currString[0] != "else" && !isProc(currString)) {
+            if (!isCurlyBracket(currString.back()) &&
+                !isSemiColon(currString.back())) {
+                continue;
+            }
+            if (currString[0] != "}" && currString[0] != "else" &&
+                !isProc(currString)) {
                 stmtNum++;
             }
+            Line curr = Line(stmtNum, currString);
+            programLines.push_back(curr);
+            currString = {};
+        }
+        while (nextString.size() > 0) {
+            vector<string> nextSubString =
+                parseProgramLine(nextString, nextString);
+            currString.insert(currString.end(), nextSubString.begin(),
+                              nextSubString.end());
             if (!currString.empty()) {
+                if (!isCurlyBracket(currString.back()) &&
+                    !isSemiColon(currString.back())) {
+                    continue;
+                }
+                if (currString[0] != "}" && currString[0] != "else" &&
+                    !isProc(currString)) {
+                    stmtNum++;
+                }
                 Line curr = Line(stmtNum, currString);
                 programLines.push_back(curr);
+                currString = {};
             }
         }
     }
@@ -76,6 +91,9 @@ vector<string> Parser::parseLine(string input) {
                 parseKeyword(input, i, currString, inputLine);
             }
         }
+    }
+    if (!currString.empty()) {
+        inputLine.push_back(currString);
     }
     return inputLine;
 }
