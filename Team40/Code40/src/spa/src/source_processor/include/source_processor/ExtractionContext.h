@@ -14,8 +14,8 @@ private:
     const EntityContext<Procedure> procedureContext;
     const EntityContext<Statement> parentContext;
     const EntityContext<Statement> followsContext;
-    const EntityContext<Statement> modifiesContext;
-    const EntityContext<Statement> usesContext;
+    optional<Statement *> usingStatement;
+    optional<Statement *> modifyingStatement;
 
     // NOTE: Do not autofix to use default constructor here
     ExtractionContext() {}
@@ -27,7 +27,12 @@ public:
 
     EntityContext<Procedure> getProcedureContext();
     EntityContext<Statement> getFollowsContext();
-    EntityContext<Statement> getModifiesContext();
     EntityContext<Statement> getParentContext();
-    EntityContext<Statement> getUsesContext();
+
+    optional<Statement *> getUsingStatement();
+    void setUsingStatement(Statement* statement);
+    void unsetUsingStatement(Statement *statement);
+    optional<Statement *> getModifyingStatement();
+    void setModifyingStatement(Statement* statement);
+    void unsetModifyingStatement(Statement *statement);
 };
