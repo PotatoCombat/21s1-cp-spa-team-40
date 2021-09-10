@@ -37,7 +37,7 @@ Relation QueryParser::parseRelation(RelTuple clause,
         x.push_back(Reference(deT, refT, ref2));
     }
 
-    return Relation(relT, &x[0], &x[1]);
+    return Relation(relT, x[0], x[1]);
 }
 
 // helper methods

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <vector>
 
 #include "pkb/Abstractions.h"
@@ -16,4 +17,8 @@ public:
     StmtIndex getFollowingStmt(StmtIndex stmt);
     StmtIndex getPrecedingStmt(StmtIndex stmt);
     bool follows(StmtIndex stmt1, StmtIndex stmt2);
+
+    set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
+    set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
+    bool followsStar(StmtIndex stmt1, StmtIndex stmt2);
 };

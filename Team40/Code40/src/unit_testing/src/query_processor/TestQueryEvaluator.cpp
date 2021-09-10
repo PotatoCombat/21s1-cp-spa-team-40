@@ -1,10 +1,118 @@
+#include "Reference.h"
+#include "Relation.h"
 #include "QueryEvaluator.h"
 #include "Query.h"
 #include "test_util/PKBStub.h"
+#include "test_util/PKBStub2.h"
 
 #include "catch.hpp"
 
 using namespace std;
 
+struct TestQueryEvaluator {
+    static PKBStub pkbStub;
+    static PKBStub2 pkbStubNoFollows;
+};
 
+PKBStub TestQueryEvaluator::pkbStub = PKBStub();
+PKBStub2 TestQueryEvaluator::pkbStubNoFollows = PKBStub2();
 
+TEST_CASE("QueryEvaluator: one clause returns false - returns empty result") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
+    Reference s2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
+    Relation follows(RelationType::FOLLOWS, s1, s2);
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{});
+}
+
+TEST_CASE("QueryEvaluator: all clauses return true - returns all statements") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s_const1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
+    Reference s_const2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
+    Relation follows(RelationType::FOLLOWS, s_const1, s_const2);
+    Reference stmt_sym1(DesignEntityType::STMT, ReferenceType::SYNONYM, "k");
+    Reference s_const3(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
+    Relation follows2(RelationType::FOLLOWS, stmt_sym1, s_const3);
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+    query.addRelation(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+}
+
+TEST_CASE("QueryEvaluator: one clause return empty list - returns empty list") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference stmt_sym1(DesignEntityType::STMT, ReferenceType::SYNONYM, "k");
+    Reference s_const3(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
+    Relation follows(RelationType::FOLLOWS, stmt_sym1, s_const3);
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStubNoFollows);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{});
+}
+
+TEST_CASE("QueryEvaluator: no intersection between results - returns empty list") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
+    Reference s2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
+    Relation follows(RelationType::FOLLOWS, s1, s);
+    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+    query.addRelation(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{});
+}
+
+TEST_CASE("QueryEvaluator: 1 matching element between results - returns the intersection") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
+    Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
+    Relation follows(RelationType::FOLLOWS, s1, s);
+    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+    query.addRelation(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"2"});
+}
+
+TEST_CASE("QueryEvaluator: multiple matching elements between results - returns the intersection") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
+    Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
+    Relation follows(RelationType::FOLLOWS, s1, s);
+    Relation follows2(RelationType::FOLLOWS, s, s2); 
+    
+    query.setReturnReference(&s);
+    query.addRelation(&follows);
+    query.addRelation(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"2", "3", "4", "6", "9", "10"});
+}

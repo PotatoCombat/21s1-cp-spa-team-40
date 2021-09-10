@@ -9,42 +9,57 @@ using namespace std;
 
 struct TestStatementTable {
 public:
-    static vector<string> createItems();
-    static vector<int> createIndices();
-    static StatementTable<string, int> createTable();
+    static vector<Statement> createItems();
+    static vector<StmtIndex> createIndices();
+    static StatementTable createTable();
 };
 
-vector<string> TestStatementTable::createItems() {
-    return vector<string> {"hello", "goodbye", "sayonara"};
+vector<Statement> TestStatementTable::createItems() {
+    return {
+        Statement(1, StatementType::ASSIGN),
+        Statement(2, StatementType::READ),
+        Statement(3, StatementType::PRINT),
+    };
 }
 
-vector<int> TestStatementTable::createIndices() {
-    return vector<int> {1, 2, 3};
-}
+vector<StmtIndex> TestStatementTable::createIndices() { return vector<int>{1, 2, 3}; }
 
-StatementTable<string, int> TestStatementTable::createTable() {
-    StatementTable<string, int> table;
+StatementTable TestStatementTable::createTable() {
+    StatementTable table;
 
     auto items = TestStatementTable::createItems();
-    for (const auto& i : items)
-    {
-        table.insert(i);
+    for (Statement i : items) {
+        table.insert(&i);
     }
     return table;
 }
 
 TEST_CASE("StatementTable: ctor") {
-    StatementTable<string, int> table;
+    StatementTable table;
     REQUIRE(table.getSize() == 0);
 }
 
 TEST_CASE("StatementTable: insert/getStmt/getIndex") {
-    StatementTable<string, int> table;
-    table.insert("hello");
+    StatementTable table;
+    Statement test = Statement(1, StatementType::CALL);
+    table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex("hello") == 1);
-    REQUIRE(table.getStmt(1) == "hello");
+    REQUIRE(table.getIndex(&test) == 1);
+    REQUIRE(table.getStmt(1) == &test);
+    REQUIRE(table.getStmt(1)->getIndex() == 1);
+    REQUIRE(table.getStmtType(1) == StatementType::CALL);
+}
+
+TEST_CASE("EntityTable: invalid Statement") {
+    auto table = TestStatementTable::createTable();
+    REQUIRE(table.getStmt(4) == NULL);
+}
+
+TEST_CASE("EntityTable: invalid Index") {
+    auto table = TestStatementTable::createTable();
+    Statement test = Statement(4, StatementType::CALL);
+    REQUIRE(table.getIndex(&test) == InvalidIndex);
 }
 
 TEST_CASE("StatementTable: getIndices") {
@@ -53,8 +68,7 @@ TEST_CASE("StatementTable: getIndices") {
     vector<int> test = TestStatementTable::createIndices();
     vector<int> actual = table.getIndices().asVector();
 
-    for (int i = 0; i < actual.size(); i++)
-    {
+    for (int i = 0; i < actual.size(); i++) {
         REQUIRE(test.at(i) == actual.at(i));
     }
 }

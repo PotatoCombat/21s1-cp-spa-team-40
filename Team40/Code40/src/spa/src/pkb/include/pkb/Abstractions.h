@@ -4,13 +4,13 @@
 
 using namespace std;
 
-typedef string Statement;
-typedef string Var;
-typedef string Const;
-typedef string Procedure;
-typedef string Pattern;
-
+typedef int ProcIndex;
 typedef int VarIndex;
 typedef int ConstIndex;
-typedef int ProcIndex;
+
+typedef string ProcName;
+typedef string VarName;
+typedef string ConstName;
+
 typedef int StmtIndex;
+constexpr int InvalidIndex = -1;

@@ -8,3 +8,4 @@ add_library(pkb ${srcs})
 target_include_directories(pkb PUBLIC include)
 
 #target_link_libraries(pkb spa)
+target_link_libraries(pkb common)

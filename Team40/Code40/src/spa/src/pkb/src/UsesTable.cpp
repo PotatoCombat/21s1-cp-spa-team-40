@@ -2,57 +2,92 @@
 
 UsesTable::UsesTable() = default;
 
-bool UsesTable::insertStmtUsingVar(StmtIndex stmt, VarIndex var) {
-  if (stmtUsesVarsMap.count(stmt) == 0) {
-    stmtUsesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
-  }
-  stmtUsesVarsMap[stmt].insert(var);
+void UsesTable::insertProcUsingVar(Procedure *proc, Variable *var) {
+    ProcName procName = proc->getName();
+    VarName varName = var->getName();
+    auto search1 = procsUsingVarMap.find(varName);
+    if (search1 == procsUsingVarMap.end()) {
+        procsUsingVarMap[varName] = { procName };
+    }
+    else {
+        search1->second.insert(procName);
+    }
 
-  if (varUsedByStmtsMap.count(var) == 0) {
-    varUsedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
-  }
-  varUsedByStmtsMap[var].insert(stmt);
-  return true;
+    auto search2 = varsUsedByProcMap.find(procName);
+    if (search2 == varsUsedByProcMap.end()) {
+        varsUsedByProcMap[procName] = { varName };
+    }
+    else {
+        search2->second.insert(varName);
+    }
 }
 
-bool UsesTable::insertProcUsingVar(ProcIndex proc, VarIndex var) {
-  if (procUsesVarsMap.count(proc) == 0) {
-    procUsesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
-  }
-  procUsesVarsMap[proc].insert(var);
+void UsesTable::insertStmtUsingVar(Statement *stmt, Variable *var) {
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = var->getName();
+    auto search1 = stmtsUsingVarMap.find(varName);
+    if (search1 == stmtsUsingVarMap.end()) {
+        stmtsUsingVarMap[varName] = { stmtIndex };
+    }
+    else {
+        search1->second.insert(stmtIndex);
+    }
 
-  if (varUsedByProcsMap.count(var) == 0) {
-    varUsedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
-  }
-  varUsedByProcsMap[var].insert(proc);
-  return true;
+    auto search2 = varsUsedByStmtMap.find(stmtIndex);
+    if (search2 == varsUsedByStmtMap.end()) {
+        varsUsedByStmtMap[stmtIndex] = { varName };
+    }
+    else {
+        search2->second.insert(varName);
+    }
 }
 
-set<VarIndex> UsesTable::getVarsUsedByStmt(StmtIndex stmt) {
-  return stmtUsesVarsMap.at(stmt);
+set<ProcName> UsesTable::getProcsUsingVar(VarName var) {
+    auto result = procsUsingVarMap.find(var);
+    if (result == procsUsingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<StmtIndex> UsesTable::getStmtsUsingVar(VarIndex var) {
-  return varUsedByStmtsMap.at(var);
+set<StmtIndex> UsesTable::getStmtsUsingVar(VarName var) {
+    auto result = stmtsUsingVarMap.find(var);
+    if (result == stmtsUsingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<VarIndex> UsesTable::getVarsUsedByProc(ProcIndex proc) {
-  return procUsesVarsMap.at(proc);
+set<VarName> UsesTable::getVarsUsedByProc(ProcName proc) {
+    auto result = varsUsedByProcMap.find(proc);
+    if (result == varsUsedByProcMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<ProcIndex> UsesTable::getProcsUsingVar(VarIndex var) {
-  return varUsedByProcsMap.at(var);
+set<VarName> UsesTable::getVarsUsedByStmt(StmtIndex stmt) {
+    auto result = varsUsedByStmtMap.find(stmt);
+    if (result == varsUsedByStmtMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given stmt uses given var
-bool UsesTable::stmtUses(StmtIndex stmt, VarIndex var) {
-  set<VarIndex> varIndexes = stmtUsesVarsMap[stmt];
-  return varIndexes.find(var) != varIndexes.end();
+bool UsesTable::procUses(ProcName proc, VarName var) {
+    auto result = varsUsedByProcMap.find(proc);
+    if (result == varsUsedByProcMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
 
-//Checks if given proc uses given var
-bool UsesTable::procUses(ProcIndex proc, VarIndex var) {
-  set<VarIndex> varIndexes = procUsesVarsMap[proc];
-  return varIndexes.find(var) != varIndexes.end();
+bool UsesTable::stmtUses(StmtIndex stmt, VarName var) {
+    auto result = varsUsedByStmtMap.find(stmt);
+    if (result == varsUsedByStmtMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
-

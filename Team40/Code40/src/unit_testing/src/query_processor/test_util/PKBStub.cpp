@@ -20,3 +20,20 @@ StmtIndex PKBStub::getPrecedingStmt(StmtIndex stmt) {
 bool PKBStub::follows(StmtIndex stmt1, StmtIndex stmt2) {
     return getFollowingStmt(stmt1) == stmt2;
 }
+
+set<StmtIndex> PKBStub::getFollowingStarStmts(StmtIndex stmt) {
+    vector<set<int>> followingStarStmtsList = {
+        {2, 3, 4, 12}, {3, 4, 12}, {4, 12}, {12}, {6, 9, 10, 11}, {9, 10, 11}, {}, {}, {10, 11}, {11}, {}, {}};
+    return followingStarStmtsList[stmt - 1];
+}
+
+set<StmtIndex> PKBStub::getPrecedingStarStmts(StmtIndex stmt) {
+    vector<set<int>> precedingStarStmtsList = {
+        {}, {1}, {1, 2}, {1, 2, 3}, {}, {5}, {}, {}, {5, 6}, {5, 6, 9}, {5, 6, 9, 10}, {1, 2, 3, 4}};
+    return precedingStarStmtsList[stmt - 1];
+}
+
+bool PKBStub::followsStar(StmtIndex stmt1, StmtIndex stmt2) {
+    set<int> followingStarStmts = getFollowingStarStmts(stmt1);
+    return followingStarStmts.find(stmt2) != followingStarStmts.end();
+}

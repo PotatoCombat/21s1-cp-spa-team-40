@@ -8,12 +8,11 @@ using namespace std;
 class Relation {
 private:
     RelationType type;
-    Reference *first;
-    Reference *second;
+    Reference first;
+    Reference second;
 
 public:
-    Relation() = default;
-    Relation(RelationType type, Reference *first, Reference *second);
+    Relation(RelationType type, Reference first, Reference second);
     Reference *getFirstReference();
     Reference *getSecondReference();
     RelationType getType();

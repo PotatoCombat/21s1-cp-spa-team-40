@@ -1,85 +1,186 @@
 #pragma once
 
-//#include "Abstractions.h"
+#include "ConstTable.h"
 #include "EntityTable.h"
-#include "Iterator.h"
-#include "StatementTable.h"
-#include "FollowsTable.h"
 #include "FollowsStarTable.h"
-#include "ParentTable.h"
-#include "ParentStarTable.h"
+#include "FollowsTable.h"
+#include "Iterator.h"
 #include "ModifiesTable.h"
+#include "ParentStarTable.h"
+#include "ParentTable.h"
+#include "ProcedureTable.h"
+#include "StatementTable.h"
 #include "UsesTable.h"
+#include "VarTable.h"
+#include "common/model/Procedure.h"
+#include "common/model/Variable.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/statement/Statement.h"
 
 using namespace std;
 
 class PKB {
 public:
-    virtual Iterator<VarIndex> getAllVars();
-    virtual Iterator<ConstIndex> getAllConsts();
-    virtual Iterator<ProcIndex> getAllProcs();
+    // =========================================================================
+    // Source Processor
+    // =========================================================================
+
+    virtual ProcIndex insertProc(Procedure *procedure);
+    virtual VarIndex insertVar(Variable *variable);
+    virtual ConstIndex insertConst(ConstantValue *constant);
+
+    virtual StmtIndex insertStmt(Statement *statement);
+
+    /// Stores the relationship Follows(stmt1, stmt2), and updates *
+    /// relationships.
+    virtual void insertFollows(Statement *precedingStmt,
+                               Statement *followingStmt);
+
+    /// Stores the relationship Parent(stmt1, stmt2), and updates *
+    /// relationships.
+    virtual void insertParent(Statement *parentStmt, Statement *childStmt);
+
+    /// Stores the relationship Modifies(proc, var).
+    virtual void insertProcModifyingVar(Procedure *proc, Variable *var);
+
+    /// Stores the relationship Modifies(stmt, var).
+    virtual void insertStmtModifyingVar(Statement *stmt, Variable *var);
+
+    /// Stores the relationship Uses(proc, var).
+    virtual void insertProcUsingVar(Procedure *proc, Variable *var);
+
+    /// Stores the relationship Uses(stmt, var).
+    virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
+
+    // =========================================================================
+    // Query Processor
+    // =========================================================================
+
+    virtual Iterator<ProcName> getAllProcs();
+    virtual Iterator<VarName> getAllVars();
+    virtual Iterator<int> getAllConsts();
 
     virtual Iterator<StmtIndex> getAllStmts();
+    virtual Iterator<StmtIndex> getAllStmts(StatementType type);
 
-    virtual VarIndex insertVar(Var variable);
-    virtual ConstIndex insertConst(Const constant);
-    virtual ProcIndex insertProc(Procedure procedure);
+    virtual StatementType getStmtType(StmtIndex stmt);
 
-    virtual StmtIndex insertStmt(Statement statement);
+    // Follows =================================================================
 
-    //stmt2 follows stmt1. This also adds to FollowStarTable
-    virtual bool insertFollows(StmtIndex stmt1, StmtIndex stmt2);
+    /// Selects s such that Follows(stmt, s).
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
+    /// is none.
     virtual StmtIndex getFollowingStmt(StmtIndex stmt);
-    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
-    //checks if stmt2 follows stmt1
-    virtual bool follows(StmtIndex stmt1, StmtIndex stmt2);
 
+    /// Selects s such that Follows*(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there
+    /// are none.
     virtual set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
+
+    /// Selects s such that Follows(s, stmt).
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
+    /// is none.
+    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
+
+    /// Selects s such that Follows*(s, stmt).
+    /// \return all stmt#no that fit the relationship, or an empty set if there
+    /// are none.
     virtual set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
-    //checks if stmt2 follows* stmt1
-    virtual bool followsStar(StmtIndex stmt1, StmtIndex stmt2);
 
-    //stmt2 is parent of stmt1. This also adds to ParentStarTable
-    virtual bool insertParent(StmtIndex stmt1, StmtIndex stmt2);
+    /// Selects BOOLEAN such that Follows(stmt1, stmt2).
+    virtual bool follows(StmtIndex precedingStmt, StmtIndex followingStmt);
+
+    /// Selects BOOLEAN such that Follows*(stmt1, stmt2).
+    virtual bool followsStar(StmtIndex precedingStmt, StmtIndex followingStmt);
+
+    // Parent ==================================================================
+
+    /// Selects s such that Parent(s, stmt).
+    /// \return stmt#no that fits the relationship, or InvalidIndex if there
+    /// is none.
     virtual StmtIndex getParentStmt(StmtIndex stmt);
-    virtual StmtIndex getChildStmt(StmtIndex stmt);
-    //checks if stmt2 is parent of stmt1
-    virtual bool parent(StmtIndex stmt1, StmtIndex stmt2);
 
+    /// Selects s such that Parent*(s, stmt).
+    /// \return all stmt#no that fit the relationship, or an empty set if there
+    /// are none.
     virtual set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+
+    /// Selects s such that Parent(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there
+    /// are none.
+    virtual set<StmtIndex> getChildStmts(StmtIndex stmt);
+
+    /// Selects s such that Parent*(stmt, s).
+    /// \return all stmt#no that fit the relationship, or an empty set if there
+    /// are none.
     virtual set<StmtIndex> getChildStarStmts(StmtIndex stmt);
-    //checks if stmt2 is parent* of stmt1
-    virtual bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
 
-    virtual bool insertStmtModifyingVar(StmtIndex stmt, VarIndex var);
-    virtual bool insertProcModifyingVar(ProcIndex proc, VarIndex var);
-    virtual set<VarIndex> getVarsModifiedByStmt(StmtIndex stmt);
-    virtual set<StmtIndex> getStmtsModifyingVar(VarIndex var);
-    virtual set<VarIndex> getVarsModifiedByProc(ProcIndex proc);
-    virtual set<ProcIndex> getProcsModifyingVar(VarIndex var);
-    virtual bool stmtModifies(StmtIndex stmt, VarIndex var);
-    virtual bool procModifies(ProcIndex proc, VarIndex var);
+    /// Selects BOOLEAN such that Parent(stmt1, stmt2).
+    virtual bool parent(StmtIndex parentStmt, StmtIndex childStmt);
 
-    virtual bool insertStmtUsingVar(StmtIndex stmt, VarIndex var);
-    virtual bool insertProcUsingVar(ProcIndex proc, VarIndex var);
-    virtual set<VarIndex> getVarsUsedByStmt(StmtIndex stmt);
-    virtual set<StmtIndex> getStmtsUsingVar(VarIndex var);
-    virtual set<VarIndex> getVarsUsedByProc(ProcIndex proc);
-    virtual set<ProcIndex> getProcsUsingVar(VarIndex var);
-    virtual bool stmtUses(StmtIndex stmt, VarIndex var);
-    virtual bool procUses(ProcIndex proc, VarIndex var);
+    /// Selects BOOLEAN such that Parent*(stmt1, stmt2).
+    virtual bool parentStar(StmtIndex parentStmt, StmtIndex childStmt);
+
+    // Modifies ================================================================
+
+    /// Selects p such that Modifies(p, var), where p is a Procedure.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<ProcName> getProcsModifyingVar(VarName var);
+
+    /// Selects s such that Modifies(s, var), where s is a Statement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getStmtsModifyingVar(VarName var);
+
+    /// Selects v such that Modifies(proc, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are
+    /// none.
+    virtual set<VarName> getVarsModifiedByProc(ProcName proc);
+
+    /// Selects v such that Modifies(stmt, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are
+    /// none.
+    virtual set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
+
+    /// Selects BOOLEAN such that Modifies(proc, var).
+    virtual bool procModifies(ProcName proc, VarName var);
+
+    /// Selects BOOLEAN such that Modifies(stmt, var).
+    virtual bool stmtModifies(StmtIndex stmt, VarName var);
+
+    // Uses ====================================================================
+
+    /// Selects p such that Uses(p, var), where p is a Procedure.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<ProcName> getProcsUsingVar(VarName var);
+
+    /// Selects s such that Uses(s, var), where s is a Statement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getStmtsUsingVar(VarName var);
+
+    /// Selects v such that Uses(proc, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are
+    /// none.
+    virtual set<VarName> getVarsUsedByProc(ProcName proc);
+
+    /// Selects v such that Uses(stmt, v), where v is a Variable.
+    /// \return all stmt#no that fit the relationship, or an empty set there are
+    /// none.
+    virtual set<VarName> getVarsUsedByStmt(StmtIndex stmt);
+
+    /// Selects BOOLEAN such that Uses(proc, var).
+    virtual bool procUses(ProcName proc, VarName var);
+
+    /// Selects BOOLEAN such that Uses(stmt, var).
+    virtual bool stmtUses(StmtIndex stmt, VarName var);
 
 private:
-    typedef EntityTable<Var, VarIndex> VarTable;
-    typedef EntityTable<Const, ConstIndex> ConstTable;
-    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
-
-    typedef StatementTable<Statement, StmtIndex> StatementTable;
-
+    ProcedureTable procTable;
     VarTable varTable;
     ConstTable constTable;
-    ProcedureTable procTable;
-
     StatementTable statementTable;
 
     FollowsTable followsTable;

@@ -15,20 +15,17 @@ public:
 };
 
 vector<string> TestEntityTable::createItems() {
-    return vector<string> {"hello", "goodbye", "sayonara"};
+    return vector<string>{"hello", "goodbye", "sayonara"};
 }
 
-vector<int> TestEntityTable::createIndices() {
-    return vector<int> {0, 1, 2};
-}
+vector<int> TestEntityTable::createIndices() { return vector<int>{0, 1, 2}; }
 
 EntityTable<string, int> TestEntityTable::createTable() {
     EntityTable<string, int> table;
 
     auto items = TestEntityTable::createItems();
-    for (const auto& i : items)
-    {
-        table.insert(i);
+    for (string i : items) {
+        table.insert(&i);
     }
     return table;
 }
@@ -40,11 +37,23 @@ TEST_CASE("EntityTable: ctor") {
 
 TEST_CASE("EntityTable: insert/getEntity/getIndex") {
     EntityTable<string, int> table;
-    table.insert("hello");
+    string test = "hello";
+    table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex("hello") == 0);
-    REQUIRE(table.getEntity(0) == "hello");
+    REQUIRE(table.getIndex(&test) == 0);
+    REQUIRE(table.getEntity(0) == &test);
+}
+
+TEST_CASE("EntityTable: invalid Entity") {
+    auto table = TestEntityTable::createTable();
+    REQUIRE(table.getEntity(4) == NULL);
+}
+
+TEST_CASE("EntityTable: invalid Index") {
+    auto table = TestEntityTable::createTable();
+    string test = "goodbye";
+    REQUIRE(table.getIndex(&test) == InvalidIndex);
 }
 
 TEST_CASE("EntityTable: getIndices") {
@@ -53,8 +62,7 @@ TEST_CASE("EntityTable: getIndices") {
     vector<int> test = TestEntityTable::createIndices();
     vector<int> actual = table.getIndices().asVector();
 
-    for (int i = 0; i < actual.size(); i++)
-    {
+    for (int i = 0; i < actual.size(); i++) {
         REQUIRE(test.at(i) == actual.at(i));
     }
 }
