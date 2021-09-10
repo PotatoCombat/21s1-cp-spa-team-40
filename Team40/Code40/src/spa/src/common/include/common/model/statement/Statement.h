@@ -3,8 +3,9 @@
 #include "common/model/Variable.h"
 #include "common/model/condition/Condition.h"
 #include <vector>
+#include <stdexcept>
 
-enum class StatementType { READ, PRINT, ASSIGN, CALL, WHILE, IF };
+enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
 class Statement {
 private:

@@ -2,58 +2,92 @@
 
 ModifiesTable::ModifiesTable() = default;
 
-bool ModifiesTable::insertStmtModifyingVar(StmtIndex stmt, VarIndex var) {
-  if (stmtModifiesVarsMap.count(stmt) == 0) {
-    stmtModifiesVarsMap.insert(pair<StmtIndex, set<VarIndex>>(stmt, {}));
-  }
-  stmtModifiesVarsMap[stmt].insert(var);
+void ModifiesTable::insertProcModifyingVar(Procedure *proc, Variable *var) {
+    VarName varName = var->getName();
+    ProcName procName = proc->getName();
+    auto search1 = procsModifyingVarMap.find(varName);
+    if (search1 == procsModifyingVarMap.end()) {
+        procsModifyingVarMap[varName] = { procName };
+    }
+    else {
+        search1->second.insert(procName);
+    }
 
-  if (varModifiedByStmtsMap.count(var) == 0) {
-    varModifiedByStmtsMap.insert(pair<VarIndex , set<StmtIndex>>(var, {}));
-  }
-  varModifiedByStmtsMap[var].insert(stmt);
-  return true;
+    auto search2 = varsModifiedByProcMap.find(procName);
+    if (search2 == varsModifiedByProcMap.end()) {
+        varsModifiedByProcMap[procName] = { varName };
+    }
+    else {
+        search2->second.insert(varName);
+    }
 }
 
-bool ModifiesTable::insertProcModifyingVar(ProcIndex proc, VarIndex var) {
-  if (procModifiesVarsMap.count(proc) == 0) {
-    procModifiesVarsMap.insert(pair<ProcIndex, set<VarIndex>>(proc, {}));
-  }
-  procModifiesVarsMap[proc].insert(var);
+void ModifiesTable::insertStmtModifyingVar(Statement *stmt, Variable *var) {
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = var->getName();
+    auto search1 = stmtsModifyingVarMap.find(varName);
+    if (search1 == stmtsModifyingVarMap.end()) {
+        stmtsModifyingVarMap[varName] = { stmtIndex };
+    }
+    else {
+        search1->second.insert(stmtIndex);
+    }
 
-  if (varModifiedByProcsMap.count(var) == 0) {
-    varModifiedByProcsMap.insert(pair<VarIndex , set<ProcIndex>>(var, {}));
-  }
-  varModifiedByProcsMap[var].insert(proc);
-  return true;
+    auto search2 = varsModifiedByStmtMap.find(stmtIndex);
+    if (search2 == varsModifiedByStmtMap.end()) {
+        varsModifiedByStmtMap[stmtIndex] = { varName };
+    }
+    else {
+        search2->second.insert(varName);
+    }
 }
 
-set<VarIndex> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
-  return stmtModifiesVarsMap.at(stmt);
+set<ProcName> ModifiesTable::getProcsModifyingVar(VarName var) {
+    auto result = procsModifyingVarMap.find(var);
+    if (result == procsModifyingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarIndex var) {
-  return varModifiedByStmtsMap.at(var);
+set<StmtIndex> ModifiesTable::getStmtsModifyingVar(VarName var) {
+    auto result = stmtsModifyingVarMap.find(var);
+    if (result == stmtsModifyingVarMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<VarIndex> ModifiesTable::getVarsModifiedByProc(ProcIndex proc) {
-  return procModifiesVarsMap.at(proc);
+set<VarName> ModifiesTable::getVarsModifiedByProc(ProcName proc) {
+    auto result = varsModifiedByProcMap.find(proc);
+    if (result == varsModifiedByProcMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-set<ProcIndex> ModifiesTable::getProcsModifyingVar(VarIndex var) {
-  return varModifiedByProcsMap.at(var);
+set<VarName> ModifiesTable::getVarsModifiedByStmt(StmtIndex stmt) {
+    auto result = varsModifiedByStmtMap.find(stmt);
+    if (result == varsModifiedByStmtMap.end()) {
+        return {};
+    }
+    return result->second;
 }
 
-//Checks if given stmt uses given var
-bool ModifiesTable::stmtModifies(StmtIndex stmt, VarIndex var) {
-  set<VarIndex> varIndexes = stmtModifiesVarsMap[stmt];
-  return varIndexes.find(var) != varIndexes.end();
+bool ModifiesTable::procModifies(ProcName proc, VarName var) {
+    auto result = varsModifiedByProcMap.find(proc);
+    if (result == varsModifiedByProcMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
 
-//Checks if given proc uses given var
-bool ModifiesTable::procModifies(ProcIndex proc, VarIndex var) {
-  set<VarIndex> varIndexes = procModifiesVarsMap[proc];
-  return varIndexes.find(var) != varIndexes.end();
+bool ModifiesTable::stmtModifies(StmtIndex stmt, VarName var) {
+    auto result = varsModifiedByStmtMap.find(stmt);
+    if (result == varsModifiedByStmtMap.end()) {
+        return false;
+    }
+    auto vars = result->second;
+    return vars.find(var) != vars.end();
 }
-
-

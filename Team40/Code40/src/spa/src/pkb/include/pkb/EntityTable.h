@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Abstractions.h"
 #include "Iterator.h"
 
 #include <map>
@@ -12,15 +13,45 @@ template <typename T, typename Index> class EntityTable {
                   "Index must be convertible to a primitive int");
 
 public:
-    EntityTable();
+    /// Stores the pointer \param entity in the table, and indexes the entity.
+    /// \return index of the \param entity in the table.
+    virtual Index insert(T *entity) {
+        entities.push_back(entity);
+        indices.push_back(size);
+        entityToIndex[entity] = size;
+        return size++;
+    }
 
-    int getSize();
+    /// Returns the pointer to the entity stored at \param index in the table.
+    /// \return pointer, or NULL if the table does not contain \param index.
+    virtual T *getEntity(Index index) {
+        if (index >= size)
+        {
+            return NULL;
+        }
+        return entities.at(index);
+    }
 
-    T *getEntity(Index index);
-    Index getIndex(T entity);
-    Iterator<Index> getIndices();
+    /// Returns the index of \param entity in the table.
+    /// \return index, or InvalidIndex if the table does not contain \param entity.
+    virtual Index getIndex(T *entity) {
+        auto search = entityToIndex.find(entity);
+        if (search == entityToIndex.end())
+        {
+            return InvalidIndex;
+        }
+        return search->second;
+    }
 
-    Index insert(T *entity);
+    /// Returns an iterator for all the entity indices stored in the table.
+    virtual Iterator<Index> getIndices() {
+        return Iterator<Index>(indices);
+    }
+
+    /// Returns the number of entities stored in the table.
+    virtual int getSize() {
+        return size;
+    }
 
 private:
     Index size = 0;
@@ -28,33 +59,3 @@ private:
     vector<Index> indices;
     map<T *, Index> entityToIndex;
 };
-
-template <typename T, typename Index>
-EntityTable<T, Index>::EntityTable() = default;
-
-template <typename T, typename Index> int EntityTable<T, Index>::getSize() {
-    return size;
-}
-
-template <typename T, typename Index>
-T *EntityTable<T, Index>::getEntity(Index index) {
-    return entities.at(index);
-}
-
-template <typename T, typename Index>
-Index EntityTable<T, Index>::getIndex(T entity) {
-    return entityToIndex.at(&entity);
-}
-
-template <typename T, typename Index>
-Iterator<Index> EntityTable<T, Index>::getIndices() {
-    return Iterator<Index>(indices);
-}
-
-template <typename T, typename Index>
-Index EntityTable<T, Index>::insert(T *entity) {
-    entities.push_back(entity);
-    indices.push_back(size);
-    entityToIndex[entity] = size;
-    return size++;
-}

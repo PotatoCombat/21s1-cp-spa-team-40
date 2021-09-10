@@ -1,6 +1,7 @@
 #include "spa/SPA.h"
 #include "common/model/Program.h"
 #include "source_processor/DesignExtractor.h"
+#include "source_processor/Line.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
