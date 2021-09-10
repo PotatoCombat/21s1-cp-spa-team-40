@@ -7,15 +7,10 @@ Result FollowsHandler::eval() {
 	string firstStmt = firstReference->getValue();
 	string secondStmt = secondReference->getValue();
 
-    // Todo: handle stmts by different design enity types
 	// Todo: use variable instead of magic number -1
 
     // assertions
     validate();
-
-
-    StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-    StatementType secondStmtType = desTypeToStmtType(secondReference->getDeType());
 
 	// WILDCARD WILDCARD
 	if (firstReference->getRefType() == ReferenceType::WILDCARD &&
@@ -88,6 +83,7 @@ Result FollowsHandler::eval() {
     if (firstReference->getDeType() == DesignEntityType::STMT) {
         precedingStmts = pkb->getAllStmts().asVector();
     } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
         precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
     }
 
