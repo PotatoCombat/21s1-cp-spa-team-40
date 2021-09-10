@@ -77,7 +77,7 @@ StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
     return pkb.insertStmt(callStatement);
 }
 
-StmtIndex DesignExtractor::extractIfStatement(Statement *ifStatement) {
+StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
     // 0. Insert statement into PKB
     StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
 

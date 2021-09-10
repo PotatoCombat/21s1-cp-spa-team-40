@@ -10,12 +10,12 @@
 #include "common/model/expression/SumTermsExpression.h"
 #include "common/model/statement/AssignStatement.h"
 #include "common/model/statement/CallStatement.h"
+#include "common/model/statement/IfStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
 #include "source_processor/ExtractionContext.h"
 #include "source_processor/FollowsExtractor.h"
-#include "source_processor/ParentsExtractor.h"
 
 class DesignExtractor {
     PKB pkb;
@@ -35,7 +35,7 @@ public:
     StmtIndex extractStatement(Statement *statement);
     StmtIndex extractAssignStatement(Statement *assignStatement);
     StmtIndex extractCallStatement(CallStatement *callStatement);
-    StmtIndex extractIfStatement(Statement *ifStatement);
+    StmtIndex extractIfStatement(IfStatement *ifStatement);
 
     // Condition
     void extractCondition(Condition *condition);
