@@ -7,17 +7,8 @@ Result UsesProcHandler::eval() {
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
-    // WILDCARD WILDCARD
-    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
-        secondReference->getRefType() == ReferenceType::WILDCARD) {
-        vector<string> allProcs = pkb->getAllProcs().asVector();
-        for (auto proc : allProcs) {
-            if (pkb->getVarsUsedByProc(proc).size() > 0) {
-                result.setValid(true);
-            }
-        }
-        result.setValid(false);
-        return result;
+    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
+        throw RelationHandlerError("UsesProcHandler: first argument cannot be wildcard");
     }
 
     /// CONSTANT CONSTANT
@@ -31,13 +22,6 @@ Result UsesProcHandler::eval() {
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
         result.setValid(pkb->getVarsUsedByProc(firstValue).size() > 0);
-        return result;
-    }
-
-    // WILDCARD CONSTANT
-    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
-        secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getProcsUsingVar(secondValue).size() > 0);
         return result;
     }
 
@@ -65,7 +49,7 @@ Result UsesProcHandler::eval() {
         return result;
     }
 
-    // NEITHER IS CONSTANT
+    // NEITHER IS CONSTANT, FIRST ARGUMENT NOT WILDCARD
     vector<string> procResults;
     vector<string> varResults;
     vector<string> procs = pkb->getAllProcs().asVector();
@@ -83,9 +67,7 @@ Result UsesProcHandler::eval() {
         }
     }
 
-    if (firstReference->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList1(firstReference, procResults);
-    }
+    result.setResultList1(firstReference, procResults);
 
     if (secondReference->getRefType() != ReferenceType::WILDCARD) {
         result.setResultList2(secondReference, varResults);

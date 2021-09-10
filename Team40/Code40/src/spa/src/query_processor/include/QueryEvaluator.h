@@ -11,6 +11,7 @@
 #include "model/Reference.h"
 #include "model/Relation.h"
 #include "Result.h"
+#include "relationship_handler/RelationHandlerError.h"
 #include "relationship_handler/RelationshipHandler.h"
 #include "relationship_handler/FollowsHandler.h"
 #include "relationship_handler/FollowsStarHandler.h"

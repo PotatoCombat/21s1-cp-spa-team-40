@@ -7,22 +7,8 @@ Result UsesStmtHandler::eval() {
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
-    // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-    // Todo: assert firstEntiy and secondReference are stmts
-    // Todo: use variable instead of magic number -1
-
-    // WILDCARD WILDCARD
-    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
-        secondReference->getRefType() == ReferenceType::WILDCARD) {
-        vector<int> allStmts = pkb->getAllStmts().asVector();
-        for (auto stmt : allStmts) {
-            if (pkb->getVarsUsedByStmt(stmt).size() > 0) {
-                result.setValid(true);
-            }
-        }
-        result.setValid(false);
-        return result;
+    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
+        throw RelationHandlerError("UsesStmtHandler: first argument cannot be wildcard");
     }
 
     /// CONSTANT CONSTANT
@@ -36,13 +22,6 @@ Result UsesStmtHandler::eval() {
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
         result.setValid(pkb->getVarsUsedByStmt(stoi(firstValue)).size() > 0);
-        return result;
-    }
-
-    // WILDCARD CONSTANT
-    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
-        secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getStmtsUsingVar(secondValue).size() > 0);
         return result;
     }
 
@@ -70,7 +49,7 @@ Result UsesStmtHandler::eval() {
         return result;
     }
 
-    // NEITHER IS CONSTANT
+    // NEITHER IS CONSTANT, FIRST ARGUMENT NOT WILDCARD
     vector<string> stmtResults;
     vector<string> varResults;
     vector<int> stmts = pkb->getAllStmts().asVector();
@@ -88,9 +67,7 @@ Result UsesStmtHandler::eval() {
         }
     }
 
-    if (firstReference->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList1(firstReference, stmtResults);
-    }
+    result.setResultList1(firstReference, stmtResults);
 
     if (secondReference->getRefType() != ReferenceType::WILDCARD) {
         result.setResultList2(secondReference, varResults);
