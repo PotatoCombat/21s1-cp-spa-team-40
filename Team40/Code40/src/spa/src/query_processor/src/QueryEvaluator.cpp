@@ -92,6 +92,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
     if (!referenceAppearInClauses[resultIndex]) {
         vector<string> result;
+
         if (returnReference->getDeType() == DesignEntityType::PROCEDURE) {
             result = pkb->getAllProcs().asVector();
             return result;
@@ -125,6 +126,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
             return result;
         }
         toString(pkb->getAllStmts().asVector(), result); 
+
         return result;
     }
 

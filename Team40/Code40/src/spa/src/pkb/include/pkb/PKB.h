@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConstTable.h"
 #include "EntityTable.h"
 #include "FollowsStarTable.h"
 #include "FollowsTable.h"
@@ -7,8 +8,10 @@
 #include "ModifiesTable.h"
 #include "ParentStarTable.h"
 #include "ParentTable.h"
+#include "ProcedureTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
+#include "VarTable.h"
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
 #include "common/model/ConstantValue.h"
@@ -23,9 +26,10 @@ public:
     // =========================================================================
 
     virtual ProcIndex insertProc(Procedure *procedure);
-    virtual StmtIndex insertStmt(Statement *statement);
     virtual VarIndex insertVar(Variable *variable);
     virtual ConstIndex insertConst(ConstantValue *constant);
+
+    virtual StmtIndex insertStmt(Statement *statement);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
@@ -52,23 +56,14 @@ public:
     // Query Processor
     // =========================================================================
 
-    // virtual Iterator<ProcIndex> getAllProcs();
-    virtual Iterator<string> getAllProcs() {
-        return Iterator(vector<string>{});
-    };
-    virtual Iterator<StmtIndex> getAllStmts() {
-        return Iterator(vector<int>{});
-    }
-    virtual Iterator<StmtIndex> getAllStmts(StatementType type) {
-        return Iterator(vector<int>{});
-    };
-    // virtual Iterator<VarIndex> getAllVars();
-    virtual Iterator<string> getAllVars() {
-        return Iterator(vector<string>{});
-    };
-    virtual Iterator<int> getAllConsts() {
-        return Iterator(vector<int>{});
-    };
+    virtual Iterator<ProcName> getAllProcs();
+    virtual Iterator<VarName> getAllVars();
+    virtual Iterator<int> getAllConsts();
+
+    virtual Iterator<StmtIndex> getAllStmts();
+    virtual Iterator<StmtIndex> getAllStmts(StatementType type);
+
+    virtual StatementType getStmtType(StmtIndex stmt);
 
     // Follows =================================================================
 
@@ -183,25 +178,10 @@ public:
     virtual bool stmtUses(StmtIndex stmt, VarName var);
 
 private:
-    typedef EntityTable<Procedure, ProcIndex> ProcedureTable;
-    typedef EntityTable<Variable, VarIndex> VarTable;
-    typedef EntityTable<ConstantValue, ConstIndex> ConstTable;
-
-    typedef StatementTable<Statement, StmtIndex> StatementTable;
-
     ProcedureTable procTable;
-
     VarTable varTable;
     ConstTable constTable;
-
     StatementTable statementTable;
-
-    vector<StmtIndex> assignStatements;
-    vector<StmtIndex> readStatements;
-    vector<StmtIndex> printStatements;
-    vector<StmtIndex> ifStatements;
-    vector<StmtIndex> whileStatements;
-    vector<StmtIndex> callStatements;
 
     FollowsTable followsTable;
     FollowsStarTable followsStarTable;
