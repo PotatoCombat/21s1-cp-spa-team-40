@@ -36,7 +36,7 @@ TEST_CASE("Query: query creation - all SYNONYM - adds all to referenceList") {
 	Query query;
     Reference returnReference(DesignEntityType::CONSTANT, ReferenceType::SYNONYM, "x");
 	Reference a_syn(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
-    Relation relation(RelationType::USES_S, &a_syn, &returnReference);
+    Relation relation(RelationType::USES_S, a_syn, returnReference);
 	query.setReturnReference(&returnReference);
     query.addRelation(&relation);
 
@@ -51,8 +51,8 @@ TEST_CASE("Query: query creation - various RefernceType - only adds SYNONYM") {
 	Reference a_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "1");
 	Reference s_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "3");
 	Reference s_wc(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation relation1(RelationType::USES_S, &a_const, &returnReference);
-	Relation relation2(RelationType::FOLLOWS, &s_const, &s_wc);
+    Relation relation1(RelationType::USES_S, a_const, returnReference);
+	Relation relation2(RelationType::FOLLOWS, s_const, s_wc);
     query.addRelation(&relation1);
 	query.setReturnReference(&returnReference);
     query.addRelation(&relation2);

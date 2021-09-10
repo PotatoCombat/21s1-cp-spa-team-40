@@ -48,7 +48,7 @@ Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) 
     } else {
         throw "Error";
     }
-    return Relation(type, &r1, &r2);
+    return Relation(type, r1, r2);
 }
 
 //PatternClause QueryParser::parsePatternClause(tuple<string, string, string> clause) {
