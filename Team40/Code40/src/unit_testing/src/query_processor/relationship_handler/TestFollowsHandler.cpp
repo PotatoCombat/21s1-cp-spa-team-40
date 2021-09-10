@@ -201,7 +201,7 @@ TEST_CASE("FollowsHandler: eval - SYNONYM WILDCARD - returns empty resultList1")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Relation followsRelation(RelationType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -231,7 +231,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD SYNONYM - returns empty resultList2")
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
     Relation followsRelation(RelationType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsRelation, &TestFollowsHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
