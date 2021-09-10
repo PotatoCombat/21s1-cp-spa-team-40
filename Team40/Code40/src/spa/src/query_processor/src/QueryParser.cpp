@@ -32,23 +32,23 @@ Reference QueryParser::parseDeclaration(pair<string, string> declaration) {
     return Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
+Clause QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
     string relation = get<0>(clause);
     string ref1 = get<1>(clause); // need information about type from declaration parser monkaS
     string ref2 = get<2>(clause); // need information about type from declaration parser monkaS
     Reference r1 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref1);
     Reference r2 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref2);
 
-    RelationType type;
+    ClauseType type;
 
     if (relation == "Follows") {
-        type = RelationType::FOLLOWS;
+        type = ClauseType::FOLLOWS;
     } else if (relation == "Follows*") {
-        type = RelationType::FOLLOWS_T;
+        type = ClauseType::FOLLOWS_T;
     } else {
         throw "Error";
     }
-    return Relation(type, r1, r2);
+    return Clause(type, r1, r2);
 }
 
 //PatternClause QueryParser::parsePatternClause(tuple<string, string, string> clause) {

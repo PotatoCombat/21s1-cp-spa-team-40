@@ -2,13 +2,13 @@
 
 Result ModifiesProcHandler::eval() {
     Result result;
-    Reference *firstReference = relation->getFirstReference();
-    Reference *secondReference = relation->getSecondReference();
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
     if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw RelationHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
+        throw ClauseHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
     }
 
     /// CONSTANT CONSTANT

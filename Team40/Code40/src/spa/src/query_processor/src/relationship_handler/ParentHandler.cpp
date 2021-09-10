@@ -2,8 +2,8 @@
 
 Result ParentHandler::eval() {
     Result result;
-    Reference *firstReference = relation->getFirstReference();
-    Reference *secondReference = relation->getSecondReference();
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
     string firstStmt = firstReference->getValue();
     string secondStmt = secondReference->getValue();
 

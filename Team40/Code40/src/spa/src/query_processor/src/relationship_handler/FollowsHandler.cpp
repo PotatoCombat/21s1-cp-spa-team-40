@@ -2,14 +2,12 @@
 
 Result FollowsHandler::eval() {
     Result result;
-	Reference* firstReference = relation->getFirstReference();
-	Reference* secondReference = relation->getSecondReference();
+	Reference* firstReference = clause->getFirstReference();
+	Reference* secondReference = clause->getSecondReference();
 	string firstStmt = firstReference->getValue();
 	string secondStmt = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-	// Todo: assert firstEntiy and secondReference are stmts
 	// Todo: use variable instead of magic number -1
 
 	// WILDCARD WILDCARD

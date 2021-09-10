@@ -29,11 +29,11 @@ Query QueryPreprocessor::preprocessQuery(const string input) {
         throw "Return entity undeclared";
     }
 
-    vector<Relation> relList;
+    vector<Clause> relList;
     for (auto x : suchThatString) {
-        Relation rel = parser.parseSuchThatClause(x);
+        Clause rel = parser.parseSuchThatClause(x);
         relList.push_back(rel);
-        q.addRelation(&rel);
+        q.addClause(&rel);
     }
 
     // vector<PatternClause> ptCl;

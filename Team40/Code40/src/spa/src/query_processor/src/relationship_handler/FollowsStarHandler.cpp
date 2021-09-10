@@ -2,8 +2,8 @@
 
 Result FollowsStarHandler::eval() {
     Result result;
-    Reference *firstReference = relation->getFirstReference();
-    Reference *secondReference = relation->getSecondReference();
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 

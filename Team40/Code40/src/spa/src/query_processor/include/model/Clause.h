@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum class RelationType {
+enum class ClauseType {
     FOLLOWS,
     FOLLOWS_T,
     PARENT,
@@ -15,16 +15,16 @@ enum class RelationType {
     USES_P
 };
 
-class Relation {
+class Clause {
 private:
-    RelationType type;
+    ClauseType type;
     Reference first;
     Reference second;
 
 public:
-    Relation(RelationType type, Reference first, Reference second);
+    Clause(ClauseType type, Reference first, Reference second);
     Reference *getFirstReference();
     Reference *getSecondReference();
-    RelationType getType();
-    bool equals(Relation &other);
+    ClauseType getType();
+    bool equals(Clause &other);
 };
