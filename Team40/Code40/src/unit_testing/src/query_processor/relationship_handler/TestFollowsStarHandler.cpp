@@ -75,7 +75,7 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - has stmt following CON
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -88,7 +88,7 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - no stmt following CONS
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -101,7 +101,7 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - has stmt preceding CON
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -114,7 +114,7 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding CONS
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -124,7 +124,7 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding CONS
 TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -139,7 +139,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty resul
 TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -154,7 +154,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns empty resultLis
 TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -169,7 +169,7 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty resul
 TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -184,7 +184,7 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns empty resultLis
 TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -199,7 +199,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty resul
 TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
@@ -214,7 +214,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns empty resultLis
 TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -229,7 +229,7 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty resul
 TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation,&TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
@@ -244,7 +244,7 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultLis
 TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty resultList1, non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
@@ -261,7 +261,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty result
 TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultList1, empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation followsStarRelation(RelationType::FOLLOWS, stmt1, stmt2);
+    Relation followsStarRelation(RelationType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarRelation, &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
