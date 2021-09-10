@@ -66,9 +66,8 @@ public:
     virtual Iterator<string> getAllVars() {
         return Iterator(vector<string>{});
     };
-    // virtual Iterator<ConstIndex> getAllConsts();
-    virtual Iterator<string> getAllConsts() {
-        return Iterator(vector<string>{});
+    virtual Iterator<int> getAllConsts() {
+        return Iterator(vector<int>{});
     };
 
     // Follows =================================================================
