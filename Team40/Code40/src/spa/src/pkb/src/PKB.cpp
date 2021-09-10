@@ -10,38 +10,16 @@ ProcIndex PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-StmtIndex PKB::insertStmt(Statement *statement) {
-    switch (statement->getStatementType()) {
-    case StatementType::ASSIGN:
-        assignStatements.push_back(statement->getIndex());
-        break;
-    case StatementType::READ:
-        readStatements.push_back(statement->getIndex());
-        break;
-    case StatementType::PRINT:
-        printStatements.push_back(statement->getIndex());
-        break;
-    case StatementType::IF:
-        ifStatements.push_back(statement->getIndex());
-        break;
-    case StatementType::WHILE:
-        whileStatements.push_back(statement->getIndex());
-        break;
-    case StatementType::CALL:
-        callStatements.push_back(statement->getIndex());
-        break;
-    default:
-        throw runtime_error("Cannot store a statement with an unknown statement type");
-    }
-    return statementTable.insert(statement);
-}
-
 VarIndex PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
 ConstIndex PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
+}
+
+StmtIndex PKB::insertStmt(Statement *statement) {
+    return statementTable.insert(statement);
 }
 
 void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
@@ -74,32 +52,21 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
 // Query Processor
 // =============================================================================
 
-Iterator<ProcIndex> PKB::getAllProcs() { return procTable.getIndices(); }
+Iterator<ProcName> PKB::getAllProcs() { return procTable.getNames(); }
+
+Iterator<VarName> PKB::getAllVars() { return varTable.getNames(); }
+
+Iterator<int> PKB::getAllConsts() { return constTable.getValues(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
 Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
-    switch (type) {
-    case StatementType::ASSIGN:
-        return {assignStatements};
-    case StatementType::READ:
-        return {readStatements};
-    case StatementType::PRINT:
-        return {printStatements};
-    case StatementType::IF:
-        return {ifStatements};
-    case StatementType::WHILE:
-        return {whileStatements};
-    case StatementType::CALL:
-        return {callStatements};
-    default:
-        throw runtime_error("Cannot fetch an iterator of statements of an unknown statement type");
-    }
+    return statementTable.getIndices(type);
 }
 
-Iterator<VarIndex> PKB::getAllVars() { return varTable.getIndices(); }
-
-Iterator<ConstIndex> PKB::getAllConsts() { return constTable.getIndices(); }
+StatementType PKB::getStmtType(StmtIndex stmt) {
+    return statementTable.getStmtType(stmt);
+}
 
 // Follows =====================================================================
 

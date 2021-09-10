@@ -62,43 +62,40 @@ TEST_CASE("PKB: insertVar/getAllVars") {
         pkb.insertVar(&i);
     }
 
-    vector<VarIndex> test = TestPKB::createIndices();
-    vector<VarIndex> actual = pkb.getAllVars().asVector();
+    vector<VarName> actual = pkb.getAllVars().asVector();
 
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
+    for (int i = 0; i < vars.size(); i++) {
+        REQUIRE(vars.at(i).getName() == actual.at(i));
     }
 }
 
 TEST_CASE("PKB: insertConst/getAllConsts") {
     PKB pkb;
 
-    vector<ConstantValue> items = TestPKB::createConstants();
-    for (ConstantValue i : items) {
+    vector<ConstantValue> consts = TestPKB::createConstants();
+    for (ConstantValue i : consts) {
         pkb.insertConst(&i);
     }
 
-    vector<ConstIndex> test = TestPKB::createIndices();
-    vector<ConstIndex> actual = pkb.getAllConsts().asVector();
+    vector<int> actual = pkb.getAllConsts().asVector();
 
     for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
+        REQUIRE(consts.at(i).getValue() == actual.at(i));
     }
 }
 
 TEST_CASE("PKB: insertProcs/getAllProcs") {
     PKB pkb;
 
-    vector<Procedure> items = TestPKB::createProcs();
-    for (Procedure i : items) {
+    vector<Procedure> procs = TestPKB::createProcs();
+    for (Procedure i : procs) {
         pkb.insertProc(&i);
     }
 
-    vector<ProcIndex> test = TestPKB::createIndices();
-    vector<ProcIndex> actual = pkb.getAllProcs().asVector();
+    vector<ProcName> actual = pkb.getAllProcs().asVector();
 
     for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
+        REQUIRE(procs.at(i).getName() == actual.at(i));
     }
 }
 

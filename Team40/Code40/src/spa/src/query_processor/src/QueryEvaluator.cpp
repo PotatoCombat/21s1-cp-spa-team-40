@@ -62,7 +62,8 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
     if (!referenceAppearInClauses[resultIndex]) {
         vector<string> result;
-        toString(pkb->getAllStmts().asVector(), result); 
+        vector<StmtIndex> statements = pkb->getAllStmts().asVector();
+        toString(statements, result);
         return result;
     }
 
