@@ -17,7 +17,7 @@ Reference TestRelation::R2 = Reference(
     DesignEntityType::STMT, ReferenceType::CONSTANT, "_");
 
 Relation TestRelation::createFollowsRelation() {
-    return Relation(RelationType::FOLLOWS, &R1, &R2);
+    return Relation(RelationType::FOLLOWS, R1, R2);
 }
 
 TEST_CASE("Relation: get methods") {
@@ -37,19 +37,19 @@ TEST_CASE("Relation: equals") {
     Reference ref6(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "x");
 
     // all match
-    Relation rela1(RelationType::USES_S, &ref1, &ref4);
-    Relation rela2(RelationType::USES_S, &ref2, &ref5);
+    Relation rela1(RelationType::USES_S, ref1, ref4);
+    Relation rela2(RelationType::USES_S, ref2, ref5);
     REQUIRE(rela1.equals(rela2));
     // different type
-    Relation rela3(RelationType::MODIFIES_S, &ref1, &ref4);
-    Relation rela4(RelationType::USES_S, &ref2, &ref5);
+    Relation rela3(RelationType::MODIFIES_S, ref1, ref4);
+    Relation rela4(RelationType::USES_S, ref2, ref5);
     REQUIRE(!rela3.equals(rela4));
     // different first reference
-    Relation rela5(RelationType::USES_S, &ref1, &ref4);
-    Relation rela6(RelationType::USES_S, &ref3, &ref5);
+    Relation rela5(RelationType::USES_S, ref1, ref4);
+    Relation rela6(RelationType::USES_S, ref3, ref5);
     REQUIRE(!rela5.equals(rela6));
     // different second reference
-    Relation rela7(RelationType::USES_S, &ref1, &ref4);
-    Relation rela8(RelationType::USES_S, &ref2, &ref6);
+    Relation rela7(RelationType::USES_S, ref1, ref4);
+    Relation rela8(RelationType::USES_S, ref2, ref6);
     REQUIRE(!rela7.equals(rela8));
 }
