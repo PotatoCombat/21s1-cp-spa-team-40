@@ -1,6 +1,10 @@
-#include "common/model/statement/Statement.h"
+#pragma once
+
 #include <string>
 #include <vector>
+
+#include "common/model/statement/Statement.h"
+
 using namespace std;
 
 class IfStatement : public Statement {
