@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "Reference.h"
-#include "Clause.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 
@@ -11,10 +11,10 @@ struct TestClause {
     static Clause createFollowsClause();
 };
 
-Reference TestClause::R1 = Reference(
-    DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-Reference TestClause::R2 = Reference(
-    DesignEntityType::STMT, ReferenceType::CONSTANT, "_");
+Reference TestClause::R1 =
+    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+Reference TestClause::R2 =
+    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "_");
 
 Clause TestClause::createFollowsClause() {
     return Clause(ClauseType::FOLLOWS, R1, R2);

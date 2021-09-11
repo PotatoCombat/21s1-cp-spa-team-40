@@ -41,9 +41,10 @@ TEST_CASE("QueryParser: parseDeclaration") {
 TEST_CASE("QueryParser: parseRelation") {
     QueryParser parser;
 
+    vector<Reference *> refs = TestQueryParser::createReferenceV();
+
     Clause expected = TestQueryParser::createClause();
-    Clause *actual = parser.parseClause(TestQueryParser::REL, 
-        TestQueryParser::createReferenceV());
+    Clause *actual = parser.parseClause(TestQueryParser::REL, refs);
 
     REQUIRE(actual->getType() == ClauseType::FOLLOWS_T);
     REQUIRE(actual->getType() == expected.getType());

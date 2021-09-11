@@ -79,7 +79,7 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
     vector<int> actual = pkb.getAllConsts().asVector();
 
     for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(consts.at(i).getValue() == actual.at(i));
+        REQUIRE(items.at(i).getValue() == actual.at(i));
     }
 }
 
