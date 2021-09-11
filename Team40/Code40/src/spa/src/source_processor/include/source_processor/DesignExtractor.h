@@ -21,10 +21,8 @@
 #include "source_processor/FollowsExtractor.h"
 
 class DesignExtractor {
-    PKB pkb;
-
 public:
-    explicit DesignExtractor(PKB pkb);
+    explicit DesignExtractor(PKB *pkb);
 
     // Program
     void extract(Program program);
@@ -75,4 +73,7 @@ public:
 
     // ConstantValue
     ConstIndex extractConstantValue(ConstantValue *constantValue);
+
+private:
+    PKB *pkb;
 };

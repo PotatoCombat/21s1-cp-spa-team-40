@@ -8,10 +8,10 @@ class FollowsExtractor {
 private:
     vector<vector<Statement *>> statementLists;
     EntityContext<Statement> ctx;
-    PKB pkb;
+    PKB *pkb;
 
 public:
-    explicit FollowsExtractor(PKB pkb);
+    explicit FollowsExtractor(PKB *pkb);
     // Program
     void extract(Program program);
 

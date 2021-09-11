@@ -18,5 +18,5 @@ private:
 
 public:
     QueryPreprocessor() = default;
-    void preprocessQuery(const string input, Query &q);
+    void preprocessQuery(string input, Query &q);
 };

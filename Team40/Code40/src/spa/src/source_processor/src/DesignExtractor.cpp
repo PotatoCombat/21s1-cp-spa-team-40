@@ -2,7 +2,7 @@
 
 using namespace std;
 
-DesignExtractor::DesignExtractor(PKB pkb) : pkb(pkb) {}
+DesignExtractor::DesignExtractor(PKB *pkb) : pkb(pkb) {}
 
 void DesignExtractor::extract(Program program) {
     extractDepthFirst(program);
@@ -21,7 +21,7 @@ void DesignExtractor::extractBreadthFirst(Program program) {
 }
 
 ProcIndex DesignExtractor::extractProcedure(Procedure *procedure) {
-    ProcIndex procIndex = pkb.insertProc(procedure);
+    ProcIndex procIndex = pkb->insertProc(procedure);
     ExtractionContext::getInstance().getProcedureContext().push(procedure);
     for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);
@@ -64,7 +64,7 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
 
 StmtIndex
 DesignExtractor::extractAssignStatement(AssignStatement *assignStatement) {
-    StmtIndex stmtIndex = pkb.insertStmt(assignStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
 
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
@@ -81,7 +81,7 @@ DesignExtractor::extractAssignStatement(AssignStatement *assignStatement) {
 }
 
 StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
-    StmtIndex stmtIndex = pkb.insertStmt(callStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
 
     /// TODO: Topologically sort all Procedures, so that Procedures are
     /// guaranteed to be extracted before they are called,
@@ -90,18 +90,18 @@ StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
     Procedure procedure = callStatement->getProcedure();
 
     set<VarName> modifiedVarNames =
-        pkb.getVarsModifiedByProc(procedure.getName());
+        pkb->getVarsModifiedByProc(procedure.getName());
     if (!modifiedVarNames.empty()) {
         for (VarName modifiedVarName : modifiedVarNames) {
-            Variable *modifiedVar = pkb.getVarByName(modifiedVarName);
+            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
             extractModifiesRelationship(modifiedVar);
         }
     }
 
-    set<VarName> usedVarNames = pkb.getVarsUsedByProc(procedure.getName());
+    set<VarName> usedVarNames = pkb->getVarsUsedByProc(procedure.getName());
     if (!usedVarNames.empty()) {
         for (VarName usedVarName : usedVarNames) {
-            Variable *usedVar = pkb.getVarByName(usedVarName);
+            Variable *usedVar = pkb->getVarByName(usedVarName);
             extractUsesRelationship(usedVar);
         }
     }
@@ -111,7 +111,7 @@ StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
 
 StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb.insertStmt(ifStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
 
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
@@ -133,7 +133,7 @@ StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
 }
 
 StmtIndex DesignExtractor::extractReadStatement(ReadStatement *readStatement) {
-    StmtIndex stmtIndex = pkb.insertStmt(readStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
     ExtractionContext::getInstance().setModifyingStatement(readStatement);
     extractVariable(readStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
@@ -142,7 +142,7 @@ StmtIndex DesignExtractor::extractReadStatement(ReadStatement *readStatement) {
 
 StmtIndex
 DesignExtractor::extractPrintStatement(PrintStatement *printStatement) {
-    StmtIndex stmtIndex = pkb.insertStmt(printStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
     extractVariable(printStatement->getVariable());
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
@@ -152,7 +152,7 @@ DesignExtractor::extractPrintStatement(PrintStatement *printStatement) {
 StmtIndex
 DesignExtractor::extractWhileStatement(WhileStatement *whileStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb.insertStmt(whileStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
 
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
@@ -273,7 +273,7 @@ void DesignExtractor::extractFactor(Factor *factor) {
 }
 
 VarIndex DesignExtractor::extractVariable(Variable *variable) {
-    VarIndex varIndex = pkb.insertVar(variable);
+    VarIndex varIndex = pkb->insertVar(variable);
     extractUsesRelationship(variable);
     extractModifiesRelationship(variable);
     return varIndex;
@@ -287,14 +287,14 @@ void DesignExtractor::extractUsesRelationship(Variable *variable) {
     }
 
     // 1. Handle using statement
-    pkb.insertStmtUsingVar(usingStatement.value(), variable);
+    pkb->insertStmtUsingVar(usingStatement.value(), variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb.insertStmtModifyingVar(parentStatement, variable);
+            pkb->insertStmtModifyingVar(parentStatement, variable);
         }
     }
 
@@ -303,7 +303,7 @@ void DesignExtractor::extractUsesRelationship(Variable *variable) {
         ExtractionContext::getInstance().getProcedureContext().getAllEntities();
     if (!usingProcedures.empty()) {
         for (Procedure *usingProcedure : usingProcedures) {
-            pkb.insertProcUsingVar(usingProcedure, variable);
+            pkb->insertProcUsingVar(usingProcedure, variable);
         }
     }
 }
@@ -316,14 +316,14 @@ void DesignExtractor::extractModifiesRelationship(Variable *variable) {
     }
 
     // 1. Handle modifying statement
-    pkb.insertStmtModifyingVar(modifyingStatement.value(), variable);
+    pkb->insertStmtModifyingVar(modifyingStatement.value(), variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb.insertStmtModifyingVar(parentStatement, variable);
+            pkb->insertStmtModifyingVar(parentStatement, variable);
         }
     }
 
@@ -332,11 +332,11 @@ void DesignExtractor::extractModifiesRelationship(Variable *variable) {
         ExtractionContext::getInstance().getProcedureContext().getAllEntities();
     if (!modifyingProcedures.empty()) {
         for (Procedure *modifyingProcedure : modifyingProcedures) {
-            pkb.insertProcModifyingVar(modifyingProcedure, variable);
+            pkb->insertProcModifyingVar(modifyingProcedure, variable);
         }
     }
 }
 
 ConstIndex DesignExtractor::extractConstantValue(ConstantValue *constantValue) {
-    return pkb.insertConst(constantValue);
+    return pkb->insertConst(constantValue);
 }
