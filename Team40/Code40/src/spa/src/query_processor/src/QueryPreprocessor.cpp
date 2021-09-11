@@ -10,7 +10,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         tokenizer.tokenizeDeclaration(parts.first, declString);
         retString = tokenizer.tokenizeReturn(parts.second, clauses);
 
-        vector<Reference *> refList;
+        vector<Reference *> refList; // need to handle deleting of these objects
         for (auto x : declString) {
             Reference *r = parser.parseDeclaration(x);
             refList.push_back(r);
