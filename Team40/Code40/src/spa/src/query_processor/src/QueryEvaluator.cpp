@@ -1,4 +1,4 @@
-#include "QueryEvaluator.h"
+#include "query_processor/QueryEvaluator.h"
 
 QueryEvaluator::QueryEvaluator(PKB* pkb) { this->pkb = pkb; }
 
@@ -106,35 +106,38 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
-                toString(pkb->getAllConsts().asVector(), result);
+                vector<int> consts = pkb->getAllConsts().asVector();
+                toString(consts, result);
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
-                toString(pkb->getAllStmts(StatementType::ASSIGN).asVector(),
-                         result);
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::ASSIGN).asVector();
+                toString(stmts, result);
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::CALL) {
-                toString(pkb->getAllStmts(StatementType::CALL).asVector(),
-                         result);
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::CALL).asVector();
+                toString(stmts, result);
+                toString(stmts, result);
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::IF) {
-                toString(pkb->getAllStmts(StatementType::IF).asVector(),
-                         result);
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::IF).asVector();
+                toString(stmts, result);
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::PRINT) {
-                toString(pkb->getAllStmts(StatementType::PRINT).asVector(),
-                         result);
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::PRINT).asVector();
+                toString(stmts, result);
                 return result;
             }
             if (returnReference->getDeType() == DesignEntityType::READ) {
-                toString(pkb->getAllStmts(StatementType::READ).asVector(),
-                         result);
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::READ).asVector();
+                toString(stmts, result);
                 return result;
             }
-            toString(pkb->getAllStmts().asVector(), result);
+            vector<StmtIndex> stmts = pkb->getAllStmts().asVector();
+            toString(stmts, result);
 
             return result;
         }

@@ -1,8 +1,8 @@
 #include "source_processor/FollowsExtractor.h"
 
-FollowsExtractor::FollowsExtractor(PKB pkb)
-    : pkb(std::move(pkb)),
-      ctx(ExtractionContext::getInstance().getFollowsContext()){};
+FollowsExtractor::FollowsExtractor(PKB *pkb)
+    : pkb(pkb),
+      ctx(ExtractionContext::getInstance().getFollowsContext()) {};
 
 void FollowsExtractor::extract(Program program) {
     for (Procedure procedure : program.getProcLst()) {
@@ -25,7 +25,7 @@ void FollowsExtractor::extractStatementList(
 
 void FollowsExtractor::extractStatement(Statement *statement) {
     for (Statement *prev : ctx.getAllEntities()) {
-        pkb.insertFollows(prev, statement);
+        pkb->insertFollows(prev, statement);
     }
     StatementType type = statement->getStatementType();
     if (type == StatementType::IF || type == StatementType::WHILE) {

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Query.h"
-#include "QueryPreprocessor.h"
+#include "query_processor/QueryPreprocessor.h"
 
 struct TestQPreprocessor {
     static const string INPUT_1;

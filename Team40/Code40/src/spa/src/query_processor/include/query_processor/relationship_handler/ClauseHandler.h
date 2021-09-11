@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Clause.h"
-#include "Result.h"
-#include "pkb/PKB.h"
-#include "common/model/statement/Statement.h"
 #include "ClauseHandlerError.h"
+
+#include "common/model/statement/Statement.h"
+
+#include "pkb/PKB.h"
+
+#include "query_processor/Result.h"
+#include "query_processor/model/Clause.h"
 
 class ClauseHandler {
 protected:

@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "Abstractions.h"
-#include "QueryParser.h"
+#include "query_processor/Abstractions.h"
+#include "query_processor/QueryParser.h"
 
 struct TestQueryParser {
     static const DeclPair DECL;

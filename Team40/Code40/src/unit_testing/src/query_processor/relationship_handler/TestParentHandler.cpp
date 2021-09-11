@@ -1,9 +1,9 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
+#include "Clause.h"
 #include "ParentHandler.h"
 #include "Reference.h"
-#include "Clause.h"
-#include "Result.h"
+#include "query_processor/Result.h"
 
 #include "catch.hpp"
 

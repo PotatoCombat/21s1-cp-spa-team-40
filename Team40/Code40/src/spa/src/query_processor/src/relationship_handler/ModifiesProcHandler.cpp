@@ -1,4 +1,4 @@
-#include "ModifiesProcHandler.h"
+#include "query_processor/relationship_handler/ModifiesProcHandler.h"
 
 Result ModifiesProcHandler::eval() {
     Result result;

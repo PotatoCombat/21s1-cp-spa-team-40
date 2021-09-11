@@ -5,23 +5,24 @@
 #include <vector>
 
 #include "Abstractions.h"
-#include "ClauseTypeHelper.h"
-#include "DesignEntityTypeHelper.h"
+
+#include "query_processor/model/ClauseTypeHelper.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 
 using namespace std;
 
 class QueryTokenizer {
 private:
-    const string KEYWORD_SELECT = "Select";
-    const string KEYWORD_SUCH_THAT = "such that";
-    const string KEYWORD_PATTERN = "pattern";
+    inline static const string KEYWORD_SELECT = "Select";
+    inline static const string KEYWORD_SUCH_THAT = "such that";
+    inline static const string KEYWORD_PATTERN = "pattern";
 
-    const string WHITESPACE_SET = " \n\t\r";
-    const char WHITESPACE = ' ';
-    const char L_BRACKET = '(';
-    const char COMMA = ',';
-    const char R_BRACKET = ')';
-    const char SEMICOLON = ';';
+    inline static const string WHITESPACE_SET = " \n\t\r";
+    inline static const char WHITESPACE = ' ';
+    inline static const char L_BRACKET = '(';
+    inline static const char COMMA = ',';
+    inline static const char R_BRACKET = ')';
+    inline static const char SEMICOLON = ';';
 
     // helpers
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();

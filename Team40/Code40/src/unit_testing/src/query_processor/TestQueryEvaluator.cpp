@@ -1,7 +1,7 @@
-#include "Reference.h"
 #include "Clause.h"
-#include "QueryEvaluator.h"
 #include "Query.h"
+#include "Reference.h"
+#include "query_processor/QueryEvaluator.h"
 #include "test_util/PKBStub.h"
 #include "test_util/PKBStub2.h"
 

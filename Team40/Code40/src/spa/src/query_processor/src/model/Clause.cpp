@@ -1,4 +1,4 @@
-#include "Clause.h"
+#include "query_processor/model/Clause.h"
 
 Clause::Clause(ClauseType type, Reference first, Reference second)
     : type(type), first(first), second(second) {}

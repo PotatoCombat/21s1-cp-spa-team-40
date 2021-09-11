@@ -1,6 +1,4 @@
-#pragma once
-
-#include "ClauseTypeHelper.h"
+#include "query_processor/model/ClauseTypeHelper.h"
 
 ClauseTypeHelper::ClauseTypeHelper() {
     typeToStringMap = {

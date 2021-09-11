@@ -3,12 +3,14 @@
 #include <string>
 #include <vector>
 
-#include "Clause.h"
-#include "Result.h"
-#include "Reference.h"
 #include "ClauseHandler.h"
 #include "ClauseHandlerError.h"
+
 #include "pkb/PKB.h"
+
+#include "query_processor/Result.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 

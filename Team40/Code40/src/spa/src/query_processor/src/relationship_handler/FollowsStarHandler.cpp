@@ -1,4 +1,4 @@
-#include "FollowsStarHandler.h"
+#include "query_processor/relationship_handler/FollowsStarHandler.h"
 
 Result FollowsStarHandler::eval() {
     Result result;

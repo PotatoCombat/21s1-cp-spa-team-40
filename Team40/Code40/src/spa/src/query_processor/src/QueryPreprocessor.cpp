@@ -1,4 +1,4 @@
-#include "QueryPreprocessor.h"
+#include "query_processor/QueryPreprocessor.h"
 
 void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     try {
