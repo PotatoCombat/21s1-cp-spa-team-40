@@ -1,4 +1,10 @@
 #include "common/model/ConstantValue.h"
 
-ConstantValue::ConstantValue(int value) : Factor(FactorType::CONSTANT, value) {}
-std::string ConstantValue::getName() { return std::to_string(this->getValue()); }
+using namespace std;
+
+ConstantValue::ConstantValue(int value)
+    : Factor(FactorType::CONSTANT), value(value) {}
+
+string ConstantValue::getName() { return to_string(this->getValue()); }
+
+int ConstantValue::getValue() { return value; }

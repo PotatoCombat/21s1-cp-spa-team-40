@@ -1,4 +1,4 @@
-#include "Reference.h"
+#include "query_processor/model/Reference.h"
 
 const string Reference::WILDCARD = "_";
 
@@ -16,3 +16,9 @@ bool Reference::equals(Reference &other) {
         this->getDeType() == other.getDeType() &&
         this->getRefType() == other.getRefType();
 }
+
+Reference* Reference::copy() {
+    return new Reference(this->deType, this->refType, this->value);
+}
+
+Reference::~Reference() {}

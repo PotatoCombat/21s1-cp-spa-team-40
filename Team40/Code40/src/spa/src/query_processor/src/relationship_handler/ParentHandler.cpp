@@ -1,16 +1,17 @@
-#include "ParentHandler.h"
+#include "query_processor/relationship_handler/ParentHandler.h"
 
 Result ParentHandler::eval() {
     Result result;
-    Reference *firstReference = relation->getFirstReference();
-    Reference *secondReference = relation->getSecondReference();
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
     string firstStmt = firstReference->getValue();
     string secondStmt = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-    // Todo: assert firstEntiy and secondReference are stmts
     // Todo: use variable instead of magic number -1
+
+    // assertions
+    validate();
 
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
@@ -52,7 +53,8 @@ Result ParentHandler::eval() {
         secondReference->getRefType() == ReferenceType::CONSTANT) {
         vector<string> firstStmtResults;
         int parentStmt = pkb->getParentStmt(stoi(secondStmt));
-        if (parentStmt != -1) {
+        if (parentStmt != -1 &&
+            isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(parentStmt))) {
             firstStmtResults.push_back(to_string(parentStmt));
         }
         result.setResultList1(firstReference, firstStmtResults);
@@ -65,7 +67,9 @@ Result ParentHandler::eval() {
         vector<string> secondStmtResults;
         set<int> childStmts = pkb->getChildStmts(stoi(firstStmt));
         for (auto childStmt : childStmts) {
-            secondStmtResults.push_back(to_string(childStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+            }
         }
         result.setResultList2(secondReference, secondStmtResults);
         return result;
@@ -74,16 +78,31 @@ Result ParentHandler::eval() {
     // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> parentStmts = pkb->getAllStmts().asVector();
+    vector<int> parentStmts;
+    if (firstReference->getDeType() == DesignEntityType::STMT) {
+        parentStmts = pkb->getAllStmts().asVector();
+    } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
+        parentStmts = pkb->getAllStmts(firstStmtType).asVector();
+    }
+
     for (int parentStmt : parentStmts) {
         set<int> childStmts = pkb->getChildStmts(parentStmt);
         if (childStmts.size() == 0) {
             continue;
         }
-        firstStmtResults.push_back(to_string(parentStmt));
+        bool hasMatchingChild = false;
+        
         for (auto childStmt : childStmts) {
-            secondStmtResults.push_back(to_string(childStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
+                secondStmtResults.push_back(to_string(childStmt));
+                hasMatchingChild = true;
+            }
         }  
+
+        if (hasMatchingChild) {
+            firstStmtResults.push_back(to_string(parentStmt));
+        }
     }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
@@ -95,4 +114,22 @@ Result ParentHandler::eval() {
     }
 
     return result;
+}
+
+void ParentHandler::validate() {
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("ParentHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("ParentHandler: second argument must be statement type");
+    }
+
+    if (clause->getType() != ClauseType::PARENT) {
+        throw ClauseHandlerError("ParentHandler: relation type must be PARENT");
+    }
 }

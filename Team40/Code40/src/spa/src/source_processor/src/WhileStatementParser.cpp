@@ -28,7 +28,7 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
             ProgramParser parser;
             Statement nestedStmt = parser.parseStatement(
                 currContent, currIndex, programLines, programIndex);
-            stmt.addStatement(nestedStmt);
+            stmt.addStatement(&nestedStmt);
         }
     }
 }

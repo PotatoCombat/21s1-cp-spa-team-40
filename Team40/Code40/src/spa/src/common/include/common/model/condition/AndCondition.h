@@ -9,4 +9,7 @@ private:
 
 public:
     AndCondition(Condition *cond1, Condition *cond2);
+
+    Condition *getPrimaryCondition() override;
+    Condition *getSecondaryCondition() override;
 };

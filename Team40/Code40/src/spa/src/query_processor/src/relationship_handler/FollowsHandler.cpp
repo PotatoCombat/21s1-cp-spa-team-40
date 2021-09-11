@@ -1,21 +1,22 @@
-#include "FollowsHandler.h"
+#include "query_processor/relationship_handler/FollowsHandler.h"
 
 Result FollowsHandler::eval() {
     Result result;
-	Reference* firstReference = relation->getFirstReference();
-	Reference* secondReference = relation->getSecondReference();
+	Reference* firstReference = clause->getFirstReference();
+	Reference* secondReference = clause->getSecondReference();
 	string firstStmt = firstReference->getValue();
 	string secondStmt = secondReference->getValue();
 
-    // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-	// Todo: assert firstEntiy and secondReference are stmts
 	// Todo: use variable instead of magic number -1
+
+    // assertions
+    validate();
 
 	// WILDCARD WILDCARD
 	if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
         vector<int> allStmts = pkb->getAllStmts().asVector();
+        
         for (auto stmt : allStmts) {
             if (pkb->getFollowingStmt(stmt) != -1) {
                 result.setValid(true);
@@ -36,14 +37,16 @@ Result FollowsHandler::eval() {
 	// CONSTANT WILDCARD
     if (firstReference->getRefType() == ReferenceType::CONSTANT &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
-        result.setValid(pkb->getFollowingStmt(stoi(firstStmt)) != -1);
+        int followingStmt = pkb->getFollowingStmt(stoi(firstStmt));
+        result.setValid(followingStmt != -1);
         return result;
 	}
 
 	// WILDCARD CONSTANT
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->getPrecedingStmt(stoi(secondStmt)) != -1);
+        int precedingStmt = pkb->getPrecedingStmt(stoi(secondStmt));
+        result.setValid(precedingStmt != -1);
         return result;
 	}
 
@@ -52,7 +55,8 @@ Result FollowsHandler::eval() {
 		secondReference->getRefType() == ReferenceType::CONSTANT) {
 		vector<string> firstStmtResults;
         int precedingStmt = pkb->getPrecedingStmt(stoi(secondStmt));
-        if (precedingStmt != -1) {
+        if (precedingStmt != -1 &&
+            isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(precedingStmt))) {
             firstStmtResults.push_back(to_string(precedingStmt));
         }
 		result.setResultList1(firstReference,firstStmtResults);
@@ -64,7 +68,8 @@ Result FollowsHandler::eval() {
 		&& secondReference->getRefType() == ReferenceType::SYNONYM) {
 		vector<string> secondStmtResults;
         int followingStmt = pkb->getFollowingStmt(stoi(firstStmt));
-        if (followingStmt != -1) {
+        if (followingStmt != -1 && 
+            isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
             secondStmtResults.push_back(to_string(followingStmt));
 		}
 		result.setResultList2(secondReference, secondStmtResults);
@@ -74,10 +79,18 @@ Result FollowsHandler::eval() {
 	// NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> precedingStmts = pkb->getAllStmts().asVector();
+    vector<int> precedingStmts;
+    if (firstReference->getDeType() == DesignEntityType::STMT) {
+        precedingStmts = pkb->getAllStmts().asVector();
+    } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
+        precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
+    }
+
     for (int precedingStmt : precedingStmts) {
         int followingStmt = pkb->getFollowingStmt(precedingStmt);
-        if (followingStmt == -1) {
+        if (followingStmt == -1 ||
+            !isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
             continue;
         }
         firstStmtResults.push_back(to_string(precedingStmt));
@@ -93,4 +106,22 @@ Result FollowsHandler::eval() {
     }
 
 	return result;
+}
+
+void FollowsHandler::validate() {
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("FollowsHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("FollowsHandler: second argument must be statement type");
+    }
+
+    if (clause->getType() != ClauseType::FOLLOWS) {
+        throw ClauseHandlerError("FollowsHandler: relation type must be FOLLOWS");
+    }
 }

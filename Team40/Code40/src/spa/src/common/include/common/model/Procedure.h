@@ -9,14 +9,14 @@ private:
     string name; // passing 'const string' {aka 'const
                  // std::__cxx11::basic_string<char>'} as 'this' argument
                  // discards qualifiers [-fpermissive]gcc
-    vector<Statement> stmtLst;
+    vector<Statement *> stmtLst;
 
 public:
     Procedure(string name);
 
-    void addToStmtLst(Statement stmt);
+    void addToStmtLst(Statement *stmt);
 
     string getName();
 
-    vector<Statement> getStmtLst();
+    vector<Statement *> getStmtLst();
 };

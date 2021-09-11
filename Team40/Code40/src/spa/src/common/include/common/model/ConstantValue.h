@@ -4,7 +4,11 @@
 #include "string"
 
 class ConstantValue : public Factor {
+    int value;
+
 public:
     explicit ConstantValue(int value);
-    std::string getName();
+
+    int getValue();
+    string getName();
 };

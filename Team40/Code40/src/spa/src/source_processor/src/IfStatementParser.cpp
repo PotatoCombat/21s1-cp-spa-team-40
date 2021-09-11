@@ -23,19 +23,19 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        ProgramParser parser;
-        Statement nestedStmt = parser.parseStatement(
-            currContent, currIndex, programLines, programIndex);
         if (hasTerminator(currContent)) {
             terminator++;
             continue;
         }
+        ProgramParser parser;
+        Statement nestedStmt = parser.parseStatement(
+            currContent, currIndex, programLines, programIndex);
         if (currIndex == 0 || terminator == 2) {
             break;
         } else if (terminator == 0) {
-            stmt.addThenStatement(nestedStmt);
+            stmt.addThenStatement(&nestedStmt);
         } else if (terminator == 1) {
-            stmt.addElseStatement(nestedStmt);
+            stmt.addElseStatement(&nestedStmt);
         }
     }
 }

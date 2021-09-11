@@ -1,160 +1,190 @@
-#include "QueryTokenizer.h"
-// #include <cstring> // am i able to use c libraries? :(
+#include "query_processor/QueryTokenizer.h"
 
-string QueryTokenizer::trimString(string input) {
-    // char* split = strrchr(*(this->query), delimiter);
-    string whitespace = " \n\t\r";
-    // return first position non-whitespace
-    size_t front_w = input.find_first_not_of(whitespace);
-    // return last position non-whitespace
-    size_t back_w = input.find_last_not_of(whitespace);
-    string x;
+pair<string, string> QueryTokenizer::separateDeclaration(string input) {
+    size_t split = input.rfind(SEMICOLON);
+
+    if (split == string::npos) {
+        throw "error"; // no declaration
+    }
+
+    string firstHalf = trim(input.substr(0, split + 1));
+    string secondHalf = trim(input.substr(split + 1));
+
+    return make_pair(firstHalf, secondHalf);
+}
+
+string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
+    size_t first_w = findFirstWhitespace(input);
+    string sub;
+    string rem;
+
+    if (first_w == string::npos) {
+        //remaining = "";
+        //return "";
+        throw "error"; // no return
+    }
+
+    sub = input.substr(0, first_w);
+    rem = trimL(input.substr(first_w + 1));
+
+    if (sub != KEYWORD_SELECT) {
+        throw "error"; // no return identifier
+    }
+
+    size_t next_w = findFirstWhitespace(rem);
+
+    if (next_w == string::npos) {
+        remaining = "";
+        return rem;
+    }
+
+    sub = rem.substr(0, next_w);
+    rem = trimL(rem.substr(next_w + 1));
+    remaining = rem;
+    return sub;
+}
+
+void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) {
+    size_t sem_pos;
+    size_t space_pos;
+    string type;
+    string rem = input;
+
+    sem_pos = rem.find(SEMICOLON); // position of semicolon
+    while (sem_pos != string::npos) {
+        string sub = trim(rem.substr(0, sem_pos)); // e.g. assign x, y
+        rem = trim(rem.substr(sem_pos + 1));
+        
+        space_pos = sub.find(WHITESPACE); // position of whitespace
+        string type = sub.substr(0, space_pos);
+
+        // check if first part is a design entity type
+
+        deHelper.getType(type); // throws if not
+
+        // remaining string should have either
+        // comma, comma + whitespace, none
+        string rest = trim(sub.substr(space_pos + 1));
+        vector<string> declSyn;
+        splitComma(rest, declSyn);
+        for (auto x : declSyn) {
+            decls.push_back(make_pair(type, x));
+        }
+        sem_pos = rem.find(SEMICOLON);
+    }
+
+    return;
+}
+
+void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss, vector<PatTuple>& pats) {
+    size_t first_b = input.find(R_BRACKET); // find the first close bracket
+
+    if (first_b == string::npos) {
+        throw "error"; // no close bracket
+    }
+    
+    string sub = input.substr(0, first_b + 1);
+    string rem = trimL(input.substr(first_b + 1));
+
+    ClsTuple clsT;
+
+    size_t st = sub.find(KEYWORD_SUCH_THAT);
+    if (st != string::npos) {
+        // TODO: check whether such that or such thatsomething
+        string stclause = trim(sub.substr(KEYWORD_SUCH_THAT.size() + 1));
+        splitBCBRel(stclause, clsT);
+    }
+
+    st = rem.find(KEYWORD_SUCH_THAT);
+    if (st != string::npos) {
+        // TODO: check whether such that or such thatsomething
+        string stclause = trim(rem.substr(KEYWORD_SUCH_THAT.size() + 1));
+        splitBCBRel(stclause, clsT);
+    }
+
+    PatTuple patT;
+    //splitBCBRel(sub, patT);
+
+    clss.push_back(clsT);
+    //pats.push_back(patT);
+    return;
+}
+
+// helper functions
+string QueryTokenizer::trim(string input) {
+    size_t front_w = input.find_first_not_of(WHITESPACE_SET);
+    size_t back_w = input.find_last_not_of(WHITESPACE_SET);
     if (back_w != string::npos && front_w != string::npos) {
-        x = input.substr(front_w, back_w - front_w + 1);
-    } else {
-        throw "Empty string"; // TODO: Test
+        return input.substr(front_w, back_w - front_w + 1);
     }
-    return x;
+    // throw "Empty string";
+    return "";
 }
 
-pair<string, string> QueryTokenizer::splitDecl(string input) {
-    string whitespace = " ";
-    size_t w_pos = input.find(whitespace);
-    if (w_pos == string::npos) {
-        throw "No whitespace";
+string QueryTokenizer::trimL(string input) {
+    size_t front_w = input.find_first_not_of(WHITESPACE_SET);
+    if (front_w != string::npos) {
+        return input.substr(front_w);
     }
-    return make_pair(input.substr(0, w_pos), input.substr(w_pos+1));
+    return "";
 }
 
-// split '(' _ ',' _ ')'
-tuple<string, string, string> QueryTokenizer::splitBCB(string input) {
-    string partial;
-    string rel;
-    string ref1;
-    string ref2;
+string QueryTokenizer::trimR(string input) {
+    size_t back_w = input.find_last_not_of(WHITESPACE_SET);
+    if (back_w != string::npos) {
+        return input.substr(0, back_w+1);
+    }
+    return "";
+}
+
+void QueryTokenizer::splitComma(string input, vector<string> &vec) {
+    string rem = input;
+
+    size_t split = rem.find(COMMA);
+    while (split != string::npos) {
+        string sub = trimR(rem.substr(0, split));
+        vec.push_back(sub);
+        rem = trimL(rem.substr(split + 1));
+        split = rem.find(COMMA);
+    }
+    if (rem.size() > 0) {
+        vec.push_back(rem);
+    }
+
+    return;
+}
+
+size_t QueryTokenizer::findFirstWhitespace(string input) {
+    size_t first_w = input.find_first_of(WHITESPACE_SET);
+    return first_w;
+}
+
+void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
+    // check count
+    int l_c = count(input.begin(), input.end(), L_BRACKET);
+    int r_c = count(input.begin(), input.end(), R_BRACKET);
+    int c_c = count(input.begin(), input.end(), COMMA);
+
+    if (!(l_c == 1 && r_c == 1 && c_c == 1)) {
+        throw "error"; // unmatched ( , ) syntax
+    }
+
+    size_t l_b = input.find(L_BRACKET);
+    size_t r_b = input.find(R_BRACKET);
+    size_t c = input.find(COMMA);
+
+    if (!(l_b < c && c < r_b) || l_b == 0) {
+        throw "error"; // unmatched Keyword( , ) syntax
+    }
+
+    if (l_b + 1 == c || c + 1 == r_b) {
+        throw "error"; // no arguments
+    }
+
+    string key = trim(input.substr(0, l_b));
+    string a1 = trim(input.substr(l_b + 1, c - (l_b + 1)));
+    string a2 = trim(input.substr(c + 1, r_b - (c + 1)));
+    tup = make_tuple(key, a1, a2);
     
-    size_t pos = input.find('(');
-    if (pos == string::npos) {
-        throw "Invalid clause";
-    }
-    rel = trimString(input.substr(0, pos));
-    partial = input.substr(pos + 1);
-
-    pos = partial.find(',');
-    if (pos == string::npos) {
-        throw "Invalid clause";
-    }
-    ref1 = trimString(partial.substr(0, pos));
-    partial = partial.substr(pos + 1);
-
-    pos = partial.find(')');
-    if (pos == string::npos) {
-        throw "Invalid clause";
-    }
-    ref2 = trimString(partial.substr(0, pos));
-
-    return make_tuple(rel, ref1, ref2);
-}
-
-pair<string, string> QueryTokenizer::splitIntoParts(string queryString) {
-    char delimiter = ';';
-    string whitespace = " \n\t\r";
-    int split = queryString.rfind(delimiter);
-    string declaration = queryString.substr(0, split + 1);
-    try {
-        declaration = trimString(declaration);
-    } catch (const char *msg) {
-        throw "Empty declaration";  // TODO: Test
-    }
-    string selectClause = queryString.substr(split + 1);
-    try {
-        selectClause = trimString(selectClause);
-    } catch (const char *msg) {
-        throw "Empty select clause";  // TODO: Test
-    }
-    return make_pair(declaration, selectClause);
-}
-
-// return <designentity, syn>
-vector<pair<string, string>> QueryTokenizer::tokenizeDeclaration(string declaration) {
-    // split by ;
-    // TODO: handle ,
-    vector<pair<string, string>> decl;
-    string::iterator it;
-    string::iterator itB;
-    it = declaration.begin();
-    itB = declaration.begin();
-    // int found = 0;
-    for (; it != declaration.end(); ++it) {
-        if (*it == ';') {
-            decl.push_back(splitDecl(trimString(string(itB, it))));
-            itB = it + 1;
-            // found = 1;
-        }
-    }
-    return decl;
-}
-
-// takes in all non declaration input
-string QueryTokenizer::tokenizeReturnEntity(string clause) {
-    string re;
-    string partial;
-
-    size_t selectKeyword = clause.find("Select"); // length 6
-    // TODO: Test truth for the following lines
-    if (selectKeyword != string::npos) {
-        partial = trimString(clause.substr(selectKeyword + 6));
-    }
-
-    size_t firstWhitespace = partial.find(" ");
-    if (firstWhitespace != string::npos) {
-        re = trimString(partial.substr(0, firstWhitespace));
-    }
-    return re;
-}
-
-vector<tuple<string, string, string>> QueryTokenizer::tokenizeSuchThatClause(string clause) {
-    string result;
-    size_t suchThatPos = clause.find("such that"); // length 9
-    
-    if (suchThatPos == string::npos) {
-        return vector<tuple<string, string, string>>();
-    }
-
-    result = trimString(clause.substr(suchThatPos + 9));
-
-    size_t patternPos = clause.find("pattern");    // length 7
-
-    if (patternPos != string::npos) {
-        if (patternPos > suchThatPos) {
-            result = trimString(result.substr(0, patternPos));
-        }
-    }
-
-    tuple<string, string, string> tup = splitBCB(result);
-
-    return vector<tuple<string, string, string>>{tup};
-}
-
-vector<tuple<string, string, string>> QueryTokenizer::tokenizePatternClause(string clause) {
-    string result;
-    size_t patternPos = clause.find("pattern");    // length 7
-
-    if (patternPos == string::npos) {
-        return vector<tuple<string, string, string>>();
-    }
-
-    result = trimString(clause.substr(patternPos + 9));
-
-    size_t suchThatPos = clause.find("such that"); // length 9
-
-    if (suchThatPos != string::npos) {
-        if (suchThatPos > patternPos) {
-            result = trimString(result.substr(0, suchThatPos));
-        }
-    }
-
-    tuple<string, string, string> tup = splitBCB(result);
-
-    return vector<tuple<string, string, string>>{tup};
+    return;
 }

@@ -7,12 +7,18 @@
 #include "pkb/Iterator.h"
 #include "pkb/PKB.h"
 
+#include "common/model/statement/Statement.h"
+
 using namespace std;
 
 // based on the Example procedure in Test40/sample_source
 class PKBStub : public PKB {
 public:
     Iterator<StmtIndex> getAllStmts();
+
+    Iterator<StmtIndex> getAllStmts(StatementType stmtType);
+
+    StatementType getStmtType(StmtIndex stmt);
 
     StmtIndex getFollowingStmt(StmtIndex stmt);
     StmtIndex getPrecedingStmt(StmtIndex stmt);
