@@ -16,11 +16,15 @@ class Parser {
 public:
     // parse file input
     vector<Line> parseFile(fstream &file);
+    vector<vector<string>> tokenizeFile(fstream &file);
+    tuple<vector<string>, vector<string>> splitLine(vector<string> inputLine);
     vector<string> parseLine(string input);
-    void parseSymbol(string input, int &index, char curr, string &currString,
-                     vector<string> &inputLine);
-    void parseKeyword(string input, int &index, string &currString,
-                      vector<string> &inputLine);
+
+    // helper functions
+    void parseAndAddSymbol(string input, int &index, char curr,
+                           string &currString, vector<string> &inputLine);
+    void parseAndAddKeyword(string input, int &index, string &currString,
+                            vector<string> &inputLine);
     string cleanString(string input);
     void addString(string &input, vector<string> &inputVector);
 

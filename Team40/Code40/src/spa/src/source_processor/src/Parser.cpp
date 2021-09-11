@@ -1,34 +1,81 @@
 #include "source_processor/Parser.h"
-#include "source_processor/AssignStatementParser.h"
-#include "source_processor/CallStatementParser.h"
-#include "source_processor/IfStatementParser.h"
-#include "source_processor/PrintStatementParser.h"
-#include "source_processor/ProcedureParser.h"
-#include "source_processor/ReadStatementParser.h"
-#include "source_processor/StatementParser.h"
-#include "source_processor/WhileStatementParser.h"
 #include <algorithm>
 #include <iostream>
+#include <tuple>
 
 // parse file input
 
 vector<Line> Parser::parseFile(fstream &file) {
     vector<Line> programLines = {};
-    string input;
+    vector<vector<string>> programTokens = tokenizeFile(file);
     int stmtNum = 0;
-    while (getline(file, input)) {
-        vector<string> inputLine = parseLine(input);
-        // The procedure definition does not receive an index.
-        if (!inputLine.empty() && inputLine[0] != "}" &&
-            inputLine[0] != "else" && !isProc(inputLine)) {
+    vector<string> currString = {};
+
+    for (int i = 0; i < programTokens.size(); i++) {
+        vector<string> subString = programTokens[i];
+        currString.insert(currString.end(), subString.begin(), subString.end());
+
+        if (!isCurlyBracket(currString.back()) &&
+            !isSemiColon(currString.back())) {
+            continue;
+        }
+
+        if (currString.front() != "}" && currString.front() != "else" &&
+            !isProc(currString)) {
             stmtNum++;
         }
-        if (!inputLine.empty()) {
-            Line curr = Line(stmtNum, inputLine);
-            programLines.push_back(curr);
+
+        Line curr = Line(stmtNum, currString);
+        programLines.push_back(curr);
+        currString = {};
+    }
+
+    return programLines;
+}
+
+vector<vector<string>> Parser::tokenizeFile(fstream &file) {
+    string input;
+    vector<vector<string>> programTokens = {};
+    while (getline(file, input)) {
+        vector<string> line = parseLine(input);
+        tuple<vector<string>, vector<string>> splitString = splitLine(line);
+        vector<string> currString = get<0>(splitString);
+        vector<string> nextString = get<1>(splitString);
+
+        if (!currString.empty()) {
+            programTokens.push_back(currString);
+        }
+        while (nextString.size() > 0) {
+
+            splitString = splitLine(nextString);
+            currString = get<0>(splitString);
+            nextString = get<1>(splitString);
+
+            if (!currString.empty()) {
+                programTokens.push_back(currString);
+            }
         }
     }
-    return programLines;
+    return programTokens;
+}
+tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
+    tuple<vector<string>, vector<string>> splitString;
+    vector<string> currString = {};
+    vector<string> nextString = {};
+
+    for (int i = 0; i < line.size(); i++) {
+        string curr = line[i];
+        if ((isCurlyBracket(curr)) || isSemiColon(curr)) {
+            currString.push_back(curr);
+            nextString = vector<string>(line.begin() + i + 1, line.end());
+            break;
+        }
+        currString.push_back(curr);
+    }
+
+    get<0>(splitString) = currString;
+    get<1>(splitString) = nextString;
+    return splitString;
 }
 
 vector<string> Parser::parseLine(string input) {
@@ -37,23 +84,30 @@ vector<string> Parser::parseLine(string input) {
     for (int i = 0; i < input.size(); i++) {
         char curr = input.at(i);
         currString = cleanString(currString);
+
         if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
             // push back previous string before special character
             addString(currString, inputLine);
             currString.push_back(curr);
-            parseSymbol(input, i, curr, currString, inputLine);
+            parseAndAddSymbol(input, i, curr, currString, inputLine);
+
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                parseKeyword(input, i, currString, inputLine);
+                parseAndAddKeyword(input, i, currString, inputLine);
             }
         }
+    }
+    if (!currString.empty()) {
+        inputLine.push_back(currString);
     }
     return inputLine;
 }
 
-void Parser::parseSymbol(string input, int &i, char curr, string &currString,
-                         vector<string> &inputLine) {
+// helper functions
+
+void Parser::parseAndAddSymbol(string input, int &i, char curr,
+                               string &currString, vector<string> &inputLine) {
     // check if operator has an additional character
     if (i < input.size() - 1) {
         char next = input.at(i + 1);
@@ -65,8 +119,8 @@ void Parser::parseSymbol(string input, int &i, char curr, string &currString,
     addString(currString, inputLine);
 }
 
-void Parser::parseKeyword(string input, int &i, string &currString,
-                          vector<string> &inputLine) {
+void Parser::parseAndAddKeyword(string input, int &i, string &currString,
+                                vector<string> &inputLine) {
     // check if keyword has an additional character
     if (i < input.size() - 1) {
         if (!isalnum(input.at(i + 1))) {
