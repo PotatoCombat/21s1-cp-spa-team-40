@@ -1,0 +1,3 @@
+procedure computeAverage {
+    read num1;
+}
