@@ -1,4 +1,4 @@
-#include "ParentHandler.h"
+#include "query_processor/relationship_handler/ParentHandler.h"
 
 Result ParentHandler::eval() {
     Result result;

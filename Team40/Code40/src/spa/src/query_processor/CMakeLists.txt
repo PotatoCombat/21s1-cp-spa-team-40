@@ -9,10 +9,6 @@ file(GLOB srcs
 add_library(query_processor ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
-target_include_directories(query_processor PUBLIC
-        include
-        include/model
-        include/relationship_handler
-        )
+target_include_directories(query_processor PUBLIC include)
 
 target_link_libraries(query_processor pkb)

@@ -1,4 +1,4 @@
-#include "ParentStarHandler.h"
+#include "query_processor/relationship_handler/ParentStarHandler.h"
 
 Result ParentStarHandler::eval() {
     Result result;

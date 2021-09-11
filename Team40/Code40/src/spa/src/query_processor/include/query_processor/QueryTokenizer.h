@@ -5,8 +5,9 @@
 #include <vector>
 
 #include "Abstractions.h"
-#include "ClauseTypeHelper.h"
-#include "DesignEntityTypeHelper.h"
+
+#include "query_processor/model/ClauseTypeHelper.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 
 using namespace std;
 

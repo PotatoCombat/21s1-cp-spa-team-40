@@ -1,4 +1,4 @@
-#include "QueryProcessor.h"
+#include "query_processor/QueryProcessor.h"
 
 void QueryProcessor::processQuery(string query, list<string>& results) {
 	Query q;

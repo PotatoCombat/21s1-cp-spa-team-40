@@ -1,4 +1,4 @@
-#include "UsesStmtHandler.h"
+#include "query_processor/relationship_handler/UsesStmtHandler.h"
 
 Result UsesStmtHandler::eval() {
     Result result;

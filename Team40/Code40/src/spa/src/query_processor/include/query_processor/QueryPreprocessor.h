@@ -4,9 +4,10 @@
 #include <tuple>
 #include <vector>
 
-#include "Query.h"
 #include "QueryParser.h"
 #include "QueryTokenizer.h"
+
+#include "query_processor/model/Query.h"
 
 using namespace std;
 

@@ -4,10 +4,11 @@
 #include <vector>
 
 #include "Abstractions.h"
-#include "Clause.h"
-#include "ClauseTypeHelper.h"
-#include "DesignEntityTypeHelper.h"
-#include "Reference.h"
+
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/ClauseTypeHelper.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 

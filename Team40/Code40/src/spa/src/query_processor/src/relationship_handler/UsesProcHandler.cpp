@@ -1,4 +1,4 @@
-#include "UsesProcHandler.h"
+#include "query_processor/relationship_handler/UsesProcHandler.h"
 
 Result UsesProcHandler::eval() {
     Result result;
