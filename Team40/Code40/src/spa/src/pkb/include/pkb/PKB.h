@@ -21,17 +21,25 @@ using namespace std;
 
 class PKB {
 public:
+
+    /// Returns the procedure with the given procedure name \param procName.
+    virtual Procedure* getProcByName(ProcName procName);
+
+    /// Returns the variable with the given variable name \param varName.
+    virtual Variable* getVarByName(VarName varName);
+
+    /// Returns the statement with the given statement index \param stmtIndex.
+    virtual Statement* getStmtByIndex(StmtIndex stmtIndex);
+
     // =========================================================================
     // Source Processor
     // =========================================================================
 
-    virtual ProcIndex insertProc(Procedure *procedure);
-    virtual VarIndex insertVar(Variable *variable);
-    virtual Variable *getVarByName(VarName varName);
-    virtual ConstIndex insertConst(ConstantValue *constant);
+    virtual void insertProc(Procedure *procedure);
+    virtual void insertVar(Variable *variable);
+    virtual void insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);
-    virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.

@@ -20,14 +20,13 @@ void DesignExtractor::extractBreadthFirst(Program program) {
     extractor.extract(std::move(program));
 }
 
-ProcIndex DesignExtractor::extractProcedure(Procedure *procedure) {
-    ProcIndex procIndex = pkb->insertProc(procedure);
+void DesignExtractor::extractProcedure(Procedure *procedure) {
+    pkb->insertProc(procedure);
     ExtractionContext::getInstance().getProcedureContext().push(procedure);
     for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getProcedureContext().pop(procedure);
-    return procIndex;
 }
 
 StmtIndex DesignExtractor::extractStatement(Statement *statement) {
@@ -272,11 +271,10 @@ void DesignExtractor::extractFactor(Factor *factor) {
     }
 }
 
-VarIndex DesignExtractor::extractVariable(Variable *variable) {
-    VarIndex varIndex = pkb->insertVar(variable);
+void DesignExtractor::extractVariable(Variable *variable) {
+    pkb->insertVar(variable);
     extractUsesRelationship(variable);
     extractModifiesRelationship(variable);
-    return varIndex;
 }
 
 void DesignExtractor::extractUsesRelationship(Variable *variable) {
@@ -337,6 +335,6 @@ void DesignExtractor::extractModifiesRelationship(Variable *variable) {
     }
 }
 
-ConstIndex DesignExtractor::extractConstantValue(ConstantValue *constantValue) {
-    return pkb->insertConst(constantValue);
+void DesignExtractor::extractConstantValue(ConstantValue *constantValue) {
+    pkb->insertConst(constantValue);
 }
