@@ -17,9 +17,6 @@ void SPA::processSource(string filename) {
         PKB pkb = PKB();
         DesignExtractor designExtractor(pkb);
         designExtractor.extract(program);
-        // vector<Variable> varLst = parser.getVarLst();
-        // vector<ConstantValue> constLst = parser.getConstLst();
-        int test = 0; // to bypass debugger
     } else {
         cout << "No such file";
     }
