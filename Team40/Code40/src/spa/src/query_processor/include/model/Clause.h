@@ -1,19 +1,9 @@
 #pragma once
 
 #include "Reference.h"
+#include "ClauseType.h"
 
 using namespace std;
-
-enum class ClauseType {
-    FOLLOWS,
-    FOLLOWS_T,
-    PARENT,
-    PARENT_T,
-    MODIFIES_S,
-    MODIFIES_P,
-    USES_S,
-    USES_P
-};
 
 class Clause {
 private:
@@ -27,4 +17,6 @@ public:
     Reference *getSecondReference();
     ClauseType getType();
     bool equals(Clause &other);
+    Clause* Clause::copy(); // not working
+    ~Clause();
 };

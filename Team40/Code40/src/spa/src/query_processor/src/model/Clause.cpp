@@ -14,3 +14,9 @@ bool Clause::equals(Clause &other) {
            this->getSecondReference()->equals(*(other.getSecondReference())) &&
            this->getType() == other.getType();
 }
+
+Clause *Clause::copy() {
+    return new Clause(this->type, this->first, this->second);
+}
+
+Clause::~Clause() { }
