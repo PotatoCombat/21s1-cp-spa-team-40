@@ -23,6 +23,6 @@ private:
 
 public:
     QueryParser() = default;
-    Reference parseDeclaration(DeclPair declaration);
-    Clause parseClause(ClsTuple clause, vector<Reference>& declList);
+    Reference *parseDeclaration(DeclPair declaration);
+    Clause *parseClause(ClsTuple clause, vector<Reference *> &declList);
 };

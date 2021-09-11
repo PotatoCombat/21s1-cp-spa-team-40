@@ -15,7 +15,8 @@ bool Clause::equals(Clause &other) {
            this->getType() == other.getType();
 }
 
-Clause::~Clause() {
-    //delete &first;
-    //delete &second;
+Clause *Clause::copy() {
+    return new Clause(this->type, this->first, this->second);
 }
+
+Clause::~Clause() { }

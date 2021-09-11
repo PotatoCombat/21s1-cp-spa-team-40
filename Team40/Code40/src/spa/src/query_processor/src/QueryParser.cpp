@@ -1,45 +1,45 @@
 #include "QueryParser.h"
 
-Reference QueryParser::parseDeclaration(DeclPair declaration) {
+Reference *QueryParser::parseDeclaration(DeclPair declaration) {
     DesignEntityType type = deHelper.getType(declaration.first);
     string syn = declaration.second;
-    return Reference(type, ReferenceType::SYNONYM, syn);
+    return new Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Clause QueryParser::parseClause(ClsTuple clause,
-                                vector<Reference> &declList) {
+Clause *QueryParser::parseClause(ClsTuple clause,
+                                 vector<Reference *> &declList) {
     string cls = get<0>(clause);
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
     ClauseType clsT = clsHelper.getType(cls);
 
-    vector<Reference> x;
+    vector<Reference *> x;
 
     auto it1 = find_if(declList.begin(), declList.end(), 
-        [&ref1](Reference& ref) { return ref.getValue() == ref1; });
+        [&ref1](Reference *ref) { return ref->getValue() == ref1; });
     auto it2 = find_if(declList.begin(), declList.end(),
-        [&ref2](Reference& ref) { return ref.getValue() == ref2; });
+        [&ref2](Reference *ref) { return ref->getValue() == ref2; });
 
     if (it1 != declList.end()) {
-        Reference *r = new Reference(*it1);
-        x.push_back(*r);
+        Reference* r = *it1; //(*it1)->copy();
+        x.push_back(r);
     } else {
         ReferenceType refT = checkRefType(ref1);
         DesignEntityType deT = clsHelper.chooseDeType1(clsT);
-        x.push_back(Reference(deT, refT, ref1));
+        x.push_back(new Reference(deT, refT, ref1));
     }
 
     if (it2 != declList.end()) {
-        Reference *r = new Reference(*it1);
-        x.push_back(*r);
+        Reference* r = *it2; //(*it2)->copy();
+        x.push_back(r);
     } else {
         ReferenceType refT = checkRefType(ref2);
         DesignEntityType deT = clsHelper.chooseDeType2(clsT);
-        x.push_back(Reference(deT, refT, ref2));
+        x.push_back(new Reference(deT, refT, ref2));
     }
 
-    return Clause(clsT, x[0], x[1]);
+    return new Clause(clsT, *x[0], *x[1]);
 }
 
 // helper methods

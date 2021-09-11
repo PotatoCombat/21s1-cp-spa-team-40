@@ -23,20 +23,21 @@ TEST_CASE("QueryPreprocessor") {
     Query expected;
     Reference ret(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference ref(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
-    Clause *cls = new Clause(ClauseType::FOLLOWS, ret, ref);
+    Clause cls(ClauseType::FOLLOWS, ret, ref);
     expected.setReturnReference(&ret);
-    expected.addClause(cls);
+    expected.addClause(&cls);
 
     QueryPreprocessor qp;
     Query actual;
     
-    //SECTION("test query created correctly") {
-    //    qp.preprocessQuery(TestQProcessor::INPUT_1, actual);
-    //    cout << (*actual.getClauses()[0]).getFirstReference()->getValue() << endl;
-    //    cout << (cls->getFirstReference()->getValue()) << endl;
-    //    cout << (*actual.getClauses()[0]).getSecondReference()->getValue() << endl;
-    //    cout << (cls->getSecondReference()->getValue()) << endl;
+    SECTION("test query created correctly") {
+        qp.preprocessQuery(TestQProcessor::INPUT_1, actual);
+        /*cout << (*actual.getClauses()[0]).getFirstReference()->getValue() << endl;
+        cout << (cls.getFirstReference()->getValue()) << endl;
+        cout << (*actual.getClauses()[0]).getSecondReference()->getValue() << endl;
+        cout << (cls.getSecondReference()->getValue()) << endl;*/
 
-    //    REQUIRE((*actual.getClauses()[0]).equals(*cls));
-    //}
+        //REQUIRE((*actual.getClauses()[0]).equals(*cls));
+        REQUIRE((actual.getReturnReference()->equals(ret)));
+    }
 }
