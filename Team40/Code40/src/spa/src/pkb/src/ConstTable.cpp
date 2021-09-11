@@ -5,8 +5,8 @@ using namespace std;
 ConstTable::ConstTable() = default;
 
 void ConstTable::insert(ConstantValue *constant) {
+    EntityTable<ConstantValue, ConstName>::insert(constant);
     values.push_back(constant->getValue());
-    EntityTable<ConstantValue, ConstName>::insert(constant)
 }
 
 Iterator<int> ConstTable::getValues() {

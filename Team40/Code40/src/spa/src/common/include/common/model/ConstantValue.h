@@ -5,6 +5,7 @@
 
 class ConstantValue : public Factor {
     int value;
+    string name;
 
 public:
     explicit ConstantValue(int value);

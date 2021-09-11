@@ -1,6 +1,20 @@
 #include "pkb/PKB.h"
 
+#include <utility>
+
 using namespace std;
+
+Procedure* PKB::getProcByName(ProcName procName) {
+    return procTable.getEntity(move(procName));
+}
+
+Variable* PKB::getVarByName(VarName varName) {
+    return varTable.getEntity(move(varName));
+}
+
+Statement* PKB::getStmtByIndex(StmtIndex stmtIndex) {
+    return statementTable.getStmt(stmtIndex);
+}
 
 // =============================================================================
 // Source Processor
@@ -20,10 +34,6 @@ void PKB::insertConst(ConstantValue *constant) {
 
 StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
-}
-
-Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
-    return statementTable.getStmt(stmtIndex);
 }
 
 void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
@@ -50,14 +60,6 @@ void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
 
 void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
-}
-
-Procedure* PKB::getProcByName(ProcName proc) {
-    return procTable.getEntity(proc);
-}
-
-Variable* PKB::getVarByName(VarName var) {
-    return varTable.getEntity(var);
 }
 
 // =============================================================================

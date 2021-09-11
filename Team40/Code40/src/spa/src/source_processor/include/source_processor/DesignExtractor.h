@@ -30,7 +30,7 @@ public:
     void extractBreadthFirst(Program program);
 
     // Procedure
-    ProcIndex extractProcedure(Procedure *program);
+    void extractProcedure(Procedure *program);
 
     // Statement
     StmtIndex extractStatement(Statement *statement);
@@ -67,12 +67,12 @@ public:
     void extractFactor(Factor *factor);
 
     // Variable
-    VarIndex extractVariable(Variable *variable);
+    void extractVariable(Variable *variable);
     void extractModifiesRelationship(Variable *variable);
     void extractUsesRelationship(Variable *variable);
 
     // ConstantValue
-    ConstIndex extractConstantValue(ConstantValue *constantValue);
+    void extractConstantValue(ConstantValue *constantValue);
 
 private:
     PKB *pkb;

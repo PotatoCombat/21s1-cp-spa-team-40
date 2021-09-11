@@ -3,8 +3,10 @@
 using namespace std;
 
 ConstantValue::ConstantValue(int value)
-    : Factor(FactorType::CONSTANT), value(value) {}
-
-string ConstantValue::getName() { return to_string(this->getValue()); }
+    : Factor(FactorType::CONSTANT), value(value) {
+    this->name = to_string(value);
+}
 
 int ConstantValue::getValue() { return value; }
+
+string ConstantValue::getName() { return name; }
