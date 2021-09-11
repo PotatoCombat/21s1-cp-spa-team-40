@@ -21,7 +21,9 @@ void IfStatement::addElseStatement(Statement *statement) {
     this->elseStmtLst.push_back(statement);
 }
 
-void IfStatement::setCondLst(vector<string> condLst) { condLst = condLst; }
+void IfStatement::setCondLst(vector<string> condLst) {
+    this->condLst = condLst;
+}
 
 Condition *IfStatement::getCondition() { return cond; }
 
