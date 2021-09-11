@@ -1,67 +1,79 @@
 #include "QueryParser.h"
 
-QueryParser::QueryParser() = default;
-
-Reference QueryParser::parseDeclaration(pair<string, string> declaration) {
-    string designEntity = declaration.first;
+Reference *QueryParser::parseDeclaration(DeclPair declaration) {
+    DesignEntityType type = deHelper.getType(declaration.first);
     string syn = declaration.second;
-    DesignEntityType type;
-    if (designEntity == "stmt") {
-        type = DesignEntityType::STMT;
-    } else if (designEntity == "assign") {
-        type = DesignEntityType::ASSIGN;
-    } else if (designEntity == "variable") {
-        type = DesignEntityType::VARIABLE;
-    } else if (designEntity == "constant") {
-        type = DesignEntityType::CONSTANT;
-    } else if (designEntity == "procedure") {
-        type = DesignEntityType::PROCEDURE;
-    } else if (designEntity == "read") {
-        type = DesignEntityType::READ;
-    } else if (designEntity == "print") {
-        type = DesignEntityType::PRINT;
-    } else if (designEntity == "while") {
-        type = DesignEntityType::WHILE;
-    } else if (designEntity == "if") {
-        type = DesignEntityType::IF;
-    } else if (designEntity == "call") {
-        type = DesignEntityType::CALL;
-    } else {
-        throw "error";
-    }
-    return Reference(type, ReferenceType::SYNONYM, syn);
+    return new Reference(type, ReferenceType::SYNONYM, syn);
 }
 
-Relation QueryParser::parseSuchThatClause(tuple<string, string, string> clause) {
-    string relation = get<0>(clause);
-    string ref1 = get<1>(clause); // need information about type from declaration parser monkaS
-    string ref2 = get<2>(clause); // need information about type from declaration parser monkaS
-    Reference r1 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref1);
-    Reference r2 = Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, ref2);
+Clause *QueryParser::parseClause(ClsTuple clause,
+                                 vector<Reference *> &declList) {
+    string cls = get<0>(clause);
+    string ref1 = get<1>(clause);
+    string ref2 = get<2>(clause);
 
-    RelationType type;
+    ClauseType clsT = clsHelper.getType(cls);
 
-    if (relation == "Follows") {
-        type = RelationType::FOLLOWS;
-    } else if (relation == "Follows*") {
-        type = RelationType::FOLLOWS_T;
+    vector<Reference *> x;
+
+    auto it1 = find_if(declList.begin(), declList.end(), 
+        [&ref1](Reference *ref) { return ref->getValue() == ref1; });
+    auto it2 = find_if(declList.begin(), declList.end(),
+        [&ref2](Reference *ref) { return ref->getValue() == ref2; });
+
+    if (it1 != declList.end()) {
+        Reference* r = *it1; //(*it1)->copy();
+        x.push_back(r);
     } else {
-        throw "Error";
+        ReferenceType refT = checkRefType(ref1);
+        DesignEntityType deT = clsHelper.chooseDeType1(clsT);
+        x.push_back(new Reference(deT, refT, ref1));
     }
-    return Relation(type, r1, r2);
+
+    if (it2 != declList.end()) {
+        Reference* r = *it2; //(*it2)->copy();
+        x.push_back(r);
+    } else {
+        ReferenceType refT = checkRefType(ref2);
+        DesignEntityType deT = clsHelper.chooseDeType2(clsT);
+        x.push_back(new Reference(deT, refT, ref2));
+    }
+
+    return new Clause(clsT, *x[0], *x[1]);
 }
 
-//PatternClause QueryParser::parsePatternClause(tuple<string, string, string> clause) {
-//    vector<PatternClause> cl;
-//    for (auto &it : clause) {
-//        // parse by syn '(' Ref1 ',' Ref2 ')'
-//        vector<string> tokens = tokenizeClause(it);
-//        string syn = tokens[0];
-//        EntityReference ref = EntityReference(tokens[1]);
-//        Expression expr = Expression(tokens[2]);
-//
-//        cl.push_back(PatternClause(syn, ref, expr));
-//    }
-//    return cl;
-//}
+// helper methods
 
+ReferenceType QueryParser::checkRefType(string val) {
+    if (isWildcard(val)) {
+        return ReferenceType::WILDCARD;
+    } else if (isInteger(val)) {
+        return ReferenceType::CONSTANT;
+    } else if (isNamedSynonym(val)) {
+        return ReferenceType::CONSTANT;
+    }
+    return ReferenceType::SYNONYM;
+}
+
+bool QueryParser::isInteger(string val) {
+    return all_of(val.begin(), val.end(), isdigit);
+}
+
+// " "
+bool QueryParser::isNamedSynonym(string val) {
+    int c = count(val.begin(), val.end(), '"');
+
+    if (c != 2) {
+        return false;
+    }
+    
+    size_t pos1 = val.find_first_of('"');
+    size_t pos2 = val.find_last_of('"');
+
+    return pos1 == 0 && pos2 == val.size() - 1;
+}
+
+// _
+bool QueryParser::isWildcard(string val) {
+    return val == "_";
+}

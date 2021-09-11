@@ -16,3 +16,9 @@ bool Reference::equals(Reference &other) {
         this->getDeType() == other.getDeType() &&
         this->getRefType() == other.getRefType();
 }
+
+Reference* Reference::copy() {
+    return new Reference(this->deType, this->refType, this->value);
+}
+
+Reference::~Reference() {}

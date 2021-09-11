@@ -2,15 +2,16 @@
 
 Result FollowsStarHandler::eval() {
     Result result;
-    Reference *firstReference = relation->getFirstReference();
-    Reference *secondReference = relation->getSecondReference();
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
     string firstValue = firstReference->getValue();
     string secondValue = secondReference->getValue();
 
     // Todo: handle stmts by different design enity types
-    // Todo: assert relationType is follows
-    // Todo: assert firstEntiy and secondReference are stmts
     // Todo: use variable instead of magic number -1
+
+    // assertions
+    validate();
 
     // WILDCARD WILDCARD
     if (firstReference->getRefType() == ReferenceType::WILDCARD &&
@@ -53,7 +54,9 @@ Result FollowsStarHandler::eval() {
         vector<string> firstStmtResults;
         set<int> precedingStarStmts = pkb->getPrecedingStarStmts(stoi(secondValue));
         for (auto precedingStarStmt : precedingStarStmts) {
-            firstStmtResults.push_back(to_string(precedingStarStmt));
+            if (isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(precedingStarStmt))) {
+                firstStmtResults.push_back(to_string(precedingStarStmt));
+            }
         }
         result.setResultList1(firstReference, firstStmtResults);
         return result;
@@ -65,7 +68,9 @@ Result FollowsStarHandler::eval() {
         vector<string> secondStmtResults;
         set<int> followingStarStmts = pkb->getFollowingStarStmts(stoi(firstValue));
         for (auto followingStarStmt : followingStarStmts) {
-            secondStmtResults.push_back(to_string(followingStarStmt));
+            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStarStmt))) {
+                secondStmtResults.push_back(to_string(followingStarStmt));
+            }
         }
         result.setResultList2(secondReference, secondStmtResults);
         return result;
@@ -74,10 +79,17 @@ Result FollowsStarHandler::eval() {
     // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> precedingStmts = pkb->getAllStmts().asVector();
+    vector<int> precedingStmts;
+    if (firstReference->getDeType() == DesignEntityType::STMT) {
+        precedingStmts = pkb->getAllStmts().asVector();
+    } else {
+        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
+        precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
+    }
     for (int precedingStmt : precedingStmts) {
         int followingStmt = pkb->getFollowingStmt(precedingStmt);
-        if (followingStmt == -1) {
+        if (followingStmt == -1 ||
+            !isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
             continue;
         }
         firstStmtResults.push_back(to_string(precedingStmt));
@@ -93,4 +105,22 @@ Result FollowsStarHandler::eval() {
     }
 
     return result;
+}
+
+void FollowsStarHandler::validate() {
+    Reference *firstReference = clause->getFirstReference();
+    Reference *secondReference = clause->getSecondReference();
+    if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
+        firstReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("FollowsStarHandler: first argument must be statement type");
+    }
+
+    if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
+        secondReference->getDeType() == DesignEntityType::VARIABLE) {
+        throw ClauseHandlerError("FollowsStarHandler: second argument must be statement type");
+    }
+
+    if (clause->getType() != ClauseType::FOLLOWS_T) {
+        throw ClauseHandlerError("FollowsStarHandler: relation type must be FOLLOWS_T");
+    }
 }

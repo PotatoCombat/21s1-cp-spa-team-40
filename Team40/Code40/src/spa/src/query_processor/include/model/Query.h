@@ -4,14 +4,14 @@
 #include <vector>
 
 #include "Reference.h"
-#include "Relation.h"
+#include "Clause.h"
 
 using namespace std;
 
 class Query {
 private:
     vector<Reference *> referenceList;
-    vector<Relation *> relationList;
+    vector<Clause *> clauseList;
     Reference *returnReference;
 
     void addReference(Reference *reference);
@@ -22,6 +22,6 @@ public:
     // returnReference must have ReferenceType::SYNONYM, should only be called once for each query object
     void setReturnReference(Reference *reference);
     Reference *getReturnReference();
-    void addRelation(Relation *relation);
-    vector<Relation *> getRelations();
+    void addClause(Clause *relation);
+    vector<Clause *> getClauses();
 };

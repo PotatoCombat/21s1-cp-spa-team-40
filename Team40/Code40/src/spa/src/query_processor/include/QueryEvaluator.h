@@ -9,10 +9,10 @@
 
 #include "model/Query.h"
 #include "model/Reference.h"
-#include "model/Relation.h"
+#include "model/Clause.h"
 #include "Result.h"
-#include "relationship_handler/RelationHandlerError.h"
-#include "relationship_handler/RelationshipHandler.h"
+#include "relationship_handler/ClauseHandlerError.h"
+#include "relationship_handler/ClauseHandler.h"
 #include "relationship_handler/FollowsHandler.h"
 #include "relationship_handler/FollowsStarHandler.h"
 #include "relationship_handler/ModifiesProcHandler.h"

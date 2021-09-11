@@ -2,20 +2,9 @@
 
 #include <string>
 
-using namespace std;
+#include "DesignEntityType.h"
 
-enum class DesignEntityType {
-    STMT,
-    ASSIGN,
-    VARIABLE,
-    CONSTANT,
-    PROCEDURE,
-    READ,
-    PRINT,
-    WHILE,
-    IF,
-    CALL
-};
+using namespace std;
 
 enum class ReferenceType {
     SYNONYM,
@@ -31,10 +20,11 @@ private:
     
 public:
     static const string WILDCARD;
-
     Reference(DesignEntityType deType, ReferenceType refType, string value);
     string getValue();
     DesignEntityType getDeType();
     ReferenceType getRefType();
     bool equals(Reference &other);
+    Reference* copy(); // not working
+    ~Reference();
 };

@@ -6,59 +6,59 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
         Reference *returnReference = query.getReturnReference();
         vector<Reference *> references = query.getReferences();
-        vector<Relation *> relationships = query.getRelations();
+        vector<Clause *> clauses = query.getClauses();
         vector<vector<string>> results(references.size(), vector<string>());
         vector<bool> referenceAppearInClauses(references.size(), false);
         bool allQueryReturnsTrue = true;
 
-        for (Relation *relationship : relationships) {
+        for (Clause *clause : clauses) {
             Result tempResult;
 
-            RelationshipHandler *relationshipHandler;
+            ClauseHandler *clauseHandler;
 
-            // TODO: add more handlers for relationshipType later
-            if (relationship->getType() == RelationType::FOLLOWS) {
-                FollowsHandler followsHandler(relationship, pkb);
-                relationshipHandler = &followsHandler;
+            // TODO: add more handlers for clauseType later
+            if (clause->getType() == ClauseType::FOLLOWS) {
+                FollowsHandler followsHandler(clause, pkb);
+                clauseHandler = &followsHandler;
             }
 
-            if (relationship->getType() == RelationType::FOLLOWS_T) {
-                FollowsStarHandler followsStarHandler(relationship, pkb);
-                relationshipHandler = &followsStarHandler;
+            if (clause->getType() == ClauseType::FOLLOWS_T) {
+                FollowsStarHandler followsStarHandler(clause, pkb);
+                clauseHandler = &followsStarHandler;
             }
 
-            if (relationship->getType() == RelationType::PARENT) {
-                ParentHandler parentHandler(relationship, pkb);
-                relationshipHandler = &parentHandler;
+            if (clause->getType() == ClauseType::PARENT) {
+                ParentHandler parentHandler(clause, pkb);
+                clauseHandler = &parentHandler;
             }
 
-            if (relationship->getType() == RelationType::PARENT_T) {
-                ParentStarHandler parentStarHandler(relationship, pkb);
-                relationshipHandler = &parentStarHandler;
+            if (clause->getType() == ClauseType::PARENT_T) {
+                ParentStarHandler parentStarHandler(clause, pkb);
+                clauseHandler = &parentStarHandler;
             }
 
-            if (relationship->getType() == RelationType::MODIFIES_P) {
-                ModifiesProcHandler modifiesProcHandler(relationship, pkb);
-                relationshipHandler = &modifiesProcHandler;
+            if (clause->getType() == ClauseType::MODIFIES_P) {
+                ModifiesProcHandler modifiesProcHandler(clause, pkb);
+                clauseHandler = &modifiesProcHandler;
             }
 
-            if (relationship->getType() == RelationType::MODIFIES_S) {
-                ModifiesStmtHandler modifiesStmtHandler(relationship, pkb);
-                relationshipHandler = &modifiesStmtHandler;
+            if (clause->getType() == ClauseType::MODIFIES_S) {
+                ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
+                clauseHandler = &modifiesStmtHandler;
             }
 
-            if (relationship->getType() == RelationType::USES_P) {
-                UsesProcHandler usesProcHandler(relationship, pkb);
-                relationshipHandler = &usesProcHandler;
+            if (clause->getType() == ClauseType::USES_P) {
+                UsesProcHandler usesProcHandler(clause, pkb);
+                clauseHandler = &usesProcHandler;
             }
 
-            if (relationship->getType() == RelationType::USES_S) {
-                UsesStmtHandler usesStmtHandler(relationship, pkb);
-                relationshipHandler = &usesStmtHandler;
+            if (clause->getType() == ClauseType::USES_S) {
+                UsesStmtHandler usesStmtHandler(clause, pkb);
+                clauseHandler = &usesStmtHandler;
             }
 
             // eval and combine result
-            tempResult = relationshipHandler->eval();
+            tempResult = clauseHandler->eval();
             allQueryReturnsTrue =
                 allQueryReturnsTrue && tempResult.isResultValid();
 
@@ -140,8 +140,9 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         }
 
         return results[resultIndex];
-    } catch (RelationHandlerError &e) {
+    } catch (ClauseHandlerError &e) {
         // to be implemented later
+        return vector<string>{};
     }
 }
 

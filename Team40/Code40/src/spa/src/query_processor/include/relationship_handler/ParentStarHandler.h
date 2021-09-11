@@ -5,16 +5,20 @@
 #include <vector>
 
 #include "Reference.h"
-#include "Relation.h"
-#include "RelationshipHandler.h"
+#include "Clause.h"
+#include "ClauseHandler.h"
+#include "ClauseHandlerError.h"
 #include "Result.h"
 #include "pkb/PKB.h"
 
 using namespace std;
 
-class ParentStarHandler : public RelationshipHandler {
+class ParentStarHandler : public ClauseHandler {
+private:
+    void validate();
+
 public:
-    ParentStarHandler(Relation *relationship, PKB *pkb)
-        : RelationshipHandler(relationship, pkb) {}
+    ParentStarHandler(Clause *clause, PKB *pkb)
+        : ClauseHandler(clause, pkb) {}
     Result eval();
 };

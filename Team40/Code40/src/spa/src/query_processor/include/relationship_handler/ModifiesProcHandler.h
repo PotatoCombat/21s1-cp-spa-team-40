@@ -4,17 +4,20 @@
 #include <vector>
 
 #include "Reference.h"
-#include "Relation.h"
-#include "RelationshipHandler.h"
-#include "RelationHandlerError.h"
+#include "Clause.h"
+#include "ClauseHandler.h"
+#include "ClauseHandlerError.h"
 #include "Result.h"
 #include "pkb/PKB.h"
 
 using namespace std;
 
-class ModifiesProcHandler : public RelationshipHandler {
+class ModifiesProcHandler : public ClauseHandler {
+private:
+    void validate();
+
 public:
-    ModifiesProcHandler(Relation *relationship, PKB *pkb)
-        : RelationshipHandler(relationship, pkb) {}
+    ModifiesProcHandler(Clause *clause, PKB *pkb)
+        : ClauseHandler(clause, pkb) {}
     Result eval();
 };

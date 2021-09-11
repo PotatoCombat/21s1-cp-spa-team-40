@@ -16,6 +16,6 @@ private:
     QueryParser parser;
 
 public:
-    QueryPreprocessor();
-    Query preprocessQuery(const string input);
+    QueryPreprocessor() = default;
+    void preprocessQuery(const string input, Query &q);
 };
