@@ -1,7 +1,7 @@
 #include "common/model/Variable.h"
 
 Variable::Variable(int value, string name)
-    : name(name), Factor(FactorType::VARIABLE, value) {}
+    : name(name), Factor(FactorType::VARIABLE) {}
 
 Variable::Variable(string name) : name(name), Factor(FactorType::VARIABLE) {}
 

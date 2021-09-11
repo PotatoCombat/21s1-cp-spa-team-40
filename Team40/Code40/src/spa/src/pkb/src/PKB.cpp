@@ -22,6 +22,10 @@ StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
+Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
+    return statementTable.getStmt(stmtIndex);
+}
+
 void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
     followsTable.insertFollows(precedingStmt, followingStmt);
     followsStarTable.insertFollowsStar(precedingStmt, followingStmt);

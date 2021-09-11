@@ -9,7 +9,8 @@ Statement AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    AssignStatement stmt = AssignStatement(index, Variable(var_name));
+    Variable variable(var_name);
+    AssignStatement stmt = AssignStatement(index, &variable);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
     stmt.setExprLst(exprLst);

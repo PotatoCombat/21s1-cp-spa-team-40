@@ -9,6 +9,7 @@ Statement PrintStatementParser::parsePrintStatement() {
     vector<string>::iterator printItr =
         find(content.begin(), content.end(), "print");
     string var_name = *next(printItr);
-    PrintStatement stmt = PrintStatement(index, Variable(var_name));
+    Variable variable(var_name);
+    PrintStatement stmt = PrintStatement(index, &variable);
     return stmt;
 }

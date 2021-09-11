@@ -12,9 +12,9 @@
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "VarTable.h"
+#include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
-#include "common/model/ConstantValue.h"
 #include "common/model/statement/Statement.h"
 
 using namespace std;
@@ -27,9 +27,11 @@ public:
 
     virtual ProcIndex insertProc(Procedure *procedure);
     virtual VarIndex insertVar(Variable *variable);
+    virtual Variable *getVarByName(VarName varName);
     virtual ConstIndex insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);
+    virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
