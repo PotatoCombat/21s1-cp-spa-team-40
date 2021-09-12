@@ -79,6 +79,7 @@ Result FollowsStarHandler::eval() {
     // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
+
     vector<int> precedingStmts;
     if (firstReference->getDeType() == DesignEntityType::STMT) {
         precedingStmts = pkb->getAllStmts().asVector();
@@ -86,14 +87,37 @@ Result FollowsStarHandler::eval() {
         StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
         precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
     }
-    for (int precedingStmt : precedingStmts) {
-        int followingStmt = pkb->getFollowingStmt(precedingStmt);
-        if (followingStmt == -1 ||
-            !isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
-            continue;
+    sort(precedingStmts.begin(), precedingStmts.end());
+
+    while (precedingStmts.size() > 0) {
+        int precedingStmt = precedingStmts.at(0);
+        vector<int> tempStmts;
+        tempStmts.push_back(precedingStmt);
+        bool hasFollowsStar = false;
+        int currStmt = pkb->getFollowingStmt(precedingStmt);
+        while (currStmt != -1) {
+            StatementType stmtType = pkb->getStmtType(currStmt);
+            if (isDesTypeStmtType(secondReference->getDeType(), stmtType)) {
+                for (auto stmt : tempStmts) {
+                    firstStmtResults.push_back(to_string(stmt));
+                    precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), stmt),
+                                         precedingStmts.end());
+                }
+                tempStmts.clear();
+                secondStmtResults.push_back(to_string(currStmt));
+                hasFollowsStar = true;
+            }
+            if (isDesTypeStmtType(firstReference->getDeType(), stmtType)) {
+                tempStmts.push_back(currStmt);
+            }
+            currStmt = pkb->getFollowingStmt(currStmt);
         }
-        firstStmtResults.push_back(to_string(precedingStmt));
-        secondStmtResults.push_back(to_string(followingStmt));
+
+        // still removed from the precedingStmts when don't have followsStar
+        if (!hasFollowsStar) {
+            precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), precedingStmt),
+                             precedingStmts.end());
+        }
     }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
