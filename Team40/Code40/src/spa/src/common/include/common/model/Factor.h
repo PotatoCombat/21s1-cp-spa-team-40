@@ -1,4 +1,8 @@
 #pragma once
+#include <stdexcept>
+#include <string>
+
+using namespace std;
 
 enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 
