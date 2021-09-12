@@ -58,9 +58,4 @@ public:
         throw runtime_error(
             "This method is not implemented for this StatementType.");
     }
-
-    // Overriden by: WhileSatement
-    virtual vector<Statement> getStmtLst() {
-        throw runtime_error("getStmtLst() is not implemented.");
-    }
 };
