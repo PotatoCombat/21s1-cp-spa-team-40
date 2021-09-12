@@ -5,15 +5,18 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-EntityContext<Procedure> ExtractionContext::getProcedureContext() {
+EntityContext<Procedure> &ExtractionContext::getProcedureContext() {
+    static EntityContext<Procedure> procedureContext;
     return procedureContext;
 }
 
-EntityContext<Statement> ExtractionContext::getFollowsContext() {
+EntityContext<struct Statement> &ExtractionContext::getFollowsContext() {
+    static EntityContext<Statement> followsContext;
     return followsContext;
 }
 
-EntityContext<Statement> ExtractionContext::getParentContext() {
+EntityContext<struct Statement> &ExtractionContext::getParentContext() {
+    static EntityContext<Statement> parentContext;
     return parentContext;
 }
 

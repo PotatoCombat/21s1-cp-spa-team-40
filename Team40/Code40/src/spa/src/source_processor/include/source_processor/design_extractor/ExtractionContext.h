@@ -11,9 +11,9 @@ using namespace std;
 class ExtractionContext {
 private:
     static ExtractionContext *instance;
-    const EntityContext<Procedure> procedureContext;
-    const EntityContext<Statement> parentContext;
-    const EntityContext<Statement> followsContext;
+    const EntityContext<Procedure> *procedureContext;
+    const EntityContext<Statement> *parentContext;
+    const EntityContext<Statement> *followsContext;
     optional<Statement *> usingStatement;
     optional<Statement *> modifyingStatement;
 
@@ -25,9 +25,9 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    EntityContext<Procedure> getProcedureContext();
-    EntityContext<Statement> getFollowsContext();
-    EntityContext<Statement> getParentContext();
+    EntityContext<Procedure> &getProcedureContext();
+    EntityContext<Statement> &getFollowsContext();
+    EntityContext<Statement> &getParentContext();
 
     optional<Statement *> getUsingStatement();
     void setUsingStatement(Statement *statement);
