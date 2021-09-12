@@ -21,8 +21,8 @@ void DesignExtractor::extractBreadthFirst(Program program) {
 }
 
 void DesignExtractor::extractProcedure(Procedure *procedure) {
-    pkb->insertProc(procedure);
     ExtractionContext::getInstance().getProcedureContext().push(procedure);
+    pkb->insertProc(procedure);
     for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);
     }
@@ -89,7 +89,7 @@ StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
     /// properly.
     /// NOTE: This will eventually bottom out since we are guaranteed
     /// there are no recursive calls in SIMPLE.
-    extractProcedure(procedure);
+    extractProcedure(&procedure);
 
     set<VarName> modifiedVarNames =
         pkb->getVarsModifiedByProc(procedure.getName());
