@@ -29,14 +29,15 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             terminator++;
             continue;
         }
+        if (terminator == 2) {
+            break;
+        }
         if (!currContent.empty() && currContent[0] != "}" &&
             currContent[0] != "else") {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
-            if (terminator == 2) {
-                break;
-            } else if (terminator == 0) {
+            if (terminator == 0) {
                 stmt.addThenStatement(nestedStmt);
             } else if (terminator == 1) {
                 stmt.addElseStatement(nestedStmt);
