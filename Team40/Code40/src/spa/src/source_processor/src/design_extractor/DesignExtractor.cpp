@@ -82,11 +82,14 @@ DesignExtractor::extractAssignStatement(AssignStatement *assignStatement) {
 StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
     StmtIndex stmtIndex = pkb->insertStmt(callStatement);
 
-    /// TODO: Topologically sort all Procedures, so that Procedures are
-    /// guaranteed to be extracted before they are called,
-    /// and call statements are transitively handled
-
     Procedure procedure = callStatement->getProcedure();
+    /// At this point, we segue into extracting the called Procedure
+    /// so that Procedures are guaranteed to be extracted before their
+    /// corresponding Call statements to ensure transitivity is handled
+    /// properly.
+    /// NOTE: This will eventually bottom out since we are guaranteed
+    /// there are no recursive calls in SIMPLE.
+    extractProcedure(procedure);
 
     set<VarName> modifiedVarNames =
         pkb->getVarsModifiedByProc(procedure.getName());
@@ -239,7 +242,7 @@ void DesignExtractor::extractSumTermsExpression(
 void DesignExtractor::extractTerm(Term *term) {
     switch (term->getTermType()) {
     case TermType::SINGLE_FACTOR:
-        extractSingleFactorTerm(term);
+        extractSingleFactorTerm(dynamic_cast<SingleFactorTerm *>(term));
     case TermType::MULTIPLY_TERM_BY_FACTOR:
     case TermType::DIVIDE_TERM_BY_FACTOR:
     case TermType::MODULO_TERM_BY_FACTOR:
@@ -249,7 +252,8 @@ void DesignExtractor::extractTerm(Term *term) {
     }
 }
 
-void DesignExtractor::extractSingleFactorTerm(Term *singleFactorTerm) {
+void DesignExtractor::extractSingleFactorTerm(
+    SingleFactorTerm *singleFactorTerm) {
     extractFactor(singleFactorTerm->getFactor());
 }
 

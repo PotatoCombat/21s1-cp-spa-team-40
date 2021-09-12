@@ -17,6 +17,7 @@
 #include "common/model/statement/ReadStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/statement/WhileStatement.h"
+#include "common/model/term/SingleFactorTerm.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
 
@@ -60,7 +61,7 @@ public:
 
     // Term
     void extractTerm(Term *term);
-    void extractSingleFactorTerm(Term *singleFactorTerm);
+    void extractSingleFactorTerm(SingleFactorTerm *singleFactorTerm);
     void extractMultiFactorTerm(Term *multiFactorTerm);
 
     // Factor
