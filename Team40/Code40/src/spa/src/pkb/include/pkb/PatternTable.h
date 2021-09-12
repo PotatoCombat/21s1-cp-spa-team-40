@@ -15,10 +15,11 @@ class PatternTable {
 public:
     PatternTable();
 
-    void insertPatternAssign(AssignStatement *stmt);
-    set<StmtIndex> getAssignsWithPattern(VarName varName, Pattern pattern);
-    set<StmtIndex> getAssignsWithExactPattern(VarName varName, Pattern pattern);
-    //    bool pattern(StmtIndex stmt, VarName varName, Pattern pattern);
+    void insertPatternAssign(AssignStatement *stmt); // Note: This will most likely be in Design Extractor
+    set<StmtIndex> getAssignsMatchingPattern(VarName varName, Pattern pattern);
+    set<StmtIndex> getAssignsMatchingExactPattern(VarName varName, Pattern pattern);
+    bool assignMatchesPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern);
+    bool assignMatchesExactPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern);
 
     typedef tuple<VarName, Pattern> Record;
 

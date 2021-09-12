@@ -192,10 +192,18 @@ bool PKB::stmtUses(StmtIndex stmt, VarName var) {
 
 // Pattern =====================================================================
 
-set<StmtIndex> PKB::getAssignsWithPattern(VarName var, Pattern pattern) {
-    return patternTable.getAssignsWithPattern(var, pattern);
+set<StmtIndex> PKB::getAssignsMatchingPattern(VarName var, Pattern pattern) {
+    return patternTable.getAssignsMatchingPattern(var, pattern);
 }
 
-set<StmtIndex> PKB::getAssignsWithExactPattern(VarName var, Pattern pattern) {
-    return patternTable.getAssignsWithExactPattern(var, pattern);
+set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var, Pattern pattern) {
+    return patternTable.getAssignsMatchingExactPattern(var, pattern);
+}
+
+bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+    return patternTable.assignMatchesPattern(stmtIndex, var, pattern);
+}
+
+bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+    return patternTable.assignMatchesExactPattern(stmtIndex, var, pattern);
 }

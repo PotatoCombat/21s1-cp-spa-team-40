@@ -41,7 +41,7 @@ void PatternTable::insertPatternAssign(AssignStatement* stmt) {
     insertExactPatternsOfStmt(stmtIndex, {exactRecordWithVarName, exactRecordWithWildcard});
 }
 
-set<StmtIndex> PatternTable::getAssignsWithPattern(VarName varName, Pattern pattern) {
+set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName, Pattern pattern) {
     Record record = make_pair(varName, pattern);
     auto kvp = stmtsWithPatternMap.find(record);
     if (kvp == stmtsWithPatternMap.end()) {
@@ -50,13 +50,31 @@ set<StmtIndex> PatternTable::getAssignsWithPattern(VarName varName, Pattern patt
     return kvp->second;
 }
 
-set<StmtIndex> PatternTable::getAssignsWithExactPattern(VarName varName, Pattern pattern) {
+set<StmtIndex> PatternTable::getAssignsMatchingExactPattern(VarName varName, Pattern pattern) {
     Record record = make_pair(varName, pattern);
     auto kvp = stmtsWithExactPatternMap.find(record);
     if (kvp == stmtsWithExactPatternMap.end()) {
         return {};
     }
     return kvp->second;
+}
+
+bool PatternTable::assignMatchesPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern) {
+    Record record = make_pair(varName, pattern);
+    auto kvp = patternsOfStmtMap.find(stmtIndex);
+    if (kvp == patternsOfStmtMap.end()) {
+        return false;
+    }
+    return kvp->second.find(record) != kvp->second.end();
+}
+
+bool PatternTable::assignMatchesExactPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern) {
+    Record record = make_pair(varName, pattern);
+    auto kvp = exactPatternsOfStmtMap.find(stmtIndex);
+    if (kvp == exactPatternsOfStmtMap.end()) {
+        return false;
+    }
+    return kvp->second.find(record) != kvp->second.end();
 }
 
 void PatternTable::insertStmtWithPattern(Record record, StmtIndex stmtIndex) {
