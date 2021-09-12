@@ -8,17 +8,14 @@ using namespace std;
 class AssignStatement : public Statement {
 private:
     Variable *variable;
-    Expression *expression;
     vector<string> exprLst;
 
 public:
-    AssignStatement(int index, Variable *variable, Expression *expression);
-
     AssignStatement(int index, Variable *variable);
 
     void setExprLst(vector<string> exprLst);
 
     Variable *getVariable() override;
 
-    Expression *getExpression() override;
+    vector<string> getExprList();
 };
