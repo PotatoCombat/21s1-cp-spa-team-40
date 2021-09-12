@@ -1,5 +1,4 @@
 #include "source_processor/WhileStatementParser.h"
-#include "common/model/statement/IfStatement.h"
 #include "source_processor/ProgramParser.h"
 #include <algorithm>
 
