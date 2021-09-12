@@ -2,7 +2,7 @@
 
 #include "common/model/Procedure.h"
 #include "pkb/Abstractions.h"
-#include "source_processor/design-extractor/EntityContext.h"
+#include "source_processor/design_extractor/EntityContext.h"
 #include <optional>
 #include <vector>
 
@@ -17,7 +17,7 @@ private:
     optional<Statement *> usingStatement;
     optional<Statement *> modifyingStatement;
 
-    // NOTE: Do not autofix to use default constructor here
+    // NOTE: Do not autofix to default constructor here
     ExtractionContext() {}
 
 public:

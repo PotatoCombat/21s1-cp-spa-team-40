@@ -1,4 +1,4 @@
-#include "source_processor/design-extractor/ExtractionContext.h"
+#include "source_processor/design_extractor/ExtractionContext.h"
 
 ExtractionContext &ExtractionContext::getInstance() {
     static ExtractionContext instance;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pkb/PKB.h"
-#include "source_processor/design-extractor/ExtractionContext.h"
+#include "source_processor/design_extractor/ExtractionContext.h"
 #include <common/model/Program.h>
 
 class FollowsExtractor {

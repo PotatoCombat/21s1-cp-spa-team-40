@@ -1,4 +1,4 @@
-#include "source_processor/design-extractor/FollowsExtractor.h"
+#include "source_processor/design_extractor/FollowsExtractor.h"
 
 FollowsExtractor::FollowsExtractor(PKB *pkb)
     : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};

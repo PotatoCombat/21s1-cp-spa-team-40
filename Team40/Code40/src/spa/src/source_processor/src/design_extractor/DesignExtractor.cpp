@@ -1,4 +1,4 @@
-#include "source_processor/design-extractor/DesignExtractor.h"
+#include "source_processor/design_extractor/DesignExtractor.h"
 
 using namespace std;
 

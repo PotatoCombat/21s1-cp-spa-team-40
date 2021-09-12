@@ -6,7 +6,7 @@
 
 #include "source_processor/Line.h"
 #include "source_processor/SourceProcessor.h"
-#include "source_processor/design-extractor/DesignExtractor.h"
+#include "source_processor/design_extractor/DesignExtractor.h"
 
 SourceProcessor::SourceProcessor(PKB *pkb) {
     this->pkb = pkb;
