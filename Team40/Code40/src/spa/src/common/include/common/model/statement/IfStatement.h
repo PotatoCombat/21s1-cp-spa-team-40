@@ -1,3 +1,4 @@
+#pragma once
 #include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>

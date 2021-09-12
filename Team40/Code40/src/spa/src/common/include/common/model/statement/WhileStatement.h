@@ -1,3 +1,4 @@
+#pragma once
 #include "common/model/condition/Condition.h"
 #include "common/model/statement/Statement.h"
 #include <string>

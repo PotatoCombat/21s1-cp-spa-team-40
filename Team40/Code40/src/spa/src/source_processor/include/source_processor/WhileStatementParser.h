@@ -6,7 +6,7 @@ using namespace std;
 class WhileStatementParser : StatementParser {
 public:
     WhileStatementParser(vector<string> content, int index,
-                         vector<Line> programLines, int programIndex);
-    Statement parseWhileStatement();
+                         vector<Line> programLines, int &programIndex);
+    Statement parseWhileStatement(int &programIndex);
     void parseChildStatements(WhileStatement &stmt);
 };

@@ -2,8 +2,8 @@
 
 #include "common/model/Variable.h"
 #include "common/model/condition/Condition.h"
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
@@ -38,7 +38,7 @@ public:
         throw runtime_error("getCondExpr() is not implemented.");
     }
 
-    // Overriden by: IfStatement, WhileStatement
+    // Overriden by: IfStatement
     virtual vector<Statement> getThenStmtLst() {
         throw runtime_error("getThenStmtLst() is not implemented.");
     }
@@ -46,5 +46,10 @@ public:
     // Overriden by: IfStatement
     virtual vector<Statement> getElseStmtLst() {
         throw runtime_error("getElseStmtLst() is not implemented.");
+    }
+
+    // Overriden by: WhileSatement
+    virtual vector<Statement> getStmtLst() {
+        throw runtime_error("getStmtLst() is not implemented.");
     }
 };
