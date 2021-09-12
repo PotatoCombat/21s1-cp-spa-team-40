@@ -274,3 +274,50 @@ TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList1, e
 
     REQUIRE(expectedResult.equals(actualResult));
 }
+
+TEST_CASE("ParentHandler: eval - SYNONYM SYNONYM - filter result by stmt type") {
+    Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
+    Reference stmt2(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "s2");
+    Clause followsClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&followsClause, &TestParentHandler::pkbStub);
+    Result actualResult = handler.eval();
+
+    Result expectedResult;
+    expectedResult.setValid(true);
+    vector<string> expectedList1{"4", "6"};
+    vector<string> expectedList2{"5", "9", "11", "7", "8"};
+    expectedResult.setResultList1(&stmt1, expectedList1);
+    expectedResult.setResultList2(&stmt2, expectedList2);
+
+    REQUIRE(expectedResult.equals(actualResult));
+}
+
+TEST_CASE("ParentHandler: eval - SYNONYM CONST - filter result by stmt type") {
+    Reference stmt1(DesignEntityType::IF, ReferenceType::SYNONYM, "s");
+    Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "10");
+    Clause followsClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&followsClause, &TestParentHandler::pkbStub);
+    Result actualResult = handler.eval();
+
+    Result expectedResult;
+    expectedResult.setValid(true);
+    vector<string> expectedList1{};
+    expectedResult.setResultList1(&stmt1, expectedList1);
+
+    REQUIRE(expectedResult.equals(actualResult));
+}
+
+TEST_CASE("ParentHandler: eval - CONST SYNONYM - filter result by stmt type") {
+    Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
+    Reference stmt2(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "s");
+    Clause followsClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&followsClause, &TestParentHandler::pkbStub);
+    Result actualResult = handler.eval();
+
+    Result expectedResult;
+    expectedResult.setValid(true);
+    vector<string> expectedList2{"5", "9", "11"};
+    expectedResult.setResultList2(&stmt2, expectedList2);
+
+    REQUIRE(expectedResult.equals(actualResult));
+}

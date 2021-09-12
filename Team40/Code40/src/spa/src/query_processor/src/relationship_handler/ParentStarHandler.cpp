@@ -7,7 +7,6 @@ Result ParentStarHandler::eval() {
     string firstStmt = firstReference->getValue();
     string secondStmt = secondReference->getValue();
 
-    // Todo: handle stmts by different design enity types
     // Todo: use variable instead of magic number -1
 
     // assertions
@@ -79,30 +78,60 @@ Result ParentStarHandler::eval() {
    // NEITHER IS CONSTANT
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
-    vector<int> parentStmts;
-    if (firstReference->getDeType() == DesignEntityType::STMT) {
-        parentStmts = pkb->getAllStmts().asVector();
+    vector<int> childStmts;
+    if (secondReference->getDeType() == DesignEntityType::STMT) {
+        childStmts = pkb->getAllStmts().asVector();
     } else {
-        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-        parentStmts = pkb->getAllStmts(firstStmtType).asVector();
+        StatementType secondStmtType = desTypeToStmtType(secondReference->getDeType());
+        childStmts = pkb->getAllStmts(secondStmtType).asVector();
     }
-    for (int parentStmt : parentStmts) {
-        set<int> childStmts = pkb->getChildStmts(parentStmt);
-        if (childStmts.size() == 0) {
-            continue;
-        }
+    sort(childStmts.begin(), childStmts.end(), greater<int>());
 
-        bool hasMatchingChild = false;
-
-        for (auto childStmt : childStmts) {
-            if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(childStmt))) {
-                secondStmtResults.push_back(to_string(childStmt));
-                hasMatchingChild = true;
+    while (childStmts.size() > 0) {
+        int childStmt = childStmts.at(0);
+        vector<int> tempStmts;
+        tempStmts.push_back(childStmt);
+        bool hasParentStar = false;
+        int currStmt = pkb->getParentStmt(childStmt);
+        while (currStmt != -1) {
+            StatementType stmtType = pkb->getStmtType(currStmt);
+            if (isDesTypeStmtType(firstReference->getDeType(), stmtType)) {
+                /*if (find(firstStmtResults.begin(), firstStmtResults.end(), to_string(currStmt)) != 
+                    firstStmtResults.end()) {
+                    secondStmtResults.push_back(to_string(childStmt));
+                    hasParentStar = true;
+                    childStmts.erase(
+                        remove(childStmts.begin(), childStmts.end(), childStmt),
+                        childStmts.end());
+                } else {*/
+                for (auto stmt : tempStmts) {
+                    secondStmtResults.push_back(to_string(stmt));
+                    childStmts.erase(
+                        remove(childStmts.begin(), childStmts.end(), stmt),
+                        childStmts.end());
+                }
+                tempStmts.clear();
+                hasParentStar = true;
+                if (find(firstStmtResults.begin(), firstStmtResults.end(), to_string(currStmt)) != 
+                    firstStmtResults.end()) {
+                    // if currStmt is in firstStmtResult already, it means the parents of it has been considered before
+                    break;
+                }
+                firstStmtResults.push_back(to_string(currStmt));
             }
+            if (isDesTypeStmtType(secondReference->getDeType(), stmtType)) {
+                tempStmts.push_back(currStmt);
+            }
+
+            currStmt = pkb->getParentStmt(currStmt);
+
+
         }
 
-        if (hasMatchingChild) {
-            firstStmtResults.push_back(to_string(parentStmt));
+        // still removed from the precedingStmts when don't have followsStar
+        if (!hasParentStar) {
+            childStmts.erase(remove(childStmts.begin(),childStmts.end(), childStmt),
+                                 childStmts.end());
         }
     }
 

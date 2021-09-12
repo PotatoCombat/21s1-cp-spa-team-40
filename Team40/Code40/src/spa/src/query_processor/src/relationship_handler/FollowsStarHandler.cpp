@@ -111,7 +111,6 @@ Result FollowsStarHandler::eval() {
                 tempStmts.push_back(currStmt);
             }
             currStmt = pkb->getFollowingStmt(currStmt);
-
         }
 
         // still removed from the precedingStmts when don't have followsStar
