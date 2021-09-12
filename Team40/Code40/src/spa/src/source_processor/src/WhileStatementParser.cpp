@@ -27,8 +27,7 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
         if (hasTerminator(currContent)) {
             break;
         }
-        if (!currContent.empty() && currContent[0] != "}" &&
-            currContent[0] != "else") {
+        if (currContent[0] != "}" && currContent[0] != "else") {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);

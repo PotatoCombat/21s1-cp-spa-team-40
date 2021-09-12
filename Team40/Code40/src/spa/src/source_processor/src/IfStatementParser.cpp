@@ -32,8 +32,7 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
         if (terminator == 2) {
             break;
         }
-        if (!currContent.empty() && currContent[0] != "}" &&
-            currContent[0] != "else") {
+        if (currContent[0] != "}" && currContent[0] != "else") {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
