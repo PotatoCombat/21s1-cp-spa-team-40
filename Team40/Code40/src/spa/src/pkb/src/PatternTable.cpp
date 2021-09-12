@@ -1,23 +1,42 @@
 #include "pkb/PatternTable.h"
 
 #include <stack>
+#include <tuple>
 
 using namespace std;
 
 PatternTable::PatternTable() = default;
 
-void PatternTable::insertAssignment(AssignStatement* a) {
+void PatternTable::insertPatternAssign(AssignStatement* stmt) {
+    vector<string> exprList = stmt->getExprList();
+    vector<string> postfix = createPostfix(exprList);
+    tuple<string, set<string>> patterns = createPatterns(postfix);
 
+    string exactPattern = get<0>(patterns);
+    set<string> uniquePatterns = get<1>(patterns);
+
+    exactPatternOfStmtMap[stmt->getIndex()] = exactPattern;
+    patternsOfStmtMap[stmt->getIndex()] = uniquePatterns;
+
+    for (const auto& p : uniquePatterns) {
+        auto kvp = stmtsWithPatternMap.find(p);
+        if (kvp == stmtsWithPatternMap.end()) {
+            stmtsWithPatternMap[p] = { stmt->getIndex() };
+        }
+        else {
+            stmtsWithPatternMap[p].insert(stmt->getIndex());
+        }
+    }
 }
 
-set<StmtIndex> PatternTable::getStmtsWithPattern(VarName varName, string pattern) {
-    set<StmtIndex> s;
-    return s;
-}
-
-bool PatternTable::pattern(StmtIndex stmt, VarName varName, string pattern) {
-    return false;
-}
+//set<StmtIndex> PatternTable::getStmtsWithPattern(VarName varName, string pattern) {
+//    set<StmtIndex> s;
+//    return s;
+//}
+//
+//bool PatternTable::pattern(StmtIndex stmt, VarName varName, string pattern) {
+//    return false;
+//}
 
 map<string, int> PatternTable::precedence = {
     { "#", 0 },
@@ -73,7 +92,7 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
     return postfix;
 }
 
-set<string> PatternTable::createPatterns(vector<string> &postfix) {
+tuple<string, set<string>> PatternTable::createPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 
@@ -109,6 +128,8 @@ set<string> PatternTable::createPatterns(vector<string> &postfix) {
             stack.push(largerTerm);
         }
     }
+    string exactPattern = stack.top();
     set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
-    return uniquePatterns;
+
+    return make_pair(exactPattern, uniquePatterns);
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include "common/model/Variable.h"
 #include "common/model/expression/Expression.h"
 #include "common/model/statement/Statement.h"

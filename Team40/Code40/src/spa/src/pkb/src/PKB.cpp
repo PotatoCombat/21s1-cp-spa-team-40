@@ -62,6 +62,10 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
+void PKB::insertPatternAssign(AssignStatement *stmt) {
+    patternTable.insertPatternAssign(stmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================

@@ -8,6 +8,7 @@
 #include "ModifiesTable.h"
 #include "ParentStarTable.h"
 #include "ParentTable.h"
+#include "PatternTable.h"
 #include "ProcedureTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
@@ -16,6 +17,7 @@
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
 #include "common/model/statement/Statement.h"
+#include "common/model/statement/AssignStatement.h"
 
 using namespace std;
 
@@ -61,6 +63,9 @@ public:
 
     /// Stores the relationship Uses(stmt, var).
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
+
+    /// Stores the relationship pattern a(var, exprList), where a is an assign.
+    virtual void insertPatternAssign(AssignStatement *stmt);
 
     // =========================================================================
     // Query Processor
@@ -187,6 +192,16 @@ public:
     /// Selects BOOLEAN such that Uses(stmt, var).
     virtual bool stmtUses(StmtIndex stmt, VarName var);
 
+    // Pattern =================================================================
+
+    /// Selects p such that Uses(p, var), where p is a Procedure.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+//    virtual set<StmtIndex> getStmtsWithPatternAssign(VarName var, Pattern pattern);
+//    virtual set<StmtIndex> getAssignsWithPattern(Pattern pattern);
+//
+//    virtual bool patternAssign(StmtIndex stmt, VarName varName, Pattern pattern);
+
 private:
     ProcedureTable procTable;
     VarTable varTable;
@@ -199,4 +214,5 @@ private:
     ParentStarTable parentStarTable;
     ModifiesTable modifiesTable;
     UsesTable usesTable;
+    PatternTable patternTable;
 };
