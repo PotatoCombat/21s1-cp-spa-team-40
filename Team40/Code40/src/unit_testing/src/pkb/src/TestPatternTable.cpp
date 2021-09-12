@@ -13,22 +13,20 @@ using namespace std;
 struct TestPatterns {
     inline static vector<string> createExprList1() {
         // ((x + 10) * (y - z) / 5)
-        return vector<string>{"(", "(", "x", "+", "10", ")", "*", "(", "y", "-", "z", ")", "/",  "5", ")",};
+        return {"(", "(", "x", "+", "10", ")", "*", "(", "y", "-", "z", ")", "/",  "5", ")",};
     }
 
     inline static vector<string> createExprList2() {
         // v + x * y + z * t
-        return vector<string>{"v", "+", "x", "*", "y", "+", "z", "*", "t"};
+        return {"v", "+", "x", "*", "y", "+", "z", "*", "t",};
     }
 
-    inline static tuple<string, set<string>> createPatterns1() {
-        string exactPattern = "((x+10)*(y-z)/5)";
-        set<string> uniquePatterns {
+    inline static set<string> createPatterns1() {
+        return {
             "x", "10", "x+10", "(x+10)",
             "y", "z", "y-z", "(y-z)",
             "(x+10)*(y-z)", "5", "(x+10)*(y-z)/5", "((x+10)*(y-z)/5)",
         };
-        return make_pair(exactPattern, uniquePatterns);
     }
 };
 
@@ -36,22 +34,16 @@ TEST_CASE("PatternTable: createPostfix -> createPatterns") {
     vector<string> exprList = TestPatterns::createExprList1();
     vector<string> postfix = PatternTable::createPostfix(exprList);
 
-    tuple<string,set<string>> testPatterns = TestPatterns::createPatterns1();
-    string testExactPattern = get<0>(testPatterns);
-    set<string> testUniquePatterns = get<1>(testPatterns);
+    set<string> testPatterns = TestPatterns::createPatterns1();
+    set<string> actualPatterns = PatternTable::createPatterns(postfix);
 
-    tuple<string,set<string>> actualPatterns = PatternTable::createPatterns(postfix);
-    string actualExactPattern = get<0>(actualPatterns);
-    set<string> actualUniquePatterns = get<1>(actualPatterns);
+    REQUIRE(testPatterns.size() == actualPatterns.size());
 
-    REQUIRE(testExactPattern == actualExactPattern);
-    REQUIRE(testUniquePatterns.size() == actualUniquePatterns.size());
-
-    for (auto &p : actualUniquePatterns) {
-        testUniquePatterns.erase(p);
+    for (auto &p : actualPatterns) {
+        testPatterns.erase(p);
     }
 
-    REQUIRE(testUniquePatterns.empty());
+    REQUIRE(testPatterns.empty());
 }
 
 TEST_CASE("PatternTable: insertPattern") {
@@ -61,6 +53,9 @@ TEST_CASE("PatternTable: insertPattern") {
 
     PatternTable table;
     table.insertPatternAssign(&stmt);
+
+    REQUIRE(table.assignMatchesPattern(1, v.getName(), "v+x*y"));
+    REQUIRE(table.assignMatchesPattern(1, "_", "v+x*y"));
 }
 
 // TEST_CASE("PatternTable: ctor") {
