@@ -80,66 +80,45 @@ Result FollowsStarHandler::eval() {
     vector<string> firstStmtResults;
     vector<string> secondStmtResults;
 
-    vector<int> precedingStarStmts;
+    vector<int> precedingStmts;
     if (firstReference->getDeType() == DesignEntityType::STMT) {
-        precedingStarStmts = pkb->getAllStmts().asVector();
+        precedingStmts = pkb->getAllStmts().asVector();
     } else {
         StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-        precedingStarStmts = pkb->getAllStmts(firstStmtType).asVector();
+        precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
     }
 
-    while (precedingStarStmts.size() > 0) {
-        int precedingStarStmt = precedingStarStmts.at(0);
+    while (precedingStmts.size() > 0) {
+        int precedingStmt = precedingStmts.at(0);
         vector<int> tempStmts;
-        tempStmts.push_back(precedingStarStmt);
+        tempStmts.push_back(precedingStmt);
         bool hasFollowsStar = false;
-        set<int> followingStarStmts = pkb->getFollowingStarStmts(precedingStarStmt);
-        for (int followingStarStmt : followingStarStmts) {
-            StatementType stmtType = pkb->getStmtType(followingStarStmt);
-             if (isDesTypeStmtType(secondReference->getDeType(), stmtType)) {
+        int currStmt = pkb->getFollowingStmt(precedingStmt);
+        while (currStmt != -1) {
+            StatementType stmtType = pkb->getStmtType(currStmt);
+            if (isDesTypeStmtType(secondReference->getDeType(), stmtType)) {
                 for (auto stmt : tempStmts) {
                     firstStmtResults.push_back(to_string(stmt));
-                    precedingStarStmts.erase(
-                        remove(precedingStarStmts.begin(), precedingStarStmts.end(), stmt), 
-                        precedingStarStmts.end());
+                    precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), stmt),
+                                         precedingStmts.end());
                 }
                 tempStmts.clear();
-                secondStmtResults.push_back(to_string(followingStarStmt));
+                secondStmtResults.push_back(to_string(currStmt));
                 hasFollowsStar = true;
-             }
-             if (isDesTypeStmtType(firstReference->getDeType(), stmtType)) {
-                tempStmts.push_back(followingStarStmt);
-             }
+            }
+            if (isDesTypeStmtType(firstReference->getDeType(), stmtType)) {
+                tempStmts.push_back(currStmt);
+            }
+            currStmt = pkb->getFollowingStmt(currStmt);
+
         }
 
-        // still removed from the precedingStarStmts when don't have followsStar
-        precedingStarStmts.erase(
-            remove(precedingStarStmts.begin(), precedingStarStmts.end(), precedingStarStmt),
-            precedingStarStmts.end());
-    
-    }
-    
-    /*vector<int> precedingStarStmts;
-    if (firstReference->getDeType() == DesignEntityType::STMT) {
-        precedingStarStmts = pkb->getAllStmts().asVector();
-    } else {
-        StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-        precedingStarStmts = pkb->getAllStmts(firstStmtType).asVector();
-    }
-
-    for (int precedingStarStmt : precedingStarStmts) {
-        set<int> followingStarStmts = pkb->getFollowingStarStmts(precedingStarStmt);
-
-        int followingStmt = pkb->getFollowingStmt(precedingStarStmt);
-        if (followingStmt == -1 ||
-            !isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStmt))) {
-            continue;
+        // still removed from the precedingStmts when don't have followsStar
+        if (!hasFollowsStar) {
+            precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), precedingStmt),
+                             precedingStmts.end());
         }
-
-
-        firstStmtResults.push_back(to_string(precedingStarStmt));
-        secondStmtResults.push_back(to_string(followingStmt));
-    }*/
+    }
 
     if (firstReference->getRefType() != ReferenceType::WILDCARD) {
         result.setResultList1(firstReference, firstStmtResults);
