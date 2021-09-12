@@ -189,3 +189,13 @@ bool PKB::procUses(ProcName proc, VarName var) {
 bool PKB::stmtUses(StmtIndex stmt, VarName var) {
     return usesTable.stmtUses(stmt, var);
 }
+
+// Pattern =====================================================================
+
+set<StmtIndex> PKB::getAssignsWithPattern(VarName var, Pattern pattern) {
+    return patternTable.getAssignsWithPattern(var, pattern);
+}
+
+set<StmtIndex> PKB::getAssignsWithExactPattern(VarName var, Pattern pattern) {
+    return patternTable.getAssignsWithExactPattern(var, pattern);
+}

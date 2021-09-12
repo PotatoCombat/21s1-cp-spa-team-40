@@ -194,13 +194,16 @@ public:
 
     // Pattern =================================================================
 
-    /// Selects p such that Uses(p, var), where p is a Procedure.
+    /// Selects a such that a(var, pattern), where a is an AssignStatement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-//    virtual set<StmtIndex> getStmtsWithPatternAssign(VarName var, Pattern pattern);
-//    virtual set<StmtIndex> getAssignsWithPattern(Pattern pattern);
-//
-//    virtual bool patternAssign(StmtIndex stmt, VarName varName, Pattern pattern);
+    virtual set<StmtIndex> getAssignsWithPattern(VarName var, Pattern pattern);
+
+    /// Selects a such that a(var, pattern), where a is an AssignStatement,
+    /// and the pattern requires an exact match.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getAssignsWithExactPattern(VarName var, Pattern pattern);
 
 private:
     ProcedureTable procTable;

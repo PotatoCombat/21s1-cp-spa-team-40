@@ -8,45 +8,100 @@ using namespace std;
 PatternTable::PatternTable() = default;
 
 void PatternTable::insertPatternAssign(AssignStatement* stmt) {
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = stmt->getVariable()->getName();
     vector<string> exprList = stmt->getExprList();
+
+    // Normal Records ============
     vector<string> postfix = createPostfix(exprList);
-    tuple<string, set<string>> patterns = createPatterns(postfix);
+    set<string> patterns = createPatterns(postfix);
 
-    string exactPattern = get<0>(patterns);
-    set<string> uniquePatterns = get<1>(patterns);
+    for (const auto& p : patterns) {
+        // Record with varName, eg. ("x", "y * 5")
+        Record recordWithVarName = make_pair(varName, p);
 
-    exactPatternOfStmtMap[stmt->getIndex()] = exactPattern;
-    patternsOfStmtMap[stmt->getIndex()] = uniquePatterns;
+        // Record with varName, eg. (_, "y * 5")
+        Record recordWithWildcard = make_pair(WILDCARD, p);
 
-    for (const auto& p : uniquePatterns) {
-        auto kvp = stmtsWithPatternMap.find(p);
-        if (kvp == stmtsWithPatternMap.end()) {
-            stmtsWithPatternMap[p] = { stmt->getIndex() };
-        }
-        else {
-            stmtsWithPatternMap[p].insert(stmt->getIndex());
+        insertStmtWithPattern(recordWithVarName, stmtIndex);
+        insertStmtWithPattern(recordWithWildcard, stmtIndex);
+
+        insertPatternsOfStmt(stmtIndex, {recordWithVarName, recordWithWildcard});
+    }
+
+    // Exact Records ============
+    string exactPattern = createExactPattern(exprList);
+
+    Record exactRecordWithVarName = make_pair(varName, exactPattern);
+    Record exactRecordWithWildcard = make_pair(WILDCARD, exactPattern);
+
+    insertStmtWithExactPattern(exactRecordWithVarName, stmtIndex);
+    insertStmtWithExactPattern(exactRecordWithWildcard, stmtIndex);
+
+    insertExactPatternsOfStmt(stmtIndex, {exactRecordWithVarName, exactRecordWithWildcard});
+}
+
+set<StmtIndex> PatternTable::getAssignsWithPattern(VarName varName, Pattern pattern) {
+    Record record = make_pair(varName, pattern);
+    auto kvp = stmtsWithPatternMap.find(record);
+    if (kvp == stmtsWithPatternMap.end()) {
+        return {};
+    }
+    return kvp->second;
+}
+
+set<StmtIndex> PatternTable::getAssignsWithExactPattern(VarName varName, Pattern pattern) {
+    Record record = make_pair(varName, pattern);
+    auto kvp = stmtsWithExactPatternMap.find(record);
+    if (kvp == stmtsWithExactPatternMap.end()) {
+        return {};
+    }
+    return kvp->second;
+}
+
+void PatternTable::insertStmtWithPattern(Record record, StmtIndex stmtIndex) {
+    auto kvp = stmtsWithPatternMap.find(record);
+    if (kvp == stmtsWithPatternMap.end()) {
+        stmtsWithPatternMap[record] = { stmtIndex };
+    }
+    else {
+        kvp->second.insert(stmtIndex);
+    }
+}
+
+void PatternTable::insertStmtWithExactPattern(Record record, StmtIndex stmtIndex) {
+    auto kvp = stmtsWithExactPatternMap.find(record);
+    if (kvp == stmtsWithExactPatternMap.end()) {
+        stmtsWithExactPatternMap[record] = { stmtIndex };
+    }
+    else {
+        kvp->second.insert(stmtIndex);
+    }
+}
+
+void PatternTable::insertPatternsOfStmt(StmtIndex stmtIndex, set<Record> records) {
+    auto kvp = patternsOfStmtMap.find(stmtIndex);
+    if (kvp == patternsOfStmtMap.end()) {
+        patternsOfStmtMap[stmtIndex] = records;
+    }
+    else {
+        for (auto record : records) {
+            kvp->second.insert(record);
         }
     }
 }
 
-//set<StmtIndex> PatternTable::getStmtsWithPattern(VarName varName, string pattern) {
-//    set<StmtIndex> s;
-//    return s;
-//}
-//
-//bool PatternTable::pattern(StmtIndex stmt, VarName varName, string pattern) {
-//    return false;
-//}
-
-map<string, int> PatternTable::precedence = {
-    { "#", 0 },
-    { "(", 0 },
-    { ")", 0 },
-    { "+", 1 },
-    { "-", 1 },
-    { "*", 2 },
-    { "/", 2 },
-    };
+void PatternTable::insertExactPatternsOfStmt(StmtIndex stmtIndex, set<Record> records) {
+    auto kvp = exactPatternsOfStmtMap.find(stmtIndex);
+    if (kvp == exactPatternsOfStmtMap.end()) {
+        exactPatternsOfStmtMap[stmtIndex] = records;
+    }
+    else {
+        for (auto record : records) {
+            kvp->second.insert(record);
+        }
+    }
+}
 
 vector<string> PatternTable::createPostfix(vector<string> &infix) {
     stack<string> stack;
@@ -54,7 +109,7 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
 
     vector<string> postfix;
     for(const string& s : infix) {
-        bool isTerm = precedence.count(s) == 0;
+        bool isTerm = PRECEDENCE.count(s) == 0;
         if (isTerm) {
             postfix.push_back(s);
         }
@@ -71,11 +126,11 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
             stack.pop();
         }
         else {
-            if (precedence.at(s) > precedence.at(stack.top())) {
+            if (PRECEDENCE.at(s) > PRECEDENCE.at(stack.top())) {
                 stack.push(s);
             }
             else {
-                while (stack.top() != "#" && precedence.at(s) <= precedence.at(stack.top())) {
+                while (stack.top() != "#" && PRECEDENCE.at(s) <= PRECEDENCE.at(stack.top())) {
                     postfix.push_back(stack.top());
                     stack.pop();
                 }
@@ -92,13 +147,13 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
     return postfix;
 }
 
-tuple<string, set<string>> PatternTable::createPatterns(vector<string> &postfix) {
+set<string> PatternTable::createPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 
     vector<string> patterns;
     for(const string& s : postfix) {
-        bool isTerm = precedence.count(s) == 0;
+        bool isTerm = PRECEDENCE.count(s) == 0;
         if (isTerm) {
             patterns.push_back(s);
             stack.push(s);
@@ -128,8 +183,14 @@ tuple<string, set<string>> PatternTable::createPatterns(vector<string> &postfix)
             stack.push(largerTerm);
         }
     }
-    string exactPattern = stack.top();
     set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
+    return uniquePatterns;
+}
 
-    return make_pair(exactPattern, uniquePatterns);
+string PatternTable::createExactPattern(vector<string> &exprList) {
+    string exactPattern;
+    for(const string& s : exprList) {
+        exactPattern.append(s);
+    }
+    return exactPattern;
 }

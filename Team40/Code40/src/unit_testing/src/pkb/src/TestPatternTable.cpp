@@ -16,6 +16,11 @@ struct TestPatterns {
         return vector<string>{"(", "(", "x", "+", "10", ")", "*", "(", "y", "-", "z", ")", "/",  "5", ")",};
     }
 
+    inline static vector<string> createExprList2() {
+        // v + x * y + z * t
+        return vector<string>{"v", "+", "x", "*", "y", "+", "z", "*", "t"};
+    }
+
     inline static tuple<string, set<string>> createPatterns1() {
         string exactPattern = "((x+10)*(y-z)/5)";
         set<string> uniquePatterns {
@@ -47,6 +52,15 @@ TEST_CASE("PatternTable: createPostfix -> createPatterns") {
     }
 
     REQUIRE(testUniquePatterns.empty());
+}
+
+TEST_CASE("PatternTable: insertPattern") {
+    Variable v("x");
+    AssignStatement stmt(1, &v);
+    stmt.setExprLst(TestPatterns::createExprList2());
+
+    PatternTable table;
+    table.insertPatternAssign(&stmt);
 }
 
 // TEST_CASE("PatternTable: ctor") {

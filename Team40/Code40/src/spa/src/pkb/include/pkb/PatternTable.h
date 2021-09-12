@@ -16,22 +16,41 @@ public:
     PatternTable();
 
     void insertPatternAssign(AssignStatement *stmt);
+    set<StmtIndex> getAssignsWithPattern(VarName varName, Pattern pattern);
+    set<StmtIndex> getAssignsWithExactPattern(VarName varName, Pattern pattern);
+    //    bool pattern(StmtIndex stmt, VarName varName, Pattern pattern);
 
-//    VarName getVarOfStmt(StmtIndex stmt);
-//    set<Pattern> getPatternsOfStmt(StmtIndex stmt);
-//    set<StmtIndex> getStmtsWithPattern(Pattern pattern);
+    typedef tuple<VarName, Pattern> Record;
 
-//    bool pattern(StmtIndex stmt, VarName varName, Pattern pattern);
-
-    // THESE METHODS WILL BE PRIVATE
-    // USE ONLY FOR TESTING PATTERNS
+    // THESE STATIC METHODS WILL BE PRIVATE
+    // USE THEM ONLY FOR TESTING PURPOSES
     static vector<string> createPostfix(vector<string> &infix);
-    static tuple<string, set<string>> createPatterns(vector<string> &postfix);
+    static set<string> createPatterns(vector<string> &postfix);
+
+    static string createExactPattern(vector<string> &exprList);
 
 private:
-    static map<string, int> precedence;
+    inline static map<string, int> PRECEDENCE {
+        { "#", 0 },
+        { "(", 0 },
+        { ")", 0 },
+        { "+", 1 },
+        { "-", 1 },
+        { "*", 2 },
+        { "/", 2 },
+    };
 
-    map<StmtIndex, Pattern> exactPatternOfStmtMap;
-    map<StmtIndex, set<Pattern>> patternsOfStmtMap;
-    map<Pattern, set<StmtIndex>> stmtsWithPatternMap;
+    inline static string WILDCARD = "_";
+
+    map<Record, set<StmtIndex>> stmtsWithPatternMap;
+    map<Record, set<StmtIndex>> stmtsWithExactPatternMap;
+
+    map<StmtIndex, set<Record>> patternsOfStmtMap;
+    map<StmtIndex, set<Record>> exactPatternsOfStmtMap;
+
+    void insertStmtWithPattern(Record record, StmtIndex stmtIndex);
+    void insertStmtWithExactPattern(Record record, StmtIndex stmtIndex);
+
+    void insertPatternsOfStmt(StmtIndex stmtIndex, set<Record> record);
+    void insertExactPatternsOfStmt(StmtIndex stmtIndex, set<Record> record);
 };
