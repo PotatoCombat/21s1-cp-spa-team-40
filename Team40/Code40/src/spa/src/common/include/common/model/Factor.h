@@ -1,4 +1,8 @@
 #pragma once
+#include <stdexcept>
+#include <string>
+
+using namespace std;
 
 enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 
@@ -10,11 +14,14 @@ private:
 
 protected:
     // constructor
-    Factor(FactorType factorType, int value);
-    Factor(FactorType factorType);
+    explicit Factor(FactorType factorType);
 
 public:
     // getters
-    const FactorType getFactorType();
-    const int getValue();
+    FactorType getFactorType();
+    int getValue() const;
+    virtual string getName() {
+        throw runtime_error(
+            "This method is not available for this FactorType.");
+    }
 };

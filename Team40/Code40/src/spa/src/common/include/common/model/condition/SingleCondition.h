@@ -4,9 +4,9 @@
 
 class SingleCondition : public Condition {
 private:
-    Relation *rel;
-    bool value;
+    Relation *relation;
 
 public:
-    SingleCondition(Relation *rel);
+    explicit SingleCondition(Relation *relation);
+    Relation *getRelation() override;
 };

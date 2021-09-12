@@ -1,24 +1,19 @@
 #include "spa/SPA.h"
-#include "common/model/Program.h"
-#include "source_processor/DesignExtractor.h"
-#include "source_processor/Line.h"
-#include <fstream>
-#include <iostream>
-#include <vector>
+
+#include <utility>
 
 using namespace std;
 
+SPA::SPA() {
+    this->pkb = PKB();
+    this->sourceProcessor = SourceProcessor(&pkb);
+    this->queryProcessor = QueryProcessor(&pkb);
+}
+
 void SPA::processSource(string filename) {
-    fstream file;
-    file.open(filename, ios::in);
-    if (file.is_open()) {
-        vector<Line> programLines = parser.parseFile(file);
-        Program program = programParser.parseProgram(programLines);
-        PKB pkb = PKB();
-        DesignExtractor designExtractor(pkb);
-        designExtractor.handleProgram(program);
-    } else {
-        cout << "No such file";
-    }
-    file.close();
+    sourceProcessor.processSource(move(filename));
+}
+
+void SPA::processQuery(string query, list<string> &results) {
+    queryProcessor.processQuery(move(query), results);
 }

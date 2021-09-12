@@ -1,7 +1,7 @@
 #include <vector>
 
-#include "Result.h"
-#include "Reference.h"
+#include "query_processor/Result.h"
+#include "query_processor/model/Reference.h"
 
 #include "catch.hpp"
 
@@ -25,29 +25,28 @@ TestResultHelper testResultHelper = {
     Reference(DesignEntityType::CALL, ReferenceType::SYNONYM, "2"),
     vector<string>{"1", "2", "3"},
     vector<string>{"1", "2", "3"},
-    vector<string>{"2", "3"}
-};
+    vector<string>{"2", "3"}};
 
 TEST_CASE("Result: equals - all the same - returns true") {
-	Result result1;
+    Result result1;
     Result result2;
 
-	result1.setValid(true);
+    result1.setValid(true);
     result2.setValid(true);
 
-	result1.setResultList1(&testResultHelper.ref1, testResultHelper.list1);
+    result1.setResultList1(&testResultHelper.ref1, testResultHelper.list1);
     result2.setResultList1(&testResultHelper.ref2, testResultHelper.list2);
 
-	REQUIRE(result1.equals(result2));
+    REQUIRE(result1.equals(result2));
 }
 
 TEST_CASE("Result: equals - different isResultValid - returns false") {
-	Result result1;
+    Result result1;
     Result result2;
 
-	result1.setValid(true);
+    result1.setValid(true);
     result2.setValid(false);
-	REQUIRE(!result1.equals(result2));
+    REQUIRE(!result1.equals(result2));
 }
 
 TEST_CASE("Result: equals - different reference - returns false") {

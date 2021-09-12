@@ -12,22 +12,32 @@
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "VarTable.h"
+#include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Variable.h"
-#include "common/model/ConstantValue.h"
 #include "common/model/statement/Statement.h"
 
 using namespace std;
 
 class PKB {
 public:
+
+    /// Returns the procedure with the given procedure name \param procName.
+    virtual Procedure* getProcByName(ProcName procName);
+
+    /// Returns the variable with the given variable name \param varName.
+    virtual Variable* getVarByName(VarName varName);
+
+    /// Returns the statement with the given statement index \param stmtIndex.
+    virtual Statement* getStmtByIndex(StmtIndex stmtIndex);
+
     // =========================================================================
     // Source Processor
     // =========================================================================
 
-    virtual ProcIndex insertProc(Procedure *procedure);
-    virtual VarIndex insertVar(Variable *variable);
-    virtual ConstIndex insertConst(ConstantValue *constant);
+    virtual void insertProc(Procedure *procedure);
+    virtual void insertVar(Variable *variable);
+    virtual void insertConst(ConstantValue *constant);
 
     virtual StmtIndex insertStmt(Statement *statement);
 

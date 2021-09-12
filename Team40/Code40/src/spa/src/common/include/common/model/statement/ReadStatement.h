@@ -4,11 +4,10 @@ using namespace std;
 
 class ReadStatement : public Statement {
 private:
-    Variable variable;
+    Variable *variable;
 
 public:
-    ReadStatement(int index, Variable variable)
-        : variable(variable), Statement(index, StatementType::READ) {}
+    ReadStatement(int index, Variable *variable);
 
-    Variable getVariable() { return this->variable; }
+    Variable *getVariable() override;
 };

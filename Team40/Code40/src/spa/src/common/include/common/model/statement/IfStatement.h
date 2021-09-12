@@ -1,41 +1,31 @@
 #pragma once
-#include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
+
+#include "common/model/statement/Statement.h"
+
 using namespace std;
 
 class IfStatement : public Statement {
 private:
-    // Condition cond;
-    vector<Statement> thenStmtLst;
-    vector<Statement> elseStmtLst;
+    Condition *cond;
+    vector<Statement *> thenStmtLst;
+    vector<Statement *> elseStmtLst;
     vector<string> condLst;
 
 public:
-    // IfStatement(int index, Condition cond)
-    //     : cond(cond), Statement(index, StatementType::IF) {
-    //     this->thenStmtLst = {};
-    //     this->elseStmtLst = {};
-    // }
+    IfStatement(int index, Condition *cond);
 
-    IfStatement(int index) : Statement(index, StatementType::IF) {
-        this->thenStmtLst = {};
-        this->elseStmtLst = {};
-        this->condLst = {};
-    }
+    IfStatement(int index);
 
-    void addThenStatement(Statement statement) {
-        this->thenStmtLst.push_back(statement);
-    }
-    void addElseStatement(Statement statement) {
-        this->elseStmtLst.push_back(statement);
-    }
+    void addThenStatement(Statement *statement);
+    void addElseStatement(Statement *statement);
 
-    void setCondLst(vector<string> condLst) { this->condLst = condLst; }
+    void setCondLst(vector<string> condLst);
 
-    // Condition getCondition() { return this->cond; }
+    Condition *getCondition() override;
 
-    vector<Statement> getThenStmtLst() { return this->thenStmtLst; }
+    vector<Statement *> getThenStmtLst() override;
 
-    vector<Statement> getElseStmtLst() { return this->elseStmtLst; }
+    vector<Statement *> getElseStmtLst() override;
 };

@@ -32,7 +32,7 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
-            stmt.addStatement(nestedStmt);
+            stmt.addStatement(&nestedStmt);
             this->programIndex = i;
             Statement *currStmt = &nestedStmt;
             if (nestedStmt.getStatementType() == StatementType::IF) {

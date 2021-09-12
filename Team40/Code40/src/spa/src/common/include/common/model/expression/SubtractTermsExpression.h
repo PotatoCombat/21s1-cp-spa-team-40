@@ -9,4 +9,8 @@ private:
 
 public:
     SubtractTermsExpression(Expression *expr, Term *term);
+
+    Expression* getExpression();
+
+    Term* getTerm();
 };

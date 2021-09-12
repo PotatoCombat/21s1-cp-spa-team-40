@@ -37,7 +37,7 @@ public:
                        currContent[0] != "else") {
                 Statement stmt =
                     parseStatement(currContent, currIndex, programLines, i);
-                currProc.addToStmtLst(stmt);
+                currProc.addToStmtLst(&stmt);
             }
         }
         program.addToProcLst(currProc);

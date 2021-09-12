@@ -9,6 +9,7 @@ Statement ReadStatementParser::parseReadStatement() {
     vector<string>::iterator readItr =
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
-    ReadStatement stmt = ReadStatement(index, Variable(var_name));
+    Variable variable(var_name);
+    ReadStatement stmt = ReadStatement(index, &variable);
     return stmt;
 }

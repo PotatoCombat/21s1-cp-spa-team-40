@@ -1,9 +1,9 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
-#include "ParentHandler.h"
-#include "Reference.h"
-#include "Relation.h"
-#include "Result.h"
+#include "query_processor/Result.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
+#include "query_processor/relationship_handler/ParentHandler.h"
 
 #include "catch.hpp"
 
@@ -23,21 +23,22 @@ TEST_CASE("ParentHandler: eval - WILDCARD WILDCARD - source has parent") {
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD WILDCARD - source does not have parent") {
+TEST_CASE(
+    "ParentHandler: eval - WILDCARD WILDCARD - source does not have parent") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStubNoParent);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStubNoParent);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -49,8 +50,8 @@ TEST_CASE("ParentHandler: eval - CONSTANT CONSTANT - parent match") {
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "5");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -62,8 +63,8 @@ TEST_CASE("ParentHandler: eval - CONSTANT CONSTANT - parent not match") {
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "3");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -75,57 +76,61 @@ TEST_CASE("ParentHandler: eval - CONSTANT WILDCARD - has stmt child CONST") {
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - CONSTANT WILDCARD - no stmt child CONSTANT/ CONSTANT out of bound") {
+TEST_CASE("ParentHandler: eval - CONSTANT WILDCARD - no stmt child CONSTANT/ "
+          "CONSTANT out of bound") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD CONSTANT - has stmt parent CONSTANT") {
+TEST_CASE(
+    "ParentHandler: eval - WILDCARD CONSTANT - has stmt parent CONSTANT") {
     Result expectedResult;
     expectedResult.setValid(true);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "5");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD CONSTANT - no stmt parent CONSTANT/ CONSTANT out of bound") {
+TEST_CASE("ParentHandler: eval - WILDCARD CONSTANT - no stmt parent CONSTANT/ "
+          "CONSTANT out of bound") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - SYNONYM CONSTANT - returns non-empty resultList1") {
+TEST_CASE(
+    "ParentHandler: eval - SYNONYM CONSTANT - returns non-empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "5");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -136,11 +141,12 @@ TEST_CASE("ParentHandler: eval - SYNONYM CONSTANT - returns non-empty resultList
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - SYNONYM CONSTANT - returns empty resultList1") {
+TEST_CASE(
+    "ParentHandler: eval - SYNONYM CONSTANT - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -151,11 +157,12 @@ TEST_CASE("ParentHandler: eval - SYNONYM CONSTANT - returns empty resultList1") 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - CONSTANT SYNONYM - returns non-empty resultList2") {
+TEST_CASE(
+    "ParentHandler: eval - CONSTANT SYNONYM - returns non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -166,11 +173,12 @@ TEST_CASE("ParentHandler: eval - CONSTANT SYNONYM - returns non-empty resultList
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - CONSTANT SYNONYM - returns empty resultList2") {
+TEST_CASE(
+    "ParentHandler: eval - CONSTANT SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -181,11 +189,12 @@ TEST_CASE("ParentHandler: eval - CONSTANT SYNONYM - returns empty resultList2") 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - SYNONYM WILDCARD - returns non-empty resultList1") {
+TEST_CASE(
+    "ParentHandler: eval - SYNONYM WILDCARD - returns non-empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -196,11 +205,12 @@ TEST_CASE("ParentHandler: eval - SYNONYM WILDCARD - returns non-empty resultList
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - SYNONYM WILDCARD - returns empty resultList1") {
+TEST_CASE(
+    "ParentHandler: eval - SYNONYM WILDCARD - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStubNoParent);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStubNoParent);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -211,11 +221,12 @@ TEST_CASE("ParentHandler: eval - SYNONYM WILDCARD - returns empty resultList1") 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns non-empty resultList2") {
+TEST_CASE(
+    "ParentHandler: eval - WILDCARD SYNONYM - returns non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -226,11 +237,12 @@ TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns non-empty resultList
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList2") {
+TEST_CASE(
+    "ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStubNoParent);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStubNoParent);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -241,11 +253,12 @@ TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList2") 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - SYNONYM SYNONYM - returns non-empty resultList1, non-empty resultList2") {
+TEST_CASE("ParentHandler: eval - SYNONYM SYNONYM - returns non-empty "
+          "resultList1, non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStub);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -258,11 +271,12 @@ TEST_CASE("ParentHandler: eval - SYNONYM SYNONYM - returns non-empty resultList1
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList1, empty resultList2") {
+TEST_CASE("ParentHandler: eval - WILDCARD SYNONYM - returns empty resultList1, "
+          "empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
-    Relation parentRelation(RelationType::PARENT, stmt1, stmt2);
-    ParentHandler handler(&parentRelation, &TestParentHandler::pkbStubNoParent);
+    Clause parentClause(ClauseType::PARENT, stmt1, stmt2);
+    ParentHandler handler(&parentClause, &TestParentHandler::pkbStubNoParent);
     Result actualResult = handler.eval();
 
     Result expectedResult;

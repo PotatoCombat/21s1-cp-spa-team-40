@@ -1,48 +1,55 @@
-//#include "catch.hpp"
-//
-//#include "QueryParser.h"
-//
-//struct TestQueryParser {
-//    static const pair<string, string> DECL;
-//    static const tuple<string, string, string> STCL;
-//    static Declaration createDeclaration();
-//    static SuchThatClause createSuchThatClause();
-//    // static PatternClause createPatternClause();
-//};
-//
-//const pair<string, string> TestQueryParser::DECL = make_pair("stmt", "s");
-//const tuple<string, string, string> TestQueryParser::STCL =
-//    make_tuple("Follows", "s", "p1");
-//
-//Declaration TestQueryParser::createDeclaration() {
-//    return Declaration(DECL.second, DesignEntityType::STMT);
-//}
-//
-//SuchThatClause TestQueryParser::createSuchThatClause() {
-//    return SuchThatClause(
-//        Relation(get<1>(STCL), get<2>(STCL), RelationType::FOLLOWS));
-//}
-//
-//TEST_CASE("QP-QueryParser: parseDeclaration") {
-//    QueryParser parser;
-//    Declaration expected = TestQueryParser::createDeclaration();
-//    Declaration actual = parser.parseDeclaration(TestQueryParser::DECL);
-//
-//    REQUIRE(expected.getSynonym() == actual.getSynonym());
-//    REQUIRE(expected.getType() == actual.getType());
-//    REQUIRE(expected.getType() == DesignEntityType::STMT);
-//}
-//
-//TEST_CASE("QP-QueryParser: parseSuchThatClause") {
-//    QueryParser parser;
-//    SuchThatClause expected = TestQueryParser::createSuchThatClause();
-//    SuchThatClause actual = parser.parseSuchThatClause(TestQueryParser::STCL);
-//
-//    REQUIRE(expected.getRelation().getFirstReference().getValue() ==
-//            actual.getRelation().getFirstReference().getValue());
-//    REQUIRE(expected.getRelation().getSecondReference().getValue() ==
-//            actual.getRelation().getSecondReference().getValue());
-//    REQUIRE(expected.getRelation().getRelationType() ==
-//            actual.getRelation().getRelationType());
-//    REQUIRE(expected.getRelation().getRelationType() == RelationType::FOLLOWS);
-//}
+#include "catch.hpp"
+
+#include "query_processor/Abstractions.h"
+#include "query_processor/QueryParser.h"
+
+struct TestQueryParser {
+    static const DeclPair DECL;
+    static const ClsTuple REL;
+    static const Reference REFERENCE;
+    static Clause createClause();
+    static vector<Reference*> createReferenceV();
+};
+
+const DeclPair TestQueryParser::DECL = make_pair("stmt", "s");
+const ClsTuple TestQueryParser::REL = make_tuple("Follows*", "s", "4");
+const Reference TestQueryParser::REFERENCE =
+    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+
+vector<Reference*> TestQueryParser::createReferenceV() {
+    return vector<Reference*>{new Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s")};
+}
+
+Clause TestQueryParser::createClause() {
+    Reference r1 = TestQueryParser::REFERENCE;
+    Reference r2 = Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
+    return Clause(ClauseType::FOLLOWS_T, r1, r2);
+}
+
+TEST_CASE("QueryParser: parseDeclaration") {
+    QueryParser parser;
+    Reference expected = TestQueryParser::REFERENCE;
+    Reference *actual;
+    actual = parser.parseDeclaration(TestQueryParser::DECL);
+
+    REQUIRE(actual->getDeType() == expected.getDeType());
+    REQUIRE(actual->getRefType() == expected.getRefType());
+    REQUIRE(actual->getValue() == expected.getValue());
+    REQUIRE(actual->getDeType() == DesignEntityType::STMT);
+}
+
+TEST_CASE("QueryParser: parseRelation") {
+    QueryParser parser;
+
+    vector<Reference *> refs = TestQueryParser::createReferenceV();
+
+    Clause expected = TestQueryParser::createClause();
+    Clause *actual = parser.parseClause(TestQueryParser::REL, refs);
+
+    REQUIRE(actual->getType() == ClauseType::FOLLOWS_T);
+    REQUIRE(actual->getType() == expected.getType());
+    REQUIRE(actual->getFirstReference()->getValue() ==
+            expected.getFirstReference()->getValue());
+    REQUIRE((actual->getSecondReference())->getValue() ==
+            expected.getSecondReference()->getValue());    
+}

@@ -37,9 +37,9 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             if (terminator == 2) {
                 break;
             } else if (terminator == 0) {
-                stmt.addThenStatement(nestedStmt);
+                stmt.addThenStatement(&nestedStmt);
             } else if (terminator == 1) {
-                stmt.addElseStatement(nestedStmt);
+                stmt.addElseStatement(&nestedStmt);
             }
             this->programIndex = i;
             Statement *currStmt = &nestedStmt;

@@ -7,6 +7,27 @@ Iterator<StmtIndex> PKBStub::getAllStmts() {
     return iter;
 }
 
+Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
+    vector<int> allStmts = getAllStmts().asVector();
+    vector<int> filteredStmts;
+    for (auto stmt : allStmts) {
+        if (getStmtType(stmt) == stmtType) {
+            filteredStmts.push_back(stmt);
+        }
+    }
+    Iterator<StmtIndex> iter(filteredStmts);
+    return iter;
+}
+
+StatementType PKBStub::getStmtType(StmtIndex stmt) {
+    vector<StatementType> stmtTypes{
+        StatementType::ASSIGN, StatementType::ASSIGN, StatementType::ASSIGN,
+        StatementType::WHILE,  StatementType::ASSIGN, StatementType::IF,
+        StatementType::ASSIGN, StatementType::ASSIGN, StatementType::ASSIGN,
+        StatementType::CALL,   StatementType::ASSIGN, StatementType::CALL};
+    return stmtTypes[stmt - 1];
+}
+
 StmtIndex PKBStub::getFollowingStmt(StmtIndex stmt) {
     vector<int> followingStmts{2, 3, 4, 12, 6, 9, -1, -1, 10, 11, -1, -1};
     return followingStmts[stmt - 1];

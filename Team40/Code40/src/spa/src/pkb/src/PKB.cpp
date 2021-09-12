@@ -1,20 +1,34 @@
 #include "pkb/PKB.h"
 
+#include <utility>
+
 using namespace std;
+
+Procedure* PKB::getProcByName(ProcName procName) {
+    return procTable.getEntity(move(procName));
+}
+
+Variable* PKB::getVarByName(VarName varName) {
+    return varTable.getEntity(move(varName));
+}
+
+Statement* PKB::getStmtByIndex(StmtIndex stmtIndex) {
+    return statementTable.getStmt(stmtIndex);
+}
 
 // =============================================================================
 // Source Processor
 // =============================================================================
 
-ProcIndex PKB::insertProc(Procedure *procedure) {
+void PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-VarIndex PKB::insertVar(Variable *variable) {
+void PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
-ConstIndex PKB::insertConst(ConstantValue *constant) {
+void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
