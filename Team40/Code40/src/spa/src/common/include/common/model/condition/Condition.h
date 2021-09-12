@@ -1,4 +1,7 @@
 #pragma once
+
+#include <stdexcept>
+
 #include "common/model/relation/Relation.h"
 
 enum class ConditionType { SINGLE, AND, OR, NOT };
