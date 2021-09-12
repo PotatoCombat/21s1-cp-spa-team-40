@@ -2,7 +2,7 @@
 #include "common/model/condition/SingleCondition.h"
 #include "common/model/relation/EqualsRelation.h"
 #include "common/model/relation/Relation.h"
-#include "source_processor/DesignExtractor.h"
+#include "source_processor/design-extractor/DesignExtractor.h"
 
 TEST_CASE("DesignExtractor: Correctly handles NotCondition") {
     //    ConstantValue cv1(1);

@@ -1,8 +1,7 @@
-#include "source_processor/FollowsExtractor.h"
+#include "source_processor/design-extractor/FollowsExtractor.h"
 
 FollowsExtractor::FollowsExtractor(PKB *pkb)
-    : pkb(pkb),
-      ctx(ExtractionContext::getInstance().getFollowsContext()) {};
+    : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};
 
 void FollowsExtractor::extract(Program program) {
     for (Procedure procedure : program.getProcLst()) {

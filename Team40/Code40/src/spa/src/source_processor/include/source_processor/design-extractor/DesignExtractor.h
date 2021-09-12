@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ExtractionContext.h"
+#include "FollowsExtractor.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
@@ -17,8 +19,6 @@
 #include "common/model/statement/WhileStatement.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
-#include "source_processor/ExtractionContext.h"
-#include "source_processor/FollowsExtractor.h"
 
 class DesignExtractor {
 public:

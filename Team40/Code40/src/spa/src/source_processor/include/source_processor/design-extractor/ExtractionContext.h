@@ -2,7 +2,7 @@
 
 #include "common/model/Procedure.h"
 #include "pkb/Abstractions.h"
-#include "source_processor/EntityContext.h"
+#include "source_processor/design-extractor/EntityContext.h"
 #include <optional>
 #include <vector>
 
@@ -30,9 +30,9 @@ public:
     EntityContext<Statement> getParentContext();
 
     optional<Statement *> getUsingStatement();
-    void setUsingStatement(Statement* statement);
+    void setUsingStatement(Statement *statement);
     void unsetUsingStatement(Statement *statement);
     optional<Statement *> getModifyingStatement();
-    void setModifyingStatement(Statement* statement);
+    void setModifyingStatement(Statement *statement);
     void unsetModifyingStatement(Statement *statement);
 };
