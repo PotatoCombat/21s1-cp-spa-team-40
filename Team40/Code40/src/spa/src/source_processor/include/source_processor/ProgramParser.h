@@ -17,9 +17,6 @@
 using namespace std;
 
 class ProgramParser {
-private:
-    int programIndex;
-
 public:
     Program parseProgram(vector<Line> programLines) {
         Program program = Program();
