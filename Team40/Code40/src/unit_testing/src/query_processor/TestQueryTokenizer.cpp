@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "QueryTokenizer.h"
+#include "query_processor/QueryTokenizer.h"
 
 struct TestQueryTokenizer {
     static const string QUERY1;

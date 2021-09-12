@@ -1,37 +1,32 @@
-#include "common/model/statement/Statement.h"
-#include "common/model/condition/Condition.h"
+#pragma once
+
 #include <string>
 #include <vector>
 
+#include "common/model/condition/Condition.h"
+#include "common/model/statement/Statement.h"
+
 using namespace std;
+
 class WhileStatement : public Statement {
 private:
-    // No AST yet
-    // Condition cond;
-    vector<Statement> stmtLst;
+    Condition *cond;
+    vector<Statement *> stmtLst;
     vector<string> condLst;
 
 public:
     // constructor
-    // WhileStatement(int index, Condition cond)
-    //     : cond(cond), Statement(index, StatementType::WHILE) {
-    //     this->stmtLst = {};
-    // }
+    WhileStatement(int index, Condition *cond);
 
-    WhileStatement(int index) : Statement(index, StatementType::WHILE) {
-        this->stmtLst = {};
-        this->condLst = {};
-    }
+    WhileStatement(int index);
 
     // adder
-    void addStatement(Statement statement) {
-        this->stmtLst.push_back(statement);
-    }
+    void addStatement(Statement *statement);
 
-    void setCondLst(vector<string> condLst) { this->condLst = condLst; }
+    void setCondLst(vector<string> condLst);
 
     // getters
-    // Condition getCondition() { return this->cond; }
+    Condition *getCondition() override;
 
-    vector<Statement> getStmtLst() { return this->stmtLst; }
+    vector<Statement *> getThenStmtLst() override;
 };

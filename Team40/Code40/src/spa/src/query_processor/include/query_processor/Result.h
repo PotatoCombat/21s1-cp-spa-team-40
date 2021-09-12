@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "model/Reference.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 

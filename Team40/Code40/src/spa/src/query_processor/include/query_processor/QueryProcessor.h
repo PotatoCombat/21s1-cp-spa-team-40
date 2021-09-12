@@ -11,13 +11,13 @@
 using namespace std;
 
 class QueryProcessor {
-private:
-    QueryPreprocessor preprocessor;
-    QueryEvaluator evaluator;
-    PKB *pkb;
-
 public:
-    QueryProcessor();
+    explicit QueryProcessor(PKB *pkb);
 
     void processQuery(string query, list<string> &results);
+
+private:
+    PKB *pkb;
+    QueryPreprocessor preprocessor;
+    QueryEvaluator evaluator = QueryEvaluator(nullptr);
 };

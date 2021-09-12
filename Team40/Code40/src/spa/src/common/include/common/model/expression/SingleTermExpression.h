@@ -7,4 +7,6 @@ private:
 
 public:
     SingleTermExpression(Term *term);
+
+    Term *getTerm();
 };

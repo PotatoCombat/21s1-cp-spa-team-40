@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "Reference.h"
 #include "Clause.h"
+#include "Reference.h"
 
 using namespace std;
 

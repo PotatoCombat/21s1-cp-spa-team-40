@@ -1,4 +1,4 @@
-#include "FollowsHandler.h"
+#include "query_processor/relationship_handler/FollowsHandler.h"
 
 Result FollowsHandler::eval() {
     Result result;

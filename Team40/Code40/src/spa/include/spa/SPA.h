@@ -1,17 +1,21 @@
 #pragma once
 
-//#include "pkb/PKB.h"
-#include "source_processor/Parser.h"
 #include <string>
+#include <list>
 
-using namespace std;
+#include "pkb/PKB.h"
+#include "query_processor/QueryProcessor.h"
+#include "source_processor/SourceProcessor.h"
 
 class SPA {
-private:
-    // PKB pkb;
-    Parser parser;
-
 public:
-    void processSource(string filename);
-    // void processQuery(string query, list<string> &results);
+    SPA();
+
+    virtual void processSource(string filename);
+    virtual void processQuery(string query, list<string> &results);
+
+private:
+    PKB pkb;
+    SourceProcessor sourceProcessor = SourceProcessor(nullptr);
+    QueryProcessor queryProcessor = QueryProcessor(nullptr);
 };

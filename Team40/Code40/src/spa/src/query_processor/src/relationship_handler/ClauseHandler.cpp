@@ -1,4 +1,4 @@
-#include "ClauseHandler.h"
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 StatementType ClauseHandler::desTypeToStmtType(DesignEntityType desType) {
     if (desType == DesignEntityType::PROCEDURE ||

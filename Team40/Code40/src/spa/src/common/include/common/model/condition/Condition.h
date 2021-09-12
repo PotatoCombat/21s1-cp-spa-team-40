@@ -1,4 +1,5 @@
 #pragma once
+#include "common/model/relation/Relation.h"
 
 enum class ConditionType { SINGLE, AND, OR, NOT };
 
@@ -16,4 +17,22 @@ public:
     ConditionType getConditionType();
 
     bool getValue();
+
+    // Overriden by: SingleCondition
+    virtual Relation *getRelation() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType.");
+    };
+
+    // Overriden by: NotCondition, AndCondition, OrCondition
+    virtual Condition *getPrimaryCondition() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType");
+    }
+
+    // Overriden by: AndCondition, OrCondition
+    virtual Condition *getSecondaryCondition() {
+        throw runtime_error(
+            "This method is not implemented for this ConditionType");
+    }
 };

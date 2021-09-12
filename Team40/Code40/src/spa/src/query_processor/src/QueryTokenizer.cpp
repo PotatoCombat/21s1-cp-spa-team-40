@@ -1,4 +1,4 @@
-#include "QueryTokenizer.h"
+#include "query_processor/QueryTokenizer.h"
 
 pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     size_t split = input.rfind(SEMICOLON);

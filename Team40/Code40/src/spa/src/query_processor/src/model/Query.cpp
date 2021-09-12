@@ -1,4 +1,4 @@
-#include "Query.h"
+#include "query_processor/model/Query.h"
 
 Query::Query() {
     vector<Clause *> clauseList;

@@ -1,4 +1,4 @@
-#include "Result.h"
+#include "query_processor/Result.h"
 
 void Result::setValid(bool isValid) {
 	this->isValid = isValid;
