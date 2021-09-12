@@ -87,6 +87,7 @@ Result FollowsStarHandler::eval() {
         StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
         precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
     }
+    sort(precedingStmts.begin(), precedingStmts.end());
 
     while (precedingStmts.size() > 0) {
         int precedingStmt = precedingStmts.at(0);
