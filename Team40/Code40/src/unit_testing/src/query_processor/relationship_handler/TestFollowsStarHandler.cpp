@@ -1,9 +1,9 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
-#include "FollowsStarHandler.h"
-#include "Reference.h"
-#include "Clause.h"
-#include "Result.h"
+#include "query_processor/Result.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
+#include "query_processor/relationship_handler/FollowsStarHandler.h"
 
 #include "catch.hpp"
 
@@ -24,20 +24,23 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source has follows") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source does not have follows") {
+TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source does not have "
+          "follows") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStubNoFollows);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -50,82 +53,95 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT CONSTANT - relation holds") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - CONSTANT CONSTANT - relation does not hold") {
+TEST_CASE(
+    "FollowsStarHandler: eval - CONSTANT CONSTANT - relation does not hold") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "5");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - has stmt following CONSTANT") {
+TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - has stmt following "
+          "CONSTANT") {
     Result expectedResult;
     expectedResult.setValid(true);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - no stmt following CONSTANT/CONSTANT out of bound") {
+TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - no stmt following "
+          "CONSTANT/CONSTANT out of bound") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - has stmt preceding CONSTANT") {
+TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - has stmt preceding "
+          "CONSTANT") {
     Result expectedResult;
     expectedResult.setValid(true);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding CONSTANT/ CONSTANT out of bound") {
+TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding "
+          "CONSTANT/ CONSTANT out of bound") {
     Result expectedResult;
     expectedResult.setValid(false);
 
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty resultList1") {
+TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
+          "resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -136,11 +152,13 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty resul
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns empty resultList1") {
+TEST_CASE(
+    "FollowsStarHandler: eval - SYNONYM CONSTANT - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -151,11 +169,13 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns empty resultLis
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty resultList2") {
+TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
+          "resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -166,11 +186,13 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty resul
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns empty resultList2") {
+TEST_CASE(
+    "FollowsStarHandler: eval - CONSTANT SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -181,11 +203,13 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns empty resultLis
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty resultList1") {
+TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty "
+          "resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -196,11 +220,13 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty resul
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns empty resultList1") {
+TEST_CASE(
+    "FollowsStarHandler: eval - SYNONYM WILDCARD - returns empty resultList1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStubNoFollows);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -211,11 +237,13 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns empty resultLis
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty resultList2") {
+TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty "
+          "resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -226,11 +254,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty resul
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultList2") {
+TEST_CASE(
+    "FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause,&TestFollowsStarHandler::pkbStubNoFollows);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -241,11 +271,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultLis
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty resultList1, non-empty resultList2") {
+TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
+          "resultList1, non-empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStub);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStub);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -258,11 +290,13 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty result
     REQUIRE(expectedResult.equals(actualResult));
 }
 
-TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty resultList1, empty resultList2") {
+TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns empty "
+          "resultList1, empty resultList2") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
-    FollowsStarHandler handler(&followsStarClause, &TestFollowsStarHandler::pkbStubNoFollows);
+    FollowsStarHandler handler(&followsStarClause,
+                               &TestFollowsStarHandler::pkbStubNoFollows);
     Result actualResult = handler.eval();
 
     Result expectedResult;

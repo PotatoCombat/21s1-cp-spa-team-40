@@ -1,38 +1,19 @@
 #include "spa/SPA.h"
-#include "source_processor/DesignExtractor.h"
 
-#include "common/model/Program.h"
-
-#include "source_processor/Line.h"
-
-#include <fstream>
-#include <iostream>
-#include <vector>
+#include <utility>
 
 using namespace std;
 
-void SPA::processSource(string filename) {
-    fstream file;
-    file.open(filename, ios::in);
-    if (file.is_open()) {
-        vector<Line> programLines = parser.parseFile(file);
-        // Program design entities
-        // Program -> list of procedures -> contains a list of statements
-        Program program = parser.parseProgram(programLines);
-        PKB pkb = PKB();
-        DesignExtractor designExtractor(pkb);
-        designExtractor.handleProgram(program);
-        // vector<Variable> varLst = parser.getVarLst();
-        // vector<ConstantValue> constLst = parser.getConstLst();
-        int test = 0; // to bypass debugger
-    } else {
-        cout << "No such file";
-    }
-    file.close();
+SPA::SPA() {
+    this->pkb = PKB();
+    this->sourceProcessor = SourceProcessor(&pkb);
+    this->queryProcessor = QueryProcessor(&pkb);
 }
 
-int main() { // For testing on Fatin's machine only
-    SPA spa;
-    spa.processSource("C:\\Users\\Admin\\source\\repos\\21s1-cp-spa-team-"
-                      "40\\Team40\\Tests40\\Code2.txt");
+void SPA::processSource(string filename) {
+    sourceProcessor.processSource(move(filename));
+}
+
+void SPA::processQuery(string query, list<string> &results) {
+    queryProcessor.processQuery(move(query), results);
 }

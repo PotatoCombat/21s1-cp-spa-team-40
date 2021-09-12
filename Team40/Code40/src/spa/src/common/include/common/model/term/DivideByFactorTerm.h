@@ -5,10 +5,10 @@
 
 class DivideByFactorTerm : public Term {
 private:
-    Factor factor;
     Term *term;
 
 public:
-    DivideByFactorTerm(Term *term, Factor factor);
+    DivideByFactorTerm(Term *term, Factor *factor);
     int getValue() override;
+    Term *getTerm() override;
 };

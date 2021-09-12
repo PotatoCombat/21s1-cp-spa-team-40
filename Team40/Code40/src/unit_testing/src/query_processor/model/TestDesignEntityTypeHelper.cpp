@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "DesignEntityTypeHelper.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 
 TEST_CASE("DesignEntityTypeHelper") {
 	DesignEntityTypeHelper helper;

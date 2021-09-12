@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Reference.h"
 #include "ClauseType.h"
+#include "Reference.h"
 
 using namespace std;
 
@@ -17,6 +17,6 @@ public:
     Reference *getSecondReference();
     ClauseType getType();
     bool equals(Clause &other);
-    Clause* Clause::copy(); // not working
+    Clause* copy(); // not working
     ~Clause();
 };

@@ -7,63 +7,61 @@
 
 using namespace std;
 
-struct TestEntityTable {
+struct TestEntity {
 public:
-    static vector<string> createItems();
-    static vector<int> createIndices();
-    static EntityTable<string, int> createTable();
+    inline explicit TestEntity(string name) { this->name = name; }
+
+    inline string getName() { return name; }
+
+private:
+    string name;
 };
 
-vector<string> TestEntityTable::createItems() {
-    return vector<string>{"hello", "goodbye", "sayonara"};
-}
-
-vector<int> TestEntityTable::createIndices() { return vector<int>{0, 1, 2}; }
-
-EntityTable<string, int> TestEntityTable::createTable() {
-    EntityTable<string, int> table;
-
-    auto items = TestEntityTable::createItems();
-    for (string i : items) {
-        table.insert(&i);
+struct TestEntityTable {
+public:
+    inline static vector<TestEntity> createItems() {
+        return vector<TestEntity>{
+            TestEntity("hello"),
+            TestEntity("goodbye"),
+            TestEntity("sayonara")};
     }
-    return table;
-}
+
+    inline static EntityTable<TestEntity, string> createTable() {
+        EntityTable<TestEntity, string> table;
+        for (auto i : TestEntityTable::createItems()) {
+            table.insert(&i);
+        }
+        return table;
+    }
+};
 
 TEST_CASE("EntityTable: ctor") {
-    EntityTable<string, int> table;
+    EntityTable<TestEntity, string> table;
     REQUIRE(table.getSize() == 0);
 }
 
-TEST_CASE("EntityTable: insert/getEntity/getIndex") {
-    EntityTable<string, int> table;
-    string test = "hello";
+TEST_CASE("EntityTable: insert/getEntity") {
+    EntityTable<TestEntity, string> table;
+    TestEntity test("hello");
     table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex(&test) == 0);
-    REQUIRE(table.getEntity(0) == &test);
+    REQUIRE(table.getEntity("hello") == &test);
 }
 
-TEST_CASE("EntityTable: invalid Entity") {
+TEST_CASE("EntityTable: entity not stored in table") {
     auto table = TestEntityTable::createTable();
-    REQUIRE(table.getEntity(4) == NULL);
+    REQUIRE(table.getEntity("goodbye") == nullptr);
 }
 
-TEST_CASE("EntityTable: invalid Index") {
-    auto table = TestEntityTable::createTable();
-    string test = "goodbye";
-    REQUIRE(table.getIndex(&test) == InvalidIndex);
-}
-
-TEST_CASE("EntityTable: getIndices") {
+TEST_CASE("EntityTable: getNames") {
     auto table = TestEntityTable::createTable();
 
-    vector<int> test = TestEntityTable::createIndices();
-    vector<int> actual = table.getIndices().asVector();
+    vector<TestEntity> test = TestEntityTable::createItems();
+    vector<string> actual = table.getNames().asVector();
 
     for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
+        REQUIRE(test.at(i).getName() == actual.at(i));
     }
 }
 

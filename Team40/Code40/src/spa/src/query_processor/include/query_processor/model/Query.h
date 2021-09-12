@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "Reference.h"
 #include "Clause.h"
 #include "Pattern.h"
+#include "Reference.h"
 
 using namespace std;
 

@@ -1,6 +1,4 @@
-#pragma once
-
-#include "DesignEntityTypeHelper.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 
 DesignEntityTypeHelper::DesignEntityTypeHelper() {
     typeToStringMap = {

@@ -1,4 +1,4 @@
-#include "QueryParser.h"
+#include "query_processor/QueryParser.h"
 
 Reference *QueryParser::parseDeclaration(DeclPair declaration) {
     DesignEntityType type = deHelper.getType(declaration.first);

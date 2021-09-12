@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "Reference.h"
+#include "query_processor/model/Reference.h"
 
 struct TestReference {
     static const string VALUE;

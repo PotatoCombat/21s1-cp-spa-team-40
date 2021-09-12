@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
-
 #include "Factor.h"
-
+#include <string>
 using namespace std;
 
 class Variable : public Factor {
@@ -14,5 +12,5 @@ public:
     Variable(string name);
 
     // getter
-    string getName();
+    string getName() override;
 };

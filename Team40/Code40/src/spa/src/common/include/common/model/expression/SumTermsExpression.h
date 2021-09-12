@@ -9,4 +9,8 @@ private:
 
 public:
     SumTermsExpression(Expression *expr, Term *term);
+
+    Expression* getExpression();
+
+    Term* getTerm();
 };

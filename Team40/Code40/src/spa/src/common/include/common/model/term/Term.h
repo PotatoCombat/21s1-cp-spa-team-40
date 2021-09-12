@@ -1,4 +1,5 @@
 #pragma once
+#include "common/model/Factor.h"
 
 enum class TermType {
     SINGLE_FACTOR,
@@ -10,14 +11,19 @@ enum class TermType {
 class Term {
 private:
     TermType termType;
+    Factor *factor;
 
 protected:
     int value;
     bool hasComputedValue; // Used for lazy initialization of value
 
 public:
-    Term(TermType termType);
-    Term(TermType termType, int value);
+    Term(TermType termType, Factor *factor);
     TermType getTermType();
+    Factor *getFactor();
+    virtual Term *getTerm() {
+        throw runtime_error(
+            "This method is not implemented for the given TermType.");
+    };
     virtual int getValue() = 0;
 };
