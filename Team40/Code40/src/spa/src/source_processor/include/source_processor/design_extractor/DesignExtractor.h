@@ -35,17 +35,17 @@ public:
 
     // Statement
     StmtIndex extractStatement(Statement statement);
-    StmtIndex extractAssignStatement(AssignStatement assignStatement);
-    StmtIndex extractCallStatement(CallStatement callStatement);
-    StmtIndex extractIfStatement(IfStatement ifStatement);
-    StmtIndex extractPrintStatement(PrintStatement printStatement);
-    StmtIndex extractReadStatement(ReadStatement readStatement);
-    StmtIndex extractWhileStatement(WhileStatement whileStatement);
+    StmtIndex extractAssignStatement(Statement assignStatement);
+    StmtIndex extractCallStatement(Statement callStatement);
+    StmtIndex extractIfStatement(Statement ifStatement);
+    StmtIndex extractPrintStatement(Statement printStatement);
+    StmtIndex extractReadStatement(Statement readStatement);
+    StmtIndex extractWhileStatement(Statement whileStatement);
 
     // Condition
     void extractCondition(Condition condition);
-    void extractSingleCondition(SingleCondition singleCondition);
-    void extractNotCondition(NotCondition notCondition);
+    void extractSingleCondition(Condition singleCondition);
+    void extractNotCondition(Condition notCondition);
     void extractBinaryCondition(Condition binaryCondition);
 
     // Relation
