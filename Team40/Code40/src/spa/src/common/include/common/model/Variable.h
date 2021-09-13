@@ -13,4 +13,7 @@ public:
 
     // getter
     string getName() override;
+
+    bool operator< (const Variable& other) const;
+    bool operator== (const Variable& other) const;
 };

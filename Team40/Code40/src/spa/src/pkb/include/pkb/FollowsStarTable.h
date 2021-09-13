@@ -12,7 +12,7 @@ public:
     FollowsStarTable();
 
     /// Stores Follows*(stmt1, stmt2).
-    void insertFollowsStar(Statement *stmt1, Statement *stmt2);
+    void insertFollowsStar(Statement stmt1, Statement stmt2);
 
     /// Selects s such that Follows*(stmt, s).
     set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);

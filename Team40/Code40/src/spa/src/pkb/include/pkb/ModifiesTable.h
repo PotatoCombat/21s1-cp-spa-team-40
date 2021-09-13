@@ -14,10 +14,10 @@ public:
     ModifiesTable();
 
     /// Stores Modifies(proc, var).
-    void insertProcModifyingVar(Procedure *proc, Variable *var);
+    void insertProcModifyingVar(Procedure proc, Variable var);
 
     /// Stores Modifies(stmt, var).
-    void insertStmtModifyingVar(Statement *stmt, Variable *var);
+    void insertStmtModifyingVar(Statement stmt, Variable var);
 
     /// Selects p such that Modifies(p, var), where p is a Procedure.
     set<ProcName> getProcsModifyingVar(VarName var);

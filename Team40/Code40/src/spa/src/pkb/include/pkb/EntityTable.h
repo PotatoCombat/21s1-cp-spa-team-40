@@ -15,10 +15,11 @@ template <typename T, typename Name> class EntityTable {
 
 public:
     /// Stores the pointer \param entity in the map.
-    virtual void insert(T *entity) {
-        string name = entity->getName();
+    virtual void insert(T entity) {
+        string name = entity.getName();
         names.push_back(name);
-        nameToEntityMap[name] = entity;
+        entities.push_back(entity);
+        nameToEntityMap[name] = &entities.back();
     }
 
     /// Returns the pointer to the entity with the given name in the map.
@@ -40,5 +41,6 @@ public:
 private:
     int size = 0;
     vector<Name> names;
+    vector<T> entities;
     map<Name, T *> nameToEntityMap;
 };
