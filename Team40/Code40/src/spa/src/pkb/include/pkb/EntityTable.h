@@ -20,6 +20,7 @@ public:
         names.push_back(name);
         entities.push_back(entity);
         nameToEntityMap[name] = entity;
+        ++size;
     }
 
     /// Returns the pointer to the entity with the given name in the map.

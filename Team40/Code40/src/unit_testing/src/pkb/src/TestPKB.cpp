@@ -58,7 +58,7 @@ TEST_CASE("PKB: insertVar/getAllVars") {
 
     vector<Variable> vars = TestPKB::createVariables();
     for (Variable i : vars) {
-        pkb.insertVar(i);
+        pkb.insertVar(&i);
     }
 
     vector<VarName> actual = pkb.getAllVars().asVector();
@@ -73,7 +73,7 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
 
     vector<ConstantValue> items = TestPKB::createConstants();
     for (ConstantValue i : items) {
-        pkb.insertConst(i);
+        pkb.insertConst(&i);
     }
 
     vector<int> actual = pkb.getAllConsts().asVector();
@@ -88,7 +88,7 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
 
     vector<Procedure> procs = TestPKB::createProcs();
     for (Procedure i : procs) {
-        pkb.insertProc(i);
+        pkb.insertProc(&i);
     }
 
     vector<ProcName> actual = pkb.getAllProcs().asVector();
@@ -103,7 +103,7 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
 
     vector<Statement> items = TestPKB::createStatements();
     for (Statement i : items) {
-        pkb.insertStmt(i);
+        pkb.insertStmt(&i);
     }
 
     vector<StmtIndex> test = vector<int>{1, 2, 3};
