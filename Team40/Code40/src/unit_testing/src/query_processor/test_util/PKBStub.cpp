@@ -144,7 +144,7 @@ set<StmtIndex> PKBStub::getStmtsModifyingVar(VarName var) {
 }
 
 set<VarName> PKBStub::getVarsModifiedByStmt(StmtIndex stmt) {
-    vector<set<string>> varsModifies = {
+    vector<set<string>> varsModified = {
         {"x"}, {"z"}, {"i"}, {"x", "z", "y", "i"}, {"x"}, {"z", "y"},
         {"z"}, {"y"}, {"z"}, {"z", "x"},           {"i"}, {"x", "z", "i"}};
 
