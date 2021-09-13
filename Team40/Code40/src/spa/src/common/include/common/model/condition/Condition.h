@@ -1,4 +1,7 @@
 #pragma once
+
+#include <stdexcept>
+
 #include "common/model/relation/Relation.h"
 #include <stdexcept>
 
