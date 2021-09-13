@@ -10,6 +10,6 @@ Statement ReadStatementParser::parseReadStatement() {
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
     Variable variable(var_name);
-    ReadStatement stmt = ReadStatement(index, &variable);
+    ReadStatement stmt = ReadStatement(index, variable);
     return stmt;
 }
