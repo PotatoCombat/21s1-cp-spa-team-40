@@ -12,4 +12,7 @@ public:
 
     int getValue();
     string getName();
+
+    bool operator< (const ConstantValue& other) const;
+    bool operator== (const ConstantValue& other) const;
 };
