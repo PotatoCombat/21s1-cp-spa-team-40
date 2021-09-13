@@ -10,7 +10,7 @@ using namespace std;
 
 class WhileStatement : public Statement {
 private:
-    vector<Statement *> stmtLst;
+    vector<Statement> stmtLst;
     vector<ConstantValue> constLst;
     vector<string> condLst;
     vector<Variable> varLst;
@@ -18,13 +18,13 @@ private:
 public:
     WhileStatement(int index);
 
-    void addStatement(Statement *statement);
+    void addStatement(Statement statement);
 
-    void setCondLst(vector<string> condLst);
+    void setExpressionLst(vector<string> condLst);
 
-    void addVar(Variable var);
+    void addExpressionVar(Variable var);
 
-    void addConst(ConstantValue constVal);
+    void addExpressionConst(ConstantValue constVal);
 
-    vector<Statement *> getThenStmtLst() override;
+    vector<Statement> getThenStmtLst();
 };

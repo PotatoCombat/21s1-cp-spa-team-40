@@ -8,24 +8,26 @@ IfStatement::IfStatement(int index) : Statement(index, StatementType::IF) {
     this->constLst = {};
 }
 
-void IfStatement::addThenStatement(Statement *statement) {
+void IfStatement::addThenStatement(Statement statement) {
     this->thenStmtLst.push_back(statement);
 }
 
-void IfStatement::addElseStatement(Statement *statement) {
+void IfStatement::addElseStatement(Statement statement) {
     this->elseStmtLst.push_back(statement);
 }
 
-void IfStatement::setCondLst(vector<string> condLst) {
+void IfStatement::setExpressionLst(vector<string> condLst) {
     this->condLst = condLst;
 }
 
-void IfStatement::addVar(Variable var) { this->varLst.push_back(var); }
+void IfStatement::addExpressionVar(Variable var) {
+    this->varLst.push_back(var);
+}
 
-void IfStatement::addConst(ConstantValue constVal) {
+void IfStatement::addExpressionConst(ConstantValue constVal) {
     this->constLst.push_back(constVal);
 }
 
-vector<Statement *> IfStatement::getThenStmtLst() { return thenStmtLst; }
+vector<Statement> IfStatement::getThenStmtLst() { return thenStmtLst; }
 
-vector<Statement *> IfStatement::getElseStmtLst() { return elseStmtLst; }
+vector<Statement> IfStatement::getElseStmtLst() { return elseStmtLst; }

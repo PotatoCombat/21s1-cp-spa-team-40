@@ -1,61 +1,53 @@
 #pragma once
 
+#include "common/model/ConstantValue.h"
+#include "common/model/Procedure.h"
+#include "common/model/Program.h"
 #include "common/model/Variable.h"
-#include "common/model/condition/Condition.h"
-#include "common/model/expression/Expression.h"
+#include <optional>
 #include <stdexcept>
 #include <vector>
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
 class Statement {
-private:
-    StatementType statementType;
-    int index;
-
-protected:
 public:
-    // constructor
     Statement(int index, StatementType statementType);
 
-    // getters
     int getIndex();
-
     StatementType getStatementType();
 
-    // Overriden by: CallStatement
-    virtual string getProcName() { // return name instead of object to prevent
-                                   // circular dependencies
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    }
+    Variable getVariable();
+    Procedure getProcedure();
 
-    // Overriden by: PrintStatement, ReadStatement, AssignStatement
-    virtual Variable *getVariable() {
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    };
+    vector<string> getExpressionLst();
+    vector<Variable> getExpressionVars();
+    vector<ConstantValue> getExpressionConsts();
 
-    // Overriden by: IfStatement, WhileStatement
-    virtual Condition *getCondition() {
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    }
+    vector<Statement> getThenStmtLst();
+    vector<Statement> getElseStmtLst();
 
-    virtual Expression *getExpression() {
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    }
+    void setVariable(Variable variable);
+    void setProcedure(Procedure procedure);
 
-    // Overriden by: IfStatement, WhileStatement
-    virtual vector<Statement *> getThenStmtLst() {
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    }
+    void setExpressionLst(vector<string> expressionLst);
+    void addExpressionVar(Variable expressionVar);
+    void addExpressionConst(ConstantValue expressionConst);
 
-    // Overriden by: IfStatement
-    virtual vector<Statement *> getElseStmtLst() {
-        throw runtime_error(
-            "This method is not implemented for this StatementType.");
-    }
+    void addThenStmt(Statement stmt);
+    void addElseStmt(Statement stmt);
+
+private:
+    int index;
+    StatementType statementType;
+
+    optional<Variable> variable;
+    optional<Procedure> procedure;
+
+    optional<vector<string>> expressionLst;
+    optional<vector<Variable>> expressionVars;
+    optional<vector<ConstantValue>> expressionConsts;
+
+    optional<vector<Statement>> thenStmtLst;
+    optional<vector<Statement>> elseStmtLst;
 };

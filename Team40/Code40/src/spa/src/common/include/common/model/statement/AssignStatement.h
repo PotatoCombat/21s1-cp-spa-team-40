@@ -8,19 +8,19 @@ using namespace std;
 
 class AssignStatement : public Statement {
 private:
-    Variable *variable;
+    Variable variable;
     vector<string> exprLst;
     vector<Variable> varLst;
     vector<ConstantValue> constLst;
 
 public:
-    AssignStatement(int index, Variable *variable);
+    AssignStatement(int index, Variable variable);
 
-    void setExprLst(vector<string> exprLst);
+    void setExpressionLst(vector<string> exprLst);
 
-    void addVar(Variable var);
+    void addExpressionVar(Variable var);
 
-    void addConst(ConstantValue constVal);
+    void addExpressionConst(ConstantValue constVal);
 
-    Variable *getVariable() override;
+    Variable getVariable();
 };

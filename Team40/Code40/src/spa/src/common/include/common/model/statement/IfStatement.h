@@ -10,25 +10,25 @@ using namespace std;
 
 class IfStatement : public Statement {
 private:
-    vector<Statement *> thenStmtLst;
-    vector<Statement *> elseStmtLst;
-    vector<ConstantValue> constLst;
+    vector<Statement> thenStmtLst;
+    vector<Statement> elseStmtLst;
     vector<string> condLst;
+    vector<ConstantValue> constLst;
     vector<Variable> varLst;
 
 public:
     IfStatement(int index);
 
-    void addThenStatement(Statement *statement);
-    void addElseStatement(Statement *statement);
+    void addThenStatement(Statement statement);
+    void addElseStatement(Statement statement);
 
-    void setCondLst(vector<string> condLst);
+    void setExpressionLst(vector<string> condLst);
 
-    void addVar(Variable var);
+    void addExpressionVar(Variable var);
 
-    void addConst(ConstantValue constVal);
+    void addExpressionConst(ConstantValue constVal);
 
-    vector<Statement *> getThenStmtLst() override;
+    vector<Statement> getThenStmtLst();
 
-    vector<Statement *> getElseStmtLst() override;
+    vector<Statement> getElseStmtLst();
 };
