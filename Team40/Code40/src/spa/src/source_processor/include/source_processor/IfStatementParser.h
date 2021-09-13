@@ -9,5 +9,5 @@ public:
     IfStatementParser(vector<string> content, int index,
                       vector<Line> programLines, int &programIndex);
     Statement parseIfStatement(int &programIndex);
-    void parseChildStatements(IfStatement &stmt);
+    void parseChildStatements(IfStatement stmt);
 };

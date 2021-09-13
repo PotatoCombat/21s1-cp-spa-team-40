@@ -10,6 +10,6 @@ Statement PrintStatementParser::parsePrintStatement() {
         find(content.begin(), content.end(), "print");
     string var_name = *next(printItr);
     Variable variable(var_name);
-    PrintStatement stmt = PrintStatement(index, &variable);
+    PrintStatement stmt = PrintStatement(index, variable);
     return stmt;
 }
