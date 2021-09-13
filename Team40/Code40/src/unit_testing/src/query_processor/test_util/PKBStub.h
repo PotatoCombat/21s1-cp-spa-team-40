@@ -15,6 +15,7 @@ using namespace std;
 class PKBStub : public PKB {
 public:
     Iterator<StmtIndex> getAllStmts();
+    Iterator<VarName> getAllVars();
 
     Iterator<StmtIndex> getAllStmts(StatementType stmtType);
 
@@ -35,4 +36,12 @@ public:
     set<StmtIndex> getParentStarStmts(StmtIndex stmt);
     set<StmtIndex> getChildStarStmts(StmtIndex stmt);
     bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
+
+    set<StmtIndex> getStmtsUsingVar(VarName var);
+    set<VarName> getVarsUsedByStmt(StmtIndex stmt);
+    bool stmtUses(StmtIndex stmt, VarName var);
+
+    set<StmtIndex> getStmtsModifyingVar(VarName var);
+    set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
+    bool stmtModifies(StmtIndex stmt, VarName var);
 };
