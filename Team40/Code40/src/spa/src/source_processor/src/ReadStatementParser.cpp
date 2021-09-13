@@ -1,5 +1,4 @@
 #include "source_processor/ReadStatementParser.h"
-#include "common/model/statement/ReadStatement.h"
 #include <algorithm>
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
@@ -9,7 +8,7 @@ Statement ReadStatementParser::parseReadStatement() {
     vector<string>::iterator readItr =
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
-    Variable variable(var_name);
-    ReadStatement stmt = ReadStatement(index, variable);
+    Statement stmt = Statement(index, StatementType::READ);
+    stmt.setVariable(Variable(var_name));
     return stmt;
 }

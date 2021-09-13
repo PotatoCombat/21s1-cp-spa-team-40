@@ -25,4 +25,6 @@ public:
     bool isAssignStmt(vector<string> inputLine);
     bool isIfStmt(vector<string> inputLine);
     bool hasTerminator(vector<string> inputLine);
+    bool isInteger(string input);
+    bool isName(string input);
 };

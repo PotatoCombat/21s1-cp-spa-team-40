@@ -9,17 +9,18 @@ IfStatementParser::IfStatementParser(vector<string> content, int index,
 
 Statement IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
-    IfStatement stmt = IfStatement(index);
+    Statement stmt = Statement(index, StatementType::IF);
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
     vector<string> condLst(next(next(ifItr)), prev(endItr));
-    stmt.setCondLst(condLst);
+    stmt.setExpressionLst(condLst);
+    parseExpression(condLst, stmt);
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
 }
 
-void IfStatementParser::parseChildStatements(IfStatement &stmt) {
+void IfStatementParser::parseChildStatements(Statement &stmt) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
@@ -36,9 +37,9 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {
-                stmt.addThenStatement(nestedStmt);
+                stmt.addThenStmt(nestedStmt);
             } else if (terminator == 1) {
-                stmt.addElseStatement(nestedStmt);
+                stmt.addElseStmt(nestedStmt);
             }
             this->programIndex = i;
             if (nestedStmt.getStatementType() == StatementType::IF) {
@@ -46,6 +47,20 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
                 i++;
             }
+        }
+    }
+}
+
+void IfStatementParser::parseExpression(vector<string> exprLst,
+                                        Statement &stmt) {
+    for (int i = 0; i < exprLst.size(); i++) {
+        string currString = exprLst[i];
+        if (isInteger(currString)) {
+            ConstantValue constVal(stoi(currString));
+            stmt.addExpressionConst(constVal);
+        } else if (isName(currString)) {
+            Variable var(currString);
+            stmt.addExpressionVar(var);
         }
     }
 }
