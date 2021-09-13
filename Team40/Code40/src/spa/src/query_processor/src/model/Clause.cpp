@@ -16,7 +16,9 @@ bool Clause::equals(Clause &other) {
 }
 
 Clause *Clause::copy() {
-    return new Clause(this->type, this->first, this->second);
+    Reference *ref1 = this->first.copy();
+    Reference *ref2 = this->second.copy();
+    return new Clause(this->type, *ref1, *ref2);
 }
 
 Clause::~Clause() { }
