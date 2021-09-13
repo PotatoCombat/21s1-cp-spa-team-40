@@ -1,9 +1,7 @@
 #include "query_processor/model/Query.h"
 
 Query::Query() {
-    vector<Clause *> clauseList;
     Reference *returnReference = NULL;
-    vector<Reference *> referenceList;
 }
 
 vector<Reference *> Query::getReferences() { return referenceList; }
@@ -41,3 +39,5 @@ void Query::addPattern(Pattern* pattern) {
     addReference(&pattern->getStmt());
     addReference(&pattern->getVar());
 }
+
+vector<Pattern *> Query::getPatterns() { return patternList; }

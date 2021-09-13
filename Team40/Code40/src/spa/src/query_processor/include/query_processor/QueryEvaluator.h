@@ -12,6 +12,7 @@
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Pattern.h"
 
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"

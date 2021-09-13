@@ -7,10 +7,16 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         Reference *returnReference = query.getReturnReference();
         vector<Reference *> references = query.getReferences();
         vector<Clause *> clauses = query.getClauses();
+        vector<Pattern *> patterns = query.getPatterns();
         vector<vector<string>> results(references.size(), vector<string>());
         vector<bool> referenceAppearInClauses(references.size(), false);
         bool allQueryReturnsTrue = true;
 
+        for (Pattern *pattern : patterns) {
+            
+        }
+
+        // handle clauses
         for (Clause *clause : clauses) {
             Result tempResult;
 
