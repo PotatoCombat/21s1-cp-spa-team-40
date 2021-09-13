@@ -7,6 +7,12 @@ Iterator<StmtIndex> PKBStub::getAllStmts() {
     return iter;
 }
 
+Iterator<VarName> PKBStub::getAllVars() {
+    vector<string> vars{"x", "y", "i", "z"};
+    Iterator<VarName> iter(vars);
+    return iter;
+}
+
 Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
     vector<int> allStmts = getAllStmts().asVector();
     vector<int> filteredStmts;
@@ -86,4 +92,66 @@ set<StmtIndex> PKBStub::getChildStarStmts(StmtIndex stmt) {
 bool PKBStub::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
     set<int> childStarStmts = getChildStarStmts(stmt1);
     return find(childStarStmts.begin(), childStarStmts.end(), stmt2) != childStarStmts.end();
+}
+
+set<StmtIndex> PKBStub::getStmtsUsingVar(VarName var) {
+    if (var == "x") {
+        return set<int>{4, 5, 6, 7, 8, 9, 10, 12}; // not considered call stmts yet
+    } else if (var == "i") {
+        return set<int>{4, 9, 11, 12};
+    } else if (var == "z") {
+        return set<int>{4, 6, 8, 9, 10, 12};
+    } else if (var == "y") {
+        return set<int>{12};
+    } else {
+        return set<int>{};
+    }
+}
+
+set<VarName> PKBStub::getVarsUsedByStmt(StmtIndex stmt) {
+    vector<set<string>> varsUsed = {{},
+                                 {},
+                                 {},
+                                 {"i", "x", "z"},
+                                 {"x"},
+                                 {"x", "z"},
+                                 {"x"},
+                                 {"x", "z"},
+                                 {"x", "z", "i"},
+                                 {"x", "z"},
+                                 {"i"},
+                                 {"x", "i", "y", "z"}};
+    return varsUsed[stmt - 1];
+}
+
+bool PKBStub::stmtUses(StmtIndex stmt, VarName var) {
+    set<string> varsUsed = getVarsUsedByStmt(stmt);
+    return varsUsed.find(var) != varsUsed.end();
+}
+
+set<StmtIndex> PKBStub::getStmtsModifyingVar(VarName var) {
+    if (var == "x") {
+        return set<int>{1, 4, 5};
+    } else if (var == "z") {
+        return set<int>{2, 4, 6, 7, 9, 10, 12};
+    } else if (var == "i") {
+        return set<int>{3, 4, 11, 12};
+    } else if (var == "y") {
+        return set<int>{4, 8};
+    } else {
+        return set<int>{};
+    }
+}
+
+set<VarName> PKBStub::getVarsModifiedByStmt(StmtIndex stmt) {
+    vector<set<string>> varsModifies = {
+        {"x"}, {"z"}, {"i"}, {"x", "z", "y", "i"}, {"x"}, {"z", "y"},
+        {"z"}, {"y"}, {"z"}, {"z", "x"},           {"i"}, {"x", "z", "i"}};
+
+    return varsModifies[stmt - 1];
+}
+
+bool PKBStub::stmtModifies(StmtIndex stmt, VarName var) {
+    set<string> varsModified = getVarsModifiedByStmt(stmt);
+    return varsModified.find(var) != varsModified.end();
 }
