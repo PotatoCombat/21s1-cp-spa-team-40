@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ExtractionContext.h"
+#include "FollowsExtractor.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
@@ -15,10 +17,9 @@
 #include "common/model/statement/ReadStatement.h"
 #include "common/model/statement/Statement.h"
 #include "common/model/statement/WhileStatement.h"
+#include "common/model/term/SingleFactorTerm.h"
 #include "common/model/term/Term.h"
 #include "pkb/PKB.h"
-#include "source_processor/ExtractionContext.h"
-#include "source_processor/FollowsExtractor.h"
 
 class DesignExtractor {
 public:
@@ -60,7 +61,7 @@ public:
 
     // Term
     void extractTerm(Term *term);
-    void extractSingleFactorTerm(Term *singleFactorTerm);
+    void extractSingleFactorTerm(SingleFactorTerm *singleFactorTerm);
     void extractMultiFactorTerm(Term *multiFactorTerm);
 
     // Factor
