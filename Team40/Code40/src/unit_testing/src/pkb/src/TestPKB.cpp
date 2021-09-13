@@ -103,7 +103,7 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
 
     vector<Statement> items = TestPKB::createStatements();
     for (Statement i : items) {
-        pkb.insertStmt(&ZZi);
+        pkb.insertStmt(&i);
     }
 
     vector<StmtIndex> test = vector<int>{1, 2, 3};
