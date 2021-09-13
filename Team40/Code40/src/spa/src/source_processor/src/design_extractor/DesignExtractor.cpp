@@ -11,7 +11,7 @@ void DesignExtractor::extract(Program program) {
 
 void DesignExtractor::extractDepthFirst(Program program) {
     for (Procedure proc : program.getProcLst()) {
-        extractProcedure(&proc);
+        extractProcedure(proc);
     }
 }
 
