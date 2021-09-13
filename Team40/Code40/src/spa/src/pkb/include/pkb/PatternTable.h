@@ -32,13 +32,17 @@ public:
 
 private:
     inline static map<string, int> PRECEDENCE {
-        { "#", 0 },
         { "(", 0 },
         { ")", 0 },
         { "+", 1 },
         { "-", 1 },
         { "*", 2 },
         { "/", 2 },
+        { "%", 2 },
+
+        // # symbol is an empty stack marker.is used in postfix method.
+        // It is placed in here so that the postfix method skips this symbol.
+        { "#", 0 },
     };
 
     inline static string WILDCARD = "_";
