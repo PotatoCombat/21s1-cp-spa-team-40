@@ -7,23 +7,23 @@ StatementParser::StatementParser(vector<string> content, int index,
       programIndex(programIndex) {}
 
 bool StatementParser::isReadStmt(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "read") != inputLine.end();
+    return inputLine[0] == "read";
 }
 
 bool StatementParser::isPrintStmt(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "print") != inputLine.end();
+    return inputLine[0] == "print";
 }
 
 bool StatementParser::isCallStmt(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "call") != inputLine.end();
+    return inputLine[0] == "call";
 }
 
 bool StatementParser::isWhileStmt(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "while") != inputLine.end();
+    return inputLine[0] == "while";
 }
 
 bool StatementParser::isIfStmt(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "if") != inputLine.end();
+    return inputLine[0] == "if";
 }
 
 bool StatementParser::isAssignStmt(vector<string> inputLine) {

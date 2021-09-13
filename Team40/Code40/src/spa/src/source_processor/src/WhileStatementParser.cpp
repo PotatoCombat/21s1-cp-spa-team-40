@@ -23,7 +23,7 @@ void WhileStatementParser::parseChildStatements(Statement &stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        if (hasTerminator(currContent)) {
+        if (currContent[0] == "}") {
             break;
         }
         if (currContent[0] != "}" && currContent[0] != "else") {

@@ -21,7 +21,7 @@ vector<Line> Parser::parseFile(fstream &file) {
         }
 
         if (currString.front() != "}" && currString.front() != "else" &&
-            !isProc(currString)) {
+            currString.front() != "procedure") {
             stmtNum++;
         }
 
@@ -99,6 +99,7 @@ vector<string> Parser::parseLine(string input) {
             }
         }
     }
+    currString = cleanString(currString);
     if (!currString.empty()) {
         inputLine.push_back(currString);
     }
@@ -133,6 +134,7 @@ void Parser::parseAndAddKeyword(string input, int &i, string &currString,
 }
 
 void Parser::addString(string &input, vector<string> &inputVector) {
+    input = cleanString(input);
     if (!input.empty()) {
         inputVector.push_back(input);
     }
