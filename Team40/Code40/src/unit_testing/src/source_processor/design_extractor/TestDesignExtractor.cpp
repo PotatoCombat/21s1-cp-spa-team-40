@@ -23,7 +23,6 @@ TEST_CASE("DesignExtractor: Correctly handles Call Statement") {
     procedure.addToStmtLst(&statement);
 
     DesignExtractor de(&TestDesignExtractor::pkbStub);
-    //    TestDesignExtractor::pkbStub.insertStmt(statement);
     de.extract(&program);
 
     REQUIRE(TestDesignExtractor::pkbStub.getNumProc() == 1);
