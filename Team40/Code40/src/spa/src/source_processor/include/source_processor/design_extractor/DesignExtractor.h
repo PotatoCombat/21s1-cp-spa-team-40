@@ -12,26 +12,26 @@ public:
     explicit DesignExtractor(PKB *pkb);
 
     // Program
-    void extract(Program program);
-    void extractDepthFirst(Program program);
-    void extractBreadthFirst(Program program);
+    void extract(Program *program);
+    void extractDepthFirst(Program *program);
+    void extractBreadthFirst(Program *program);
 
     // Procedure
-    void extractProcedure(Procedure program);
+    void extractProcedure(Procedure *program);
 
     // Statement
-    StmtIndex extractStatement(Statement statement);
-    StmtIndex extractAssignStatement(Statement assignStatement);
-    StmtIndex extractCallStatement(Statement callStatement);
-    StmtIndex extractIfStatement(Statement ifStatement);
-    StmtIndex extractPrintStatement(Statement printStatement);
-    StmtIndex extractReadStatement(Statement readStatement);
-    StmtIndex extractWhileStatement(Statement whileStatement);
+    StmtIndex extractStatement(Statement *statement);
+    StmtIndex extractAssignStatement(Statement *assignStatement);
+    StmtIndex extractCallStatement(Statement *callStatement);
+    StmtIndex extractIfStatement(Statement *ifStatement);
+    StmtIndex extractPrintStatement(Statement *printStatement);
+    StmtIndex extractReadStatement(Statement *readStatement);
+    StmtIndex extractWhileStatement(Statement *whileStatement);
 
     // Variable
-    void extractVariable(Variable variable);
-    void extractModifiesRelationship(Variable variable);
-    void extractUsesRelationship(Variable variable);
+    void extractVariable(Variable *variable);
+    void extractModifiesRelationship(Variable *variable);
+    void extractUsesRelationship(Variable *variable);
 
     // Condition
     //    void extractCondition(Condition condition);

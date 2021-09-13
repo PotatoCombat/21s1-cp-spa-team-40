@@ -1,6 +1,6 @@
 #include "common/model/Program.h"
 
-Program::Program() { this->procLst = {}; }
+Program::Program() : procLst({}) {}
 
 void Program::addToProcLst(Procedure proc) { this->procLst.push_back(proc); }
 

@@ -4,32 +4,32 @@ using namespace std;
 
 DesignExtractor::DesignExtractor(PKB *pkb) : pkb(pkb) {}
 
-void DesignExtractor::extract(Program program) {
+void DesignExtractor::extract(Program *program) {
     extractDepthFirst(program);
     extractBreadthFirst(program);
 }
 
-void DesignExtractor::extractDepthFirst(Program program) {
-    for (Procedure proc : program.getProcLst()) {
+void DesignExtractor::extractDepthFirst(Program *program) {
+    for (Procedure *proc : program->getProcLst()) {
         extractProcedure(proc);
     }
 }
 
-void DesignExtractor::extractBreadthFirst(Program program) {
+void DesignExtractor::extractBreadthFirst(Program *program) {
     FollowsExtractor extractor(pkb);
     extractor.extract(program);
 }
 
-void DesignExtractor::extractProcedure(Procedure procedure) {
-    ExtractionContext::getInstance().setCurrentProcedure(&procedure);
-    pkb->insertProc(procedure);
-    for (const Statement &statement : procedure.getStmtLst()) {
+void DesignExtractor::extractProcedure(Procedure *procedure) {
+    ExtractionContext::getInstance().setCurrentProcedure(procedure);
+    pkb->insertProc(*procedure);
+    for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(&procedure);
 }
 
-StmtIndex DesignExtractor::extractStatement(Statement statement) {
+StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     StmtIndex stmtIndex;
     switch (statement.getStatementType()) {
     case StatementType::ASSIGN:
@@ -56,29 +56,29 @@ StmtIndex DesignExtractor::extractStatement(Statement statement) {
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractAssignStatement(Statement assignStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
+StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(*assignStatement);
 
     // Handle LHS
-    ExtractionContext::getInstance().setModifyingStatement(&assignStatement);
-    extractVariable(assignStatement.getVariable());
-    extractModifiesRelationship(assignStatement.getVariable());
-    ExtractionContext::getInstance().unsetModifyingStatement(&assignStatement);
+    ExtractionContext::getInstance().setModifyingStatement(assignStatement);
+    extractVariable(assignStatement->getVariable());
+    extractModifiesRelationship(assignStatement->getVariable());
+    ExtractionContext::getInstance().unsetModifyingStatement(assignStatement);
 
     // Handle RHS
-    ExtractionContext::getInstance().setUsingStatement(&assignStatement);
-    for (const Variable &variable : assignStatement.getExpressionVars()) {
+    ExtractionContext::getInstance().setUsingStatement(assignStatement);
+    for (Variable *variable : assignStatement->getExpressionVars()) {
         extractVariable(variable);
     }
-    ExtractionContext::getInstance().unsetUsingStatement(&assignStatement);
+    ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
 
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
+StmtIndex DesignExtractor::extractCallStatement(Statement *callStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(*callStatement);
 
-    ProcName procName = callStatement.getProcName();
+    ProcName procName = callStatement->getProcName();
 
     optional<Procedure *> currentProcedure =
         ExtractionContext::getInstance().getCurrentProcedure();
@@ -109,75 +109,75 @@ StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractIfStatement(Statement ifStatement) {
+StmtIndex DesignExtractor::extractIfStatement(Statement *ifStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(*ifStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().setUsingStatement(&ifStatement);
-    for (const Variable &variable : ifStatement.getExpressionVars()) {
+    ExtractionContext::getInstance().setUsingStatement(ifStatement);
+    for (Variable *variable : ifStatement->getExpressionVars()) {
         extractVariable(variable);
     }
-    ExtractionContext::getInstance().unsetUsingStatement(&ifStatement);
+    ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
 
-    ExtractionContext::getInstance().getParentContext().push(&ifStatement);
+    ExtractionContext::getInstance().getParentContext().push(ifStatement);
     // 2. Handle THEN statements
-    for (const Statement &statement : ifStatement.getThenStmtLst()) {
+    for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
 
     // 3. Handle ELSE statements
-    for (const Statement &statement : ifStatement.getElseStmtLst()) {
+    for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(&ifStatement);
+    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractReadStatement(Statement readStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
-    ExtractionContext::getInstance().setModifyingStatement(&readStatement);
-    extractVariable(readStatement.getVariable());
-    ExtractionContext::getInstance().unsetModifyingStatement(&readStatement);
+StmtIndex DesignExtractor::extractReadStatement(Statement *readStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(*readStatement);
+    ExtractionContext::getInstance().setModifyingStatement(readStatement);
+    extractVariable(readStatement->getVariable());
+    ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractPrintStatement(Statement printStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
-    ExtractionContext::getInstance().setUsingStatement(&printStatement);
-    extractVariable(printStatement.getVariable());
-    ExtractionContext::getInstance().unsetUsingStatement(&printStatement);
+StmtIndex DesignExtractor::extractPrintStatement(Statement *printStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(*printStatement);
+    ExtractionContext::getInstance().setUsingStatement(printStatement);
+    extractVariable(printStatement->getVariable());
+    ExtractionContext::getInstance().unsetUsingStatement(printStatement);
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractWhileStatement(Statement whileStatement) {
+StmtIndex DesignExtractor::extractWhileStatement(Statement *whileStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(*whileStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().setUsingStatement(&whileStatement);
-    for (const Variable &variable : whileStatement.getExpressionVars()) {
+    ExtractionContext::getInstance().setUsingStatement(whileStatement);
+    for (Variable *variable : whileStatement->getExpressionVars()) {
         extractVariable(variable);
     }
-    ExtractionContext::getInstance().unsetUsingStatement(&whileStatement);
+    ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(&whileStatement);
-    for (const Statement &statement : whileStatement.getThenStmtLst()) {
+    ExtractionContext::getInstance().getParentContext().push(whileStatement);
+    for (Statement *statement : whileStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(&whileStatement);
+    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
 
     return stmtIndex;
 }
 
-void DesignExtractor::extractVariable(Variable variable) {
-    pkb->insertVar(variable);
+void DesignExtractor::extractVariable(Variable *variable) {
+    pkb->insertVar(*variable);
     extractUsesRelationship(variable);
     extractModifiesRelationship(variable);
 }
 
-void DesignExtractor::extractUsesRelationship(Variable variable) {
+void DesignExtractor::extractUsesRelationship(Variable *variable) {
     optional<Statement *> usingStatement =
         ExtractionContext::getInstance().getUsingStatement();
     if (!usingStatement.has_value()) {
@@ -185,14 +185,14 @@ void DesignExtractor::extractUsesRelationship(Variable variable) {
     }
 
     // 1. Handle using statement
-    pkb->insertStmtUsingVar(*(usingStatement.value()), variable);
+    pkb->insertStmtUsingVar(*(usingStatement.value()), *variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb->insertStmtModifyingVar(*parentStatement, variable);
+            pkb->insertStmtModifyingVar(*parentStatement, *variable);
         }
     }
 
@@ -206,7 +206,7 @@ void DesignExtractor::extractUsesRelationship(Variable variable) {
     //    }
 }
 
-void DesignExtractor::extractModifiesRelationship(Variable variable) {
+void DesignExtractor::extractModifiesRelationship(Variable *variable) {
     optional<Statement *> modifyingStatement =
         ExtractionContext::getInstance().getModifyingStatement();
     if (!modifyingStatement.has_value()) {
@@ -214,14 +214,14 @@ void DesignExtractor::extractModifiesRelationship(Variable variable) {
     }
 
     // 1. Handle modifying statement
-    pkb->insertStmtModifyingVar(*(modifyingStatement.value()), variable);
+    pkb->insertStmtModifyingVar(*(modifyingStatement.value()), *variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb->insertStmtModifyingVar(*parentStatement, variable);
+            pkb->insertStmtModifyingVar(*parentStatement, *variable);
         }
     }
 
