@@ -77,18 +77,18 @@ StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
     StmtIndex stmtIndex = pkb->insertStmt(&callStatement);
 
     // TODO: Get actual proc
-    Procedure procedure = callStatement.getProcName();
+    ProcName procName = callStatement.getProcName();
+    ExtractionContext::getInstance()
+        /// At this point, we segue into extracting the called Procedure
+        /// so that Procedures are guaranteed to be extracted before their
+        /// corresponding Call statements to ensure transitivity is handled
+        /// properly.
+        /// NOTE: This will eventually bottom out since we are guaranteed
+        /// there are no recursive calls in SIMPLE.
+        /// TODO:
 
-    /// At this point, we segue into extracting the called Procedure
-    /// so that Procedures are guaranteed to be extracted before their
-    /// corresponding Call statements to ensure transitivity is handled
-    /// properly.
-    /// NOTE: This will eventually bottom out since we are guaranteed
-    /// there are no recursive calls in SIMPLE.
-    extractProcedure(procedure);
-
-    set<VarName> modifiedVarNames =
-        pkb->getVarsModifiedByProc(procedure.getName());
+        set<VarName>
+            modifiedVarNames = pkb->getVarsModifiedByProc(procedure.getName());
     if (!modifiedVarNames.empty()) {
         for (VarName modifiedVarName : modifiedVarNames) {
             Variable *modifiedVar = pkb->getVarByName(modifiedVarName);

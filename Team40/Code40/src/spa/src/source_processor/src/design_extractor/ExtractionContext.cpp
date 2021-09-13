@@ -61,3 +61,13 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
     }
     usingStatement = nullopt;
 }
+
+void ExtractionContext::addProcDependency(ProcName from, ProcName to) {
+    // Note: We are guaranteed that there will be no circular dependencies in
+    // SIMPLE (i.e. recursion)
+    procDependencyTree[from].insert(to);
+}
+
+unordered_set<ProcName> ExtractionContext::getProcDependencies(ProcName from) {
+    return procDependencyTree[from];
+}
