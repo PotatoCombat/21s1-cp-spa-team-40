@@ -4,11 +4,8 @@ WhileStatement::WhileStatement(int index)
     : Statement(index, StatementType::WHILE) {
     this->stmtLst = {};
     this->condLst = {};
-}
-
-WhileStatement::WhileStatement(int index, Condition *cond)
-    : cond(cond), Statement(index, StatementType::WHILE) {
-    this->stmtLst = {};
+    this->varLst = {};
+    this->constLst = {};
 }
 
 void WhileStatement::addStatement(Statement *statement) {
@@ -19,6 +16,10 @@ void WhileStatement::setCondLst(vector<string> condLst) {
     this->condLst = condLst;
 }
 
-Condition *WhileStatement::getCondition() { return cond; }
+void WhileStatement::addVar(Variable var) { this->varLst.push_back(var); }
+
+void WhileStatement::addConst(ConstantValue constVal) {
+    this->constLst.push_back(constVal);
+}
 
 vector<Statement *> WhileStatement::getThenStmtLst() { return stmtLst; }

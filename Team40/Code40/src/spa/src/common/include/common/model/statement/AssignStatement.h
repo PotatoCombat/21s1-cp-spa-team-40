@@ -1,24 +1,26 @@
+#include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
-#include "common/model/expression/Expression.h"
 #include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
+
 using namespace std;
 
 class AssignStatement : public Statement {
 private:
     Variable *variable;
-    Expression *expression;
     vector<string> exprLst;
+    vector<Variable> varLst;
+    vector<ConstantValue> constLst;
 
 public:
-    AssignStatement(int index, Variable *variable, Expression *expression);
-
     AssignStatement(int index, Variable *variable);
 
     void setExprLst(vector<string> exprLst);
 
-    Variable *getVariable() override;
+    void addVar(Variable var);
 
-    Expression *getExpression() override;
+    void addConst(ConstantValue constVal);
+
+    Variable *getVariable() override;
 };

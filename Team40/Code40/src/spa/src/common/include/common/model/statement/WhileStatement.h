@@ -1,32 +1,30 @@
 #pragma once
 
+#include "common/model/ConstantValue.h"
+#include "common/model/Variable.h"
+#include "common/model/statement/Statement.h"
 #include <string>
 #include <vector>
-
-#include "common/model/condition/Condition.h"
-#include "common/model/statement/Statement.h"
 
 using namespace std;
 
 class WhileStatement : public Statement {
 private:
-    Condition *cond;
     vector<Statement *> stmtLst;
+    vector<ConstantValue> constLst;
     vector<string> condLst;
+    vector<Variable> varLst;
 
 public:
-    // constructor
-    WhileStatement(int index, Condition *cond);
-
     WhileStatement(int index);
 
-    // adder
     void addStatement(Statement *statement);
 
     void setCondLst(vector<string> condLst);
 
-    // getters
-    Condition *getCondition() override;
+    void addVar(Variable var);
+
+    void addConst(ConstantValue constVal);
 
     vector<Statement *> getThenStmtLst() override;
 };

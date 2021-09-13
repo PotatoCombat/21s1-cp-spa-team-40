@@ -58,6 +58,7 @@ vector<vector<string>> Parser::tokenizeFile(fstream &file) {
     }
     return programTokens;
 }
+
 tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString = {};

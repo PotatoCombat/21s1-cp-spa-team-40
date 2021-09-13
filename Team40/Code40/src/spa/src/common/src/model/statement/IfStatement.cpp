@@ -1,16 +1,11 @@
 #include "common/model/statement/IfStatement.h"
 
-IfStatement::IfStatement(int index, Condition *cond)
-    : cond(cond), Statement(index, StatementType::IF) {
-    thenStmtLst = {};
-    elseStmtLst = {};
-    condLst = {};
-};
-
 IfStatement::IfStatement(int index) : Statement(index, StatementType::IF) {
     this->thenStmtLst = {};
     this->elseStmtLst = {};
     this->condLst = {};
+    this->varLst = {};
+    this->constLst = {};
 }
 
 void IfStatement::addThenStatement(Statement *statement) {
@@ -25,7 +20,11 @@ void IfStatement::setCondLst(vector<string> condLst) {
     this->condLst = condLst;
 }
 
-Condition *IfStatement::getCondition() { return cond; }
+void IfStatement::addVar(Variable var) { this->varLst.push_back(var); }
+
+void IfStatement::addConst(ConstantValue constVal) {
+    this->constLst.push_back(constVal);
+}
 
 vector<Statement *> IfStatement::getThenStmtLst() { return thenStmtLst; }
 
