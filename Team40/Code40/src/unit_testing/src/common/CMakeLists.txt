@@ -14,4 +14,4 @@ target_sources(unit_testing PRIVATE ${srcs})
 add_executable(common_testing ${catch_main} ${srcs})
 
 # Ensures that unit_testing runs with spa library.
-target_link_libraries(common_testing spa)
+target_link_libraries(common_testing common)
