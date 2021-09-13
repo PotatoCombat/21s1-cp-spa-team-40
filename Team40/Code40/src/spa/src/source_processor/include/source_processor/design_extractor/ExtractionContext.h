@@ -1,7 +1,7 @@
 #pragma once
 
+#include "common/model/Abstractions.h"
 #include "common/model/Procedure.h"
-#include "pkb/Abstractions.h"
 #include "source_processor/design_extractor/EntityContext.h"
 #include <optional>
 #include <unordered_map>

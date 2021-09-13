@@ -2,7 +2,7 @@
 
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
-#include "pkb/Abstractions.h"
+#include "common/model/Abstractions.h"
 
 #include <optional>
 #include <stdexcept>
