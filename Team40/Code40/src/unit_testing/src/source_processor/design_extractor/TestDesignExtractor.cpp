@@ -5,8 +5,10 @@
 #include "source_processor/design_extractor/DesignExtractor.h"
 
 struct TestDesignExtractor {
-    static DesignExtractorPKBStub
+    static DesignExtractorPKBStub pkbStub;
 };
+
+DesignExtractorPKBStub TestDesignExtractor::pkbStub = DesignExtractorPKBStub();
 
 TEST_CASE("DesignExtractor: Correctly handles Call Statement") {
     ProcName CALLED_PROC_NAME = "CALLED_PROC";
@@ -20,12 +22,12 @@ TEST_CASE("DesignExtractor: Correctly handles Call Statement") {
     program.addToProcLst(procedure);
     procedure.addToStmtLst(statement);
 
-    DesignExtractorPKBStub pkb = DesignExtractorPKBStub();
-    DesignExtractor de(&pkb);
+    DesignExtractor de(&TestDesignExtractor::pkbStub);
+    //    TestDesignExtractor::pkbStub.insertStmt(statement);
     de.extract(program);
 
-    REQUIRE(pkb.getNumProc() == 1);
-    REQUIRE(pkb.getNumStmt() == 1);
+    REQUIRE(TestDesignExtractor::pkbStub.getNumProc() == 1);
+    REQUIRE(TestDesignExtractor::pkbStub.getNumStmt() == 1);
     REQUIRE(ExtractionContext::getInstance()
                 .getProcDependencies(CALLING_PROC_NAME)
                 .count(CALLED_PROC_NAME));

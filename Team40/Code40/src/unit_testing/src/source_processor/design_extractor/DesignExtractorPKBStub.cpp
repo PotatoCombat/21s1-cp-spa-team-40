@@ -19,7 +19,7 @@ public:
     void insertVar(Variable variable) override { numVar++; }
     void insertConst(ConstantValue constant) override { numConst++; }
     StmtIndex insertStmt(Statement statement) override {
-        numStmt += 1;
+        throw runtime_error("CALLED");
         return 0; // STUB
     }
     void insertFollows(Statement precedingStmt,
