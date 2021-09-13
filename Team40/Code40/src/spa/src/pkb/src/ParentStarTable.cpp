@@ -3,22 +3,22 @@
 ParentStarTable::ParentStarTable() = default;
 
 // NOTE: stmt1 is parent of stmt2
-void ParentStarTable::insertParentStar(Statement stmt1, Statement stmt2) {
-    insertIntoMaps(stmt1.getIndex(), stmt2.getIndex());
+void ParentStarTable::insertParentStar(Statement *stmt1, Statement *stmt2) {
+    insertIntoMaps(stmt1->getIndex(), stmt2->getIndex());
 
     // Adding parent*(parentStmts, stmt2)
-    auto search1 = parentStarMap.find(stmt1.getIndex());
+    auto search1 = parentStarMap.find(stmt1->getIndex());
     if (search1 != parentStarMap.end()) {
         for (const StmtIndex &parentStmt : search1->second) {
-            insertIntoMaps(parentStmt, stmt2.getIndex());
+            insertIntoMaps(parentStmt, stmt2->getIndex());
         }
     }
 
     // Adding parent*(stmt1, childStmts)
-    auto search2 = childStarMap.find(stmt2.getIndex());
+    auto search2 = childStarMap.find(stmt2->getIndex());
     if (search2 != childStarMap.end()) {
         for (const StmtIndex &childStmt : search2->second) {
-            insertIntoMaps(stmt1.getIndex(), childStmt);
+            insertIntoMaps(stmt1->getIndex(), childStmt);
         }
     }
 }

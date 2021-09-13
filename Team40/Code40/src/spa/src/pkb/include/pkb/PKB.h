@@ -34,32 +34,32 @@ public:
     // Source Processor
     // =========================================================================
 
-    virtual void insertProc(Procedure procedure);
-    virtual void insertVar(Variable variable);
-    virtual void insertConst(ConstantValue constant);
+    virtual void insertProc(Procedure *procedure);
+    virtual void insertVar(Variable *variable);
+    virtual void insertConst(ConstantValue *constant);
 
-    virtual StmtIndex insertStmt(Statement statement);
+    virtual StmtIndex insertStmt(Statement *statement);
 
     /// Stores the relationship Follows(stmt1, stmt2), and updates *
     /// relationships.
-    virtual void insertFollows(Statement precedingStmt,
-                               Statement followingStmt);
+    virtual void insertFollows(Statement *precedingStmt,
+                               Statement *followingStmt);
 
     /// Stores the relationship Parent(stmt1, stmt2), and updates *
     /// relationships.
-    virtual void insertParent(Statement parentStmt, Statement childStmt);
+    virtual void insertParent(Statement *parentStmt, Statement *childStmt);
 
     /// Stores the relationship Modifies(proc, var).
-    virtual void insertProcModifyingVar(Procedure proc, Variable var);
+    virtual void insertProcModifyingVar(Procedure *proc, Variable *var);
 
     /// Stores the relationship Modifies(stmt, var).
-    virtual void insertStmtModifyingVar(Statement stmt, Variable var);
+    virtual void insertStmtModifyingVar(Statement *stmt, Variable *var);
 
     /// Stores the relationship Uses(proc, var).
-    virtual void insertProcUsingVar(Procedure proc, Variable var);
+    virtual void insertProcUsingVar(Procedure *proc, Variable *var);
 
     /// Stores the relationship Uses(stmt, var).
-    virtual void insertStmtUsingVar(Statement stmt, Variable var);
+    virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
     // =========================================================================
     // Query Processor

@@ -20,45 +20,45 @@ Statement* PKB::getStmtByIndex(StmtIndex stmtIndex) {
 // Source Processor
 // =============================================================================
 
-void PKB::insertProc(Procedure procedure) {
+void PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-void PKB::insertVar(Variable variable) {
+void PKB::insertVar(Variable *variable) {
     return varTable.insert(variable);
 }
 
-void PKB::insertConst(ConstantValue constant) {
+void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
-StmtIndex PKB::insertStmt(Statement statement) {
+StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-void PKB::insertFollows(Statement precedingStmt, Statement followingStmt) {
+void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
     followsTable.insertFollows(precedingStmt, followingStmt);
     followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
 }
 
-void PKB::insertParent(Statement parentStmt, Statement childStmt) {
+void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
     parentTable.insertParent(parentStmt, childStmt);
     parentStarTable.insertParentStar(parentStmt, childStmt);
 }
 
-void PKB::insertProcModifyingVar(Procedure proc, Variable var) {
+void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
     modifiesTable.insertProcModifyingVar(proc, var);
 }
 
-void PKB::insertStmtModifyingVar(Statement stmt, Variable var) {
+void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
     modifiesTable.insertStmtModifyingVar(stmt, var);
 }
 
-void PKB::insertProcUsingVar(Procedure proc, Variable var) {
+void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
     usesTable.insertProcUsingVar(proc, var);
 }
 
-void PKB::insertStmtUsingVar(Statement stmt, Variable var) {
+void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
