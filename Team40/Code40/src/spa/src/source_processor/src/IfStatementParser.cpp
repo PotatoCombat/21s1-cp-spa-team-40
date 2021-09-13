@@ -36,12 +36,11 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {
-                stmt.addThenStatement(&nestedStmt);
+                stmt.addThenStatement(nestedStmt);
             } else if (terminator == 1) {
-                stmt.addElseStatement(&nestedStmt);
+                stmt.addElseStatement(nestedStmt);
             }
             this->programIndex = i;
-            Statement *currStmt = &nestedStmt;
             if (nestedStmt.getStatementType() == StatementType::IF) {
                 i++;
             } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
