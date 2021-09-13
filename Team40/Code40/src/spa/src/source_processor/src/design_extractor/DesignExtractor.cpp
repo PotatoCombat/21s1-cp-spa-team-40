@@ -17,13 +17,13 @@ void DesignExtractor::extractDepthFirst(Program program) {
 
 void DesignExtractor::extractBreadthFirst(Program program) {
     FollowsExtractor extractor(pkb);
-    extractor.extract(std::move(program));
+    extractor.extract(program);
 }
 
 void DesignExtractor::extractProcedure(Procedure procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(&procedure);
     pkb->insertProc(&procedure);
-    for (Statement statement : procedure.getStmtLst()) {
+    for (const Statement &statement : procedure.getStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(&procedure);
@@ -31,7 +31,7 @@ void DesignExtractor::extractProcedure(Procedure procedure) {
 
 StmtIndex DesignExtractor::extractStatement(Statement statement) {
     StmtIndex stmtIndex;
-    switch (statement->getStatementType()) {
+    switch (statement.getStatementType()) {
     case StatementType::ASSIGN:
         stmtIndex = extractAssignStatement(statement);
         break;
@@ -67,7 +67,9 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement assignStatement) {
 
     // Handle RHS
     ExtractionContext::getInstance().setUsingStatement(&assignStatement);
-    extractExpression(assignStatement.getExpression());
+    for (const Variable &variable : assignStatement.getExpressionVars()) {
+        extractVariable(variable);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(&assignStatement);
 
     return stmtIndex;
@@ -76,8 +78,7 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement assignStatement) {
 StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
     StmtIndex stmtIndex = pkb->insertStmt(&callStatement);
 
-    // TODO: Get actual proc
-    ProcName procName = callStatement.getProcName();
+    ProcName procName = callStatement.getProcedure().getName();
     /// At this point, we segue into extracting the called Procedure
     /// so that Procedures are guaranteed to be extracted before their
     /// corresponding Call statements to ensure transitivity is handled
@@ -120,17 +121,19 @@ StmtIndex DesignExtractor::extractIfStatement(Statement ifStatement) {
 
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(&ifStatement);
-    extractCondition(ifStatement.getCondition());
+    for (const Variable &variable : ifStatement.getExpressionVars()) {
+        extractVariable(variable);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(&ifStatement);
 
     ExtractionContext::getInstance().getParentContext().push(&ifStatement);
     // 2. Handle THEN statements
-    for (Statement statement : ifStatement.getThenStmtLst()) {
+    for (const Statement &statement : ifStatement.getThenStmtLst()) {
         extractStatement(statement);
     }
 
     // 3. Handle ELSE statements
-    for (Statement statement : ifStatement.getElseStmtLst()) {
+    for (const Statement &statement : ifStatement.getElseStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(&ifStatement);
@@ -159,116 +162,19 @@ StmtIndex DesignExtractor::extractWhileStatement(Statement whileStatement) {
 
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(&whileStatement);
-    extractCondition(whileStatement.getCondition());
+    for (const Variable &variable : whileStatement.getExpressionVars()) {
+        extractVariable(variable);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(&whileStatement);
 
     // 2. Handle THEN statements
     ExtractionContext::getInstance().getParentContext().push(&whileStatement);
-    for (Statement statement : whileStatement.getThenStmtLst()) {
+    for (const Statement &statement : whileStatement.getThenStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(&whileStatement);
 
     return stmtIndex;
-}
-
-void DesignExtractor::extractCondition(Condition condition) {
-    switch (condition->getConditionType()) {
-    case ConditionType::SINGLE:
-        extractSingleCondition(condition);
-    case ConditionType::AND:
-    case ConditionType::OR:
-        extractBinaryCondition(condition);
-    case ConditionType::NOT:
-        extractNotCondition(condition);
-    default:
-        throw runtime_error("Invalid ConditionType.");
-    }
-}
-
-void DesignExtractor::extractSingleCondition(Condition singleCondition) {
-    extractRelation(singleCondition.getRelation());
-}
-
-void DesignExtractor::extractNotCondition(Condition notCondition) {
-    extractCondition(notCondition.getPrimaryCondition());
-}
-
-void DesignExtractor::extractBinaryCondition(Condition binaryCondition) {
-    extractCondition(binaryCondition.getPrimaryCondition());
-    extractCondition(binaryCondition.getSecondaryCondition());
-}
-
-void DesignExtractor::extractRelation(Relation relation) {
-    extractFactor(relation.getLeftFactor());
-    extractFactor(relation.getRightFactor());
-}
-
-void DesignExtractor::extractExpression(Expression expression) {
-    switch (expression.getExpressionType()) {
-    case ExpressionType::SINGLE_TERM:
-        extractSingleTermExpression(expression);
-        break;
-    case ExpressionType::SUBTRACT_TERMS:
-        extractSubtractTermsExpression(expression);
-        break;
-    case ExpressionType::SUM_TERMS:
-        extractSumTermsExpression(expression);
-        break;
-    default:
-        throw runtime_error("Invalid ExpressionType.");
-    }
-}
-
-void DesignExtractor::extractSingleTermExpression(
-    Expression singleTermExpression) {
-    extractTerm(singleTermExpression.getTerm());
-}
-
-void DesignExtractor::extractSubtractTermsExpression(
-    Expression subtractTermsExpression) {
-    extractExpression(subtractTermsExpression.getExpression());
-    extractTerm(subtractTermsExpression.getTerm());
-}
-
-void DesignExtractor::extractSumTermsExpression(Expression sumTermsExpression) {
-    extractExpression(sumTermsExpression.getExpression());
-    extractTerm(sumTermsExpression.getTerm());
-}
-
-void DesignExtractor::extractTerm(Term term) {
-    switch (term.getTermType()) {
-    case TermType::SINGLE_FACTOR:
-        extractSingleFactorTerm(term);
-    case TermType::MULTIPLY_TERM_BY_FACTOR:
-    case TermType::DIVIDE_TERM_BY_FACTOR:
-    case TermType::MODULO_TERM_BY_FACTOR:
-        extractMultiFactorTerm(term);
-    default:
-        throw runtime_error("Invalid TermType.");
-    }
-}
-
-void DesignExtractor::extractSingleFactorTerm(Term singleFactorTerm) {
-    extractFactor(singleFactorTerm.getFactor());
-}
-
-void DesignExtractor::extractMultiFactorTerm(Term multiFactorTerm) {
-    extractFactor(multiFactorTerm.getFactor());
-    extractTerm(multiFactorTerm.getTerm());
-}
-
-void DesignExtractor::extractFactor(Factor factor) {
-    switch (factor.getFactorType()) {
-    case FactorType::EXPRESSION:
-        extractExpression(factor);
-    case FactorType::VARIABLE:
-        extractVariable(factor);
-    case FactorType::CONSTANT:
-        extractConstantValue(factor);
-    default:
-        throw runtime_error("Invalid FactorType.");
-    }
 }
 
 void DesignExtractor::extractVariable(Variable variable) {
@@ -335,6 +241,112 @@ void DesignExtractor::extractModifiesRelationship(Variable variable) {
     //    }
 }
 
-void DesignExtractor::extractConstantValue(ConstantValue constantValue) {
-    pkb->insertConst(&constantValue);
-}
+/**
+ * The following methods are not used in iteration 1,
+ * but are likely relevant in the future. Do not remove.
+ */
+
+// void DesignExtractor::extractCondition(Condition condition) {
+//     switch (condition.getConditionType()) {
+//     case ConditionType::SINGLE:
+//         extractSingleCondition(condition);
+//     case ConditionType::AND:
+//     case ConditionType::OR:
+//         extractBinaryCondition(condition);
+//     case ConditionType::NOT:
+//         extractNotCondition(condition);
+//     default:
+//         throw runtime_error("Invalid ConditionType.");
+//     }
+// }
+
+// void DesignExtractor::extractSingleCondition(Condition singleCondition) {
+//     extractRelation(singleCondition.getRelation());
+// }
+//
+// void DesignExtractor::extractNotCondition(Condition notCondition) {
+//     extractCondition(notCondition.getPrimaryCondition());
+// }
+//
+// void DesignExtractor::extractBinaryCondition(Condition binaryCondition) {
+//     extractCondition(binaryCondition.getPrimaryCondition());
+//     extractCondition(binaryCondition.getSecondaryCondition());
+// }
+//
+// void DesignExtractor::extractRelation(Relation relation) {
+//     extractFactor(relation.getLeftFactor());
+//     extractFactor(relation.getRightFactor());
+// }
+//
+// void DesignExtractor::extractExpression(Expression expression) {
+//     switch (expression.getExpressionType()) {
+//     case ExpressionType::SINGLE_TERM:
+//         extractSingleTermExpression(expression);
+//         break;
+//     case ExpressionType::SUBTRACT_TERMS:
+//         extractSubtractTermsExpression(expression);
+//         break;
+//     case ExpressionType::SUM_TERMS:
+//         extractSumTermsExpression(expression);
+//         break;
+//     default:
+//         throw runtime_error("Invalid ExpressionType.");
+//     }
+// }
+//
+// void DesignExtractor::extractSingleTermExpression(
+//     Expression singleTermExpression) {
+//     extractTerm(singleTermExpression.getTerm());
+// }
+//
+// void DesignExtractor::extractSubtractTermsExpression(
+//     Expression subtractTermsExpression) {
+//     extractExpression(subtractTermsExpression.getExpression());
+//     extractTerm(subtractTermsExpression.getTerm());
+// }
+//
+// void DesignExtractor::extractSumTermsExpression(Expression
+// sumTermsExpression) {
+//     extractExpression(sumTermsExpression.getExpression());
+//     extractTerm(sumTermsExpression.getTerm());
+// }
+//
+// void DesignExtractor::extractTerm(Term term) {
+//     switch (term.getTermType()) {
+//     case TermType::SINGLE_FACTOR:
+//         extractSingleFactorTerm(term);
+//     case TermType::MULTIPLY_TERM_BY_FACTOR:
+//     case TermType::DIVIDE_TERM_BY_FACTOR:
+//     case TermType::MODULO_TERM_BY_FACTOR:
+//         extractMultiFactorTerm(term);
+//     default:
+//         throw runtime_error("Invalid TermType.");
+//     }
+// }
+//
+// void DesignExtractor::extractSingleFactorTerm(Term singleFactorTerm) {
+//     extractFactor(singleFactorTerm.getFactor());
+// }
+//
+// void DesignExtractor::extractMultiFactorTerm(Term multiFactorTerm) {
+//     extractFactor(multiFactorTerm.getFactor());
+//     extractTerm(multiFactorTerm.getTerm());
+// }
+//
+// void DesignExtractor::extractFactor(Factor factor) {
+//     switch (factor.getFactorType()) {
+//     case FactorType::EXPRESSION:
+//         extractExpression(factor);
+//     case FactorType::VARIABLE:
+//         extractVariable(factor);
+//     case FactorType::CONSTANT:
+//         extractConstantValue(factor);
+//     default:
+//         throw runtime_error("Invalid FactorType.");
+//     }
+// }
+//
+
+// void DesignExtractor::extractConstantValue(ConstantValue constantValue) {
+//     pkb->insertConst(&constantValue);
+// }
