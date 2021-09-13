@@ -3,14 +3,14 @@
 ParentTable::ParentTable() = default;
 
 // NOTE: stmt1 is parent of stmt2
-void ParentTable::insertParent(Statement stmt1, Statement stmt2) {
-    parentMap[stmt2.getIndex()] = stmt1.getIndex();
+void ParentTable::insertParent(Statement *stmt1, Statement *stmt2) {
+    parentMap[stmt2->getIndex()] = stmt1->getIndex();
 
-    auto search = childMap.find(stmt1.getIndex());
+    auto search = childMap.find(stmt1->getIndex());
     if (search == childMap.end()) {
-        childMap[stmt1.getIndex()] = { stmt2.getIndex() };
+        childMap[stmt1->getIndex()] = { stmt2->getIndex() };
     } else {
-        search->second.insert(stmt2.getIndex());
+        search->second.insert(stmt2->getIndex());
     }
 }
 

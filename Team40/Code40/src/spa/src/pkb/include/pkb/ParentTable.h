@@ -12,7 +12,7 @@ public:
     ParentTable();
 
     /// Stores Parent(stmt1, stmt2).
-    void insertParent(Statement stmt1, Statement stmt2);
+    void insertParent(Statement *stmt1, Statement *stmt2);
 
     /// Selects s such that Parent(s, stmt).
     StmtIndex getParentStmt(StmtIndex stmt);

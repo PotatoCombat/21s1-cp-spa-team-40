@@ -4,22 +4,22 @@ using namespace std;
 
 FollowsStarTable::FollowsStarTable() = default;
 
-void FollowsStarTable::insertFollowsStar(Statement stmt1, Statement stmt2) {
-    insertIntoMaps(stmt1.getIndex(), stmt2.getIndex());
+void FollowsStarTable::insertFollowsStar(Statement *stmt1, Statement *stmt2) {
+    insertIntoMaps(stmt1->getIndex(), stmt2->getIndex());
 
     // Adding follows*(prevStmts, stmt2)
-    auto search1 = followedByStarMap.find(stmt1.getIndex());
+    auto search1 = followedByStarMap.find(stmt1->getIndex());
     if (search1 != followedByStarMap.end()) {
         for (const StmtIndex &prevStmt : search1->second) {
-            insertIntoMaps(prevStmt, stmt2.getIndex());
+            insertIntoMaps(prevStmt, stmt2->getIndex());
         }
     }
 
     // Adding follows*(stmt1, nextStmts)
-    auto search2 = followsStarMap.find(stmt2.getIndex());
+    auto search2 = followsStarMap.find(stmt2->getIndex());
     if (search2 != followsStarMap.end()) {
         for (const StmtIndex &nextStmt : search2->second) {
-            insertIntoMaps(stmt1.getIndex(), nextStmt);
+            insertIntoMaps(stmt1->getIndex(), nextStmt);
         }
     }
 }

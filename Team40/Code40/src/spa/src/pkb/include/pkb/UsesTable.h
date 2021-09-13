@@ -14,10 +14,10 @@ public:
     UsesTable();
 
     /// Stores Uses(proc, var).
-    void insertProcUsingVar(Procedure proc, Variable var);
+    void insertProcUsingVar(Procedure *proc, Variable *var);
 
     /// Stores Uses(stmt, var).
-    void insertStmtUsingVar(Statement stmt, Variable var);
+    void insertStmtUsingVar(Statement *stmt, Variable *var);
 
     /// Selects p such that Uses(p, var), where p is a Procedure.
     set<ProcName> getProcsUsingVar(VarName var);
