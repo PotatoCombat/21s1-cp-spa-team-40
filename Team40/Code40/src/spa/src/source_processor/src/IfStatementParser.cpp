@@ -7,20 +7,22 @@ IfStatementParser::IfStatementParser(vector<string> content, int index,
                                      int &programIndex)
     : StatementParser(content, index, programLines, programIndex){};
 
-Statement IfStatementParser::parseIfStatement(int &programIndex) {
+Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
-    Statement stmt = Statement(index, StatementType::IF);
+    auto stmt = new Statement(index, StatementType::IF);
+
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
     vector<string> condLst(next(next(ifItr)), prev(endItr));
-    stmt.setExpressionLst(condLst);
+
+    stmt->setExpressionLst(condLst);
     parseExpression(condLst, stmt);
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
 }
 
-void IfStatementParser::parseChildStatements(Statement &stmt) {
+void IfStatementParser::parseChildStatements(Statement *stmt) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
@@ -34,17 +36,17 @@ void IfStatementParser::parseChildStatements(Statement &stmt) {
         }
         if (currContent[0] != "}" && currContent[0] != "else") {
             ProgramParser parser;
-            Statement nestedStmt =
+            auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {
-                stmt.addThenStmt(&nestedStmt);
+                stmt->addThenStmt(nestedStmt);
             } else if (terminator == 1) {
-                stmt.addElseStmt(&nestedStmt);
+                stmt->addElseStmt(nestedStmt);
             }
             this->programIndex = i;
-            if (nestedStmt.getStatementType() == StatementType::IF) {
+            if (nestedStmt->getStatementType() == StatementType::IF) {
                 i++;
-            } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
+            } else if (nestedStmt->getStatementType() == StatementType::WHILE) {
                 i++;
             }
         }
@@ -52,15 +54,15 @@ void IfStatementParser::parseChildStatements(Statement &stmt) {
 }
 
 void IfStatementParser::parseExpression(vector<string> exprLst,
-                                        Statement &stmt) {
+                                        Statement *stmt) {
     for (int i = 0; i < exprLst.size(); i++) {
         string currString = exprLst[i];
         if (isInteger(currString)) {
-            ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(&constVal);
+            auto constant = new ConstantValue(stoi(currString));
+            stmt->addExpressionConst(constant);
         } else if (isName(currString)) {
-            Variable var(currString);
-            stmt.addExpressionVar(&var);
+            auto variable = new Variable(currString);
+            stmt->addExpressionVar(variable);
         }
     }
 }

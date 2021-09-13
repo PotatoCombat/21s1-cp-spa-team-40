@@ -18,30 +18,30 @@ using namespace std;
 
 class ProgramParser {
 public:
-    Program parseProgram(vector<Line> programLines) {
-        Program program = Program();
-        Procedure currProc("");
+    Program parseProgram(vector<Line> programLines, Program &program) {
+        Procedure *currProc = nullptr; //new Procedure("");
         for (int i = 0; i < programLines.size(); i++) {
             int currIndex = programLines[i].getIndex();
             vector<string> currContent = programLines[i].getContent();
             if (isProc(currContent)) {
-                if (!currProc.getName().empty()) {
-                    program.addToProcLst(&currProc);
+                if (currProc != nullptr) {
+//                if (!currProc->getName().empty()) {
+                    program.addToProcLst(currProc);
                 }
                 ProcedureParser procParser(currContent);
                 currProc = procParser.parseProcedure();
             } else if (!currContent.empty() && currContent[0] != "}" &&
                        currContent[0] != "else") {
-                Statement stmt =
+                Statement* stmt =
                     parseStatement(currContent, currIndex, programLines, i);
-                currProc.addToStmtLst(&stmt);
+                currProc->addToStmtLst(stmt);
             }
         }
-        program.addToProcLst(&currProc);
+        program.addToProcLst(currProc);
         return program;
     }
 
-    Statement parseStatement(vector<string> content, int index,
+    Statement* parseStatement(vector<string> content, int index,
                              vector<Line> programLines, int &programIndex) {
         StatementParser stmtParser(content, index, programLines, programIndex);
         if (stmtParser.isReadStmt(content)) {

@@ -20,7 +20,8 @@ void SourceProcessor::processSource(string filename) {
     file.open(filename, ios::in);
     if (file.is_open()) {
         vector<Line> programLines = parser.parseFile(file);
-        Program program = programParser.parseProgram(programLines);
+        Program program;
+        programParser.parseProgram(programLines, program);
         designExtractor.extract(&program);
     } else {
         cout << "No such file";

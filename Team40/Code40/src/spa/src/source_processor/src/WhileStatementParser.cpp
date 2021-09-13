@@ -7,19 +7,19 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
                                            int &programIndex)
     : StatementParser(content, index, programLines, programIndex){};
 
-Statement WhileStatementParser::parseWhileStatement(int &programIndex) {
+Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
-    Statement stmt = Statement(index, StatementType::WHILE);
+    auto stmt = new Statement(index, StatementType::WHILE);
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     vector<string> condLst(next(next(whileItr)), prev(endItr));
-    stmt.setExpressionLst(condLst);
+    stmt->setExpressionLst(condLst);
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
 }
 
-void WhileStatementParser::parseChildStatements(Statement &stmt) {
+void WhileStatementParser::parseChildStatements(Statement *stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
@@ -28,13 +28,13 @@ void WhileStatementParser::parseChildStatements(Statement &stmt) {
         }
         if (currContent[0] != "}" && currContent[0] != "else") {
             ProgramParser parser;
-            Statement nestedStmt =
+            auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
-            stmt.addThenStmt(&nestedStmt);
+            stmt->addThenStmt(nestedStmt);
             this->programIndex = i;
-            if (nestedStmt.getStatementType() == StatementType::IF) {
+            if (nestedStmt->getStatementType() == StatementType::IF) {
                 i++;
-            } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
+            } else if (nestedStmt->getStatementType() == StatementType::WHILE) {
                 i++;
             }
         }
@@ -42,15 +42,15 @@ void WhileStatementParser::parseChildStatements(Statement &stmt) {
 }
 
 void WhileStatementParser::parseExpression(vector<string> exprLst,
-                                           Statement &stmt) {
+                                           Statement *stmt) {
     for (int i = 0; i < exprLst.size(); i++) {
         string currString = exprLst[i];
         if (isInteger(currString)) {
-            ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(&constVal);
+            auto constant = new ConstantValue(stoi(currString));
+            stmt->addExpressionConst(constant);
         } else if (isName(currString)) {
-            Variable var(currString);
-            stmt.addExpressionVar(&var);
+            auto variable = new Variable(currString);
+            stmt->addExpressionVar(variable);
         }
     }
 }

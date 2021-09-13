@@ -6,30 +6,34 @@
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
     : StatementParser(content, index, {}, -1){};
 
-Statement AssignStatementParser::parseAssignStatement() {
+Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    Statement stmt = Statement(index, StatementType::ASSIGN);
-    Variable variable(var_name);
-    stmt.setVariable(&variable);
+
+    auto stmt = new Statement(index, StatementType::ASSIGN);
+
+    auto variable = new Variable(var_name);
+    stmt->setVariable(variable);
+
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
-    stmt.setExpressionLst(exprLst);
+    stmt->setExpressionLst(exprLst);
+
     parseExpression(exprLst, stmt);
     return stmt;
 }
 
 void AssignStatementParser::parseExpression(vector<string> exprLst,
-                                            Statement &stmt) {
+                                            Statement *stmt) {
     for (int i = 0; i < exprLst.size(); i++) {
         string currString = exprLst[i];
         if (isInteger(currString)) {
-            ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(&constVal);
+            auto constant = new ConstantValue(stoi(currString));
+            stmt->addExpressionConst(constant);
         } else if (isName(currString)) {
-            Variable var(currString);
-            stmt.addExpressionVar(&var);
+            auto variable = new Variable(currString);
+            stmt->addExpressionVar(variable);
         }
     }
 }

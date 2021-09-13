@@ -16,7 +16,7 @@ protected:
 public:
     StatementParser(vector<string> content, int index,
                     vector<Line> programLines, int programIndex);
-    Statement parseStatement();
+    Statement *parseStatement();
 
     bool isReadStmt(vector<string> inputLine);
     bool isPrintStmt(vector<string> inputLine);

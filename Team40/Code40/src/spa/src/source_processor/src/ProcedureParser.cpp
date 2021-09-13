@@ -3,10 +3,10 @@
 
 ProcedureParser::ProcedureParser(vector<string> content) : content(content) {}
 
-Procedure ProcedureParser::parseProcedure() {
+Procedure* ProcedureParser::parseProcedure() {
     vector<string>::iterator procItr =
         find(content.begin(), content.end(), "procedure");
     string proc_name = *next(procItr);
-    Procedure proc = Procedure(proc_name);
-    return proc;
+    auto procedure = new Procedure(proc_name);
+    return procedure;
 }

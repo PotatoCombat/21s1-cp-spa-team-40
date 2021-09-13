@@ -6,7 +6,7 @@ class WhileStatementParser : StatementParser {
 public:
     WhileStatementParser(vector<string> content, int index,
                          vector<Line> programLines, int &programIndex);
-    Statement parseWhileStatement(int &programIndex);
-    void parseChildStatements(Statement &stmt);
-    void parseExpression(vector<string> exprLst, Statement &statement);
+    Statement *parseWhileStatement(int &programIndex);
+    void parseChildStatements(Statement *stmt);
+    void parseExpression(vector<string> exprLst, Statement *statement);
 };
