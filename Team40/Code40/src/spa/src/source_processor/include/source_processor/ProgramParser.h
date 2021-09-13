@@ -42,7 +42,7 @@ public:
     }
 
     Statement parseStatement(vector<string> content, int index,
-                             vector<Line> programLines, int programIndex) {
+                             vector<Line> programLines, int &programIndex) {
         StatementParser stmtParser(content, index, programLines, programIndex);
         if (stmtParser.isReadStmt(content)) {
             ReadStatementParser readParser(content, index);
@@ -59,11 +59,11 @@ public:
         } else if (stmtParser.isWhileStmt(content)) {
             WhileStatementParser whileParser(content, index, programLines,
                                              programIndex);
-            return whileParser.parseWhileStatement();
+            return whileParser.parseWhileStatement(programIndex);
         } else if (stmtParser.isIfStmt(content)) {
             IfStatementParser ifParser(content, index, programLines,
                                        programIndex);
-            return ifParser.parseIfStatement();
+            return ifParser.parseIfStatement(programIndex);
         } else {
             throw runtime_error("Invalid statement!");
         }

@@ -3,8 +3,8 @@
 #include "common/model/Variable.h"
 #include "common/model/condition/Condition.h"
 #include "common/model/expression/Expression.h"
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
