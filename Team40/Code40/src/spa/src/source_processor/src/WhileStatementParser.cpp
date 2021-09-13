@@ -10,7 +10,7 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 Statement WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
-    WhileStatement stmt = WhileStatement(index);
+    Statement stmt = Statement(index, StatementType::WHILE);
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     vector<string> condLst(next(next(whileItr)), prev(endItr));
     stmt.setExpressionLst(condLst);
@@ -19,7 +19,7 @@ Statement WhileStatementParser::parseWhileStatement(int &programIndex) {
     return stmt;
 }
 
-void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
+void WhileStatementParser::parseChildStatements(Statement &stmt) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
@@ -30,7 +30,7 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
-            stmt.addStatement(nestedStmt);
+            stmt.addThenStmt(nestedStmt);
             this->programIndex = i;
             if (nestedStmt.getStatementType() == StatementType::IF) {
                 i++;

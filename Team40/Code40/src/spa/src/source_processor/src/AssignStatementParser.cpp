@@ -1,7 +1,6 @@
 #include "source_processor/AssignStatementParser.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
-#include "common/model/statement/AssignStatement.h"
 #include <algorithm>
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
@@ -11,8 +10,8 @@ Statement AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-    Variable variable(var_name);
-    AssignStatement stmt = AssignStatement(index, variable);
+    Statement stmt = Statement(index, StatementType::ASSIGN);
+    stmt.setVariable(Variable(var_name));
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
     stmt.setExpressionLst(exprLst);
