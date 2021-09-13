@@ -3,11 +3,11 @@
 #include <set>
 #include <vector>
 
-#include "pkb/Abstractions.h"
+#include "common/model/Abstractions.h"
 #include "pkb/Iterator.h"
 #include "pkb/PKB.h"
 
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 
 using namespace std;
 

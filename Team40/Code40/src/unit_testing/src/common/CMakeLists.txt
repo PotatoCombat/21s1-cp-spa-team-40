@@ -5,7 +5,6 @@ file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/models/conditional/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/expression/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/relation/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/models/statement/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/term/*.cpp"
         )
 

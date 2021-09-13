@@ -1,12 +1,9 @@
 #include "catch.hpp"
-#include "common/model/statement/CallStatement.h"
 #include "source_processor/design_extractor/ExtractionContext.h"
 
 TEST_CASE("ExtractionContext: Creates correctly") {
-    REQUIRE(ExtractionContext::getInstance()
-                .getProcedureContext()
-                .getAllEntities()
-                .empty());
+    REQUIRE(
+        !ExtractionContext::getInstance().getCurrentProcedure().has_value());
     REQUIRE(ExtractionContext::getInstance()
                 .getParentContext()
                 .getAllEntities()
@@ -23,26 +20,20 @@ TEST_CASE("ExtractionContext: Creates correctly") {
 TEST_CASE("ExtractionContext: Correctly pushes and pops Entities") {
     const string PROC_NAME = "TEST_PROC";
     Procedure procedure(PROC_NAME);
+    REQUIRE(
+        !ExtractionContext::getInstance().getCurrentProcedure().has_value());
+    ExtractionContext::getInstance().setCurrentProcedure(&procedure);
+    REQUIRE(ExtractionContext::getInstance().getCurrentProcedure().has_value());
     REQUIRE(ExtractionContext::getInstance()
-                .getProcedureContext()
-                .getAllEntities()
-                .empty());
-    ExtractionContext::getInstance().getProcedureContext().push(&procedure);
-    REQUIRE(ExtractionContext::getInstance()
-                .getProcedureContext()
-                .getAllEntities()
-                .size() == 1);
-    REQUIRE(ExtractionContext::getInstance()
-                .getProcedureContext()
-                .getAllEntities()
-                .front()
+                .getCurrentProcedure()
+                .value()
                 ->getName() == PROC_NAME);
 }
 
 TEST_CASE("ExtractionContext: Correctly sets and unsets statements") {
     const string PROC_NAME = "TEST_PROC";
-    Procedure procedure(PROC_NAME);
-    CallStatement callStatement(1, procedure);
+    Statement callStatement(1, StatementType::CALL);
+    callStatement.setProcName(PROC_NAME);
     REQUIRE(!ExtractionContext::getInstance().getUsingStatement().has_value());
     ExtractionContext::getInstance().setUsingStatement(&callStatement);
     REQUIRE(ExtractionContext::getInstance().getUsingStatement().has_value());
