@@ -12,13 +12,14 @@ using namespace std;
 
 class ExtractionContext {
 private:
+    optional<Procedure *> currentProcedure;
+    unordered_map<ProcName, unordered_set<ProcName>> procDependencyTree;
+
     static ExtractionContext *instance;
-    const EntityContext<Procedure> *procedureContext;
-    const EntityContext<Statement> *parentContext;
-    const EntityContext<Statement> *followsContext;
+    EntityContext<Statement> *parentContext;
+    EntityContext<Statement> *followsContext;
     optional<Statement *> usingStatement;
     optional<Statement *> modifyingStatement;
-    unordered_map<ProcName, unordered_set<ProcName>> procDependencyTree;
 
     // NOTE: Do not autofix to default constructor here
     ExtractionContext() {}
@@ -28,10 +29,12 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    static EntityContext<Procedure> &getProcedureContext();
     static EntityContext<Statement> &getFollowsContext();
     static EntityContext<Statement> &getParentContext();
 
+    optional<Procedure *> getCurrentProcedure();
+    void setCurrentProcedure(Procedure *procedure);
+    void unsetCurrentProcedure(Procedure *procedure);
     optional<Statement *> getUsingStatement();
     void setUsingStatement(Statement *statement);
     void unsetUsingStatement(Statement *statement);

@@ -8,30 +8,29 @@ void FollowsExtractor::extract(Program program) {
         statementLists.push_back(procedure.getStmtLst());
     }
     while (!statementLists.empty()) {
-        vector<Statement *> statementList = statementLists.back();
+        vector<Statement> statementList = statementLists.back();
         extractStatementList(statementList);
         statementLists.pop_back();
     }
 }
 
-void FollowsExtractor::extractStatementList(
-    const vector<Statement *> &statementList) {
-    for (Statement *statement : statementList) {
+void FollowsExtractor::extractStatementList(vector<Statement> statementList) {
+    for (Statement statement : statementList) {
         extractStatement(statement);
     }
     ctx.clear();
 }
 
-void FollowsExtractor::extractStatement(Statement *statement) {
+void FollowsExtractor::extractStatement(Statement statement) {
     for (Statement *prev : ctx.getAllEntities()) {
-        pkb->insertFollows(prev, statement);
+        pkb->insertFollows(prev, &statement);
     }
-    StatementType type = statement->getStatementType();
+    StatementType type = statement.getStatementType();
     if (type == StatementType::IF || type == StatementType::WHILE) {
-        statementLists.push_back(statement->getThenStmtLst());
+        statementLists.push_back(statement.getThenStmtLst());
     }
     if (type == StatementType::IF) {
-        statementLists.push_back(statement->getElseStmtLst());
+        statementLists.push_back(statement.getElseStmtLst());
     }
-    ctx.push(statement);
+    ctx.push(&statement);
 }

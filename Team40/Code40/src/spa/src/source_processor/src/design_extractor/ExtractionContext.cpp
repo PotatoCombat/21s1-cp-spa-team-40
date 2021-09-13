@@ -5,11 +5,6 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-EntityContext<Procedure> &ExtractionContext::getProcedureContext() {
-    static EntityContext<Procedure> procedureContext;
-    return procedureContext;
-}
-
 EntityContext<struct Statement> &ExtractionContext::getFollowsContext() {
     static EntityContext<Statement> followsContext;
     return followsContext;
@@ -39,6 +34,27 @@ void ExtractionContext::unsetModifyingStatement(Statement *statement) {
         throw runtime_error("Trying to unset another modifying statement.");
     }
     modifyingStatement = nullopt;
+}
+
+optional<Procedure *> ExtractionContext::getCurrentProcedure() {
+    return currentProcedure;
+}
+
+void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
+    if (currentProcedure.has_value()) {
+        throw runtime_error("Trying to overwrite another procedure.");
+    }
+    currentProcedure = procedure;
+}
+
+void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (currentProcedure.value() != procedure) {
+        throw runtime_error("Trying to unset another procedure.");
+    }
+    currentProcedure = nullopt;
 }
 
 optional<Statement *> ExtractionContext::getUsingStatement() {

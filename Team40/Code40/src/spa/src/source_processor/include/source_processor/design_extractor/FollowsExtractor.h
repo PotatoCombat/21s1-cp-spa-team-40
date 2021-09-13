@@ -6,7 +6,7 @@
 
 class FollowsExtractor {
 private:
-    vector<vector<Statement *>> statementLists;
+    vector<vector<Statement>> statementLists;
     EntityContext<Statement> ctx;
     PKB *pkb;
 
@@ -16,6 +16,6 @@ public:
     void extract(Program program);
 
     // Statement
-    void extractStatement(Statement *statement);
-    void extractStatementList(const vector<Statement *> &statementList);
+    void extractStatement(Statement statement);
+    void extractStatementList(vector<Statement> statementList);
 };

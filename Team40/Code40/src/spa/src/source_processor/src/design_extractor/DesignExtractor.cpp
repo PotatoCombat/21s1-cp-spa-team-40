@@ -21,12 +21,12 @@ void DesignExtractor::extractBreadthFirst(Program program) {
 }
 
 void DesignExtractor::extractProcedure(Procedure procedure) {
-    ExtractionContext::getInstance().getProcedureContext().push(&procedure);
+    ExtractionContext::getInstance().setCurrentProcedure(&procedure);
     pkb->insertProc(&procedure);
     for (Statement statement : procedure.getStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getProcedureContext().pop(&procedure);
+    ExtractionContext::getInstance().unsetCurrentProcedure(&procedure);
 }
 
 StmtIndex DesignExtractor::extractStatement(Statement statement) {
@@ -78,32 +78,39 @@ StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
 
     // TODO: Get actual proc
     ProcName procName = callStatement.getProcName();
-    ExtractionContext::getInstance()
-        /// At this point, we segue into extracting the called Procedure
-        /// so that Procedures are guaranteed to be extracted before their
-        /// corresponding Call statements to ensure transitivity is handled
-        /// properly.
-        /// NOTE: This will eventually bottom out since we are guaranteed
-        /// there are no recursive calls in SIMPLE.
-        /// TODO:
-
-        set<VarName>
-            modifiedVarNames = pkb->getVarsModifiedByProc(procedure.getName());
-    if (!modifiedVarNames.empty()) {
-        for (VarName modifiedVarName : modifiedVarNames) {
-            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
-            extractModifiesRelationship(*modifiedVar);
-        }
+    /// At this point, we segue into extracting the called Procedure
+    /// so that Procedures are guaranteed to be extracted before their
+    /// corresponding Call statements to ensure transitivity is handled
+    /// properly.
+    /// NOTE: This will eventually bottom out since we are guaranteed
+    /// there are no recursive calls in SIMPLE.
+    /// TODO:
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
     }
+    ExtractionContext::getInstance().addProcDependency(
+        procName, currentProcedure.value()->getName());
 
-    set<VarName> usedVarNames = pkb->getVarsUsedByProc(procedure.getName());
-    if (!usedVarNames.empty()) {
-        for (VarName usedVarName : usedVarNames) {
-            Variable *usedVar = pkb->getVarByName(usedVarName);
-            extractUsesRelationship(*usedVar);
-        }
-    }
-
+    //    set<VarName> modifiedVarNames =
+    //        pkb->getVarsModifiedByProc(procedure.getName());
+    //    if (!modifiedVarNames.empty()) {
+    //        for (VarName modifiedVarName : modifiedVarNames) {
+    //            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
+    //            extractModifiesRelationship(*modifiedVar);
+    //        }
+    //    }
+    //
+    //    set<VarName> usedVarNames =
+    //    pkb->getVarsUsedByProc(procedure.getName()); if
+    //    (!usedVarNames.empty()) {
+    //        for (VarName usedVarName : usedVarNames) {
+    //            Variable *usedVar = pkb->getVarByName(usedVarName);
+    //            extractUsesRelationship(*usedVar);
+    //        }
+    //    }
+    //
     return stmtIndex;
 }
 
@@ -290,13 +297,13 @@ void DesignExtractor::extractUsesRelationship(Variable variable) {
     }
 
     // 3. Handle all enclosing procedures
-    vector<Procedure *> usingProcedures =
-        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    if (!usingProcedures.empty()) {
-        for (Procedure *usingProcedure : usingProcedures) {
-            pkb->insertProcUsingVar(usingProcedure, &variable);
-        }
-    }
+    //    vector<Procedure *> usingProcedures =
+    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
+    //    if (!usingProcedures.empty()) {
+    //        for (Procedure *usingProcedure : usingProcedures) {
+    //            pkb->insertProcUsingVar(usingProcedure, &variable);
+    //        }
+    //    }
 }
 
 void DesignExtractor::extractModifiesRelationship(Variable variable) {
@@ -319,13 +326,13 @@ void DesignExtractor::extractModifiesRelationship(Variable variable) {
     }
 
     // 3. Handle all enclosing procedures
-    vector<Procedure *> modifyingProcedures =
-        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    if (!modifyingProcedures.empty()) {
-        for (Procedure *modifyingProcedure : modifyingProcedures) {
-            pkb->insertProcModifyingVar(modifyingProcedure, &variable);
-        }
-    }
+    //    vector<Procedure *> modifyingProcedures =
+    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
+    //    if (!modifyingProcedures.empty()) {
+    //        for (Procedure *modifyingProcedure : modifyingProcedures) {
+    //            pkb->insertProcModifyingVar(modifyingProcedure, &variable);
+    //        }
+    //    }
 }
 
 void DesignExtractor::extractConstantValue(ConstantValue constantValue) {
