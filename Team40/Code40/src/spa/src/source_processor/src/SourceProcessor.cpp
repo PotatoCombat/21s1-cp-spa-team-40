@@ -21,7 +21,7 @@ void SourceProcessor::processSource(string filename) {
     if (file.is_open()) {
         vector<Line> programLines = parser.parseFile(file);
         Program program = programParser.parseProgram(programLines);
-        designExtractor.extract(program);
+        designExtractor.extract(&program);
     } else {
         cout << "No such file";
     }

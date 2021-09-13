@@ -9,6 +9,7 @@ Statement PrintStatementParser::parsePrintStatement() {
         find(content.begin(), content.end(), "print");
     string var_name = *next(printItr);
     Statement stmt = Statement(index, StatementType::PRINT);
-    stmt.setVariable(Variable(var_name));
+    Variable variable(var_name);
+    stmt.setVariable(&variable);
     return stmt;
 }

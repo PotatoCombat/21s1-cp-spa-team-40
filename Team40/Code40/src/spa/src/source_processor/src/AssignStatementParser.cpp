@@ -11,7 +11,8 @@ Statement AssignStatementParser::parseAssignStatement() {
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
     Statement stmt = Statement(index, StatementType::ASSIGN);
-    stmt.setVariable(Variable(var_name));
+    Variable variable(var_name);
+    stmt.setVariable(&variable);
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
     stmt.setExpressionLst(exprLst);
@@ -25,10 +26,10 @@ void AssignStatementParser::parseExpression(vector<string> exprLst,
         string currString = exprLst[i];
         if (isInteger(currString)) {
             ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(constVal);
+            stmt.addExpressionConst(&constVal);
         } else if (isName(currString)) {
             Variable var(currString);
-            stmt.addExpressionVar(var);
+            stmt.addExpressionVar(&var);
         }
     }
 }

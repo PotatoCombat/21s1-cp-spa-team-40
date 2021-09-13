@@ -26,7 +26,7 @@ public:
             vector<string> currContent = programLines[i].getContent();
             if (isProc(currContent)) {
                 if (!currProc.getName().empty()) {
-                    program.addToProcLst(currProc);
+                    program.addToProcLst(&currProc);
                 }
                 ProcedureParser procParser(currContent);
                 currProc = procParser.parseProcedure();
@@ -34,10 +34,10 @@ public:
                        currContent[0] != "else") {
                 Statement stmt =
                     parseStatement(currContent, currIndex, programLines, i);
-                currProc.addToStmtLst(stmt);
+                currProc.addToStmtLst(&stmt);
             }
         }
-        program.addToProcLst(currProc);
+        program.addToProcLst(&currProc);
         return program;
     }
 

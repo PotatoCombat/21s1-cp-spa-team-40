@@ -37,9 +37,9 @@ void IfStatementParser::parseChildStatements(Statement &stmt) {
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {
-                stmt.addThenStmt(nestedStmt);
+                stmt.addThenStmt(&nestedStmt);
             } else if (terminator == 1) {
-                stmt.addElseStmt(nestedStmt);
+                stmt.addElseStmt(&nestedStmt);
             }
             this->programIndex = i;
             if (nestedStmt.getStatementType() == StatementType::IF) {
@@ -57,10 +57,10 @@ void IfStatementParser::parseExpression(vector<string> exprLst,
         string currString = exprLst[i];
         if (isInteger(currString)) {
             ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(constVal);
+            stmt.addExpressionConst(&constVal);
         } else if (isName(currString)) {
             Variable var(currString);
-            stmt.addExpressionVar(var);
+            stmt.addExpressionVar(&var);
         }
     }
 }
