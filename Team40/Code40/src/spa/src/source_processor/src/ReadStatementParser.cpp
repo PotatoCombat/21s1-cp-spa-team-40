@@ -9,6 +9,7 @@ Statement ReadStatementParser::parseReadStatement() {
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
     Statement stmt = Statement(index, StatementType::READ);
-    stmt.setVariable(Variable(var_name));
+    Variable var = Variable(var_name);
+    stmt.setVariable(&var);
     return stmt;
 }

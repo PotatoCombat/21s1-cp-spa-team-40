@@ -25,7 +25,7 @@ void FollowsExtractor::extractStatement(Statement *statement) {
     for (Statement *prev : ctx.getAllEntities()) {
         pkb->insertFollows(*prev, *statement);
     }
-    StatementType type = statement.getStatementType();
+    StatementType type = statement->getStatementType();
     if (type == StatementType::IF || type == StatementType::WHILE) {
         statementLists.push_back(statement->getThenStmtLst());
     }

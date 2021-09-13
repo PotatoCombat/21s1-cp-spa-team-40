@@ -30,7 +30,7 @@ void WhileStatementParser::parseChildStatements(Statement &stmt) {
             ProgramParser parser;
             Statement nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
-            stmt.addThenStmt(nestedStmt);
+            stmt.addThenStmt(&nestedStmt);
             this->programIndex = i;
             if (nestedStmt.getStatementType() == StatementType::IF) {
                 i++;
@@ -47,10 +47,10 @@ void WhileStatementParser::parseExpression(vector<string> exprLst,
         string currString = exprLst[i];
         if (isInteger(currString)) {
             ConstantValue constVal(stoi(currString));
-            stmt.addExpressionConst(constVal);
+            stmt.addExpressionConst(&constVal);
         } else if (isName(currString)) {
             Variable var(currString);
-            stmt.addExpressionVar(var);
+            stmt.addExpressionVar(&var);
         }
     }
 }
