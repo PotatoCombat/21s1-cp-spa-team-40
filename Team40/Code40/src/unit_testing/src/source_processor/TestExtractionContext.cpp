@@ -40,3 +40,43 @@ TEST_CASE("ExtractionContext: Correctly sets and unsets statements") {
     REQUIRE(ExtractionContext::getInstance().getUsingStatement().value() ==
             &callStatement);
 }
+
+TEST_CASE(
+    "ExtractionContext: Correctly builds dependency tree for Procedures") {
+    const ProcName proc1 = "PROC_1";
+    const ProcName proc2 = "PROC_2";
+    const ProcName proc3 = "PROC_3";
+    const ProcName proc4 = "PROC_4";
+    const ProcName proc5 = "PROC_5";
+
+    ExtractionContext::getInstance().addProcDependency(proc1, proc2);
+    ExtractionContext::getInstance().addProcDependency(proc1, proc5);
+    ExtractionContext::getInstance().addProcDependency(proc2, proc3);
+    ExtractionContext::getInstance().addProcDependency(proc2, proc4);
+    ExtractionContext::getInstance().addProcDependency(proc2, proc5);
+    ExtractionContext::getInstance().addProcDependency(proc4, proc5);
+
+    auto deps1 = ExtractionContext::getInstance().getProcDependencies(proc1);
+    REQUIRE(deps1.count(proc2));
+    REQUIRE(!deps1.count(proc3));
+    REQUIRE(!deps1.count(proc4));
+    REQUIRE(deps1.count(proc5));
+
+    auto deps2 = ExtractionContext::getInstance().getProcDependencies(proc2);
+    REQUIRE(!deps2.count(proc1));
+    REQUIRE(deps2.count(proc3));
+    REQUIRE(deps2.count(proc4));
+    REQUIRE(deps2.count(proc5));
+
+    auto deps3 = ExtractionContext::getInstance().getProcDependencies(proc3);
+    REQUIRE(deps3.empty());
+
+    auto deps4 = ExtractionContext::getInstance().getProcDependencies(proc4);
+    REQUIRE(!deps4.count(proc1));
+    REQUIRE(!deps4.count(proc2));
+    REQUIRE(!deps4.count(proc3));
+    REQUIRE(deps4.count(proc5));
+
+    auto deps5 = ExtractionContext::getInstance().getProcDependencies(proc5);
+    REQUIRE(deps5.empty());
+}
