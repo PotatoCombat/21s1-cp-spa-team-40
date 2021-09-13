@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "common/model/statement/CallStatement.h"
+#include "common/model/CallStatement.h"
 #include "source_processor/design_extractor/ExtractionContext.h"
 
 TEST_CASE("ExtractionContext: Creates correctly") {

@@ -7,7 +7,7 @@
 #include "pkb/Iterator.h"
 #include "pkb/PKB.h"
 
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 
 using namespace std;
 
