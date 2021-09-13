@@ -12,6 +12,9 @@ class ClauseTypeHelper {
 private:
     map<ClauseType, string> typeToStringMap;
     map<string, ClauseType> stringToTypeMap;
+
+    // only used to represent a wildcard/constant used in Clause 
+    // since it cannot be declared
     map<ClauseType, DesignEntityType> deTypeMap1;
     map<ClauseType, DesignEntityType> deTypeMap2;
 

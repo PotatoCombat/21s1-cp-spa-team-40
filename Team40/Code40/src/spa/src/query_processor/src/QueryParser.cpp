@@ -52,7 +52,7 @@ ReferenceType QueryParser::checkRefType(string val) {
     } else if (isNamedSynonym(val)) {
         return ReferenceType::CONSTANT;
     }
-    return ReferenceType::SYNONYM;
+    throw "error"; // undeclared synonym
 }
 
 bool QueryParser::isInteger(string val) {
