@@ -3,6 +3,7 @@
 #include "Iterator.h"
 #include "common/model/Abstractions.h"
 
+
 #include <map>
 #include <vector>
 
@@ -24,22 +25,17 @@ public:
     /// \return pointer, or NULL if the table does not contain \param index.
     virtual T *getEntity(Name name) {
         auto result = nameToEntityMap.find(name);
-        if (result == nameToEntityMap.end())
-        {
+        if (result == nameToEntityMap.end()) {
             return nullptr;
         }
         return result->second;
     }
 
     /// Returns an iterator for all the entity indices stored in the table.
-    virtual Iterator<Name> getNames() {
-        return Iterator<Name>(names);
-    }
+    virtual Iterator<Name> getNames() { return Iterator<Name>(names); }
 
     /// Returns the number of entities stored in the table.
-    virtual int getSize() {
-        return size;
-    }
+    virtual int getSize() { return size; }
 
 private:
     int size = 0;

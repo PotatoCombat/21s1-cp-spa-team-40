@@ -9,6 +9,6 @@ Statement CallStatementParser::parseCallStatement() {
         find(content.begin(), content.end(), "call");
     string proc_name = *next(callItr);
     Statement stmt = Statement(index, StatementType::CALL);
-    stmt.setProcedure(Procedure(proc_name));
+    stmt.setProcName(proc_name);
     return stmt;
 }

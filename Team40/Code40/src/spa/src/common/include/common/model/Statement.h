@@ -1,8 +1,9 @@
 #pragma once
 
+#include "common/model/Abstractions.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
-#include "common/model/Abstractions.h"
+
 
 #include <optional>
 #include <stdexcept>
