@@ -21,7 +21,7 @@ vector<Line> Parser::parseFile(fstream &file) {
         }
 
         if (currString.front() != "}" && currString.front() != "else" &&
-            !isProc(currString)) {
+            currString.front() != "procedure") {
             stmtNum++;
         }
 
@@ -58,6 +58,7 @@ vector<vector<string>> Parser::tokenizeFile(fstream &file) {
     }
     return programTokens;
 }
+
 tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString = {};
@@ -98,6 +99,7 @@ vector<string> Parser::parseLine(string input) {
             }
         }
     }
+    currString = cleanString(currString);
     if (!currString.empty()) {
         inputLine.push_back(currString);
     }
@@ -132,6 +134,7 @@ void Parser::parseAndAddKeyword(string input, int &i, string &currString,
 }
 
 void Parser::addString(string &input, vector<string> &inputVector) {
+    input = cleanString(input);
     if (!input.empty()) {
         inputVector.push_back(input);
     }
@@ -194,13 +197,3 @@ bool Parser::isRoundBracket(string input) {
 }
 
 bool Parser::isSemiColon(string input) { return input == ";"; }
-
-bool Parser::isInteger(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isdigit(c)); }) == input.end();
-}
-
-bool Parser::isName(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
-}

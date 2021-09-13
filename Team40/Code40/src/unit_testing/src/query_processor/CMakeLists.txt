@@ -13,4 +13,4 @@ target_sources(unit_testing PRIVATE ${srcs})
 add_executable(query_processor_testing ${catch_main} ${srcs})
 
 # Ensures that unit_testing runs with spa library.
-target_link_libraries(query_processor_testing spa)
+target_link_libraries(query_processor_testing query_processor)

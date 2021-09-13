@@ -7,4 +7,4 @@ target_sources(unit_testing PRIVATE ${srcs})
 add_executable(pkb_testing ${catch_main} ${srcs})
 
 # Ensures that unit_testing runs with spa library.
-target_link_libraries(pkb_testing spa)
+target_link_libraries(pkb_testing pkb)
