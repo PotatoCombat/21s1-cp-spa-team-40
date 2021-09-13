@@ -13,7 +13,7 @@ Statement WhileStatementParser::parseWhileStatement(int &programIndex) {
     WhileStatement stmt = WhileStatement(index);
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     vector<string> condLst(next(next(whileItr)), prev(endItr));
-    stmt.setCondLst(condLst);
+    stmt.setExpressionLst(condLst);
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
@@ -37,6 +37,20 @@ void WhileStatementParser::parseChildStatements(WhileStatement &stmt) {
             } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
                 i++;
             }
+        }
+    }
+}
+
+void WhileStatementParser::parseExpression(vector<string> exprLst,
+                                           Statement &stmt) {
+    for (int i = 0; i < exprLst.size(); i++) {
+        string currString = exprLst[i];
+        if (isInteger(currString)) {
+            ConstantValue constVal(stoi(currString));
+            stmt.addExpressionConst(constVal);
+        } else if (isName(currString)) {
+            Variable var(currString);
+            stmt.addExpressionVar(var);
         }
     }
 }

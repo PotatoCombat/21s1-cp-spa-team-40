@@ -13,7 +13,8 @@ Statement IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
     vector<string> condLst(next(next(ifItr)), prev(endItr));
-    stmt.setCondLst(condLst);
+    stmt.setExpressionLst(condLst);
+    parseExpression(condLst, stmt);
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
@@ -46,6 +47,20 @@ void IfStatementParser::parseChildStatements(IfStatement &stmt) {
             } else if (nestedStmt.getStatementType() == StatementType::WHILE) {
                 i++;
             }
+        }
+    }
+}
+
+void IfStatementParser::parseExpression(vector<string> exprLst,
+                                        Statement &stmt) {
+    for (int i = 0; i < exprLst.size(); i++) {
+        string currString = exprLst[i];
+        if (isInteger(currString)) {
+            ConstantValue constVal(stoi(currString));
+            stmt.addExpressionConst(constVal);
+        } else if (isName(currString)) {
+            Variable var(currString);
+            stmt.addExpressionVar(var);
         }
     }
 }

@@ -195,13 +195,3 @@ bool Parser::isRoundBracket(string input) {
 }
 
 bool Parser::isSemiColon(string input) { return input == ";"; }
-
-bool Parser::isInteger(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isdigit(c)); }) == input.end();
-}
-
-bool Parser::isName(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
-}

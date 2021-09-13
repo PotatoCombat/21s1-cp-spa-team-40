@@ -9,4 +9,5 @@ public:
                          vector<Line> programLines, int &programIndex);
     Statement parseWhileStatement(int &programIndex);
     void parseChildStatements(WhileStatement &stmt);
+    void parseExpression(vector<string> exprLst, Statement &statement);
 };

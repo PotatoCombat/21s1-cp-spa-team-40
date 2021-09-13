@@ -6,4 +6,5 @@ class AssignStatementParser : StatementParser {
 public:
     AssignStatementParser(vector<string> content, int index);
     Statement parseAssignStatement();
+    void parseExpression(vector<string> exprLst, Statement &statement);
 };
