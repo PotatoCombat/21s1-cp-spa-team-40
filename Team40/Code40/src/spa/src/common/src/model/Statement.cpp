@@ -11,7 +11,7 @@ int Statement::getIndex() { return index; }
 
 StatementType Statement::getStatementType() { return statementType; }
 
-Variable Statement::getVariable() {
+Variable* Statement::getVariable() {
     if (!variable.has_value()) {
         throw runtime_error("This statement does not use a variable.");
     }
@@ -32,15 +32,15 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-set<Variable> Statement::getExpressionVars() {
+set<Variable *> Statement::getExpressionVars() {
     return expressionVars;
 };
 
-set<ConstantValue> Statement::getExpressionConsts() {
+set<ConstantValue *> Statement::getExpressionConsts() {
     return expressionConsts;
 };
 
-vector<Statement> Statement::getThenStmtLst() {
+vector<Statement *> Statement::getThenStmtLst() {
     if (!thenStmtLst.has_value()) {
         throw runtime_error(
             "This statement does not use a THEN statement list.");
@@ -48,7 +48,7 @@ vector<Statement> Statement::getThenStmtLst() {
     return thenStmtLst.value();
 }
 
-vector<Statement> Statement::getElseStmtLst() {
+vector<Statement *> Statement::getElseStmtLst() {
     if (!elseStmtLst.has_value()) {
         throw runtime_error(
             "This statement does not use an ELSE statement list.");
@@ -56,7 +56,7 @@ vector<Statement> Statement::getElseStmtLst() {
     return elseStmtLst.value();
 }
 
-void Statement::setVariable(Variable variable) { this->variable = variable; }
+void Statement::setVariable(Variable *variable) { this->variable = variable; }
 
 void Statement::setProcName(ProcName procName) { this->procName = procName; }
 
@@ -64,15 +64,15 @@ void Statement::setExpressionLst(vector<string> expressionLst) {
     this->expressionLst = expressionLst;
 }
 
-void Statement::addExpressionVar(Variable expressionVar) {
+void Statement::addExpressionVar(Variable *expressionVar) {
     expressionVars.insert(expressionVar);
 }
 
-void Statement::addExpressionConst(ConstantValue expressionConst) {
+void Statement::addExpressionConst(ConstantValue *expressionConst) {
     expressionConsts.insert(expressionConst);
 }
 
-void Statement::addThenStmt(Statement stmt) {
+void Statement::addThenStmt(Statement *stmt) {
     if (!this->thenStmtLst.has_value()) {
         this->thenStmtLst = {stmt};
         return;
@@ -80,7 +80,7 @@ void Statement::addThenStmt(Statement stmt) {
     this->thenStmtLst->push_back(stmt);
 }
 
-void Statement::addElseStmt(Statement stmt) {
+void Statement::addElseStmt(Statement *stmt) {
     if (!this->elseStmtLst.has_value()) {
         this->elseStmtLst = {stmt};
         return;

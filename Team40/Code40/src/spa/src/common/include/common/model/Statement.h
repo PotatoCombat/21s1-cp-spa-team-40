@@ -19,37 +19,37 @@ public:
     int getIndex();
     StatementType getStatementType();
 
-    Variable getVariable();
+    Variable* getVariable();
     ProcName getProcName();
 
     vector<string> getExpressionLst();
-    set<Variable> getExpressionVars();
-    set<ConstantValue> getExpressionConsts();
+    set<Variable *> getExpressionVars();
+    set<ConstantValue *> getExpressionConsts();
 
-    vector<Statement> getThenStmtLst();
-    vector<Statement> getElseStmtLst();
+    vector<Statement *> getThenStmtLst();
+    vector<Statement *> getElseStmtLst();
 
-    void setVariable(Variable variable);
+    void setVariable(Variable *variable);
     void setProcName(ProcName procName);
 
     void setExpressionLst(vector<string> expressionLst);
-    void addExpressionVar(Variable expressionVar);
-    void addExpressionConst(ConstantValue expressionConst);
+    void addExpressionVar(Variable *expressionVar);
+    void addExpressionConst(ConstantValue *expressionConst);
 
-    void addThenStmt(Statement stmt);
-    void addElseStmt(Statement stmt);
+    void addThenStmt(Statement *stmt);
+    void addElseStmt(Statement *stmt);
 
 private:
     int index;
     StatementType statementType;
 
-    optional<Variable> variable;
+    optional<Variable *> variable;
     optional<ProcName> procName;
 
     optional<vector<string>> expressionLst;
-    set<Variable> expressionVars;
-    set<ConstantValue> expressionConsts;
+    set<Variable *> expressionVars;
+    set<ConstantValue *> expressionConsts;
 
-    optional<vector<Statement>> thenStmtLst;
-    optional<vector<Statement>> elseStmtLst;
+    optional<vector<Statement *>> thenStmtLst;
+    optional<vector<Statement *>> elseStmtLst;
 };
