@@ -16,7 +16,7 @@ public:
         Statement s(1, StatementType::ASSIGN);
 
         PKB pkb;
-        pkb.insertStmt(&s);
+        pkb.insertStmt(s);
 
         return pkb;
     }
