@@ -1,0 +1,458 @@
+1 - variables no clause
+variable     v;
+Select v
+x, y, z, i
+5000
+2 - constants no clause
+constant  c;
+Select c
+9, 10, 5, 3, 4, 1, 6
+5000
+3 - assign stmts no clause
+assign     a;
+Select a
+2, 3, 5, 6, 7, 12
+5000
+4 - while stmts no clause
+while w;
+Select w
+4, 11
+5000
+5 - if stmts no clause
+if ifs;
+Select ifs
+8, 14
+5000
+6 - procedures no clause
+procedure p;
+Select p
+Examp1le
+5000
+7 - statements no clause
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+8 - stmts that follow a constant
+stmt s;
+Select s such that Follows ( 5      , s)
+6
+5000
+9 - stmts that follow a while loop
+stmt s;
+Select s such that Follows ( 4      ,   s)
+7
+5000
+10 - stmts that follow an if statement
+stmt s;
+Select s such that Follows ( 8      ,   s)
+14
+5000
+11 - stmts that follow the end of an if statement
+stmt s;
+Select s such that Follows ( 16      ,   s)
+
+5000
+12 - stmts that follow the end of a while statement
+stmt s;
+Select s such that Follows  ( 6      ,   s)
+
+5000
+13 - stmts that come before a constant
+stmt s;
+Select s such that Follows ( s      , 3)
+2
+5000
+14 - stmts that come before in a while loop
+stmt s;
+Select s such that Follows ( s      ,   6)
+5
+5000
+15 - stmts that come before in an if statement
+stmt s;
+Select s such that Follows ( s      ,   16)
+
+5000
+16 - stmts that come before the beginning of an if statement
+stmt s;
+Select s such that Follows ( s      ,   9)
+
+5000
+17 - stmts that come before the beginning of a while statement
+stmt s;
+Select s such that Follows  ( s      ,   5)
+
+5000
+18 - synonym is not in follows clause which is true and made of constants
+stmt s;
+Select s such that Follows (5,6)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+19 - synonym is not in follows clause which is true and made of variables
+stmt s; if ifs;
+Select s such that Follows (7,ifs)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+20 - synonym is not in follows clause which is false and made of constants
+stmt s;
+Select s such that Follows (6,5)
+
+5000
+21 - synonym is not in follows clause which is true and made of variables
+if ifs; while w;
+Select ifs such that Follows (3, w)
+8, 14
+5000
+22 - synonym is not in follows clause which is false and made of variables
+if ifs; while w;
+Select ifs such that Follows (7, w)
+
+5000
+23 - follows with two wildcards
+if ifs;
+Select ifs such that Follows (_, _)
+8, 14
+5000
+24 - follows with one wildcard
+if ifs; while w;
+Select ifs such that Follows (_, w)
+8, 14
+5000
+24 - follows with one wildcard
+if ifs;
+Select ifs such that Follows (_, 5)
+
+5000
+25 - follows with one wildcard
+stmt s;
+Select s such that Follows (_, s)
+2, 3, 4, 6, 7, 8, 10, 13, 14
+5000
+26 - follows with one wildcard
+if ifs; while w;
+Select ifs such that Follows (w, _)
+8, 14
+5000
+27 - follows with one wildcard
+if ifs;
+Select ifs such that Follows (6, _)
+
+5000
+28 - follows with one wildcard
+assign a;
+Select a such that Follows (a, _)
+2, 3, 5, 7, 12
+5000
+29 - stmts that follow* a constant
+stmt s;
+Select s such that Follows* ( 1      , s)
+2, 3, 4, 7, 8, 14
+5000
+30 - stmts that follow* in a while loop
+stmt s;
+Select s such that Follows* ( 5      ,   s)
+6
+5000
+31 - stmts that follow* in an if statement
+stmt s;
+Select s such that Follows* ( 9      ,   s)
+10
+5000
+32 - stmts that come before a constant
+stmt s;
+Select s such that Follows* ( s      , 3)
+1, 2
+5000
+33 - stmts that come before in a while loop
+stmt s;
+Select s such that Follows* ( s      ,   6)
+5
+5000
+34 - stmts that come before in an if statement
+stmt s;
+Select s such that Follows* ( s      ,   16)
+
+5000
+35 - synonym is not in follows* clause which is true and made of constants
+assign a;
+Select a such that Follows (5,6)
+2, 3, 5, 6, 7, 12
+5000
+36 - stmts that are the parent of a constant
+stmt s;
+Select s such that Parent ( s      , 5)
+4
+5000
+37 - parent is an if stmt (then clause)
+stmt s;
+Select s such that Parent (s, 10)
+8
+5000
+38 - parent is an if stmt (else clause)
+stmt s;
+Select s such that Parent (s, 16)
+14
+5000
+39 - nested parents
+stmt s;
+Select s such that Parent* ( s      ,   12)
+8, 11
+5000
+40 - stmts that are the children of a constant
+stmt s;
+Select s such that Parent ( 3      , s)
+
+5000
+41 - stmts that are the children of a constant
+stmt s;
+Select s such that Parent ( 4      , s)
+5, 6
+5000
+42 - stmts that are the children of a constant
+stmt s;
+Select s such that Parent* ( 8      , s)
+9, 10, 11, 12, 13
+5000
+43 - stmts that are the children of a constant
+stmt s;
+Select s such that Parent ( 8      , s)
+9, 10, 11
+5000
+44 - synonym is not in parent clause which is true and made of constants
+stmt s;
+Select s such that Parent (4,6)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+45 - synonym is not in parent clause which is true and made of variables
+stmt s; if ifs;
+Select s such that Parent (9, ifs)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+46 - synonym is not in parent clause which is false and made of constants
+stmt s;
+Select s such that Parent (6,5)
+
+5000
+47 - synonym is not in parent clause which is true and made of variables
+if ifs; while w;
+Select ifs such that Parent (8, w)
+8, 14
+5000
+48 - synonym is not in parent clause which is false and made of variables
+if ifs; while w;
+Select ifs such that Parent (7, w)
+
+5000
+49 - parent with two wildcards
+if ifs;
+Select ifs such that Parent (_, _)
+8, 14
+5000
+50 - Parent with one wildcard
+if ifs; while w;
+Select ifs such that Parent (_, w)
+8, 14
+5000
+51 - Parent with one wildcard
+if ifs;
+Select ifs such that Parent (_, ifs)
+
+5000
+52 - Parent where if is parent of a while clause
+if ifs; while w;
+Select ifs such that Parent (ifs, w)
+8
+5000
+53 - Parent where if is parent of a while clause
+if ifs; while w;
+Select w such that Parent (ifs, w)
+11
+5000
+54 - parent with one wildcard
+if ifs;
+Select ifs such that Parent (_, 5)
+8, 14
+5000
+55 - parent with one wildcard
+stmt s;
+Select s such that Parent (_, s)
+5, 6, 9, 10, 11, 12, 13, 15, 16
+5000
+56 - parent with one wildcard
+if ifs; while w;
+Select ifs such that Follows (w, _)
+8, 14
+5000
+57 - parent with one wildcard
+if ifs;
+Select ifs such that Parent (6, _)
+
+5000
+58 - Parent with one wildcard
+assign a;
+Select a such that Parent (a, _)
+
+5000
+58 - Parent with one wildcard
+if a;
+Select a such that Parent (a, _)
+8, 14
+5000
+59 - Parent with one wildcard
+while a;
+Select a such that Parent (a, _)
+4, 11
+5000
+60 - stmts that have a parent*
+stmt s;
+Select s such that Parent* ( 4      , s)
+5, 6
+5000
+61 - stmts that have a parent*
+stmt s;
+Select s such that Parent* ( 8      , s)
+9, 10, 11, 12, 13
+5000
+62 - assignment statement uses a variable
+assign a;
+Select a such that Uses (a, "x")
+3, 7
+5000
+62 - assignment statement uses any variable
+assign a;
+Select a such that Uses (a, _)
+2, 3, 5, 6, 7, 12
+5000
+63 - print statement uses a variable
+print p;
+Select p such that Uses (p, "z")
+13, 15
+5000
+64 - print statement uses any variable
+print p;
+Select p such that Uses (p, _)
+9, 10, 13, 15, 16
+5000
+65 - if statement uses a variable
+if ifs;
+Select ifs such that Uses (if, "z")
+8, 14
+5000
+66 - while statement uses a variable
+while w;
+Select w such that Uses (w, "z")
+4, 11
+5000
+67 - variables used by while statement
+variable v; while w;
+Select v such that Uses (w, v)
+i, z
+5000
+68 - variables used by while statement
+variable v; if ifs;
+Select v such that Uses (ifs, v)
+z, x, y
+5000
+69 - procedure uses a variable
+procedure p;
+Select p such that Uses (p, "z")
+Examp1le
+5000
+70 - all variables in a procedure
+procedure p; variable v;
+Select v such that Uses (p, v)
+x, y, z, i
+5000
+71 - all statements that use a particular variable
+stmt s;
+Select s such that Uses (s, "z")
+4, 5, 7, 8, 11, 12, 13, 14, 15
+5000
+72 - assignment statement modifies a variable
+assign a;
+Select a such that Modifies (a, "z")
+3, 5, 12
+5000
+73 - assignment statement modifies any variable
+assign a;
+Select a such that Modifies (a, _)
+2, 3, 5, 6, 7, 12
+5000
+74 - read statement modifies a variable
+read r;
+Select r such that Modifies (r, "z")
+
+5000
+75 - read statement modifies a variable
+read r;
+Select r such that Modifies (r, "x")
+1
+5000
+76 - read statement modifies any variable
+read r;
+Select r such that Modifies (r, _)
+1
+5000
+77 - if statement modifies a variable
+if ifs;
+Select ifs such that Modifies (if, "z")
+8
+5000
+78 - while statement modifies a variable
+while w;
+Select w such that Modifies (w, "z")
+4, 11
+5000
+79 - variables modified by while statement
+variable v; while w;
+Select v such that Modifies (w, v)
+z, i
+5000
+80 - variables modified by if statement
+variable v; if ifs;
+Select v such that Modifies (ifs, v)
+z
+5000
+81 - procedure modifies a variable
+procedure p;
+Select p such that Modifies (p, "z")
+Examp1le
+5000
+82 - all variables modified in a procedure
+procedure p; variable v;
+Select v such that Modifies (p, v)
+x, y, z, i
+5000
+83 - one pattern where both are wild cards
+assign a;
+Select a such that pattern a (_, _)
+2, 3, 5, 6, 7, 12
+84 - pattern with first as wild card, second as variable with space
+assign a;
+Select a such that pattern a (_, " x ")
+3, 7
+85 - pattern with first as wild card, second as constant
+assign a;
+Select a such that pattern a (_, " 5")
+7
+86 - pattern with second as wild card, first as variable
+assign a;
+Select a such that pattern a ("z", _)
+3, 12
+87 - true pattern with synonym not in pattern
+assign a; stmt s;
+Select s such that pattern a ("z", "x")
+2, 3, 5, 6, 7, 12
+88 - false pattern with synonym not in pattern
+89 - pattern with one variable and one constant
+90 - pattern with two variables
+TO ADD: ONE PATTERN ONE SUCH THAT CLAUSE
+
+
+
+
+
+
+
+
+
