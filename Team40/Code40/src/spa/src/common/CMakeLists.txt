@@ -11,5 +11,3 @@ add_library(common ${srcs})
 
 # this makes the headers accessible for other projects which uses spa lib
 target_include_directories(common PUBLIC include)
-
-target_link_libraries(common pkb)
