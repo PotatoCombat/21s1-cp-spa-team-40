@@ -1,4 +1,4 @@
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 
 Statement::Statement(int index, StatementType statementType) {
     this->index = index;
@@ -62,10 +62,12 @@ vector<Statement> Statement::getElseStmtLst() {
     return elseStmtLst.value();
 }
 
-void Statement::setVariable(Variable variable) { this->variable = variable; }
+void Statement::setVariable(Variable variable) {
+    this->variable = variable;
+}
 
 void Statement::setProcedure(Procedure procedure) {
-    this->procedure = procedure;
+   this->procedure = procedure;
 }
 
 void Statement::setExpressionLst(vector<string> expressionLst) {

@@ -5,11 +5,6 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-EntityContext<Procedure> &ExtractionContext::getProcedureContext() {
-    static EntityContext<Procedure> procedureContext;
-    return procedureContext;
-}
-
 EntityContext<struct Statement> &ExtractionContext::getFollowsContext() {
     static EntityContext<Statement> followsContext;
     return followsContext;
@@ -41,6 +36,27 @@ void ExtractionContext::unsetModifyingStatement(Statement *statement) {
     modifyingStatement = nullopt;
 }
 
+optional<Procedure *> ExtractionContext::getCurrentProcedure() {
+    return currentProcedure;
+}
+
+void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
+    if (currentProcedure.has_value()) {
+        throw runtime_error("Trying to overwrite another procedure.");
+    }
+    currentProcedure = procedure;
+}
+
+void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (currentProcedure.value() != procedure) {
+        throw runtime_error("Trying to unset another procedure.");
+    }
+    currentProcedure = nullopt;
+}
+
 optional<Statement *> ExtractionContext::getUsingStatement() {
     return usingStatement;
 }
@@ -60,4 +76,14 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
         throw runtime_error("Trying to unset another using statement.");
     }
     usingStatement = nullopt;
+}
+
+void ExtractionContext::addProcDependency(ProcName from, ProcName to) {
+    // Note: We are guaranteed that there will be no circular dependencies in
+    // SIMPLE (i.e. recursion)
+    procDependencyTree[from].insert(to);
+}
+
+unordered_set<ProcName> ExtractionContext::getProcDependencies(ProcName from) {
+    return procDependencyTree[from];
 }

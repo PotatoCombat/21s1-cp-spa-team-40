@@ -1,7 +1,9 @@
 #pragma once
-#include "common/model/statement/Statement.h"
+
+#include "common/model/Statement.h"
 #include <string>
 #include <vector>
+
 using namespace std;
 
 class Procedure {

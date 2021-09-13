@@ -31,49 +31,47 @@ public:
     void extractBreadthFirst(Program program);
 
     // Procedure
-    void extractProcedure(Procedure *program);
+    void extractProcedure(Procedure program);
 
     // Statement
-    StmtIndex extractStatement(Statement *statement);
-    StmtIndex extractAssignStatement(AssignStatement *assignStatement);
-    StmtIndex extractCallStatement(CallStatement *callStatement);
-    StmtIndex extractIfStatement(IfStatement *ifStatement);
-    StmtIndex extractPrintStatement(PrintStatement *printStatement);
-    StmtIndex extractReadStatement(ReadStatement *readStatement);
-    StmtIndex extractWhileStatement(WhileStatement *whileStatement);
+    StmtIndex extractStatement(Statement statement);
+    StmtIndex extractAssignStatement(Statement assignStatement);
+    StmtIndex extractCallStatement(Statement callStatement);
+    StmtIndex extractIfStatement(Statement ifStatement);
+    StmtIndex extractPrintStatement(Statement printStatement);
+    StmtIndex extractReadStatement(Statement readStatement);
+    StmtIndex extractWhileStatement(Statement whileStatement);
 
     // Condition
-    void extractCondition(Condition *condition);
-    void extractSingleCondition(SingleCondition *singleCondition);
-    void extractNotCondition(NotCondition *notCondition);
-    void extractBinaryCondition(Condition *binaryCondition);
+    void extractCondition(Condition condition);
+    void extractSingleCondition(Condition singleCondition);
+    void extractNotCondition(Condition notCondition);
+    void extractBinaryCondition(Condition binaryCondition);
 
     // Relation
-    void extractRelation(Relation *relation);
+    void extractRelation(Relation relation);
 
     // Expression
-    void extractExpression(Expression *expression);
-    void
-    extractSingleTermExpression(SingleTermExpression *singleTermExpression);
-    void extractSubtractTermsExpression(
-        SubtractTermsExpression *subtractTermsExpression);
-    void extractSumTermsExpression(SumTermsExpression *sumTermsExpression);
+    void extractExpression(Expression expression);
+    void extractSingleTermExpression(Expression singleTermExpression);
+    void extractSubtractTermsExpression(Expression subtractTermsExpression);
+    void extractSumTermsExpression(Expression sumTermsExpression);
 
     // Term
-    void extractTerm(Term *term);
-    void extractSingleFactorTerm(SingleFactorTerm *singleFactorTerm);
-    void extractMultiFactorTerm(Term *multiFactorTerm);
+    void extractTerm(Term term);
+    void extractSingleFactorTerm(Term singleFactorTerm);
+    void extractMultiFactorTerm(Term multiFactorTerm);
 
     // Factor
-    void extractFactor(Factor *factor);
+    void extractFactor(Factor factor);
 
     // Variable
-    void extractVariable(Variable *variable);
-    void extractModifiesRelationship(Variable *variable);
-    void extractUsesRelationship(Variable *variable);
+    void extractVariable(Variable variable);
+    void extractModifiesRelationship(Variable variable);
+    void extractUsesRelationship(Variable variable);
 
     // ConstantValue
-    void extractConstantValue(ConstantValue *constantValue);
+    void extractConstantValue(ConstantValue constantValue);
 
 private:
     PKB *pkb;

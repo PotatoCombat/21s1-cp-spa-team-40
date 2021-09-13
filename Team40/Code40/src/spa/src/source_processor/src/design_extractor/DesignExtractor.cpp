@@ -11,7 +11,7 @@ void DesignExtractor::extract(Program program) {
 
 void DesignExtractor::extractDepthFirst(Program program) {
     for (Procedure proc : program.getProcLst()) {
-        extractProcedure(&proc);
+        extractProcedure(proc);
     }
 }
 
@@ -20,40 +20,35 @@ void DesignExtractor::extractBreadthFirst(Program program) {
     extractor.extract(std::move(program));
 }
 
-void DesignExtractor::extractProcedure(Procedure *procedure) {
-    ExtractionContext::getInstance().getProcedureContext().push(procedure);
-    pkb->insertProc(procedure);
-    for (Statement *statement : procedure->getStmtLst()) {
+void DesignExtractor::extractProcedure(Procedure procedure) {
+    ExtractionContext::getInstance().setCurrentProcedure(&procedure);
+    pkb->insertProc(&procedure);
+    for (Statement statement : procedure.getStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getProcedureContext().pop(procedure);
+    ExtractionContext::getInstance().unsetCurrentProcedure(&procedure);
 }
 
-StmtIndex DesignExtractor::extractStatement(Statement *statement) {
+StmtIndex DesignExtractor::extractStatement(Statement statement) {
     StmtIndex stmtIndex;
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
-        stmtIndex =
-            extractAssignStatement(dynamic_cast<AssignStatement *>(statement));
+        stmtIndex = extractAssignStatement(statement);
         break;
     case StatementType::CALL:
-        stmtIndex =
-            extractCallStatement(dynamic_cast<CallStatement *>(statement));
+        stmtIndex = extractCallStatement(statement);
         break;
     case StatementType::IF:
-        stmtIndex = extractIfStatement(dynamic_cast<IfStatement *>(statement));
+        stmtIndex = extractIfStatement(statement);
         break;
     case StatementType::PRINT:
-        stmtIndex =
-            extractPrintStatement(dynamic_cast<PrintStatement *>(statement));
+        stmtIndex = extractPrintStatement(statement);
         break;
     case StatementType::READ:
-        stmtIndex =
-            extractReadStatement(dynamic_cast<ReadStatement *>(statement));
+        stmtIndex = extractReadStatement(statement);
         break;
     case StatementType::WHILE:
-        stmtIndex =
-            extractWhileStatement(dynamic_cast<WhileStatement *>(statement));
+        stmtIndex = extractWhileStatement(statement);
         break;
     default:
         throw runtime_error("Invalid StatementType!");
@@ -61,161 +56,164 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     return stmtIndex;
 }
 
-StmtIndex
-DesignExtractor::extractAssignStatement(AssignStatement *assignStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
+StmtIndex DesignExtractor::extractAssignStatement(Statement assignStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(&assignStatement);
 
     // Handle LHS
-    ExtractionContext::getInstance().setModifyingStatement(assignStatement);
-    extractVariable(assignStatement->getVariable());
-    extractModifiesRelationship(assignStatement->getVariable());
-    ExtractionContext::getInstance().unsetModifyingStatement(assignStatement);
+    ExtractionContext::getInstance().setModifyingStatement(&assignStatement);
+    extractVariable(assignStatement.getVariable());
+    extractModifiesRelationship(assignStatement.getVariable());
+    ExtractionContext::getInstance().unsetModifyingStatement(&assignStatement);
 
     // Handle RHS
-    ExtractionContext::getInstance().setUsingStatement(assignStatement);
-    extractExpression(assignStatement->getExpression());
-    ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
+    ExtractionContext::getInstance().setUsingStatement(&assignStatement);
+    extractExpression(assignStatement.getExpression());
+    ExtractionContext::getInstance().unsetUsingStatement(&assignStatement);
 
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractCallStatement(CallStatement *callStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
+StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(&callStatement);
 
-    Procedure procedure = callStatement->getProcedure();
+    // TODO: Get actual proc
+    ProcName procName = callStatement.getProcName();
     /// At this point, we segue into extracting the called Procedure
     /// so that Procedures are guaranteed to be extracted before their
     /// corresponding Call statements to ensure transitivity is handled
     /// properly.
     /// NOTE: This will eventually bottom out since we are guaranteed
     /// there are no recursive calls in SIMPLE.
-    extractProcedure(&procedure);
-
-    set<VarName> modifiedVarNames =
-        pkb->getVarsModifiedByProc(procedure.getName());
-    if (!modifiedVarNames.empty()) {
-        for (VarName modifiedVarName : modifiedVarNames) {
-            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
-            extractModifiesRelationship(modifiedVar);
-        }
+    /// TODO:
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
     }
+    ExtractionContext::getInstance().addProcDependency(
+        procName, currentProcedure.value()->getName());
 
-    set<VarName> usedVarNames = pkb->getVarsUsedByProc(procedure.getName());
-    if (!usedVarNames.empty()) {
-        for (VarName usedVarName : usedVarNames) {
-            Variable *usedVar = pkb->getVarByName(usedVarName);
-            extractUsesRelationship(usedVar);
-        }
-    }
-
+    //    set<VarName> modifiedVarNames =
+    //        pkb->getVarsModifiedByProc(procedure.getName());
+    //    if (!modifiedVarNames.empty()) {
+    //        for (VarName modifiedVarName : modifiedVarNames) {
+    //            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
+    //            extractModifiesRelationship(*modifiedVar);
+    //        }
+    //    }
+    //
+    //    set<VarName> usedVarNames =
+    //    pkb->getVarsUsedByProc(procedure.getName()); if
+    //    (!usedVarNames.empty()) {
+    //        for (VarName usedVarName : usedVarNames) {
+    //            Variable *usedVar = pkb->getVarByName(usedVarName);
+    //            extractUsesRelationship(*usedVar);
+    //        }
+    //    }
+    //
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractIfStatement(IfStatement *ifStatement) {
+StmtIndex DesignExtractor::extractIfStatement(Statement ifStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(&ifStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().setUsingStatement(ifStatement);
-    extractCondition(ifStatement->getCondition());
-    ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
+    ExtractionContext::getInstance().setUsingStatement(&ifStatement);
+    extractCondition(ifStatement.getCondition());
+    ExtractionContext::getInstance().unsetUsingStatement(&ifStatement);
 
-    ExtractionContext::getInstance().getParentContext().push(ifStatement);
+    ExtractionContext::getInstance().getParentContext().push(&ifStatement);
     // 2. Handle THEN statements
-    for (Statement *statement : ifStatement->getThenStmtLst()) {
+    for (Statement statement : ifStatement.getThenStmtLst()) {
         extractStatement(statement);
     }
 
     // 3. Handle ELSE statements
-    for (Statement *statement : ifStatement->getElseStmtLst()) {
+    for (Statement statement : ifStatement.getElseStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
+    ExtractionContext::getInstance().getParentContext().pop(&ifStatement);
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractReadStatement(ReadStatement *readStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
-    ExtractionContext::getInstance().setModifyingStatement(readStatement);
-    extractVariable(readStatement->getVariable());
-    ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
+StmtIndex DesignExtractor::extractReadStatement(Statement readStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(&readStatement);
+    ExtractionContext::getInstance().setModifyingStatement(&readStatement);
+    extractVariable(readStatement.getVariable());
+    ExtractionContext::getInstance().unsetModifyingStatement(&readStatement);
     return stmtIndex;
 }
 
-StmtIndex
-DesignExtractor::extractPrintStatement(PrintStatement *printStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
-    ExtractionContext::getInstance().unsetUsingStatement(printStatement);
-    extractVariable(printStatement->getVariable());
-    ExtractionContext::getInstance().unsetUsingStatement(printStatement);
+StmtIndex DesignExtractor::extractPrintStatement(Statement printStatement) {
+    StmtIndex stmtIndex = pkb->insertStmt(&printStatement);
+    ExtractionContext::getInstance().setUsingStatement(&printStatement);
+    extractVariable(printStatement.getVariable());
+    ExtractionContext::getInstance().unsetUsingStatement(&printStatement);
     return stmtIndex;
 }
 
-StmtIndex
-DesignExtractor::extractWhileStatement(WhileStatement *whileStatement) {
+StmtIndex DesignExtractor::extractWhileStatement(Statement whileStatement) {
     // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
+    StmtIndex stmtIndex = pkb->insertStmt(&whileStatement);
 
     // 1. Handle condition
-    ExtractionContext::getInstance().setUsingStatement(whileStatement);
-    extractCondition(whileStatement->getCondition());
-    ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
+    ExtractionContext::getInstance().setUsingStatement(&whileStatement);
+    extractCondition(whileStatement.getCondition());
+    ExtractionContext::getInstance().unsetUsingStatement(&whileStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(whileStatement);
-    for (Statement *statement : whileStatement->getThenStmtLst()) {
+    ExtractionContext::getInstance().getParentContext().push(&whileStatement);
+    for (Statement statement : whileStatement.getThenStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
+    ExtractionContext::getInstance().getParentContext().pop(&whileStatement);
 
     return stmtIndex;
 }
 
-void DesignExtractor::extractCondition(Condition *condition) {
+void DesignExtractor::extractCondition(Condition condition) {
     switch (condition->getConditionType()) {
     case ConditionType::SINGLE:
-        extractSingleCondition(dynamic_cast<SingleCondition *>(condition));
+        extractSingleCondition(condition);
     case ConditionType::AND:
     case ConditionType::OR:
         extractBinaryCondition(condition);
     case ConditionType::NOT:
-        extractNotCondition(dynamic_cast<NotCondition *>(condition));
+        extractNotCondition(condition);
     default:
         throw runtime_error("Invalid ConditionType.");
     }
 }
 
-void DesignExtractor::extractSingleCondition(SingleCondition *singleCondition) {
-    extractRelation(singleCondition->getRelation());
+void DesignExtractor::extractSingleCondition(Condition singleCondition) {
+    extractRelation(singleCondition.getRelation());
 }
 
-void DesignExtractor::extractNotCondition(NotCondition *notCondition) {
-    extractCondition(notCondition->getPrimaryCondition());
+void DesignExtractor::extractNotCondition(Condition notCondition) {
+    extractCondition(notCondition.getPrimaryCondition());
 }
 
-void DesignExtractor::extractBinaryCondition(Condition *binaryCondition) {
-    extractCondition(binaryCondition->getPrimaryCondition());
-    extractCondition(binaryCondition->getSecondaryCondition());
+void DesignExtractor::extractBinaryCondition(Condition binaryCondition) {
+    extractCondition(binaryCondition.getPrimaryCondition());
+    extractCondition(binaryCondition.getSecondaryCondition());
 }
 
-void DesignExtractor::extractRelation(Relation *relation) {
-    extractFactor(relation->getLeftFactor());
-    extractFactor(relation->getRightFactor());
+void DesignExtractor::extractRelation(Relation relation) {
+    extractFactor(relation.getLeftFactor());
+    extractFactor(relation.getRightFactor());
 }
 
-void DesignExtractor::extractExpression(Expression *expression) {
-    switch (expression->getExpressionType()) {
+void DesignExtractor::extractExpression(Expression expression) {
+    switch (expression.getExpressionType()) {
     case ExpressionType::SINGLE_TERM:
-        extractSingleTermExpression(
-            dynamic_cast<SingleTermExpression *>(expression));
+        extractSingleTermExpression(expression);
         break;
     case ExpressionType::SUBTRACT_TERMS:
-        extractSubtractTermsExpression(
-            dynamic_cast<SubtractTermsExpression *>(expression));
+        extractSubtractTermsExpression(expression);
         break;
     case ExpressionType::SUM_TERMS:
-        extractSumTermsExpression(
-            dynamic_cast<SumTermsExpression *>(expression));
+        extractSumTermsExpression(expression);
         break;
     default:
         throw runtime_error("Invalid ExpressionType.");
@@ -223,26 +221,25 @@ void DesignExtractor::extractExpression(Expression *expression) {
 }
 
 void DesignExtractor::extractSingleTermExpression(
-    SingleTermExpression *singleTermExpression) {
-    extractTerm(singleTermExpression->getTerm());
+    Expression singleTermExpression) {
+    extractTerm(singleTermExpression.getTerm());
 }
 
 void DesignExtractor::extractSubtractTermsExpression(
-    SubtractTermsExpression *subtractTermsExpression) {
-    extractExpression(subtractTermsExpression->getExpression());
-    extractTerm(subtractTermsExpression->getTerm());
+    Expression subtractTermsExpression) {
+    extractExpression(subtractTermsExpression.getExpression());
+    extractTerm(subtractTermsExpression.getTerm());
 }
 
-void DesignExtractor::extractSumTermsExpression(
-    SumTermsExpression *sumTermsExpression) {
-    extractExpression(sumTermsExpression->getExpression());
-    extractTerm(sumTermsExpression->getTerm());
+void DesignExtractor::extractSumTermsExpression(Expression sumTermsExpression) {
+    extractExpression(sumTermsExpression.getExpression());
+    extractTerm(sumTermsExpression.getTerm());
 }
 
-void DesignExtractor::extractTerm(Term *term) {
-    switch (term->getTermType()) {
+void DesignExtractor::extractTerm(Term term) {
+    switch (term.getTermType()) {
     case TermType::SINGLE_FACTOR:
-        extractSingleFactorTerm(dynamic_cast<SingleFactorTerm *>(term));
+        extractSingleFactorTerm(term);
     case TermType::MULTIPLY_TERM_BY_FACTOR:
     case TermType::DIVIDE_TERM_BY_FACTOR:
     case TermType::MODULO_TERM_BY_FACTOR:
@@ -252,36 +249,35 @@ void DesignExtractor::extractTerm(Term *term) {
     }
 }
 
-void DesignExtractor::extractSingleFactorTerm(
-    SingleFactorTerm *singleFactorTerm) {
-    extractFactor(singleFactorTerm->getFactor());
+void DesignExtractor::extractSingleFactorTerm(Term singleFactorTerm) {
+    extractFactor(singleFactorTerm.getFactor());
 }
 
-void DesignExtractor::extractMultiFactorTerm(Term *multiFactorTerm) {
-    extractFactor(multiFactorTerm->getFactor());
-    extractTerm(multiFactorTerm->getTerm());
+void DesignExtractor::extractMultiFactorTerm(Term multiFactorTerm) {
+    extractFactor(multiFactorTerm.getFactor());
+    extractTerm(multiFactorTerm.getTerm());
 }
 
-void DesignExtractor::extractFactor(Factor *factor) {
-    switch (factor->getFactorType()) {
+void DesignExtractor::extractFactor(Factor factor) {
+    switch (factor.getFactorType()) {
     case FactorType::EXPRESSION:
-        extractExpression(dynamic_cast<Expression *>(factor));
+        extractExpression(factor);
     case FactorType::VARIABLE:
-        extractVariable(dynamic_cast<Variable *>(factor));
+        extractVariable(factor);
     case FactorType::CONSTANT:
-        extractConstantValue(dynamic_cast<ConstantValue *>(factor));
+        extractConstantValue(factor);
     default:
         throw runtime_error("Invalid FactorType.");
     }
 }
 
-void DesignExtractor::extractVariable(Variable *variable) {
-    pkb->insertVar(variable);
+void DesignExtractor::extractVariable(Variable variable) {
+    pkb->insertVar(&variable);
     extractUsesRelationship(variable);
     extractModifiesRelationship(variable);
 }
 
-void DesignExtractor::extractUsesRelationship(Variable *variable) {
+void DesignExtractor::extractUsesRelationship(Variable variable) {
     optional<Statement *> usingStatement =
         ExtractionContext::getInstance().getUsingStatement();
     if (!usingStatement.has_value()) {
@@ -289,28 +285,28 @@ void DesignExtractor::extractUsesRelationship(Variable *variable) {
     }
 
     // 1. Handle using statement
-    pkb->insertStmtUsingVar(usingStatement.value(), variable);
+    pkb->insertStmtUsingVar(usingStatement.value(), &variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb->insertStmtModifyingVar(parentStatement, variable);
+            pkb->insertStmtModifyingVar(parentStatement, &variable);
         }
     }
 
     // 3. Handle all enclosing procedures
-    vector<Procedure *> usingProcedures =
-        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    if (!usingProcedures.empty()) {
-        for (Procedure *usingProcedure : usingProcedures) {
-            pkb->insertProcUsingVar(usingProcedure, variable);
-        }
-    }
+    //    vector<Procedure *> usingProcedures =
+    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
+    //    if (!usingProcedures.empty()) {
+    //        for (Procedure *usingProcedure : usingProcedures) {
+    //            pkb->insertProcUsingVar(usingProcedure, &variable);
+    //        }
+    //    }
 }
 
-void DesignExtractor::extractModifiesRelationship(Variable *variable) {
+void DesignExtractor::extractModifiesRelationship(Variable variable) {
     optional<Statement *> modifyingStatement =
         ExtractionContext::getInstance().getModifyingStatement();
     if (!modifyingStatement.has_value()) {
@@ -318,27 +314,27 @@ void DesignExtractor::extractModifiesRelationship(Variable *variable) {
     }
 
     // 1. Handle modifying statement
-    pkb->insertStmtModifyingVar(modifyingStatement.value(), variable);
+    pkb->insertStmtModifyingVar(modifyingStatement.value(), &variable);
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb->insertStmtModifyingVar(parentStatement, variable);
+            pkb->insertStmtModifyingVar(parentStatement, &variable);
         }
     }
 
     // 3. Handle all enclosing procedures
-    vector<Procedure *> modifyingProcedures =
-        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    if (!modifyingProcedures.empty()) {
-        for (Procedure *modifyingProcedure : modifyingProcedures) {
-            pkb->insertProcModifyingVar(modifyingProcedure, variable);
-        }
-    }
+    //    vector<Procedure *> modifyingProcedures =
+    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
+    //    if (!modifyingProcedures.empty()) {
+    //        for (Procedure *modifyingProcedure : modifyingProcedures) {
+    //            pkb->insertProcModifyingVar(modifyingProcedure, &variable);
+    //        }
+    //    }
 }
 
-void DesignExtractor::extractConstantValue(ConstantValue *constantValue) {
-    pkb->insertConst(constantValue);
+void DesignExtractor::extractConstantValue(ConstantValue constantValue) {
+    pkb->insertConst(&constantValue);
 }
