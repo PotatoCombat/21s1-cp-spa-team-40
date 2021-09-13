@@ -3,7 +3,7 @@
 #include "Abstractions.h"
 #include "Iterator.h"
 
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 
 #include <map>
 #include <vector>
@@ -18,16 +18,19 @@ public:
     /// \return index of the \param stmt in the table.
     StmtIndex insert(Statement *stmt);
 
-    /// Returns the pointer to the statement stored at \param index in the table.
-    /// \return pointer, or NULL if the table does not contain \param index.
+    /// Returns the pointer to the statement stored at \param index in the
+    /// table. \return pointer, or NULL if the table does not contain \param
+    /// index.
     Statement *getStmt(StmtIndex index);
 
-    /// Returns the pointer to the statement stored at \param index in the table.
-    /// \return pointer, or NULL if the table does not contain \param index.
+    /// Returns the pointer to the statement stored at \param index in the
+    /// table. \return pointer, or NULL if the table does not contain \param
+    /// index.
     StatementType getStmtType(StmtIndex index);
 
     /// Returns the index of \param stmt in the table.
-    /// \return index, or InvalidIndex if the table does not contain \param stmt.
+    /// \return index, or InvalidIndex if the table does not contain \param
+    /// stmt.
     StmtIndex getIndex(Statement *stmt);
 
     /// Returns an iterator for all the statement indices stored in the table.

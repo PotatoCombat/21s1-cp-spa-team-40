@@ -1,9 +1,9 @@
 #pragma once
 
 #include "common/model/ConstantValue.h"
-#include "common/model/Procedure.h"
-#include "common/model/Program.h"
 #include "common/model/Variable.h"
+#include "pkb/Abstractions.h"
+
 #include <optional>
 #include <stdexcept>
 #include <vector>
@@ -18,7 +18,7 @@ public:
     StatementType getStatementType();
 
     Variable getVariable();
-    Procedure getProcedure();
+    ProcName getProcName();
 
     vector<string> getExpressionLst();
     vector<Variable> getExpressionVars();
@@ -28,7 +28,7 @@ public:
     vector<Statement> getElseStmtLst();
 
     void setVariable(Variable variable);
-    void setProcedure(Procedure procedure);
+    void setProcName(ProcName procName);
 
     void setExpressionLst(vector<string> expressionLst);
     void addExpressionVar(Variable expressionVar);
@@ -42,7 +42,7 @@ private:
     StatementType statementType;
 
     optional<Variable> variable;
-    optional<Procedure> procedure;
+    optional<ProcName> procName;
 
     optional<vector<string>> expressionLst;
     optional<vector<Variable>> expressionVars;

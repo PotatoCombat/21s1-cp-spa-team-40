@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Abstractions.h"
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 #include <map>
 
 class FollowsTable {

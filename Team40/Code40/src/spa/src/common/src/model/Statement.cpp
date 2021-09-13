@@ -16,11 +16,11 @@ Variable Statement::getVariable() {
     return variable.value();
 };
 
-Procedure Statement::getProcedure() {
-    if (!procedure.has_value()) {
+ProcName Statement::getProcName() {
+    if (!procName.has_value()) {
         throw runtime_error("This statement does not use a procedure.");
     }
-    return procedure.value();
+    return procName.value();
 };
 
 vector<string> Statement::getExpressionLst() {
@@ -62,13 +62,9 @@ vector<Statement> Statement::getElseStmtLst() {
     return elseStmtLst.value();
 }
 
-void Statement::setVariable(Variable variable) {
-    this->variable = variable;
-}
+void Statement::setVariable(Variable variable) { this->variable = variable; }
 
-void Statement::setProcedure(Procedure procedure) {
-   this->procedure = procedure;
-}
+void Statement::setProcName(ProcName procName) { this->procName = procName; }
 
 void Statement::setExpressionLst(vector<string> expressionLst) {
     this->expressionLst = expressionLst;

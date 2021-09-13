@@ -2,17 +2,9 @@
 
 #include "ExtractionContext.h"
 #include "FollowsExtractor.h"
-#include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
 #include "common/model/Statement.h"
-#include "common/model/condition/NotCondition.h"
-#include "common/model/condition/SingleCondition.h"
-#include "common/model/expression/SingleTermExpression.h"
-#include "common/model/expression/SubtractTermsExpression.h"
-#include "common/model/expression/SumTermsExpression.h"
-#include "common/model/term/SingleFactorTerm.h"
-#include "common/model/term/Term.h"
 #include "pkb/PKB.h"
 
 class DesignExtractor {
@@ -35,6 +27,11 @@ public:
     StmtIndex extractPrintStatement(Statement printStatement);
     StmtIndex extractReadStatement(Statement readStatement);
     StmtIndex extractWhileStatement(Statement whileStatement);
+
+    // Variable
+    void extractVariable(Variable variable);
+    void extractModifiesRelationship(Variable variable);
+    void extractUsesRelationship(Variable variable);
 
     // Condition
     //    void extractCondition(Condition condition);
@@ -59,11 +56,6 @@ public:
 
     // Factor
     //    void extractFactor(Factor factor);
-
-    // Variable
-    void extractVariable(Variable variable);
-    void extractModifiesRelationship(Variable variable);
-    void extractUsesRelationship(Variable variable);
 
     // ConstantValue
     //    void extractConstantValue(ConstantValue constantValue);
