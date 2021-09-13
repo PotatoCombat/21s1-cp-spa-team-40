@@ -1,5 +1,5 @@
 #pragma once
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 #include "source_processor/Line.h"
 #include <string>
 #include <vector>

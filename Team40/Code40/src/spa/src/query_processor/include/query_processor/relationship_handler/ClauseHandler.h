@@ -2,7 +2,7 @@
 
 #include "ClauseHandlerError.h"
 
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 
 #include "pkb/PKB.h"
 
