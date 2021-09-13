@@ -78,7 +78,7 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement assignStatement) {
 StmtIndex DesignExtractor::extractCallStatement(Statement callStatement) {
     StmtIndex stmtIndex = pkb->insertStmt(&callStatement);
 
-    ProcName procName = callStatement.getProcedure().getName();
+    ProcName procName = callStatement.getProcName();
     /// At this point, we segue into extracting the called Procedure
     /// so that Procedures are guaranteed to be extracted before their
     /// corresponding Call statements to ensure transitivity is handled

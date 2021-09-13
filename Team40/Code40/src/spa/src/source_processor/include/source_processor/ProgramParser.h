@@ -1,7 +1,7 @@
 #pragma once
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 #include "source_processor/AssignStatementParser.h"
 #include "source_processor/CallStatementParser.h"
 #include "source_processor/IfStatementParser.h"
