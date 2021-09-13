@@ -19,12 +19,12 @@ TEST_CASE("DesignExtractor: Correctly handles Call Statement") {
     Statement statement(1, StatementType::CALL);
 
     statement.setProcName(CALLED_PROC_NAME);
-    program.addToProcLst(procedure);
-    procedure.addToStmtLst(statement);
+    program.addToProcLst(&procedure);
+    procedure.addToStmtLst(&statement);
 
     DesignExtractor de(&TestDesignExtractor::pkbStub);
     //    TestDesignExtractor::pkbStub.insertStmt(statement);
-    de.extract(program);
+    de.extract(&program);
 
     REQUIRE(TestDesignExtractor::pkbStub.getNumProc() == 1);
     REQUIRE(TestDesignExtractor::pkbStub.getNumStmt() == 1);

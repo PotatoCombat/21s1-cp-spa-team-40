@@ -26,12 +26,12 @@ void DesignExtractor::extractProcedure(Procedure *procedure) {
     for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().unsetCurrentProcedure(&procedure);
+    ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
 
 StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     StmtIndex stmtIndex;
-    switch (statement.getStatementType()) {
+    switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
         stmtIndex = extractAssignStatement(statement);
         break;
@@ -78,7 +78,7 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
 StmtIndex DesignExtractor::extractCallStatement(Statement *callStatement) {
     StmtIndex stmtIndex = pkb->insertStmt(*callStatement);
 
-    ProcName procName = callStatement->getProcName();
+    ProcName calledProcName = callStatement->getProcName();
 
     optional<Procedure *> currentProcedure =
         ExtractionContext::getInstance().getCurrentProcedure();
@@ -86,7 +86,7 @@ StmtIndex DesignExtractor::extractCallStatement(Statement *callStatement) {
         throw runtime_error("Current procedure not set.");
     }
     ExtractionContext::getInstance().addProcDependency(
-        procName, currentProcedure.value()->getName());
+        currentProcedure.value()->getName(), calledProcName);
 
     //    set<VarName> modifiedVarNames =
     //        pkb->getVarsModifiedByProc(procedure.getName());
