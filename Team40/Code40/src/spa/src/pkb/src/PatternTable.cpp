@@ -20,7 +20,7 @@ void PatternTable::insertPatternAssign(AssignStatement* stmt) {
         // Record with varName, eg. ("x", "y * 5")
         Record recordWithVarName = make_pair(varName, p);
 
-        // Record with varName, eg. (_, "y * 5")
+        // Record with wildcard, eg. (_, "y * 5")
         Record recordWithWildcard = make_pair(WILDCARD, p);
 
         insertStmtWithPattern(recordWithVarName, stmtIndex);
@@ -43,8 +43,8 @@ void PatternTable::insertPatternAssign(AssignStatement* stmt) {
 
 set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName, Pattern pattern) {
     Record record = make_pair(varName, pattern);
-    auto kvp = stmtsWithPatternMap.find(record);
-    if (kvp == stmtsWithPatternMap.end()) {
+    auto kvp = stmtsWithPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
+    if (kvp == stmtsWithPatternMap.end()) { // Could not find a map entry with record as the key.
         return {};
     }
     return kvp->second;
