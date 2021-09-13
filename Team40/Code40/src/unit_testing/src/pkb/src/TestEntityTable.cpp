@@ -29,7 +29,7 @@ public:
     inline static EntityTable<TestEntity, string> createTable() {
         EntityTable<TestEntity, string> table;
         for (auto i : TestEntityTable::createItems()) {
-            table.insert(i);
+            table.insert(&i);
         }
         return table;
     }
@@ -43,7 +43,7 @@ TEST_CASE("EntityTable: ctor") {
 TEST_CASE("EntityTable: insert/getEntity") {
     EntityTable<TestEntity, string> table;
     TestEntity test("hello");
-    table.insert(test);
+    table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
     REQUIRE(table.getEntity("hello") == &test);

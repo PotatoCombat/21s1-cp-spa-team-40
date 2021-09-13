@@ -29,7 +29,7 @@ StatementTable TestStatementTable::createTable() {
 
     auto items = TestStatementTable::createItems();
     for (Statement i : items) {
-        table.insert(i);
+        table.insert(&i);
     }
     return table;
 }
@@ -42,7 +42,7 @@ TEST_CASE("StatementTable: ctor") {
 TEST_CASE("StatementTable: insert/getStmt/getIndex") {
     StatementTable table;
     Statement test = Statement(1, StatementType::CALL);
-    table.insert(test);
+    table.insert(&test);
 
     REQUIRE(table.getSize() == 1);
     REQUIRE(table.getIndex(&test) == 1);
