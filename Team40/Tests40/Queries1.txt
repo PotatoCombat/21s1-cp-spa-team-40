@@ -427,26 +427,53 @@ x, y, z, i
 assign a;
 Select a such that pattern a (_, _)
 2, 3, 5, 6, 7, 12
+5000
 84 - pattern with first as wild card, second as variable with space
 assign a;
 Select a such that pattern a (_, " x ")
 3, 7
+5000
 85 - pattern with first as wild card, second as constant
 assign a;
 Select a such that pattern a (_, " 5")
 7
+5000
 86 - pattern with second as wild card, first as variable
 assign a;
 Select a such that pattern a ("z", _)
 3, 12
+5000
 87 - true pattern with synonym not in pattern
 assign a; stmt s;
 Select s such that pattern a ("z", "x")
-2, 3, 5, 6, 7, 12
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
 88 - false pattern with synonym not in pattern
+assign a; stmt s;
+Select s such that pattern a ("y", "x")
+
+5000
 89 - pattern with one variable and one constant
-90 - pattern with two variables
-TO ADD: ONE PATTERN ONE SUCH THAT CLAUSE
+assign a; stmt s;
+Select s such that pattern a ("y", "1")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+90 - pattern with one variable and one constant
+assign a;
+Select a such that pattern a ("y", "1")
+2
+5000
+91 - pattern with two variables
+assign a;
+Select a such that pattern a ("z", "z")
+5, 12
+5000
+92 - pattern with two variables
+assign a;
+Select a such that pattern a ("z", "x ")
+3
+5000
+
 
 
 
