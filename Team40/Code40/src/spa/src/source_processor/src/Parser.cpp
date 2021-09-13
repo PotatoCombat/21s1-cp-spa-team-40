@@ -58,6 +58,7 @@ vector<vector<string>> Parser::tokenizeFile(fstream &file) {
     }
     return programTokens;
 }
+
 tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString = {};
@@ -194,13 +195,3 @@ bool Parser::isRoundBracket(string input) {
 }
 
 bool Parser::isSemiColon(string input) { return input == ";"; }
-
-bool Parser::isInteger(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isdigit(c)); }) == input.end();
-}
-
-bool Parser::isName(string input) {
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
-}

@@ -33,3 +33,13 @@ bool StatementParser::isAssignStmt(vector<string> inputLine) {
 bool StatementParser::hasTerminator(vector<string> inputLine) {
     return find(inputLine.begin(), inputLine.end(), "}") != inputLine.end();
 }
+
+bool StatementParser::isInteger(string input) {
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isdigit(c)); }) == input.end();
+}
+
+bool StatementParser::isName(string input) {
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isalnum(c)); }) == input.end();
+}
