@@ -6,6 +6,7 @@
 
 
 #include <optional>
+#include <set>
 #include <stdexcept>
 #include <vector>
 
@@ -22,8 +23,8 @@ public:
     ProcName getProcName();
 
     vector<string> getExpressionLst();
-    vector<Variable> getExpressionVars();
-    vector<ConstantValue> getExpressionConsts();
+    set<Variable> getExpressionVars();
+    set<ConstantValue> getExpressionConsts();
 
     vector<Statement> getThenStmtLst();
     vector<Statement> getElseStmtLst();
@@ -46,8 +47,8 @@ private:
     optional<ProcName> procName;
 
     optional<vector<string>> expressionLst;
-    optional<vector<Variable>> expressionVars;
-    optional<vector<ConstantValue>> expressionConsts;
+    set<Variable> expressionVars;
+    set<ConstantValue> expressionConsts;
 
     optional<vector<Statement>> thenStmtLst;
     optional<vector<Statement>> elseStmtLst;

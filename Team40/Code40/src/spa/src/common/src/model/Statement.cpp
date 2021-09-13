@@ -3,6 +3,8 @@
 Statement::Statement(int index, StatementType statementType) {
     this->index = index;
     this->statementType = statementType;
+    this->expressionVars = {};
+    this->expressionConsts = {};
 }
 
 int Statement::getIndex() { return index; }
@@ -30,20 +32,12 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-vector<Variable> Statement::getExpressionVars() {
-    if (!expressionVars.has_value()) {
-        throw runtime_error(
-            "This statement does not use an expression (with variables).");
-    }
-    return expressionVars.value();
+set<Variable> Statement::getExpressionVars() {
+    return expressionVars;
 };
 
-vector<ConstantValue> Statement::getExpressionConsts() {
-    if (!expressionConsts.has_value()) {
-        throw runtime_error(
-            "This statement does not use an expression (with constants).");
-    }
-    return expressionConsts.value();
+set<ConstantValue> Statement::getExpressionConsts() {
+    return expressionConsts;
 };
 
 vector<Statement> Statement::getThenStmtLst() {
@@ -71,19 +65,11 @@ void Statement::setExpressionLst(vector<string> expressionLst) {
 }
 
 void Statement::addExpressionVar(Variable expressionVar) {
-    if (!this->expressionVars.has_value()) {
-        this->expressionVars = {expressionVar};
-        return;
-    }
-    this->expressionVars->push_back(expressionVar);
+    expressionVars.insert(expressionVar);
 }
 
 void Statement::addExpressionConst(ConstantValue expressionConst) {
-    if (!this->expressionConsts.has_value()) {
-        this->expressionConsts = {expressionConst};
-        return;
-    }
-    this->expressionConsts->push_back(expressionConst);
+    expressionConsts.insert(expressionConst);
 }
 
 void Statement::addThenStmt(Statement stmt) {
