@@ -8,11 +8,11 @@
 #include <stdexcept>
 #include <vector>
 
-//enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
+enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
-class Statement2 {
+class Statement {
 public:
-    Statement2(int index, StatementType statementType);
+    Statement(int index, StatementType statementType);
 
     int getIndex();
     StatementType getStatementType();
@@ -24,8 +24,8 @@ public:
     vector<Variable> getExpressionVars();
     vector<ConstantValue> getExpressionConsts();
 
-    vector<Statement2> getThenStmtLst();
-    vector<Statement2> getElseStmtLst();
+    vector<Statement> getThenStmtLst();
+    vector<Statement> getElseStmtLst();
 
     void setVariable(Variable variable);
     void setProcedure(Procedure procedure);
@@ -34,8 +34,8 @@ public:
     void addExpressionVar(Variable expressionVar);
     void addExpressionConst(ConstantValue expressionConst);
 
-    void addThenStmt(Statement2 stmt);
-    void addElseStmt(Statement2 stmt);
+    void addThenStmt(Statement stmt);
+    void addElseStmt(Statement stmt);
 
 private:
     int index;
@@ -48,6 +48,6 @@ private:
     optional<vector<Variable>> expressionVars;
     optional<vector<ConstantValue>> expressionConsts;
 
-    optional<vector<Statement2>> thenStmtLst;
-    optional<vector<Statement2>> elseStmtLst;
+    optional<vector<Statement>> thenStmtLst;
+    optional<vector<Statement>> elseStmtLst;
 };
