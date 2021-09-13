@@ -4,30 +4,30 @@ using namespace std;
 
 StatementTable::StatementTable() = default;
 
-StmtIndex StatementTable::insert(Statement *stmt) {
+StmtIndex StatementTable::insert(Statement stmt) {
     size++;
     statements.push_back(stmt);
     indices.push_back(size);
-    statementToIndex[stmt] = size;
+    statementToIndex[&statements.back()] = size;
 
-    switch (stmt->getStatementType()) {
+    switch (stmt.getStatementType()) {
     case StatementType::ASSIGN:
-        assignStatements.push_back(stmt->getIndex());
+        assignStatements.push_back(stmt.getIndex());
         break;
     case StatementType::READ:
-        readStatements.push_back(stmt->getIndex());
+        readStatements.push_back(stmt.getIndex());
         break;
     case StatementType::PRINT:
-        printStatements.push_back(stmt->getIndex());
+        printStatements.push_back(stmt.getIndex());
         break;
     case StatementType::IF:
-        ifStatements.push_back(stmt->getIndex());
+        ifStatements.push_back(stmt.getIndex());
         break;
     case StatementType::WHILE:
-        whileStatements.push_back(stmt->getIndex());
+        whileStatements.push_back(stmt.getIndex());
         break;
     case StatementType::CALL:
-        callStatements.push_back(stmt->getIndex());
+        callStatements.push_back(stmt.getIndex());
         break;
     default:
         throw runtime_error(
@@ -40,14 +40,14 @@ Statement *StatementTable::getStmt(StmtIndex index) {
     if (index > size) {
         return NULL;
     }
-    return statements.at(index - 1);
+    return &statements.at(index - 1);
 }
 
 StatementType StatementTable::getStmtType(StmtIndex index) {
     if (index > size) {
         return StatementType::UNKNOWN;
     }
-    return statements.at(index - 1)->getStatementType();
+    return statements.at(index - 1).getStatementType();
 }
 
 StmtIndex StatementTable::getIndex(Statement *stmt) {

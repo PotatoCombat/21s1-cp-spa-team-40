@@ -2,9 +2,9 @@
 
 UsesTable::UsesTable() = default;
 
-void UsesTable::insertProcUsingVar(Procedure *proc, Variable *var) {
-    ProcName procName = proc->getName();
-    VarName varName = var->getName();
+void UsesTable::insertProcUsingVar(Procedure proc, Variable var) {
+    ProcName procName = proc.getName();
+    VarName varName = var.getName();
     auto search1 = procsUsingVarMap.find(varName);
     if (search1 == procsUsingVarMap.end()) {
         procsUsingVarMap[varName] = { procName };
@@ -22,9 +22,9 @@ void UsesTable::insertProcUsingVar(Procedure *proc, Variable *var) {
     }
 }
 
-void UsesTable::insertStmtUsingVar(Statement *stmt, Variable *var) {
-    StmtIndex stmtIndex = stmt->getIndex();
-    VarName varName = var->getName();
+void UsesTable::insertStmtUsingVar(Statement stmt, Variable var) {
+    StmtIndex stmtIndex = stmt.getIndex();
+    VarName varName = var.getName();
     auto search1 = stmtsUsingVarMap.find(varName);
     if (search1 == stmtsUsingVarMap.end()) {
         stmtsUsingVarMap[varName] = { stmtIndex };

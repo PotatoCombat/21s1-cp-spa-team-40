@@ -2,9 +2,9 @@
 
 ModifiesTable::ModifiesTable() = default;
 
-void ModifiesTable::insertProcModifyingVar(Procedure *proc, Variable *var) {
-    VarName varName = var->getName();
-    ProcName procName = proc->getName();
+void ModifiesTable::insertProcModifyingVar(Procedure proc, Variable var) {
+    VarName varName = var.getName();
+    ProcName procName = proc.getName();
     auto search1 = procsModifyingVarMap.find(varName);
     if (search1 == procsModifyingVarMap.end()) {
         procsModifyingVarMap[varName] = { procName };
@@ -22,9 +22,9 @@ void ModifiesTable::insertProcModifyingVar(Procedure *proc, Variable *var) {
     }
 }
 
-void ModifiesTable::insertStmtModifyingVar(Statement *stmt, Variable *var) {
-    StmtIndex stmtIndex = stmt->getIndex();
-    VarName varName = var->getName();
+void ModifiesTable::insertStmtModifyingVar(Statement stmt, Variable var) {
+    StmtIndex stmtIndex = stmt.getIndex();
+    VarName varName = var.getName();
     auto search1 = stmtsModifyingVarMap.find(varName);
     if (search1 == stmtsModifyingVarMap.end()) {
         stmtsModifyingVarMap[varName] = { stmtIndex };

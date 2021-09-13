@@ -17,7 +17,7 @@ public:
 
     /// Stores the pointer \param stmt in the table, and indexes the statement.
     /// \return index of the \param stmt in the table.
-    StmtIndex insert(Statement *stmt);
+    StmtIndex insert(Statement stmt);
 
     /// Returns the pointer to the statement stored at \param index in the
     /// table. \return pointer, or NULL if the table does not contain \param
@@ -44,7 +44,7 @@ public:
 
 private:
     StmtIndex size = 0;
-    vector<Statement *> statements;
+    vector<Statement> statements;
     vector<StmtIndex> indices;
     map<Statement *, StmtIndex> statementToIndex;
 

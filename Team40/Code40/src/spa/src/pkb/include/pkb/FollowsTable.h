@@ -10,7 +10,7 @@ public:
     FollowsTable();
 
     /// Stores Follows(stmt1, stmt2).
-    void insertFollows(Statement *stmt1, Statement *stmt2);
+    void insertFollows(Statement stmt1, Statement stmt2);
 
     /// Selects s such that Follows(stmt, s).
     StmtIndex getFollowingStmt(StmtIndex stmt);
