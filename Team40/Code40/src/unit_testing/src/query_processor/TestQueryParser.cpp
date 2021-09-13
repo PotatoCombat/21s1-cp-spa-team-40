@@ -63,28 +63,39 @@ TEST_CASE("QueryParser: parseRelation") {
     vector<Reference *> refs = TestQueryParser::createReferenceV(1);
 
     SECTION("test pass: constants/wildcards") {
-        //Clause *expected =
-        //    new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
-        //               TestQueryParser::CONSTANT4);
-        //Clause *actual =
-        //    parser.parseClause(make_tuple("Follows*", "1", "4"), refs);
-        //REQUIRE(actual->equals(*expected));
+        Clause *expected =
+            new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
+                       TestQueryParser::CONSTANT4);
+        Clause *actual =
+            parser.parseClause(make_tuple("Follows*", "1", "4"), refs);
+        REQUIRE(actual->equals(*expected));
 
-        //expected =
-        //    new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
-        //               TestQueryParser::WILDCARD);
-        //actual = parser.parseClause(make_tuple("Follows*", "1", "_"), refs);
-        //REQUIRE(actual->equals(*expected));
+        delete expected;
+        delete actual;
 
-        //expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD,
-        //                      TestQueryParser::CONSTANT4);
-        //actual = parser.parseClause(make_tuple("Follows*", "_", "4"), refs);
-        //REQUIRE(actual->equals(*expected));
+        expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
+                              TestQueryParser::WILDCARD);
+        actual = parser.parseClause(make_tuple("Follows*", "1", "_"), refs);
+        REQUIRE(actual->equals(*expected));
 
-        //expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD,
-        //                      TestQueryParser::WILDCARD);
-        //actual = parser.parseClause(make_tuple("Follows*", "_", "_"), refs);
-        //REQUIRE(actual->equals(*expected));
+        delete expected;
+        delete actual;
+
+        expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD,
+                              TestQueryParser::CONSTANT4);
+        actual = parser.parseClause(make_tuple("Follows*", "_", "4"), refs);
+        REQUIRE(actual->equals(*expected));
+
+        delete expected;
+        delete actual;
+
+        expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD,
+                              TestQueryParser::WILDCARD);
+        actual = parser.parseClause(make_tuple("Follows*", "_", "_"), refs);
+        REQUIRE(actual->equals(*expected));
+
+        delete expected;
+        delete actual;
     }
 
     SECTION("test pass: synonym declared") {
@@ -92,18 +103,16 @@ TEST_CASE("QueryParser: parseRelation") {
         Clause *actual = parser.parseClause(TestQueryParser::REL, refs);
 
         REQUIRE(actual->getType() == ClauseType::FOLLOWS_T);
-        REQUIRE(actual->getType() == expected->getType());
-        REQUIRE(actual->getFirstReference()->getValue() ==
-                expected->getFirstReference()->getValue());
-        REQUIRE(actual->getSecondReference()->getValue() ==
-                expected->getSecondReference()->getValue());
+        REQUIRE(actual->equals(*expected));
+
+        delete expected;
+        delete actual;
     }
 
     SECTION("test fail: synonym undeclared") {
-        //Clause *expected =
-        //    new Clause(ClauseType::FOLLOWS_T, TestQueryParser::UNDECLARED_SYN,
-        //               TestQueryParser::CONSTANT4);
-
-        REQUIRE_THROWS(parser.parseClause(make_tuple("Follows*", "undeclared", "4"), refs));
+        REQUIRE_THROWS(parser.parseClause(
+            make_tuple("Follows*", "undeclared", "4"), refs));
+        REQUIRE_THROWS(parser.parseClause(
+            make_tuple("Follows*", "4", "undeclared"), refs));
     }
 }
