@@ -38,6 +38,6 @@ vector<Clause *> Query::getClauses() { return this->clauseList; }
 
 void Query::addPattern(Pattern* pattern) {
     patternList.push_back(pattern);
-    addReference(&pattern->getStmt());
-    addReference(&pattern->getVar());
+    addReference(pattern->getStmt());
+    addReference(pattern->getVar());
 }
