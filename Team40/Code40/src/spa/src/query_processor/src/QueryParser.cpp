@@ -22,7 +22,7 @@ Clause *QueryParser::parseClause(ClsTuple clause,
         [&ref2](Reference *ref) { return ref->getValue() == ref2; });
 
     if (it1 != declList.end()) {
-        Reference* r = *it1; //(*it1)->copy();
+        Reference* r = (*it1)->copy();
         x.push_back(r);
     } else {
         ReferenceType refT = checkRefType(ref1);
@@ -31,7 +31,7 @@ Clause *QueryParser::parseClause(ClsTuple clause,
     }
 
     if (it2 != declList.end()) {
-        Reference* r = *it2; //(*it2)->copy();
+        Reference* r = (*it2)->copy();
         x.push_back(r);
     } else {
         ReferenceType refT = checkRefType(ref2);
