@@ -6,13 +6,14 @@
 
 using namespace std;
 
-class Pattern {
+class PatternClause {
 private:
     Reference stmt;
     Reference var;
     string pattern;
+
 public:
-    Pattern(Reference stmt, Reference var, string pattern);
+    PatternClause(Reference stmt, Reference var, string pattern);
     Reference *getStmt();
     Reference *getVar();
     string getPattern();
