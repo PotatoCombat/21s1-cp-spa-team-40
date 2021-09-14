@@ -195,7 +195,7 @@ void DepthFirstExtractor::extractUsesRelationship(Variable *variable) {
         ExtractionContext::getInstance().getParentContext().getAllEntities();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
-            pkb->insertStmtModifyingVar(parentStatement, variable);
+            pkb->insertStmtUsingVar(parentStatement, variable);
         }
     }
 
