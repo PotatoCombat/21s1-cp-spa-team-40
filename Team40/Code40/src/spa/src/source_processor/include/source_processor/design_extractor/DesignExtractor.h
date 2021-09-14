@@ -1,7 +1,7 @@
 #pragma once
 
+#include "BreadthFirstExtractor.h"
 #include "DepthFirstExtractor.h"
-#include "FollowsExtractor.h"
 #include "common/model/Program.h"
 #include "pkb/PKB.h"
 

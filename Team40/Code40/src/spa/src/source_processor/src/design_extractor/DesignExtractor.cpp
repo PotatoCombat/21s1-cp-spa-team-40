@@ -15,6 +15,6 @@ void DesignExtractor::extractDepthFirst(Program *program) {
 }
 
 void DesignExtractor::extractBreadthFirst(Program *program) {
-    FollowsExtractor extractor(pkb);
+    BreadthFirstExtractor extractor(pkb);
     extractor.extract(program);
 }

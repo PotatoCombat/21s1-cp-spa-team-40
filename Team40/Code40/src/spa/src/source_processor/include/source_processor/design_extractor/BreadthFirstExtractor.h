@@ -4,14 +4,14 @@
 #include "source_processor/design_extractor/ExtractionContext.h"
 #include <common/model/Program.h>
 
-class FollowsExtractor {
+class BreadthFirstExtractor {
 private:
     vector<vector<Statement *>> statementLists;
     EntityContext<Statement> ctx;
     PKB *pkb;
 
 public:
-    explicit FollowsExtractor(PKB *pkb);
+    explicit BreadthFirstExtractor(PKB *pkb);
     // Program
     void extract(Program *program);
 
