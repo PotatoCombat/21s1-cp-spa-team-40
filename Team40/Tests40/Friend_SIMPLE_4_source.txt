@@ -1,0 +1,40 @@
+procedure main {
+	read x;
+	read y;
+	read a;
+	read b;
+	if ((x > y) && (a > b)) then {
+		while (a > b) {
+			a = a - 1;
+			if (x > y) then {
+				x = x - 1;
+			}
+			else {
+				x = x + 1;
+			}
+		}
+		a = a + b; 
+		if (a > b) then {
+			a = a - 1;
+		} 
+		else {
+			a = 2 * a;
+		}
+	} 
+	else {
+		while (a < b) {
+			a = a + 1;
+		}
+		print b;
+		b = b / 2;
+		a = a % 10;
+		if (a > b) then {
+			print a; 
+		}
+		else {
+			print b;
+		}
+		read nameWithNumber0;
+		print nameWithNumber0;
+	}
+}
