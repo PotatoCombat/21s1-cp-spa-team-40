@@ -89,13 +89,15 @@ ExtractionContext::getProcDependencies(ProcName caller) {
     return procDependencyTree[caller];
 }
 
-void ExtractionContext::reset() {
-    if (!followsContext.getAllEntities().empty()) {
-        followsContext.getAllEntities().clear();
-    }
+void ExtractionContext::resetStatementContexts() {
+    followsContext.getAllEntities().clear();
     parentContext.getAllEntities().clear();
     currentProcedure.reset();
     usingStatement.reset();
     modifyingStatement.reset();
+}
+
+void ExtractionContext::reset() {
+    resetStatementContexts();
     procDependencyTree.clear();
 }

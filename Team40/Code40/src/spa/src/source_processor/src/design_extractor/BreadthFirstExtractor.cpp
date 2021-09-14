@@ -4,6 +4,9 @@ BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb)
     : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};
 
 void BreadthFirstExtractor::extract(Program *program) {
+    // Here, we only reset statement contexts since we need to persist the
+    // procedure dependency tree
+    ExtractionContext::getInstance().resetStatementContexts();
     for (Procedure *procedure : program->getProcLst()) {
         statementLists.push_back(procedure->getStmtLst());
     }

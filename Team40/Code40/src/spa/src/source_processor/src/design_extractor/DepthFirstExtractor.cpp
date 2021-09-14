@@ -3,6 +3,7 @@
 DepthFirstExtractor::DepthFirstExtractor(PKB *pkb) : pkb(pkb) {}
 
 void DepthFirstExtractor::extract(Program *program) {
+    ExtractionContext::getInstance().reset();
     for (Procedure *procedure : program->getProcLst()) {
         extractProcedure(procedure);
     }
@@ -18,6 +19,16 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
 }
 
 StmtIndex DepthFirstExtractor::extractStatement(Statement *statement) {
+    if (!ExtractionContext::getInstance()
+             .getParentContext()
+             .getAllEntities()
+             .empty()) {
+        Statement *parent = ExtractionContext::getInstance()
+                                .getParentContext()
+                                .getAllEntities()
+                                .back();
+        pkb->insertParent(parent, statement);
+    }
     StmtIndex stmtIndex;
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
@@ -110,6 +121,7 @@ StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
 
     // 2. Handle THEN statements
+    ExtractionContext::getInstance().getParentContext().push(ifStatement);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
@@ -118,6 +130,8 @@ StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
+    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
+
     return stmtIndex;
 }
 
@@ -151,9 +165,11 @@ DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
 
     // 2. Handle THEN statements
+    ExtractionContext::getInstance().getParentContext().push(whileStatement);
     for (Statement *statement : whileStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
+    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
 
     return stmtIndex;
 }

@@ -45,5 +45,6 @@ public:
     void addProcDependency(ProcName from, ProcName to);
     unordered_set<ProcName> getProcDependencies(ProcName from);
 
+    void resetStatementContexts();
     void reset();
 };
