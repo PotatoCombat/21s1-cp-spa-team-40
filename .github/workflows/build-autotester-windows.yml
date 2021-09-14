@@ -1,19 +1,19 @@
 name: Run Autotester on Windows Environment
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.
 # Comment the above 7 lines, and uncomment the following 3 lines
 # Runs job at 8am and 6pm daily
-#on:
-#  schedule:
-#    - cron: "0 0,10 * * *"
+on:
+  schedule:
+    - cron: "0 0,10 * * *"
 
 env:
     BUILD_TYPE: Release
@@ -21,7 +21,7 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 3
     strategy:
       fail-fast: true
 
@@ -62,29 +62,29 @@ jobs:
           key: ${{ runner.os }}-build
       - name: Run Tests
         run: |
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source1.txt Team40\Tests40\Queries1.txt Team40\Code40\tests\out1.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TA_source.txt Team40\Tests40\TA_queries.txt Team40\Code40\tests\out2.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_BasicSource_source.txt Team40\Tests40\TD_BasicSource_queries.txt Team40\Code40\tests\out2.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_ComplexSource_source.txt Team40\Tests40\TD_ComplexSource_queries.txt Team40\Code40\tests\out3.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_DeepNest_source.txt Team40\Tests40\TD_DeepNest_queries.txt Team40\Code40\tests\out4.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_1_source.txt Team40\Tests40\TD_SIMPLE_1_queries.txt Team40\Code40\tests\out5.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_2_source.txt Team40\Tests40\TD_SIMPLE_2_queries.txt Team40\Code40\tests\out6.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_3_source.txt Team40\Tests40\TD_SIMPLE_3_queries.txt Team40\Code40\tests\out7.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_4_source.txt Team40\Tests40\TD_SIMPLE_4_queries.txt Team40\Code40\tests\out8.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source1.txt Team40\Tests40\Queries1.txt Team40\Code40\tests\out.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TA_source.txt Team40\Tests40\TA_queries.txt Team40\Code40\tests\out1.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_BasicSource_source.txt Team40\Tests40\Friend_BasicSource_queries.txt Team40\Code40\tests\out2.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_ComplexSource_source.txt Team40\Tests40\Friend_ComplexSource_queries.txt Team40\Code40\tests\out3.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_DeepNest_source.txt Team40\Tests40\Friend_DeepNest_queries.txt Team40\Code40\tests\out4.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_SIMPLE_1_source.txt Team40\Tests40\Friend_SIMPLE_1_queries.txt Team40\Code40\tests\out5.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_SIMPLE_2_source.txt Team40\Tests40\Friend_SIMPLE_2_queries.txt Team40\Code40\tests\out6.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_SIMPLE_3_source.txt Team40\Tests40\Friend_SIMPLE_3_queries.txt Team40\Code40\tests\out7.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Friend_SIMPLE_4_source.txt Team40\Tests40\Friend_SIMPLE_4_queries.txt Team40\Code40\tests\out8.xml
       - name: Archive System Test Results
         uses: actions/upload-artifact@v2
         with:
           name: system-test-report
           path: |
+            Team40/Code40/tests/out.xml
             Team40/Code40/tests/out1.xml
             Team40/Code40/tests/out2.xml
-            # Team40/Code40/tests/out2.xml
-            # Team40/Code40/tests/out3.xml
-            # Team40/Code40/tests/out4.xml
-            # Team40/Code40/tests/out5.xml
-            # Team40/Code40/tests/out6.xml
-            # Team40/Code40/tests/out7.xml
-            # Team40/Code40/tests/out8.xml
+            Team40/Code40/tests/out3.xml
+            Team40/Code40/tests/out4.xml
+            Team40/Code40/tests/out5.xml
+            Team40/Code40/tests/out6.xml
+            Team40/Code40/tests/out7.xml
+            Team40/Code40/tests/out8.xml
             Team40/Code40/tests/analysis.xsl
 
 # might need test-2 test-3 etc. with the same structure if testing all source/query combinations tgt takes too long
