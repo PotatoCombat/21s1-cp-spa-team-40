@@ -14,9 +14,16 @@ using namespace std;
 class QueryTokenizer {
 private:
     inline static const string KEYWORD_SELECT = "Select";
-    inline static const string KEYWORD_SUCH_THAT = "such that";
+    inline static const string KEYWORD_SUCH = "such";
+    inline static const string KEYWORD_THAT = "that";
     inline static const string KEYWORD_PATTERN = "pattern";
+    inline static const string KEYWORD_AND = "and";
+    inline static const string KEYWORD_WITH = "with";
 
+    inline static const string NAME_SET = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    inline static const string NAME_WITH_QUOTE_SET =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\"";
     inline static const string WHITESPACE_SET = " \n\t\r";
     inline static const char WHITESPACE = ' ';
     inline static const char L_BRACKET = '(';
