@@ -13,7 +13,7 @@ private:
     string pattern;
 public:
     Pattern(Reference stmt, Reference var, string pattern);
-    Reference getStmt();
-    Reference getVar();
+    Reference *getStmt();
+    Reference *getVar();
     string getPattern();
 };
