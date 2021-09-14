@@ -74,7 +74,7 @@ PatternClause* QueryParser::parsePattern(PatTuple pattern, vector<Reference*>& d
 
 // helper methods
 
-ReferenceType QueryParser::checkRefType(string val) {
+ReferenceType QueryParser::checkRefType(string &val) {
     if (isWildcard(val)) {
         return ReferenceType::WILDCARD;
     } else if (isInteger(val)) {
@@ -90,7 +90,7 @@ bool QueryParser::isInteger(string val) {
 }
 
 // " "
-bool QueryParser::isNamedSynonym(string val) {
+bool QueryParser::isNamedSynonym(string &val) {
     int c = count(val.begin(), val.end(), '"');
 
     if (c != 2) {
@@ -100,7 +100,12 @@ bool QueryParser::isNamedSynonym(string val) {
     size_t pos1 = val.find_first_of('"');
     size_t pos2 = val.find_last_of('"');
 
-    return pos1 == 0 && pos2 == val.size() - 1;
+
+    if (pos1 == 0 && pos2 == val.size() - 1) {
+        val = val.substr(pos1, val.size() - 2);
+        return true;
+    }
+    return false;
 }
 
 // _

@@ -18,9 +18,9 @@ private:
     DesignEntityTypeHelper deHelper;
     ClauseTypeHelper clsHelper;
 
-    ReferenceType checkRefType(string val);
+    ReferenceType checkRefType(string &val);
     bool isInteger(string val);
-    bool isNamedSynonym(string val);
+    bool isNamedSynonym(string &val);
     bool isWildcard(string val);
 
 public:
