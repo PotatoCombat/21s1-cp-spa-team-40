@@ -62,8 +62,8 @@ jobs:
           key: ${{ runner.os }}-build
       - name: Run Tests
         run: |
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source1.txt Team40\Tests40\Queries1.txt Team40\Code40\tests\outt.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TA_source.txt Team40\Tests40\TA_queries.txt Team40\Code40\tests\out1.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source1.txt Team40\Tests40\Queries1.txt Team40\Code40\tests\out1.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TA_source.txt Team40\Tests40\TA_queries.txt Team40\Code40\tests\out2.xml
           # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_BasicSource_source.txt Team40\Tests40\TD_BasicSource_queries.txt Team40\Code40\tests\out2.xml
           # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_ComplexSource_source.txt Team40\Tests40\TD_ComplexSource_queries.txt Team40\Code40\tests\out3.xml
           # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_DeepNest_source.txt Team40\Tests40\TD_DeepNest_queries.txt Team40\Code40\tests\out4.xml
@@ -76,8 +76,8 @@ jobs:
         with:
           name: system-test-report
           path: |
-            Team40/Code40/tests/out.xml
             Team40/Code40/tests/out1.xml
+            Team40/Code40/tests/out2.xml
             # Team40/Code40/tests/out2.xml
             # Team40/Code40/tests/out3.xml
             # Team40/Code40/tests/out4.xml
