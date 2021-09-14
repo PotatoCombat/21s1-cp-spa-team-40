@@ -101,7 +101,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
         // check if it's a comma
         if (isClause) { // handle tokenizing of X1(X2,X3) here
             if (portionOfClause == 0) {
-                size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(L_BRACKET);
                 if (not_name_char_pos != string::npos) {
                     if (token[not_name_char_pos] == '(') {
                         token1 = token.substr(0, not_name_char_pos);
@@ -118,7 +119,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 }
                 ++portionOfClause; // 1
             } else if (portionOfClause == 1) {
-                size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(COMMA);
                 if (not_name_char_pos != string::npos) {
                     if (token[not_name_char_pos] == ',') {
                         token2 = token.substr(0, not_name_char_pos);
@@ -135,7 +137,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 }
                 ++portionOfClause; // 2
             } else if (portionOfClause == 2) {
-                size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(R_BRACKET);
                 if (not_name_char_pos != string::npos) {
                     if (token[not_name_char_pos] == ')') {
                         token3 = token.substr(0, not_name_char_pos);
@@ -149,7 +152,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (isClause == 1) {
                     clss.push_back(make_tuple(token1, token2, token3));
                 } else if (isClause == 2) {
-                    pats.push_back(make_pair(token1, vector<PatArg>{token2, token3}));
+                    pats.push_back(
+                        make_pair(token1, vector<PatArg>{token2, token3}));
                 } else {
                     throw "error"; // something is very wrong
                 }
@@ -234,7 +238,7 @@ size_t QueryTokenizer::findFirstWhitespace(string input) {
     return first_w;
 }
 
-//void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
+// void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
 //    // check count
 //    int l_c = count(input.begin(), input.end(), L_BRACKET);
 //    int r_c = count(input.begin(), input.end(), R_BRACKET);

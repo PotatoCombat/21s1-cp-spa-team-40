@@ -49,10 +49,6 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             q.addClause(rel);
         }
 
-        for (int i = 0; i < refList.size(); ++i) {
-            delete refList[i];
-        }
-
         return;
     } catch (const char *msg) {
         throw "invalid query";

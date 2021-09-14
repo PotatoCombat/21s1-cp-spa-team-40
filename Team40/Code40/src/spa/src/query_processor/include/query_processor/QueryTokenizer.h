@@ -22,8 +22,6 @@ private:
 
     inline static const string NAME_SET = 
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    inline static const string NAME_WITH_QUOTE_SET =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\"";
     inline static const string WHITESPACE_SET = " \n\t\r";
     inline static const char WHITESPACE = ' ';
     inline static const char L_BRACKET = '(';
