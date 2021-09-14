@@ -30,25 +30,25 @@ void DesignExtractor::extractProcedure(Procedure *procedure) {
 }
 
 StmtIndex DesignExtractor::extractStatement(Statement *statement) {
-    StmtIndex stmtIndex;
+    StmtIndex stmtIndex = pkb->insertStmt(statement);
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
-        stmtIndex = extractAssignStatement(statement);
+        extractAssignStatement(statement);
         break;
     case StatementType::CALL:
-        stmtIndex = extractCallStatement(statement);
+        extractCallStatement(statement);
         break;
     case StatementType::IF:
-        stmtIndex = extractIfStatement(statement);
+        extractIfStatement(statement);
         break;
     case StatementType::PRINT:
-        stmtIndex = extractPrintStatement(statement);
+        extractPrintStatement(statement);
         break;
     case StatementType::READ:
-        stmtIndex = extractReadStatement(statement);
+        extractReadStatement(statement);
         break;
     case StatementType::WHILE:
-        stmtIndex = extractWhileStatement(statement);
+        extractWhileStatement(statement);
         break;
     default:
         throw runtime_error("Invalid StatementType!");
@@ -56,8 +56,8 @@ StmtIndex DesignExtractor::extractStatement(Statement *statement) {
     return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
+void DesignExtractor::extractAssignStatement(Statement *assignStatement) {
+    pkb->insertPatternAssign(assignStatement);
 
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
@@ -71,13 +71,9 @@ StmtIndex DesignExtractor::extractAssignStatement(Statement *assignStatement) {
         extractVariable(variable);
     }
     ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
-
-    return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractCallStatement(Statement *callStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
-
+void DesignExtractor::extractCallStatement(Statement *callStatement) {
     ProcName calledProcName = callStatement->getProcName();
 
     optional<Procedure *> currentProcedure =
@@ -106,13 +102,9 @@ StmtIndex DesignExtractor::extractCallStatement(Statement *callStatement) {
     //        }
     //    }
     //
-    return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractIfStatement(Statement *ifStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
-
+void DesignExtractor::extractIfStatement(Statement *ifStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
     for (Variable *variable : ifStatement->getExpressionVars()) {
@@ -131,29 +123,21 @@ StmtIndex DesignExtractor::extractIfStatement(Statement *ifStatement) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(ifStatement);
-    return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractReadStatement(Statement *readStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
+void DesignExtractor::extractReadStatement(Statement *readStatement) {
     ExtractionContext::getInstance().setModifyingStatement(readStatement);
     extractVariable(readStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
-    return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractPrintStatement(Statement *printStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
+void DesignExtractor::extractPrintStatement(Statement *printStatement) {
     ExtractionContext::getInstance().setUsingStatement(printStatement);
     extractVariable(printStatement->getVariable());
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
-    return stmtIndex;
 }
 
-StmtIndex DesignExtractor::extractWhileStatement(Statement *whileStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
-
+void DesignExtractor::extractWhileStatement(Statement *whileStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : whileStatement->getExpressionVars()) {
@@ -167,8 +151,6 @@ StmtIndex DesignExtractor::extractWhileStatement(Statement *whileStatement) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(whileStatement);
-
-    return stmtIndex;
 }
 
 void DesignExtractor::extractVariable(Variable *variable) {
