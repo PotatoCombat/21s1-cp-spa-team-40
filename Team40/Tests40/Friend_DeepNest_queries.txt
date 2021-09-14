@@ -1,0 +1,220 @@
+1 - no clause
+variable v;
+Select v
+a, b, c, x, y, z
+5000
+2 - no clause
+constant c;
+Select c
+0, 1
+5000
+3 - no clause
+read r;
+Select r
+1, 14, 16
+5000
+4 - no clause
+while w;
+Select w
+9, 10, 11, 17, 20
+5000
+5 - no clause
+print p;
+Select p
+5, 6, 7, 8, 13, 19
+5000
+6 - no clause
+if ifs;
+Select ifs
+2, 3, 4, 15, 18
+5000
+7 - no clause
+assign a;
+Select a
+12, 21
+5000
+8 - no clause
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+5000
+9 - Parent
+while w, w1;
+Select w such that Parent(w, w1)
+9, 10
+5000
+10 - Parent
+if ifs, ifs1;
+Select ifs1 such that Parent(ifs, ifs1)
+3, 4
+5000
+11 - Parent
+while w; if ifs;
+Select w such that Parent(w, ifs)
+17
+5000
+12 - Parent
+while w; assign a;
+Select w such that Parent(w, a)
+11, 20
+5000
+13 - Parent*
+while w; assign a;
+Select w such that Parent*(w, a)
+9, 10, 11, 17, 20
+5000
+14 - Parent*
+while w; if ifs;
+Select w such that Parent*(ifs, w)
+17, 20
+5000
+15 - Parent*
+while w; if ifs;
+Select ifs such that Parent*(ifs, w)
+15, 18
+5000
+16 - Parent*
+if ifs; assign a;
+Select ifs such that Parent*(ifs, a)
+15, 18
+5000
+17 - Parent*
+if ifs; assign a;
+Select a such that Parent*(ifs, a)
+21
+5000
+18 - Follows
+if ifs; assign a;
+Select a such that Follows(ifs, a)
+
+5000
+19 - Follows
+if ifs; read re;
+Select ifs such that Follows(ifs, re)
+
+5000
+20 - Follows
+if ifs, ifs1;
+Select ifs such that Follows(ifs, ifs1)
+
+5000
+21 - Follows*
+read r; if ifs;
+Select r such that Follows*(r, ifs)
+1, 14
+5000
+22 - Follows*
+assign a; print p;
+Select a such that Follows*(a, p)
+12
+5000
+23 - Follows*
+if ifs, ifs1;
+Select ifs1 such that Follows*(ifs, ifs1)
+15
+5000
+24 - Uses
+while w;
+Select w such that Uses(w, "x")
+9, 10, 11, 17, 20
+5000
+25 - Uses
+if ifs;
+Select ifs such that Uses(ifs, "c")
+2, 3, 4, 15, 18
+5000
+26 - Uses
+if ifs; variable v;
+Select v such that Uses(ifs, v)
+a, b, c, x, y
+5000
+27 - Modifies
+while w;
+Select w such that Modifies(w, "y")
+9, 10, 11
+5000
+28 - Modifies
+while w; variable v;
+Select v such that Modifies(w, v)
+y, z
+5000
+29 - Pattern
+assign a;
+Select a pattern a("z", _"y"_)
+21
+5000
+30 - Pattern
+assign a;
+Select a pattern a("x", __)
+
+5000
+31 - Pattern
+assign a; variable v;
+Select v pattern a(v, _"0"_)
+y
+5000
+32 - Parent and Pattern
+assign a, a1; while w;
+Select a such that Parent(w, a1) pattern a("z", _"x"_)
+21
+5000
+33 - Parent and Pattern
+assign a; if ifs;
+Select ifs such that Parent(ifs, a) pattern a(_, _)
+
+5000
+34 - Parent* and Pattern
+assign a; if ifs;
+Select ifs such that Parent*(ifs, a) pattern a("z", _)
+15, 18
+5000
+35 - Parent* and Pattern
+assign a; while w; variable v;
+Select w such that Parent*(w, a) pattern a(v, _"a"_)
+17, 20
+5000
+36 - Follows and Pattern
+assign a; print pn;
+Select a such that Follows(a, pn) pattern a(_, _"0"_)
+12
+5000
+37 - Follows and Pattern
+assign a, a1; variable v;
+Select v such that Follows(a, a1) pattern a(v, _)
+
+5000
+38 - Follows* and Pattern
+assign a; read r;
+Select r such that Follows*(r, a) pattern a(_, _)
+
+5000
+39 - Follows* and Pattern
+assign a; read r, r1;
+Select r such that Follows*(r, r1) pattern a(_, _"1"_)
+
+5000
+40 - Uses and Pattern
+assign a; variable v;
+Select a such that Uses(a, "y") pattern a(v, _)
+21
+5000
+41 - Uses and Pattern
+assign a; while w;
+Select w such that Uses(w, "x") pattern a(_, _)
+9, 10, 11, 17, 20
+5000
+42 - Modifies and Pattern
+assign a;
+Select a such that Modifies(a, "z") pattern a("z", _)
+21
+5000
+43 - Modifies and Pattern
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(v, _"x"_)
+z
+5000
+44 - Modifies and Pattern
+assign a; if ifs;
+Select ifs such that Modifies(ifs, "y") pattern a(_, _"x * a * b * c / y"_)
+
+5000
