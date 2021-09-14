@@ -24,6 +24,7 @@ void WhileStatementParser::parseChildStatements(Statement *stmt) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         if (currContent[0] == "}") {
+            this->programIndex = i;
             break;
         }
         if (currContent[0] != "}" && currContent[0] != "else") {
@@ -31,12 +32,6 @@ void WhileStatementParser::parseChildStatements(Statement *stmt) {
             auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             stmt->addThenStmt(nestedStmt);
-            this->programIndex = i;
-            if (nestedStmt->getStatementType() == StatementType::IF) {
-                i++;
-            } else if (nestedStmt->getStatementType() == StatementType::WHILE) {
-                i++;
-            }
         }
     }
 }
