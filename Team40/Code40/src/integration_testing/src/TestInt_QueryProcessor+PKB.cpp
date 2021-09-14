@@ -13,11 +13,12 @@ using namespace std;
 struct TestInt_QP: public PKB {
 public:
     inline static PKB createPKBWithOneStatement() {
-        Statement s(1, StatementType::ASSIGN);
+        auto stmt = new Statement(1, StatementType::ASSIGN);
 
         PKB pkb;
-        pkb.insertStmt(&s);
+        pkb.insertStmt(stmt);
 
+        delete stmt;
         return pkb;
     }
 };

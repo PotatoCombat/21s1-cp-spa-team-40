@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Abstractions.h"
+#include "common/model/Abstractions.h"
 #include "common/model/Procedure.h"
-#include "common/model/statement/Statement.h"
+#include "common/model/Statement.h"
 #include "common/model/Variable.h"
 
 #include <map>

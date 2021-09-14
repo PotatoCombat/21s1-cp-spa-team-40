@@ -1,4 +1,7 @@
 #pragma once
+
+#include <stdexcept>
+
 #include "common/model/Factor.h"
 
 enum class TermType {

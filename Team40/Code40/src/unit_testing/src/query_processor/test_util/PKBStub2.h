@@ -3,7 +3,7 @@
 #include <vector>
 #include <set>
 
-#include "pkb/Abstractions.h"
+#include "common/model/Abstractions.h"
 #include "pkb/Iterator.h"
 #include "pkb/PKB.h"
 

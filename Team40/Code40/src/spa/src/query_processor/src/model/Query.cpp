@@ -15,10 +15,10 @@ void Query::setReturnReference(Reference *reference) {
 
 Reference *Query::getReturnReference() { return this->returnReference; }
 
-void Query::addClause(Clause *relation) {
-    clauseList.push_back(relation);
-    addReference(relation->getFirstReference());
-    addReference(relation->getSecondReference());
+void Query::addClause(Clause *clause) {
+    clauseList.push_back(clause);
+    addReference(clause->getFirstReference());
+    addReference(clause->getSecondReference());
 }
 
 void Query::addReference(Reference* reference) {
@@ -35,3 +35,9 @@ void Query::addReference(Reference* reference) {
 }
 
 vector<Clause *> Query::getClauses() { return this->clauseList; }
+
+void Query::addPattern(Pattern* pattern) {
+    patternList.push_back(pattern);
+    addReference(&pattern->getStmt());
+    addReference(&pattern->getVar());
+}

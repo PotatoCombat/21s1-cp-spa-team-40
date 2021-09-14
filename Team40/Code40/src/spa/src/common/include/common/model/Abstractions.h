@@ -4,10 +4,6 @@
 
 using namespace std;
 
-typedef int ProcIndex;
-typedef int VarIndex;
-typedef int ConstIndex;
-
 typedef string ProcName;
 typedef string VarName;
 typedef string ConstName;
