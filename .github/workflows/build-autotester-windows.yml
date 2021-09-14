@@ -44,7 +44,7 @@ jobs:
           path: ./*
           key: ${{ runner.os }}-build
 
-  test-1:
+  test:
     needs: build
     runs-on: windows-latest
     timeout-minutes: 3
