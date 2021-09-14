@@ -1,0 +1,76 @@
+name: Run Autotester on Windows Environment
+
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
+# If you are doing triggering your workflow from pushes or merging more than twice a day on average,
+# please execute your workflow on a schedule instead.
+# Comment the above 7 lines, and uncomment the following 3 lines
+# Runs job at 8am and 6pm daily
+on:
+  schedule:
+    - cron: "0 0,10 * * *"
+
+env:
+    BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 3
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build Project and Cache
+        shell: bash
+        run: |
+          cd Team40/Code40
+          mkdir build
+          cd build
+          cmake -A Win32 ..
+          # cmake --build . --target unit_testing --config Release
+          # cmake --build . --target integration_testing --config Release
+          cmake --build . --target autotester --config Release
+      - uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ runner.os }}-build
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 3
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Use Cache
+        uses: actions/cache@v2
+        id: restore-build
+        with: 
+          path: ./*
+          key: ${{ runner.os }}-build
+      - name: Run Tests
+        run: |
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source.txt Team40\Tests40\Sample_queries.txt Team40\Code40\tests\out.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source1.txt Team40\Tests40\Sample_queries1.txt Team40\Code40\tests\out1.xml
+          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source2.txt Team40\Tests40\Sample_queries2.txt Team40\Code40\tests\out2.xml
+      - name: Archive System Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: system-test-report
+          path: |
+            Team40/Code40/tests/out.xml
+            Team40/Code40/tests/out1.xml
+            Team40/Code40/tests/out2.xml
+            Team40/Code40/tests/analysis.xsl
