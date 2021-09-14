@@ -148,7 +148,7 @@ set<VarName> PKBStub::getVarsModifiedByStmt(StmtIndex stmt) {
         {"x"}, {"z"}, {"i"}, {"x", "z", "y", "i"}, {"x"}, {"z", "y"},
         {"z"}, {"y"}, {"z"}, {"z", "x"},           {"i"}, {"x", "z", "i"}};
 
-    return varsModifies[stmt - 1];
+    return varsModified[stmt - 1];
 }
 
 bool PKBStub::stmtModifies(StmtIndex stmt, VarName var) {
