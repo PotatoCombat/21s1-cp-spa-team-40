@@ -63,7 +63,7 @@ public:
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
     /// Stores the relationship pattern a(var, exprList), where a is an assign.
-    virtual void insertPatternAssign(AssignStatement *stmt);
+    virtual void insertPatternAssign(Statement *stmt);
 
     // =========================================================================
     // Query Processor

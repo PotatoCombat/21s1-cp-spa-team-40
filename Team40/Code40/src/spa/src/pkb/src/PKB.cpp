@@ -4,15 +4,15 @@
 
 using namespace std;
 
-Procedure* PKB::getProcByName(ProcName procName) {
+Procedure *PKB::getProcByName(ProcName procName) {
     return procTable.getEntity(move(procName));
 }
 
-Variable* PKB::getVarByName(VarName varName) {
+Variable *PKB::getVarByName(VarName varName) {
     return varTable.getEntity(move(varName));
 }
 
-Statement* PKB::getStmtByIndex(StmtIndex stmtIndex) {
+Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
     return statementTable.getStmt(stmtIndex);
 }
 
@@ -24,9 +24,7 @@ void PKB::insertProc(Procedure *procedure) {
     return procTable.insert(procedure);
 }
 
-void PKB::insertVar(Variable *variable) {
-    return varTable.insert(variable);
-}
+void PKB::insertVar(Variable *variable) { return varTable.insert(variable); }
 
 void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
@@ -62,7 +60,7 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
-void PKB::insertPatternAssign(AssignStatement *stmt) {
+void PKB::insertPatternAssign(Statement *stmt) {
     patternTable.insertPatternAssign(stmt);
 }
 
@@ -196,14 +194,17 @@ set<StmtIndex> PKB::getAssignsMatchingPattern(VarName var, Pattern pattern) {
     return patternTable.getAssignsMatchingPattern(var, pattern);
 }
 
-set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var, Pattern pattern) {
+set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var,
+                                                   Pattern pattern) {
     return patternTable.getAssignsMatchingExactPattern(var, pattern);
 }
 
-bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var,
+                               Pattern pattern) {
     return patternTable.assignMatchesPattern(stmtIndex, var, pattern);
 }
 
-bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var,
+                                    Pattern pattern) {
     return patternTable.assignMatchesExactPattern(stmtIndex, var, pattern);
 }

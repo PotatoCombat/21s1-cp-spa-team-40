@@ -4,10 +4,9 @@
 #include <set>
 #include <vector>
 
-#include "Abstractions.h"
 #include "Iterator.h"
-
-#include "common/model/statement/AssignStatement.h"
+#include "common/model/Abstractions.h"
+#include "common/model/Statement.h"
 
 using namespace std;
 
@@ -15,11 +14,15 @@ class PatternTable {
 public:
     PatternTable();
 
-    void insertPatternAssign(AssignStatement *stmt); // Note: This will most likely be in Design Extractor
+    void insertPatternAssign(
+        Statement *stmt); // Note: This will most likely be in Design Extractor
     set<StmtIndex> getAssignsMatchingPattern(VarName varName, Pattern pattern);
-    set<StmtIndex> getAssignsMatchingExactPattern(VarName varName, Pattern pattern);
-    bool assignMatchesPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern);
-    bool assignMatchesExactPattern(StmtIndex stmtIndex, VarName varName, Pattern pattern);
+    set<StmtIndex> getAssignsMatchingExactPattern(VarName varName,
+                                                  Pattern pattern);
+    bool assignMatchesPattern(StmtIndex stmtIndex, VarName varName,
+                              Pattern pattern);
+    bool assignMatchesExactPattern(StmtIndex stmtIndex, VarName varName,
+                                   Pattern pattern);
 
     typedef tuple<VarName, Pattern> Record;
 
@@ -31,18 +34,18 @@ public:
     static string createExactPattern(vector<string> &exprList);
 
 private:
-    inline static map<string, int> PRECEDENCE {
-        { "(", 0 },
-        { ")", 0 },
-        { "+", 1 },
-        { "-", 1 },
-        { "*", 2 },
-        { "/", 2 },
-        { "%", 2 },
+    inline static map<string, int> PRECEDENCE{
+        {"(", 0},
+        {")", 0},
+        {"+", 1},
+        {"-", 1},
+        {"*", 2},
+        {"/", 2},
+        {"%", 2},
 
         // # symbol is an empty stack marker.is used in postfix method.
         // It is placed in here so that the postfix method skips this symbol.
-        { "#", 0 },
+        {"#", 0},
     };
 
     inline static string WILDCARD = "_";
