@@ -16,8 +16,8 @@ private:
     unordered_map<ProcName, unordered_set<ProcName>> procDependencyTree;
 
     static ExtractionContext *instance;
-    EntityContext<Statement> *parentContext;
-    EntityContext<Statement> *followsContext;
+    EntityContext<Statement> parentContext;
+    EntityContext<Statement> followsContext;
     optional<Statement *> usingStatement;
     optional<Statement *> modifyingStatement;
 
@@ -29,8 +29,8 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    static EntityContext<Statement> &getFollowsContext();
-    static EntityContext<Statement> &getParentContext();
+    EntityContext<Statement> &getFollowsContext();
+    EntityContext<Statement> &getParentContext();
 
     optional<Procedure *> getCurrentProcedure();
     void setCurrentProcedure(Procedure *procedure);
@@ -44,4 +44,6 @@ public:
 
     void addProcDependency(ProcName from, ProcName to);
     unordered_set<ProcName> getProcDependencies(ProcName from);
+
+    void reset();
 };
