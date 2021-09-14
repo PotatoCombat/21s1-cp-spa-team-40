@@ -19,7 +19,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         int found = 0;
         for (auto x : refList) {
             if (retString == x->getValue()) {
-                q.setReturnReference(x);
+                q.setReturnReference(x->copy());
                 found = 1;
                 break;
             }
@@ -32,10 +32,6 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             return;
         }
 
-        /*for (int i = 0; i < refList.size(); ++i) {
-            delete refList[i];
-        }*/
-
         // has clauses
         vector<ClsTuple> relString;
         vector<PatTuple> patString;
@@ -47,6 +43,10 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             Clause *rel = parser.parseClause(x, refList);
             clsList.push_back(rel);
             q.addClause(rel);
+        }
+
+        for (int i = 0; i < refList.size(); ++i) {
+            delete refList[i];
         }
 
         return;
