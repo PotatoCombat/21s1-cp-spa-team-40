@@ -1,7 +1,9 @@
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "ClauseHandler.h"
 #include "ClauseHandlerError.h"
