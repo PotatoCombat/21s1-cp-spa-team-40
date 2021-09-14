@@ -13,19 +13,33 @@ using namespace std;
 struct TestPatterns {
     inline static vector<string> createExprList1() {
         // ((x + 10) * (y - z) / 5)
-        return {"(", "(", "x", "+", "10", ")", "*", "(", "y", "-", "z", ")", "/",  "5", ")",};
+        return {
+            "(", "(", "x", "+", "10", ")", "*", "(",
+            "y", "-", "z", ")", "/",  "5", ")",
+        };
     }
 
     inline static vector<string> createExprList2() {
         // v + x * y + z * t
-        return {"v", "+", "x", "*", "y", "+", "z", "*", "t",};
+        return {
+            "v", "+", "x", "*", "y", "+", "z", "*", "t",
+        };
     }
 
     inline static set<string> createPatterns1() {
         return {
-            "x", "10", "x+10", "(x+10)",
-            "y", "z", "y-z", "(y-z)",
-            "(x+10)*(y-z)", "5", "(x+10)*(y-z)/5", "((x+10)*(y-z)/5)",
+            "x",
+            "10",
+            "x+10",
+            "(x+10)",
+            "y",
+            "z",
+            "y-z",
+            "(y-z)",
+            "(x+10)*(y-z)",
+            "5",
+            "(x+10)*(y-z)/5",
+            "((x+10)*(y-z)/5)",
         };
     }
 };
@@ -48,8 +62,9 @@ TEST_CASE("PatternTable: createPostfix -> createPatterns") {
 
 TEST_CASE("PatternTable: insertPattern") {
     Variable v("x");
-    AssignStatement stmt(1, &v);
-    stmt.setExprLst(TestPatterns::createExprList2());
+    Statement stmt(1, StatementType::ASSIGN);
+    stmt.setVariable(&v);
+    stmt.setExpressionLst(TestPatterns::createExprList2());
 
     PatternTable table;
     table.insertPatternAssign(&stmt);
