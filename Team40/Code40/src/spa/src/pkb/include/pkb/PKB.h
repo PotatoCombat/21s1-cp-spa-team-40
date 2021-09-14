@@ -17,11 +17,6 @@
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
 #include "common/model/Variable.h"
-<<<<<<< HEAD
-#include "common/model/statement/Statement.h"
-#include "common/model/statement/AssignStatement.h"
-=======
->>>>>>> master
 
 using namespace std;
 
@@ -200,19 +195,24 @@ public:
     /// Selects a such that a(var, pattern), where a is an AssignStatement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getAssignsMatchingPattern(VarName var, Pattern pattern);
+    virtual set<StmtIndex> getAssignsMatchingPattern(VarName var,
+                                                     Pattern pattern);
 
     /// Selects a such that a(var, pattern), where a is an AssignStatement,
     /// and the pattern requires an exact match.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getAssignsMatchingExactPattern(VarName var, Pattern pattern);
+    virtual set<StmtIndex> getAssignsMatchingExactPattern(VarName var,
+                                                          Pattern pattern);
 
     /// Selects BOOLEAN such that a(var, pattern).
-    virtual bool assignMatchesPattern(StmtIndex stmt, VarName var, Pattern pattern);
+    virtual bool assignMatchesPattern(StmtIndex stmt, VarName var,
+                                      Pattern pattern);
 
-    /// Selects BOOLEAN such that a(var, pattern), but pattern must be an exact match.
-    virtual bool assignMatchesExactPattern(StmtIndex stmt, VarName var, Pattern pattern);
+    /// Selects BOOLEAN such that a(var, pattern), but pattern must be an exact
+    /// match.
+    virtual bool assignMatchesExactPattern(StmtIndex stmt, VarName var,
+                                           Pattern pattern);
 
 private:
     ProcedureTable procTable;
