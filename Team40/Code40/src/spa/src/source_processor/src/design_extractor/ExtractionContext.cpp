@@ -88,3 +88,14 @@ unordered_set<ProcName>
 ExtractionContext::getProcDependencies(ProcName caller) {
     return procDependencyTree[caller];
 }
+
+void ExtractionContext::reset() {
+    if (!followsContext.getAllEntities().empty()) {
+        followsContext.getAllEntities().clear();
+    }
+    parentContext.getAllEntities().clear();
+    currentProcedure.reset();
+    usingStatement.reset();
+    modifyingStatement.reset();
+    procDependencyTree.clear();
+}
