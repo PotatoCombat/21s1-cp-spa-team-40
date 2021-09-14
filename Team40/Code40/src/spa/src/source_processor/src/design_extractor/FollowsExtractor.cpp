@@ -9,8 +9,8 @@ void FollowsExtractor::extract(Program *program) {
     }
     while (!statementLists.empty()) {
         vector<Statement *> statementList = statementLists.back();
-        extractStatementList(statementList);
         statementLists.pop_back();
+        extractStatementList(statementList);
     }
 }
 

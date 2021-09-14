@@ -23,6 +23,7 @@ TEST_CASE("TestExtractionContext") {
                      .getModifyingStatement()
                      .has_value());
     }
+
     SECTION("Correctly pushes and pops Entities") {
         ExtractionContext::getInstance().reset();
         const string PROC_NAME = "TEST_PROC";
