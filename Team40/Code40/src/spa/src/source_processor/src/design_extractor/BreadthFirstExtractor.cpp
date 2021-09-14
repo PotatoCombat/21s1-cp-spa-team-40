@@ -1,9 +1,12 @@
-#include "source_processor/design_extractor/FollowsExtractor.h"
+#include "source_processor/design_extractor/BreadthFirstExtractor.h"
 
-FollowsExtractor::FollowsExtractor(PKB *pkb)
+BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb)
     : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};
 
-void FollowsExtractor::extract(Program *program) {
+void BreadthFirstExtractor::extract(Program *program) {
+    // Here, we only reset statement contexts since we need to persist the
+    // procedure dependency tree
+    ExtractionContext::getInstance().resetStatementContexts();
     for (Procedure *procedure : program->getProcLst()) {
         statementLists.push_back(procedure->getStmtLst());
     }
@@ -14,14 +17,15 @@ void FollowsExtractor::extract(Program *program) {
     }
 }
 
-void FollowsExtractor::extractStatementList(vector<Statement *> statementList) {
+void BreadthFirstExtractor::extractStatementList(
+    vector<Statement *> statementList) {
     for (Statement *statement : statementList) {
         extractStatement(statement);
     }
     ctx.clear();
 }
 
-void FollowsExtractor::extractStatement(Statement *statement) {
+void BreadthFirstExtractor::extractStatement(Statement *statement) {
     for (Statement *prev : ctx.getAllEntities()) {
         pkb->insertFollows(prev, statement);
     }
