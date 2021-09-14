@@ -33,16 +33,23 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         }
 
         // has clauses
-        vector<ClsTuple> relString;
+        vector<ClsTuple> clsString;
         vector<PatTuple> patString;
 
-        tokenizer.tokenizeClause(clauses, relString, patString);
+        tokenizer.tokenizeClause(clauses, clsString, patString);
 
         vector<Clause *> clsList;
-        for (auto x : relString) {
-            Clause *rel = parser.parseClause(x, refList);
-            clsList.push_back(rel);
-            q.addClause(rel);
+        for (auto x : clsString) {
+            Clause *cls = parser.parseClause(x, refList);
+            clsList.push_back(cls);
+            q.addClause(cls);
+        }
+
+        vector<PatternClause *> patList;
+        for (auto x : patString) {
+            PatternClause* pat = parser.parsePattern(x, refList);
+            patList.push_back(pat);
+            q.addPattern(pat);
         }
 
         for (int i = 0; i < refList.size(); ++i) {

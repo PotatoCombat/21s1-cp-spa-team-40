@@ -42,6 +42,36 @@ Clause *QueryParser::parseClause(ClsTuple clause,
     return new Clause(clsT, *x[0], *x[1]);
 }
 
+PatternClause* QueryParser::parsePattern(PatTuple pattern, vector<Reference*>& declList) {
+    string identity = get<0>(pattern);
+    vector<PatArg> patArgs = get<1>(pattern);
+    string LHS = patArgs[0];
+    string RHS = patArgs[1];
+    
+    Reference* r;
+    Reference* r1;
+    auto it = find_if(declList.begin(), declList.end(),
+        [&identity](Reference* ref) { return ref->getValue() == identity; });
+    auto it1 = find_if(declList.begin(), declList.end(),
+        [&LHS](Reference* ref) { return ref->getValue() == LHS; });
+
+    if (it != declList.end()) {
+        r = (*it)->copy();
+    } else {
+        throw "error"; // identity isn't a declared synonym
+    }
+
+    if (it1 != declList.end()) {
+        r1 = (*it1)->copy();
+    } else {
+        ReferenceType refT = checkRefType(LHS);
+        DesignEntityType deT = DesignEntityType::VARIABLE;
+        r1 = new Reference(deT, refT, LHS);
+    }
+    
+    return new PatternClause(*r, *r1, RHS);
+}
+
 // helper methods
 
 ReferenceType QueryParser::checkRefType(string val) {

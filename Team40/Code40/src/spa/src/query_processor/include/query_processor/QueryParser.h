@@ -8,6 +8,7 @@
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
+#include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Reference.h"
 
 using namespace std;
@@ -26,4 +27,5 @@ public:
     QueryParser() = default;
     Reference *parseDeclaration(DeclPair declaration);
     Clause *parseClause(ClsTuple clause, vector<Reference *> &declList);
+    PatternClause *parsePattern(PatTuple pattern, vector<Reference*>& declList);
 };
