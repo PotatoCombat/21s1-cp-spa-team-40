@@ -51,7 +51,7 @@ TEST_CASE("EntityTable: insert/getEntity") {
 
 TEST_CASE("EntityTable: entity not stored in table") {
     auto table = TestEntityTable::createTable();
-    REQUIRE(table.getEntity("goodbye") == nullptr);
+    REQUIRE(table.getEntity("bye") == nullptr);
 }
 
 TEST_CASE("EntityTable: getNames") {

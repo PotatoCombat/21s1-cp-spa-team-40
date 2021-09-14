@@ -4,7 +4,7 @@
 #include <tuple>
 #include <vector>
 
-#include "Abstractions.h"
+#include "query_processor/Abstractions.h"
 
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"

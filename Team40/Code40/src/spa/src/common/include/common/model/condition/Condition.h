@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "common/model/relation/Relation.h"
+#include <stdexcept>
 
 enum class ConditionType { SINGLE, AND, OR, NOT };
 

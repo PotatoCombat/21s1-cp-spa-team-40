@@ -42,6 +42,4 @@ public:
     bool isComparisonOperator(string input);
     bool isLogicalOperator(string input);
     bool isSemiColon(string input);
-    bool isInteger(string input);
-    bool isName(string input);
 };

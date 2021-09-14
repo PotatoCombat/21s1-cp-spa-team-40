@@ -1,22 +1,20 @@
-#include "source_processor/FollowsExtractor.h"
+#include "source_processor/design_extractor/FollowsExtractor.h"
 
 FollowsExtractor::FollowsExtractor(PKB *pkb)
-    : pkb(pkb),
-      ctx(ExtractionContext::getInstance().getFollowsContext()) {};
+    : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};
 
-void FollowsExtractor::extract(Program program) {
-    for (Procedure procedure : program.getProcLst()) {
-        statementLists.push_back(procedure.getStmtLst());
+void FollowsExtractor::extract(Program *program) {
+    for (Procedure *procedure : program->getProcLst()) {
+        statementLists.push_back(procedure->getStmtLst());
     }
     while (!statementLists.empty()) {
         vector<Statement *> statementList = statementLists.back();
-        extractStatementList(statementList);
         statementLists.pop_back();
+        extractStatementList(statementList);
     }
 }
 
-void FollowsExtractor::extractStatementList(
-    const vector<Statement *> &statementList) {
+void FollowsExtractor::extractStatementList(vector<Statement *> statementList) {
     for (Statement *statement : statementList) {
         extractStatement(statement);
     }

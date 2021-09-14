@@ -5,7 +5,7 @@ using namespace std;
 
 class Variable : public Factor {
 private:
-    const string name;
+    string name;
 
 public:
     Variable(int value, string name);
@@ -13,4 +13,7 @@ public:
 
     // getter
     string getName() override;
+
+    bool operator< (const Variable& other) const;
+    bool operator== (const Variable& other) const;
 };

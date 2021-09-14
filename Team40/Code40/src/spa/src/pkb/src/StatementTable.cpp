@@ -8,7 +8,7 @@ StmtIndex StatementTable::insert(Statement *stmt) {
     size++;
     statements.push_back(stmt);
     indices.push_back(size);
-    statementToIndex[stmt] = size;
+    statementToIndex[statements.back()] = size;
 
     switch (stmt->getStatementType()) {
     case StatementType::ASSIGN:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdexcept>
-
 #include <string>
 
 using namespace std;
@@ -10,7 +9,7 @@ enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 
 class Factor {
 private:
-    const FactorType factorType;
+    FactorType factorType;
     int value;
     bool hasComputedValue; // Used for lazy initialization of value
 

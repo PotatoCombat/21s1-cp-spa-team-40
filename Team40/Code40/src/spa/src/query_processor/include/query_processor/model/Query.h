@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Clause.h"
-#include "Pattern.h"
+#include "PatternClause.h"
 #include "Reference.h"
 
 using namespace std;
@@ -13,8 +13,8 @@ class Query {
 private:
     vector<Reference *> referenceList;
     vector<Clause *> clauseList;
-    vector<Pattern *> patternList;
-    
+    vector<PatternClause *> patternList;
+
     Reference *returnReference;
 
     void addReference(Reference *reference);
@@ -22,11 +22,12 @@ private:
 public:
     Query();
     vector<Reference *> getReferences();
-    // returnReference must have ReferenceType::SYNONYM, should only be called once for each query object
+    // returnReference must have ReferenceType::SYNONYM, should only be called
+    // once for each query object
     void setReturnReference(Reference *reference);
     Reference *getReturnReference();
     void addClause(Clause *clause);
     vector<Clause *> getClauses();
-    void addPattern(Pattern *pattern);
-    vector<Pattern *> getPatterns();
+    void addPattern(PatternClause *pattern);
+    vector<PatternClause *> getPatterns();
 };

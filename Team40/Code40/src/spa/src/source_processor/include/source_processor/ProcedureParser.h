@@ -12,5 +12,5 @@ protected:
 
 public:
     ProcedureParser(vector<string> content);
-    Procedure parseProcedure();
+    Procedure* parseProcedure();
 };
