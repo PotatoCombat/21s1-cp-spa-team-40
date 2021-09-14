@@ -30,6 +30,7 @@ void IfStatementParser::parseChildStatements(Statement *stmt) {
         if (currContent[0] == "}") {
             terminator++;
             if (terminator == 2) {
+                this->programIndex = i;
                 break;
             }
             continue;
@@ -42,12 +43,6 @@ void IfStatementParser::parseChildStatements(Statement *stmt) {
                 stmt->addThenStmt(nestedStmt);
             } else if (terminator == 1) {
                 stmt->addElseStmt(nestedStmt);
-            }
-            this->programIndex = i;
-            if (nestedStmt->getStatementType() == StatementType::IF) {
-                i++;
-            } else if (nestedStmt->getStatementType() == StatementType::WHILE) {
-                i++;
             }
         }
     }
