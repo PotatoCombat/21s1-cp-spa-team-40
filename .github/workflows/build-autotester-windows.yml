@@ -70,7 +70,7 @@ jobs:
           Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_1_source.txt Team40\Tests40\TD_SIMPLE_1_queries.txt Team40\Code40\tests\out5.xml
           Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_2_source.txt Team40\Tests40\TD_SIMPLE_2_queries.txt Team40\Code40\tests\out6.xml
           Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_3_source.txt Team40\Tests40\TD_SIMPLE_3_queries.txt Team40\Code40\tests\out7.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_4_source.txt Team40\Tests40\TD_SIMPLE_4_queries.txt Team40\Code40\tests\out8.xml
+          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_4_source.txt Team40\Tests40\TD_SIMPLE_4_queries.txt Team40\Code40\tests\out8.xml
       - name: Archive System Test Results
         uses: actions/upload-artifact@v2
         with:
@@ -84,7 +84,7 @@ jobs:
             Team40/Code40/tests/out5.xml
             Team40/Code40/tests/out6.xml
             Team40/Code40/tests/out7.xml
-            Team40/Code40/tests/out8.xml
+            # Team40/Code40/tests/out8.xml
             Team40/Code40/tests/analysis.xsl
 
 # might need test-2 test-3 etc. with the same structure if testing all source/query combinations tgt takes too long
