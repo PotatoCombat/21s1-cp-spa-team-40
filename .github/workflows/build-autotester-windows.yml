@@ -44,7 +44,7 @@ jobs:
           path: ./*
           key: ${{ runner.os }}-build
 
-  test:
+  test-1:
     needs: build
     runs-on: windows-latest
     timeout-minutes: 3
@@ -63,14 +63,16 @@ jobs:
       - name: Run Tests
         run: |
           Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source.txt Team40\Tests40\Sample_queries.txt Team40\Code40\tests\out.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source1.txt Team40\Tests40\Sample_queries1.txt Team40\Code40\tests\out1.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source2.txt Team40\Tests40\Sample_queries2.txt Team40\Code40\tests\out2.xml
+          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source1.txt Team40\Tests40\Sample_queries1.txt Team40\Code40\tests\out1.xml
+          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Sample_source2.txt Team40\Tests40\Sample_queries2.txt Team40\Code40\tests\out2.xml
       - name: Archive System Test Results
         uses: actions/upload-artifact@v2
         with:
           name: system-test-report
           path: |
             Team40/Code40/tests/out.xml
-            Team40/Code40/tests/out1.xml
-            Team40/Code40/tests/out2.xml
+            # Team40/Code40/tests/out1.xml
+            # Team40/Code40/tests/out2.xml
             Team40/Code40/tests/analysis.xsl
+
+# might need test-2 test-3 etc. with the same structure if testing all source/query combinations tgt takes too long
