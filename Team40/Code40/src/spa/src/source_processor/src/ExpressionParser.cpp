@@ -53,7 +53,7 @@ bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
 
 bool ExpressionParser::isValidWhileIfOperator(Statement *stmt, string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) ||
-             isRoundBracket(input));
+            isArtihmeticOperator(input) || isRoundBracket(input));
 }
 
 bool ExpressionParser::isRoundBracket(string input) {
