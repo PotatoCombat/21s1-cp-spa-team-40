@@ -12,6 +12,7 @@
 #include "source_processor/StatementParser.h"
 #include "source_processor/WhileStatementParser.h"
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <vector>
 using namespace std;
@@ -19,50 +20,54 @@ using namespace std;
 class ProgramParser {
 public:
     Program parseProgram(vector<Line> programLines, Program &program) {
-        Procedure *currProc = nullptr; //new Procedure("");
+        Procedure *currProc = nullptr;
         for (int i = 0; i < programLines.size(); i++) {
             int currIndex = programLines[i].getIndex();
             vector<string> currContent = programLines[i].getContent();
             if (isProc(currContent)) {
                 if (currProc != nullptr) {
-//                if (!currProc->getName().empty()) {
                     program.addToProcLst(currProc);
                 }
                 ProcedureParser procParser(currContent);
                 currProc = procParser.parseProcedure();
             } else if (!currContent.empty() && currContent[0] != "}" &&
                        currContent[0] != "else") {
-                Statement* stmt =
+                Statement *stmt =
                     parseStatement(currContent, currIndex, programLines, i);
                 currProc->addToStmtLst(stmt);
             }
         }
-        program.addToProcLst(currProc);
+        if (currProc != nullptr) {
+            program.addToProcLst(currProc);
+        }
+        // program: procedure+
+        if (program.getProcLst().size() == 0) {
+            throw runtime_error("Invalid SIMPLE program: program should have "
+                                "at least one procedure.");
+        }
         return program;
     }
 
-    Statement* parseStatement(vector<string> content, int index,
-                             vector<Line> programLines, int &programIndex) {
-        StatementParser stmtParser(content, index, programLines, programIndex);
-        if (stmtParser.isReadStmt(content)) {
+    Statement *parseStatement(vector<string> content, int index,
+                              vector<Line> programLines, int &programIndex) {
+        StatementParser stmtParser(content);
+        if (stmtParser.isReadStmt()) {
             ReadStatementParser readParser(content, index);
             return readParser.parseReadStatement();
-        } else if (stmtParser.isPrintStmt(content)) {
+        } else if (stmtParser.isPrintStmt()) {
             PrintStatementParser printParser(content, index);
             return printParser.parsePrintStatement();
-        } else if (stmtParser.isCallStmt(content)) {
+        } else if (stmtParser.isCallStmt()) {
             CallStatementParser callParser(content, index);
             return callParser.parseCallStatement();
-        } else if (stmtParser.isAssignStmt(content)) {
+        } else if (stmtParser.isAssignStmt()) {
             AssignStatementParser assignParser(content, index);
             return assignParser.parseAssignStatement();
-        } else if (stmtParser.isWhileStmt(content)) {
-            WhileStatementParser whileParser(content, index, programLines,
-                                             programIndex);
+        } else if (stmtParser.isWhileStmt()) {
+            WhileStatementParser whileParser(content, index, programLines);
             return whileParser.parseWhileStatement(programIndex);
-        } else if (stmtParser.isIfStmt(content)) {
-            IfStatementParser ifParser(content, index, programLines,
-                                       programIndex);
+        } else if (stmtParser.isIfStmt()) {
+            IfStatementParser ifParser(content, index, programLines);
             return ifParser.parseIfStatement(programIndex);
         } else {
             throw runtime_error("Invalid statement!");

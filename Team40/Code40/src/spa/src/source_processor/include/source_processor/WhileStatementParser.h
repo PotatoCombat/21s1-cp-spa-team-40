@@ -1,12 +1,22 @@
 #pragma once
-#include "source_processor/StatementParser.h"
+#include "common/model/Statement.h"
+#include "source_processor/Line.h"
+#include <string>
+#include <vector>
+
 using namespace std;
 
-class WhileStatementParser : StatementParser {
+class WhileStatementParser {
+private:
+    Statement *stmt;
+    vector<string> content;
+    int index;
+    vector<Line> programLines;
+    int programIndex;
+
 public:
     WhileStatementParser(vector<string> content, int index,
-                         vector<Line> programLines, int &programIndex);
+                         vector<Line> programLines);
     Statement *parseWhileStatement(int &programIndex);
-    void parseChildStatements(Statement *stmt);
-    void parseExpression(vector<string> exprLst, Statement *statement);
+    void parseChildStatements();
 };

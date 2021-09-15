@@ -7,24 +7,16 @@
 using namespace std;
 
 class StatementParser {
-protected:
+private:
     vector<string> content;
-    int index;
-    vector<Line> programLines;
-    int programIndex;
 
 public:
-    StatementParser(vector<string> content, int index,
-                    vector<Line> programLines, int programIndex);
+    StatementParser(vector<string> content);
     Statement *parseStatement();
-
-    bool isReadStmt(vector<string> inputLine);
-    bool isPrintStmt(vector<string> inputLine);
-    bool isCallStmt(vector<string> inputLine);
-    bool isWhileStmt(vector<string> inputLine);
-    bool isAssignStmt(vector<string> inputLine);
-    bool isIfStmt(vector<string> inputLine);
-    bool hasTerminator(vector<string> inputLine);
-    bool isInteger(string input);
-    bool isName(string input);
+    bool isReadStmt();
+    bool isPrintStmt();
+    bool isCallStmt();
+    bool isWhileStmt();
+    bool isAssignStmt();
+    bool isIfStmt();
 };

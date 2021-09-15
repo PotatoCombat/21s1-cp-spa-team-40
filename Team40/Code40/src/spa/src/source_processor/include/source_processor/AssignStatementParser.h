@@ -1,10 +1,16 @@
 #pragma once
-#include "source_processor/StatementParser.h"
+#include "common/model/Statement.h"
+#include <string>
+#include <vector>
 using namespace std;
 
-class AssignStatementParser : StatementParser {
+class AssignStatementParser {
+private:
+    Statement *stmt;
+    vector<string> content;
+    int index;
+
 public:
     AssignStatementParser(vector<string> content, int index);
     Statement *parseAssignStatement();
-    void parseExpression(vector<string> exprLst, Statement *statement);
 };

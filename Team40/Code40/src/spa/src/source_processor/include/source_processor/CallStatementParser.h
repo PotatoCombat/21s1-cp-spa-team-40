@@ -1,8 +1,15 @@
 #pragma once
-#include "source_processor/StatementParser.h"
+#include "common/model/Statement.h"
+#include <string>
+#include <vector>
 using namespace std;
 
-class CallStatementParser : StatementParser {
+class CallStatementParser {
+private:
+    Statement *stmt;
+    vector<string> content;
+    int index;
+
 public:
     CallStatementParser(vector<string> content, int index);
     Statement *parseCallStatement();
