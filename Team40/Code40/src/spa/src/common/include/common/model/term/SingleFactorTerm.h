@@ -6,5 +6,4 @@
 class SingleFactorTerm : public Term {
 public:
     explicit SingleFactorTerm(Factor *factor);
-    int getValue() override;
 };

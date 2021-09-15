@@ -15,7 +15,6 @@ private:
     RelationType relType;
     Factor *leftFactor;
     Factor *rightFactor;
-    bool value;
 
 protected:
     // constructor
@@ -24,7 +23,6 @@ protected:
 public:
     // getters
     RelationType getRelationType();
-    virtual bool getValue() = 0;
     Factor *getLeftFactor();
     Factor *getRightFactor();
 };

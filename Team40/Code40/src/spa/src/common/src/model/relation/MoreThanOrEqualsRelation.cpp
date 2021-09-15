@@ -5,8 +5,4 @@ public:
     MoreThanOrEqualsRelation(Factor *leftFactor, Factor *rightFactor)
         : Relation(RelationType::MORE_THAN_OR_EQUALS, leftFactor,
                    rightFactor){};
-
-    bool getValue() {
-        return getLeftFactor()->getValue() >= getRightFactor()->getValue();
-    }
 };

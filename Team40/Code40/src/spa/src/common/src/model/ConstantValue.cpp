@@ -7,14 +7,14 @@ ConstantValue::ConstantValue(int value)
     this->name = to_string(value);
 }
 
-int ConstantValue::getValue() { return value; }
+int ConstantValue::getValue() const { return value; }
 
 string ConstantValue::getName() { return name; }
 
-bool ConstantValue::operator< (const ConstantValue& other) const {
+bool ConstantValue::operator<(const ConstantValue &other) const {
     return value < other.value;
 }
 
-bool ConstantValue::operator== (const ConstantValue& other) const {
+bool ConstantValue::operator==(const ConstantValue &other) const {
     return value == other.value;
 }

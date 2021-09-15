@@ -10,8 +10,6 @@ enum class FactorType { VARIABLE, CONSTANT, EXPRESSION };
 class Factor {
 private:
     FactorType factorType;
-    int value;
-    bool hasComputedValue; // Used for lazy initialization of value
 
 protected:
     // constructor
@@ -20,7 +18,6 @@ protected:
 public:
     // getters
     FactorType getFactorType();
-    int getValue() const;
     virtual string getName() {
         throw runtime_error(
             "This method is not available for this FactorType.");

@@ -17,7 +17,6 @@ private:
     Factor *factor;
 
 protected:
-    int value;
     bool hasComputedValue; // Used for lazy initialization of value
 
 public:
@@ -28,5 +27,4 @@ public:
         throw runtime_error(
             "This method is not implemented for the given TermType.");
     };
-    virtual int getValue() = 0;
 };
