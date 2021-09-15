@@ -1,5 +1,6 @@
 #include "source_processor/ExpressionParser.h"
 #include <algorithm>
+#include <stdexcept>
 
 void ExpressionParser::parseExpression(vector<string> exprLst,
                                        Statement *stmt) {
@@ -11,6 +12,9 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
         } else if (isName(currString)) {
             auto variable = new Variable(currString);
             stmt->addExpressionVar(variable);
+        } else {
+            throw runtime_error(
+                "Invalid SIMPLE program: invalid variable or constant");
         }
     }
 }
