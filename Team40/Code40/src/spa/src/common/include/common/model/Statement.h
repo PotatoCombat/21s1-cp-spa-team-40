@@ -4,10 +4,9 @@
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
 
-
 #include <optional>
-#include <set>
 #include <stdexcept>
+#include <unordered_set>
 #include <vector>
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
@@ -19,12 +18,12 @@ public:
     int getIndex();
     StatementType getStatementType();
 
-    Variable* getVariable();
+    Variable *getVariable();
     ProcName getProcName();
 
     vector<string> getExpressionLst();
-    set<Variable *> getExpressionVars();
-    set<ConstantValue *> getExpressionConsts();
+    unordered_set<Variable *> getExpressionVars();
+    unordered_set<ConstantValue *> getExpressionConsts();
 
     vector<Statement *> getThenStmtLst();
     vector<Statement *> getElseStmtLst();
@@ -47,8 +46,8 @@ private:
     optional<ProcName> procName;
 
     optional<vector<string>> expressionLst;
-    set<Variable *> expressionVars;
-    set<ConstantValue *> expressionConsts;
+    unordered_set<Variable *> expressionVars;
+    unordered_set<ConstantValue *> expressionConsts;
 
     optional<vector<Statement *>> thenStmtLst;
     optional<vector<Statement *>> elseStmtLst;
