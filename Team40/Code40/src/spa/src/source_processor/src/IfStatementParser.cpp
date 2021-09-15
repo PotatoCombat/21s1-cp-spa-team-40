@@ -1,6 +1,6 @@
 #include "source_processor/IfStatementParser.h"
 #include "source_processor/ExpressionParser.h"
-#include "source_processor/ProgramParser.h"
+#include "source_processor/Parser.h"
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index,
@@ -16,8 +16,8 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
 
     vector<string> condLst(next(next(ifItr)), prev(endItr));
     stmt->setExpressionLst(condLst);
-     ExpressionParser exprParser;
-     exprParser.parseExpression(condLst, stmt);
+    ExpressionParser exprParser;
+    exprParser.parseExpression(condLst, stmt);
 
     parseChildStatements(programIndex);
     return stmt;
@@ -37,7 +37,7 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
             continue;
         }
         if (currContent[0] != "}" && currContent[0] != "else") {
-            ProgramParser parser;
+            Parser parser;
             auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {

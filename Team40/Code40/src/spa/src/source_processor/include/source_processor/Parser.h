@@ -17,7 +17,7 @@
 #include <vector>
 using namespace std;
 
-class ProgramParser {
+class Parser {
 public:
     Program parseProgram(vector<Line> programLines, Program &program) {
         Procedure *currProc = nullptr;

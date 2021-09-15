@@ -11,7 +11,7 @@
 SourceProcessor::SourceProcessor(PKB *pkb) {
     this->pkb = pkb;
     this->lexer = Lexer();
-    this->programParser = ProgramParser();
+    this->parser = Parser();
     this->designExtractor = DesignExtractor(pkb);
 }
 
@@ -21,7 +21,7 @@ void SourceProcessor::processSource(string filename) {
     if (file.is_open()) {
         vector<Line> programLines = lexer.tokenizeFile(file);
         Program program;
-        programParser.parseProgram(programLines, program);
+        parser.parseProgram(programLines, program);
         designExtractor.extract(&program);
     } else {
         cout << "No such file";

@@ -2,7 +2,7 @@
 
 #include "pkb/PKB.h"
 #include "source_processor/Lexer.h"
-#include "source_processor/ProgramParser.h"
+#include "source_processor/Parser.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 
 class SourceProcessor {
@@ -14,6 +14,6 @@ public:
 private:
     PKB *pkb;
     Lexer lexer;
-    ProgramParser programParser;
+    Parser parser;
     DesignExtractor designExtractor = DesignExtractor(nullptr);
 };
