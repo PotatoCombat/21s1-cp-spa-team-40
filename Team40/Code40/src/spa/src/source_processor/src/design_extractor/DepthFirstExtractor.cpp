@@ -18,7 +18,8 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
 
-StmtIndex DepthFirstExtractor::extractStatement(Statement *statement) {
+void DepthFirstExtractor::extractStatement(Statement *statement) {
+    pkb->insertStmt(statement);
     if (!ExtractionContext::getInstance()
              .getParentContext()
              .getAllEntities()
@@ -29,35 +30,32 @@ StmtIndex DepthFirstExtractor::extractStatement(Statement *statement) {
                                 .back();
         pkb->insertParent(parent, statement);
     }
-    StmtIndex stmtIndex;
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
-        stmtIndex = extractAssignStatement(statement);
+        extractAssignStatement(statement);
         break;
     case StatementType::CALL:
-        stmtIndex = extractCallStatement(statement);
+        extractCallStatement(statement);
         break;
     case StatementType::IF:
-        stmtIndex = extractIfStatement(statement);
+        extractIfStatement(statement);
         break;
     case StatementType::PRINT:
-        stmtIndex = extractPrintStatement(statement);
+        extractPrintStatement(statement);
         break;
     case StatementType::READ:
-        stmtIndex = extractReadStatement(statement);
+        extractReadStatement(statement);
         break;
     case StatementType::WHILE:
-        stmtIndex = extractWhileStatement(statement);
+        extractWhileStatement(statement);
         break;
     default:
         throw runtime_error("Invalid StatementType!");
     }
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
+void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
+    pkb->insertPatternAssign(assignStatement);
 
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
@@ -71,12 +69,9 @@ DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
         extractVariable(variable);
     }
     ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
-
-    return stmtIndex;
 }
 
-StmtIndex DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
+void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
     ProcName calledProcName = callStatement->getProcName();
 
@@ -87,14 +82,9 @@ StmtIndex DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
     }
     ExtractionContext::getInstance().addProcDependency(
         currentProcedure.value()->getName(), calledProcName);
-
-    return stmtIndex;
 }
 
-StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
-
+void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
     for (Variable *variable : ifStatement->getExpressionVars()) {
@@ -113,32 +103,21 @@ StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(ifStatement);
-
-    return stmtIndex;
 }
 
-StmtIndex DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
+void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
     ExtractionContext::getInstance().setModifyingStatement(readStatement);
     extractVariable(readStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
+void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
     ExtractionContext::getInstance().setUsingStatement(printStatement);
     extractVariable(printStatement->getVariable());
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
-
+void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : whileStatement->getExpressionVars()) {
@@ -152,8 +131,6 @@ DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().getParentContext().pop(whileStatement);
-
-    return stmtIndex;
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
