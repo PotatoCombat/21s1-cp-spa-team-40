@@ -40,4 +40,4 @@ void Query::addPattern(PatternClause *pattern) {
     addReference(pattern->getVar());
 }
 
-vector<Pattern *> Query::getPatterns() { return patternList; }
+vector<PatternClause *> Query::getPatterns() { return patternList; }
