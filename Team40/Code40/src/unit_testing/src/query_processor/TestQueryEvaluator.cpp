@@ -18,6 +18,15 @@ struct TestQueryEvaluator {
 PKBStub TestQueryEvaluator::pkbStub = PKBStub();
 PKBStub2 TestQueryEvaluator::pkbStubNoFollows = PKBStub2();
 
+TEST_CASE("QueryEvaluator: no clause - returns all") {
+    Query query;
+    Reference c(DesignEntityType::CONSTANT, ReferenceType::SYNONYM, "c");
+    query.setReturnReference(&c);
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"1", "2", "3", "5"});
+}
+
 TEST_CASE("QueryEvaluator: one clause returns false - returns empty result") {
     Query query;
     Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
