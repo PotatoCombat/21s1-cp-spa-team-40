@@ -19,17 +19,16 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     // ExpressionParser exprParser;
     // exprParser.parseExpression(condLst, stmt);
 
-    parseChildStatements();
-    programIndex = this->programIndex;
+    parseChildStatements(programIndex);
     return stmt;
 }
 
-void WhileStatementParser::parseChildStatements() {
+void WhileStatementParser::parseChildStatements(int &programIndex) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         if (currContent[0] == "}") {
-            this->programIndex = i;
+            programIndex = i;
             break;
         }
         if (currContent[0] != "}" && currContent[0] != "else") {
