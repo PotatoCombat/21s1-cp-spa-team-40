@@ -5,16 +5,34 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-EntityContext<Statement> ExtractionContext::getFollowsContext() {
-    return followsContext;
-}
-
-EntityContext<Statement> ExtractionContext::getParentContext() {
-    return parentContext;
-}
-
 optional<Statement *> ExtractionContext::getModifyingStatement() {
     return modifyingStatement;
+}
+
+optional<Procedure *> ExtractionContext::getCurrentProcedure() {
+    return currentProcedure;
+}
+
+void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
+    if (currentProcedure.has_value()) {
+        throw runtime_error("Trying to overwrite another procedure.");
+    }
+    if (procDependencyMap.find(procedure->getName()) ==
+        procDependencyMap.end()) {
+        procDependencyMap[procedure->getName()] = unordered_set<ProcName>();
+        procIndegreesCounter[procedure->getName()] = 0;
+    }
+    currentProcedure = procedure;
+}
+
+void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (currentProcedure.value() != procedure) {
+        throw runtime_error("Trying to unset another procedure.");
+    }
+    currentProcedure = nullopt;
 }
 
 void ExtractionContext::setModifyingStatement(Statement *statement) {
@@ -32,27 +50,6 @@ void ExtractionContext::unsetModifyingStatement(Statement *statement) {
         throw runtime_error("Trying to unset another modifying statement.");
     }
     modifyingStatement = nullopt;
-}
-
-optional<Procedure *> ExtractionContext::getCurrentProcedure() {
-    return currentProcedure;
-}
-
-void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
-    if (currentProcedure.has_value()) {
-        throw runtime_error("Trying to overwrite another procedure.");
-    }
-    currentProcedure = procedure;
-}
-
-void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
-    if (!currentProcedure.has_value()) {
-        throw runtime_error("Trying to unset a null value.");
-    }
-    if (currentProcedure.value() != procedure) {
-        throw runtime_error("Trying to unset another procedure.");
-    }
-    currentProcedure = nullopt;
 }
 
 optional<Statement *> ExtractionContext::getUsingStatement() {
@@ -74,6 +71,48 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
         throw runtime_error("Trying to unset another using statement.");
     }
     usingStatement = nullopt;
+}
+
+vector<Statement *> ExtractionContext::getParentStatements() {
+    return parentStatements;
+}
+
+void ExtractionContext::setParentStatement(Statement *statement) {
+    parentStatements.push_back(statement);
+}
+
+void ExtractionContext::unsetParentStatement(Statement *statement) {
+    if (parentStatements.empty()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (parentStatements.back() != statement) {
+        throw runtime_error("Trying to unset another parent statement.");
+    }
+    parentStatements.pop_back();
+}
+
+void ExtractionContext::clearParentStatements() { parentStatements.clear(); }
+
+vector<Statement *> ExtractionContext::getPreviousStatements() {
+    return previousStatements;
+}
+
+void ExtractionContext::setPreviousStatement(Statement *statement) {
+    previousStatements.push_back(statement);
+}
+
+void ExtractionContext::unsetPreviousStatement(Statement *statement) {
+    if (previousStatements.empty()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (previousStatements.back() != statement) {
+        throw runtime_error("Trying to unset another previous statement.");
+    }
+    previousStatements.pop_back();
+}
+
+void ExtractionContext::clearPreviousStatements() {
+    previousStatements.clear();
 }
 
 void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {
@@ -139,8 +178,8 @@ vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
 }
 
 void ExtractionContext::resetTransientContexts() {
-    followsContext.reset();
-    parentContext.reset();
+    previousStatements.clear();
+    parentStatements.clear();
     currentProcedure.reset();
     usingStatement.reset();
     modifyingStatement.reset();

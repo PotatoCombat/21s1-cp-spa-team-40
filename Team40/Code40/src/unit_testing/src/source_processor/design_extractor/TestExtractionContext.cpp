@@ -9,8 +9,9 @@ TEST_CASE("TestExtractionContext") {
         REQUIRE(!ExtractionContext::getInstance()
                      .getCurrentProcedure()
                      .has_value());
-        REQUIRE(ExtractionContext::getInstance().getParentContext().empty());
-        REQUIRE(ExtractionContext::getInstance().getFollowsContext().empty());
+        REQUIRE(ExtractionContext::getInstance().getParentStatements().empty());
+        REQUIRE(
+            ExtractionContext::getInstance().getPreviousStatements().empty());
         REQUIRE(
             !ExtractionContext::getInstance().getUsingStatement().has_value());
         REQUIRE(!ExtractionContext::getInstance()

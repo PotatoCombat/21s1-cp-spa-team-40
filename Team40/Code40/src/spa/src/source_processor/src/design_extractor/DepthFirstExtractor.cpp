@@ -20,12 +20,10 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
 
 void DepthFirstExtractor::extractStatement(Statement *statement) {
     pkb->insertStmt(statement);
-    if (!ExtractionContext::getInstance().getParentContext().empty()) {
-        Statement *parent = ExtractionContext::getInstance()
-                                .getParentContext()
-                                .getCopy()
-                                .back();
-        pkb->insertParent(parent, statement);
+    vector<Statement *> parentStatement =
+        ExtractionContext::getInstance().getParentStatements();
+    if (!parentStatement.empty()) {
+        pkb->insertParent(parentStatement.back(), statement);
     }
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
@@ -89,7 +87,7 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(ifStatement);
+    ExtractionContext::getInstance().setParentStatement(ifStatement);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
@@ -98,7 +96,7 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
+    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
 }
 
 void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
@@ -122,11 +120,11 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(whileStatement);
+    ExtractionContext::getInstance().setParentStatement(whileStatement);
     for (Statement *statement : whileStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
+    ExtractionContext::getInstance().unsetParentStatement(whileStatement);
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
@@ -147,7 +145,7 @@ void DepthFirstExtractor::extractUsesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getCopy();
+        ExtractionContext::getInstance().getParentStatements();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtUsingVar(parentStatement, variable);
@@ -179,7 +177,7 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getCopy();
+        ExtractionContext::getInstance().getParentStatements();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtModifyingVar(parentStatement, variable);

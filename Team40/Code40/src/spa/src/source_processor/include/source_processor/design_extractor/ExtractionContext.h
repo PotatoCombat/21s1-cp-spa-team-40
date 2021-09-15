@@ -12,15 +12,17 @@ using namespace std;
 
 class ExtractionContext {
 private:
-    optional<Procedure *> currentProcedure;
     unordered_map<ProcName, unordered_set<ProcName>> procDependencyMap;
     unordered_map<ProcName, int> procIndegreesCounter;
 
     static ExtractionContext *instance;
-    EntityContext<Statement> parentContext;
-    EntityContext<Statement> followsContext;
-    optional<Statement *> usingStatement;
+
+    optional<Procedure *> currentProcedure;
+
     optional<Statement *> modifyingStatement;
+    optional<Statement *> usingStatement;
+    vector<Statement *> parentStatements;
+    vector<Statement *> previousStatements;
 
     // NOTE: Do not autofix to default constructor here
     ExtractionContext() {}
@@ -30,18 +32,25 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    EntityContext<Statement> getFollowsContext();
-    EntityContext<Statement> getParentContext();
-
     optional<Procedure *> getCurrentProcedure();
     void setCurrentProcedure(Procedure *procedure);
     void unsetCurrentProcedure(Procedure *procedure);
-    optional<Statement *> getUsingStatement();
-    void setUsingStatement(Statement *statement);
-    void unsetUsingStatement(Statement *statement);
+
     optional<Statement *> getModifyingStatement();
     void setModifyingStatement(Statement *statement);
     void unsetModifyingStatement(Statement *statement);
+    optional<Statement *> getUsingStatement();
+    void setUsingStatement(Statement *statement);
+    void unsetUsingStatement(Statement *statement);
+
+    vector<Statement *> getPreviousStatements();
+    void setPreviousStatement(Statement *statement);
+    void unsetPreviousStatement(Statement *statement);
+    void clearPreviousStatements();
+    vector<Statement *> getParentStatements();
+    void setParentStatement(Statement *statement);
+    void unsetParentStatement(Statement *statement);
+    void clearParentStatements();
 
     void addProcDependency(ProcName caller, ProcName callee);
     bool hasCyclicalProcDependency(ProcName caller, ProcName callee);

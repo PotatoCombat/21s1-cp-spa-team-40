@@ -12,7 +12,7 @@ struct TestDesignExtractor {
 
 PKB TestDesignExtractor::pkb = PKB();
 
-TEST_CASE("DesignExtractor") {
+TEST_CASE("DesignExtractor: Basic statement parsing") {
     ExtractionContext::getInstance().reset();
     TestDesignExtractor::pkb = PKB();
 
@@ -89,6 +89,58 @@ TEST_CASE("DesignExtractor") {
         REQUIRE(TestDesignExtractor::pkb.getProcsModifyingVar(ASSIGNED_VAR_NAME)
                     .size() == 2);
     }
+}
+
+TEST_CASE("DesignExtractor: Follows") {
 
     ExtractionContext::getInstance().reset();
+    TestDesignExtractor::pkb = PKB();
+
+    SECTION("Correctly extracts Follows") {
+        ProcName PROC_NAME = "PROC";
+        VarName VAR_NAME = "VAR";
+
+        Program program;
+        Procedure procedure(PROC_NAME);
+        Statement statement1(1, StatementType::READ);
+        Statement statement2(2, StatementType::READ);
+        Statement statement3(2, StatementType::READ);
+        Variable variable(VAR_NAME);
+
+        statement1.setVariable(&variable);
+        statement2.setVariable(&variable);
+        statement3.setVariable(&variable);
+        procedure.addToStmtLst(&statement1);
+        procedure.addToStmtLst(&statement2);
+        procedure.addToStmtLst(&statement3);
+        program.addToProcLst(&procedure);
+
+        DesignExtractor de(&TestDesignExtractor::pkb);
+        de.extract(&program);
+
+        auto follow1 =
+            TestDesignExtractor::pkb.getFollowingStmt(statement1.getIndex());
+        auto followStar1 = TestDesignExtractor::pkb.getFollowingStarStmts(
+            statement1.getIndex());
+        auto follow2 =
+            TestDesignExtractor::pkb.getFollowingStmt(statement2.getIndex());
+        auto followStar2 = TestDesignExtractor::pkb.getFollowingStarStmts(
+            statement2.getIndex());
+        auto follow3 =
+            TestDesignExtractor::pkb.getFollowingStmt(statement3.getIndex());
+        auto followStar3 = TestDesignExtractor::pkb.getFollowingStarStmts(
+            statement3.getIndex());
+
+        REQUIRE(follow1 == statement2.getIndex());
+        REQUIRE(followStar1.size() == 2);
+        REQUIRE(followStar1.count(statement2.getIndex()));
+        REQUIRE(followStar1.count(statement3.getIndex()));
+
+        REQUIRE(follow2 == statement3.getIndex());
+        REQUIRE(followStar2.size() == 1);
+        REQUIRE(followStar2.count(statement3.getIndex()));
+
+        REQUIRE(follow3 == -1);
+        REQUIRE(followStar3.empty());
+    }
 }

@@ -14,9 +14,7 @@ void BreadthFirstExtractor::extract(Program *program) {
     for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
          it++) {
         string procName = *it;
-        if (procMap.count(procName)) {
-            extractProcedure(procMap[procName]);
-        }
+        extractProcedure(procMap[procName]);
     }
 }
 
@@ -24,6 +22,7 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
     statementLists.push_back(procedure->getStmtLst());
     while (!statementLists.empty()) {
+        ExtractionContext::getInstance().clearPreviousStatements();
         vector<Statement *> statementList = statementLists.back();
         statementLists.pop_back();
         for (Statement *statement : statementList) {
@@ -34,10 +33,10 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
 }
 
 void BreadthFirstExtractor::extractStatement(Statement *statement) {
-    auto previousStatements =
-        ExtractionContext::getInstance().getFollowsContext().getCopy();
-    for (Statement *prev : previousStatements) {
-        pkb->insertFollows(prev, statement);
+    vector<Statement *> previousStatements =
+        ExtractionContext::getInstance().getPreviousStatements();
+    if (!previousStatements.empty()) {
+        pkb->insertFollows(previousStatements.back(), statement);
     }
     switch (statement->getStatementType()) {
     case StatementType::WHILE:
@@ -56,7 +55,7 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
     default:
         throw runtime_error("Invalid StatementType!");
     }
-    ExtractionContext::getInstance().getFollowsContext().push(statement);
+    ExtractionContext::getInstance().setPreviousStatement(statement);
 }
 
 void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
