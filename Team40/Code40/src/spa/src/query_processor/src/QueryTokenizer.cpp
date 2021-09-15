@@ -4,7 +4,7 @@ pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     size_t split = input.rfind(SEMICOLON);
 
     if (split == string::npos) {
-        throw "error"; // no declaration
+        throw SyntaxError("no declaration");
     }
 
     string firstHalf = trim(input.substr(0, split + 1));
@@ -19,16 +19,16 @@ string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
     string rem;
 
     if (first_w == string::npos) {
-        //remaining = "";
-        //return "";
-        throw "error"; // no return
+        // remaining = "";
+        // return "";
+        throw SyntaxError("no return entity");
     }
 
     sub = input.substr(0, first_w);
     rem = trimL(input.substr(first_w + 1));
 
     if (sub != KEYWORD_SELECT) {
-        throw "error"; // no return identifier
+        throw SyntaxError("no select clause");
     }
 
     size_t next_w = findFirstWhitespace(rem);
@@ -44,7 +44,8 @@ string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
     return sub;
 }
 
-void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) {
+void QueryTokenizer::tokenizeDeclaration(string input,
+                                         vector<DeclPair> &decls) {
     size_t sem_pos;
     size_t space_pos;
     string type;
@@ -54,7 +55,7 @@ void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) 
     while (sem_pos != string::npos) {
         string sub = trim(rem.substr(0, sem_pos)); // e.g. assign x, y
         rem = trim(rem.substr(sem_pos + 1));
-        
+
         space_pos = sub.find(WHITESPACE); // position of whitespace
         string type = sub.substr(0, space_pos);
 
@@ -76,37 +77,118 @@ void QueryTokenizer::tokenizeDeclaration(string input, vector<DeclPair> &decls) 
     return;
 }
 
-void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss, vector<PatTuple>& pats) {
-    size_t first_b = input.find(R_BRACKET); // find the first close bracket
+void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
+                                    vector<PatTuple> &pats) {
+    // tokenizes by whitespace
+    size_t curr_pos = input.find_first_not_of(WHITESPACE_SET);
+    int suchThatCounter = 0; // 1 for such, 2 for such that
+    int isClause = 0;        // 1 for such that, 2 for pattern
+    // 0 for before (, 1 for between ( and ,, 2 for between , and )
+    int portionOfClause = 0;
+    string token1;
+    string token2;
+    string token3;
 
-    if (first_b == string::npos) {
-        throw "error"; // no close bracket
+    while (curr_pos != string::npos) {
+        // find the next whitespace
+        // chop the string between curr and next whitespace
+        // check if the string is a something
+
+        size_t cut_pos = input.find_first_of(WHITESPACE_SET, curr_pos);
+        string token = input.substr(curr_pos, cut_pos - curr_pos);
+
+        // check if it's a bracket
+        // check if it's a comma
+        if (isClause) { // handle tokenizing of X1(X2,X3) here
+            if (portionOfClause == 0) {
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(L_BRACKET);
+                if (not_name_char_pos != string::npos) {
+                    if (token[not_name_char_pos] == '(') {
+                        token1 = token.substr(0, not_name_char_pos);
+                        size_t size = not_name_char_pos + 1;
+                        if (size < token.size()) { // something after the '('
+                            // change the next position to search to after '('
+                            cut_pos = cut_pos - (token.size() - size);
+                        }
+                    } else {
+                        throw SyntaxError("invalid syntax");
+                    }
+                } else {
+                    token1 = token;
+                }
+                ++portionOfClause; // 1
+            } else if (portionOfClause == 1) {
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(COMMA);
+                if (not_name_char_pos != string::npos) {
+                    if (token[not_name_char_pos] == ',') {
+                        token2 = token.substr(0, not_name_char_pos);
+                        size_t size = not_name_char_pos + 1;
+                        if (size < token.size()) { // something after the ','
+                            // change the next position to search to after ','
+                            cut_pos = cut_pos - (token.size() - size);
+                        }
+                    } else {
+                        throw SyntaxError("invalid syntax");
+                    }
+                } else {
+                    token2 = token;
+                }
+                ++portionOfClause; // 2
+            } else if (portionOfClause == 2) {
+                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
+                size_t not_name_char_pos = token.find(R_BRACKET);
+                if (not_name_char_pos != string::npos) {
+                    if (token[not_name_char_pos] == ')') {
+                        token3 = token.substr(0, not_name_char_pos);
+                    } else {
+                        throw SyntaxError("invalid syntax");
+                    }
+                } else {
+                    token3 = token;
+                }
+                portionOfClause = 0;
+                if (isClause == 1) {
+                    clss.push_back(make_tuple(token1, token2, token3));
+                } else if (isClause == 2) {
+                    pats.push_back(
+                        make_pair(token1, vector<PatArg>{token2, token3}));
+                } else {
+                    throw SyntaxError("something is very wrong");
+                }
+                isClause = 0;
+            } else {
+                throw "error"; // error in the token counting or something
+            }
+        } else { // handle tokenizing of such that / pattern keywords here
+            if (token == KEYWORD_SUCH) {
+                if (suchThatCounter == 0) {
+                    ++suchThatCounter;
+                } else {
+                    // such is misplaced!
+                    throw SyntaxError("invalid syntax");
+                }
+            } else if (token == KEYWORD_THAT) {
+                if (suchThatCounter == 1) {
+                    ++suchThatCounter;
+                    isClause = 1;
+                } else {
+                    // that is misplaced!
+                    throw SyntaxError("invalid syntax"); 
+                }
+            } else if (token == KEYWORD_PATTERN) {
+                isClause = 2;
+            } else {
+                // error in the keyword counting or some
+                // irrevelant text
+                throw SyntaxError("invalid syntax");
+            }
+        }
+
+        // find the start position of the next token
+        curr_pos = input.find_first_not_of(WHITESPACE_SET, cut_pos);
     }
-    
-    string sub = input.substr(0, first_b + 1);
-    string rem = trimL(input.substr(first_b + 1));
-
-    ClsTuple clsT;
-
-    size_t st = sub.find(KEYWORD_SUCH_THAT);
-    if (st != string::npos) {
-        // TODO: check whether such that or such thatsomething
-        string stclause = trim(sub.substr(KEYWORD_SUCH_THAT.size() + 1));
-        splitBCBRel(stclause, clsT);
-    }
-
-    st = rem.find(KEYWORD_SUCH_THAT);
-    if (st != string::npos) {
-        // TODO: check whether such that or such thatsomething
-        string stclause = trim(rem.substr(KEYWORD_SUCH_THAT.size() + 1));
-        splitBCBRel(stclause, clsT);
-    }
-
-    PatTuple patT;
-    //splitBCBRel(sub, patT);
-
-    clss.push_back(clsT);
-    //pats.push_back(patT);
     return;
 }
 
@@ -132,7 +214,7 @@ string QueryTokenizer::trimL(string input) {
 string QueryTokenizer::trimR(string input) {
     size_t back_w = input.find_last_not_of(WHITESPACE_SET);
     if (back_w != string::npos) {
-        return input.substr(0, back_w+1);
+        return input.substr(0, back_w + 1);
     }
     return "";
 }
@@ -159,32 +241,32 @@ size_t QueryTokenizer::findFirstWhitespace(string input) {
     return first_w;
 }
 
-void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
-    // check count
-    int l_c = count(input.begin(), input.end(), L_BRACKET);
-    int r_c = count(input.begin(), input.end(), R_BRACKET);
-    int c_c = count(input.begin(), input.end(), COMMA);
-
-    if (!(l_c == 1 && r_c == 1 && c_c == 1)) {
-        throw "error"; // unmatched ( , ) syntax
-    }
-
-    size_t l_b = input.find(L_BRACKET);
-    size_t r_b = input.find(R_BRACKET);
-    size_t c = input.find(COMMA);
-
-    if (!(l_b < c && c < r_b) || l_b == 0) {
-        throw "error"; // unmatched Keyword( , ) syntax
-    }
-
-    if (l_b + 1 == c || c + 1 == r_b) {
-        throw "error"; // no arguments
-    }
-
-    string key = trim(input.substr(0, l_b));
-    string a1 = trim(input.substr(l_b + 1, c - (l_b + 1)));
-    string a2 = trim(input.substr(c + 1, r_b - (c + 1)));
-    tup = make_tuple(key, a1, a2);
-    
-    return;
-}
+// void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
+//    // check count
+//    int l_c = count(input.begin(), input.end(), L_BRACKET);
+//    int r_c = count(input.begin(), input.end(), R_BRACKET);
+//    int c_c = count(input.begin(), input.end(), COMMA);
+//
+//    if (!(l_c == 1 && r_c == 1 && c_c == 1)) {
+//        throw "error"; // unmatched ( , ) syntax
+//    }
+//
+//    size_t l_b = input.find(L_BRACKET);
+//    size_t r_b = input.find(R_BRACKET);
+//    size_t c = input.find(COMMA);
+//
+//    if (!(l_b < c && c < r_b) || l_b == 0) {
+//        throw "error"; // unmatched Keyword( , ) syntax
+//    }
+//
+//    if (l_b + 1 == c || c + 1 == r_b) {
+//        throw "error"; // no arguments
+//    }
+//
+//    string key = trim(input.substr(0, l_b));
+//    string a1 = trim(input.substr(l_b + 1, c - (l_b + 1)));
+//    string a2 = trim(input.substr(c + 1, r_b - (c + 1)));
+//    tup = make_tuple(key, a1, a2);
+//
+//    return;
+//}

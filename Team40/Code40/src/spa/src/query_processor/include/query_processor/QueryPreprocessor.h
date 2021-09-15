@@ -8,6 +8,7 @@
 #include "QueryTokenizer.h"
 
 #include "query_processor/model/Query.h"
+#include "query_processor/exception/ValidityError.h"
 
 using namespace std;
 

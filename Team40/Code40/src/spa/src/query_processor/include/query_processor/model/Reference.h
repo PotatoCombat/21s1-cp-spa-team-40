@@ -25,6 +25,6 @@ public:
     DesignEntityType getDeType();
     ReferenceType getRefType();
     bool equals(Reference &other);
-    Reference* copy(); // not working
+    Reference* copy();
     ~Reference();
 };

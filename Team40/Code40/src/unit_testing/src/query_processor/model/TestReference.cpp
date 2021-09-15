@@ -30,7 +30,7 @@ Reference TestReference::createOtherReference() {
 
 TEST_CASE("Reference: get methods") {
     Reference ref = TestReference::createReference();
-    
+
     SECTION("test correct attributes") {
         REQUIRE(ref.getValue() == TestReference::VALUE);
         REQUIRE(ref.getDeType() == TestReference::ASSIGN_TYPE);
@@ -51,11 +51,24 @@ TEST_CASE("Reference: equals") {
         Reference refSame = TestReference::createReference();
         REQUIRE(ref.equals(refSame));
     }
-    
+
     SECTION("test not equals") {
         // semantically wrong but just for testing purposes :)
-        Reference refDiffRefType = Reference(
-            TestReference::ASSIGN_TYPE, TestReference::CONST_TYPE, TestReference::VALUE);
+        Reference refDiffRefType =
+            Reference(TestReference::ASSIGN_TYPE, TestReference::CONST_TYPE,
+                      TestReference::VALUE);
         REQUIRE(!ref.equals(refDiffRefType));
     }
+}
+
+TEST_CASE("Reference: copy") {
+    Reference *ref =
+        new Reference(TestReference::ASSIGN_TYPE, TestReference::SYN_TYPE,
+                      TestReference::VALUE);
+    Reference *refCopy = ref->copy();
+
+    REQUIRE(ref->equals(*refCopy));
+
+    delete ref;
+    delete refCopy;
 }

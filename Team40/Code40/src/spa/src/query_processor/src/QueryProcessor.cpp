@@ -8,7 +8,12 @@ QueryProcessor::QueryProcessor(PKB *pkb) {
 
 void QueryProcessor::processQuery(string query, list<string>& results) {
 	Query q;
-	preprocessor.preprocessQuery(query, q);
+	try {
+		preprocessor.preprocessQuery(query, q);
+	} catch (invalid_argument e) { // no result required, just return
+		//cout << e.what();
+		return;
+	}
 	vector<string> e = evaluator.evaluateQuery(q);
 	copy(e.begin(), e.end(), back_inserter(results));
 }
