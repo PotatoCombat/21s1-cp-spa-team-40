@@ -33,9 +33,8 @@ vector<Statement> TestPKB::createStatements() {
 }
 
 vector<Variable> TestPKB::createVariables() {
-    return vector<Variable>{Variable(0, "var_name_1"),
-                            Variable(0, "var_name_1"),
-                            Variable(0, "var_name_1")};
+    return vector<Variable>{Variable("var_name_1"), Variable("var_name_1"),
+                            Variable("var_name_1")};
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
