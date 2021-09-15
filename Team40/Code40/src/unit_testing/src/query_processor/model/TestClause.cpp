@@ -9,6 +9,7 @@ struct TestClause {
     static Reference R1;
     static Reference R2;
     static Clause createFollowsClause();
+    static Clause *createParentClause(string x, string y);
 };
 
 Reference TestClause::R1 =
@@ -18,6 +19,12 @@ Reference TestClause::R2 =
 
 Clause TestClause::createFollowsClause() {
     return Clause(ClauseType::FOLLOWS, R1, R2);
+}
+
+Clause *TestClause::createParentClause(string x, string y) {
+    Reference ref1 = TestClause::R1;
+    Reference ref2 = TestClause::R2;
+    return new Clause(ClauseType::PARENT, ref1, ref2);
 }
 
 TEST_CASE("Clause: get methods") {
@@ -52,4 +59,14 @@ TEST_CASE("Clause: equals") {
     Clause clause7(ClauseType::USES_S, ref1, ref4);
     Clause clause8(ClauseType::USES_S, ref2, ref6);
     REQUIRE(!clause7.equals(clause8));
+}
+
+TEST_CASE("Clause: copy") {
+    Clause* cls = TestClause::createParentClause("s", "_");
+    Clause* clsCopy = cls->copy();
+
+    REQUIRE(cls->equals(*clsCopy));
+
+    delete cls;
+    delete clsCopy;
 }

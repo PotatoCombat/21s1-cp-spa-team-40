@@ -11,7 +11,8 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::PRINT, "print"},
         {DesignEntityType::WHILE, "while"},
         {DesignEntityType::IF, "if"},
-        {DesignEntityType::CALL, "call"}
+        {DesignEntityType::CALL, "call"},
+        {DesignEntityType::PROG_LINE, "prog_line"}
     };
     stringToTypeMap = {
         {"stmt", DesignEntityType::STMT},
@@ -23,7 +24,8 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {"print", DesignEntityType::PRINT},
         {"while", DesignEntityType::WHILE},
         {"if", DesignEntityType::IF},
-        {"call", DesignEntityType::CALL}
+        {"call", DesignEntityType::CALL},
+        {"prog_line", DesignEntityType::PROG_LINE}
     };
 }
 
