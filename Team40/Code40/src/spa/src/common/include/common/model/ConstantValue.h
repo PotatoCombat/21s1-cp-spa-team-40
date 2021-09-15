@@ -10,9 +10,9 @@ class ConstantValue : public Factor {
 public:
     explicit ConstantValue(int value);
 
-    int getValue();
-    string getName();
+    int getValue() const;
+    string getName() override;
 
-    bool operator< (const ConstantValue& other) const;
-    bool operator== (const ConstantValue& other) const;
+    bool operator<(const ConstantValue &other) const;
+    bool operator==(const ConstantValue &other) const;
 };
