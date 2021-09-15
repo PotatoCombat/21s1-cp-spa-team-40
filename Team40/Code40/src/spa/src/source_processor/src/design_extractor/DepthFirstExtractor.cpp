@@ -57,7 +57,6 @@ void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
     extractVariable(assignStatement->getVariable());
-    extractModifiesRelationship(assignStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(assignStatement);
 
     // Handle RHS
