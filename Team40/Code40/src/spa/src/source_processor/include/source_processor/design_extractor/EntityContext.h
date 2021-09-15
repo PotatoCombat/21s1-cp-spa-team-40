@@ -24,10 +24,12 @@ public:
     }
 
     // Creates and returns a copy of the stack
-    vector<T *> getAllEntities() {
+    vector<T *> getCopy() {
         const vector<T *> copy(stack);
         return copy;
     }
 
-    void clear() { stack.clear(); }
+    void reset() { stack.clear(); }
+
+    bool empty() { return stack.empty(); }
 };

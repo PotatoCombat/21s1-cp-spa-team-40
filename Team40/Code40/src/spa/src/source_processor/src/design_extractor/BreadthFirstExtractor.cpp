@@ -4,6 +4,7 @@ BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 
 void BreadthFirstExtractor::extract(Program *program) {
     ExtractionContext::getInstance().resetTransientContexts();
+
     unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
         procMap[procedure->getName()] = procedure;
@@ -12,7 +13,10 @@ void BreadthFirstExtractor::extract(Program *program) {
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
     for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
          it++) {
-        extractProcedure(procMap[*it]);
+        string procName = *it;
+        if (procMap.count(procName)) {
+            extractProcedure(procMap[procName]);
+        }
     }
 }
 
@@ -31,7 +35,7 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
 
 void BreadthFirstExtractor::extractStatement(Statement *statement) {
     auto previousStatements =
-        ExtractionContext::getInstance().getFollowsContext().getAllEntities();
+        ExtractionContext::getInstance().getFollowsContext().getCopy();
     for (Statement *prev : previousStatements) {
         pkb->insertFollows(prev, statement);
     }

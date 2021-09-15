@@ -5,13 +5,11 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-EntityContext<struct Statement> &ExtractionContext::getFollowsContext() {
-    static EntityContext<Statement> followsContext;
+EntityContext<Statement> ExtractionContext::getFollowsContext() {
     return followsContext;
 }
 
-EntityContext<struct Statement> &ExtractionContext::getParentContext() {
-    static EntityContext<Statement> parentContext;
+EntityContext<Statement> ExtractionContext::getParentContext() {
     return parentContext;
 }
 
@@ -85,7 +83,8 @@ void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {
         throw runtime_error("There exists a cyclical dependency between " +
                             caller + " and " + callee);
     }
-    procDependencyTree[caller].insert(callee);
+    procDependencyMap[caller].insert(callee);
+    procIndegreesCounter[callee]++;
 }
 
 bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
@@ -103,7 +102,7 @@ bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
         }
         callers.pop_back();
         transitiveCallees.insert(c);
-        copy(procDependencyTree[c].begin(), procDependencyTree[c].end(),
+        copy(procDependencyMap[c].begin(), procDependencyMap[c].end(),
              back_inserter(callers));
     }
     return false;
@@ -111,30 +110,37 @@ bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
 
 unordered_set<ProcName>
 ExtractionContext::getProcDependencies(ProcName caller) {
-    return procDependencyTree[caller];
+    return procDependencyMap[caller];
 }
 
+// Uses Kahn's algorithm to sort procedures by dependencies
 vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
-    vector<ProcName> result;
+    vector<ProcName> sortedProcNames;
     vector<ProcName> callers;
-    // Add all top-level prcs into callers
-    for (auto &it : procDependencyTree) {
+    // Add all procedures with 0 in-degrees into callers
+    for (auto &it : procDependencyMap) {
         ProcName caller = it.first;
-        callers.push_back(caller);
+        if (procIndegreesCounter[caller] == 0) {
+            callers.push_back(caller);
+        }
     }
     while (!callers.empty()) {
         ProcName c = callers.back();
-        result.push_back(c);
         callers.pop_back();
-        copy(procDependencyTree[c].begin(), procDependencyTree[c].end(),
-             back_inserter(callers));
+        sortedProcNames.push_back(c);
+        for (ProcName procName : procDependencyMap[c]) {
+            procIndegreesCounter[procName]--;
+            if (procIndegreesCounter[procName] == 0) {
+                callers.push_back(procName);
+            }
+        }
     }
-    return result;
+    return sortedProcNames;
 }
 
 void ExtractionContext::resetTransientContexts() {
-    followsContext.getAllEntities().clear();
-    parentContext.getAllEntities().clear();
+    followsContext.reset();
+    parentContext.reset();
     currentProcedure.reset();
     usingStatement.reset();
     modifyingStatement.reset();
@@ -142,5 +148,6 @@ void ExtractionContext::resetTransientContexts() {
 
 void ExtractionContext::reset() {
     resetTransientContexts();
-    procDependencyTree.clear();
+    procDependencyMap.clear();
+    procIndegreesCounter.clear();
 }

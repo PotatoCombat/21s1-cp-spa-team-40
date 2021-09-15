@@ -5,18 +5,12 @@ TEST_CASE("TestExtractionContext") {
     ExtractionContext::getInstance().reset();
 
     SECTION("Creates correctly") {
-
+        ExtractionContext::getInstance().reset();
         REQUIRE(!ExtractionContext::getInstance()
                      .getCurrentProcedure()
                      .has_value());
-        REQUIRE(ExtractionContext::getInstance()
-                    .getParentContext()
-                    .getAllEntities()
-                    .empty());
-        REQUIRE(ExtractionContext::getInstance()
-                    .getFollowsContext()
-                    .getAllEntities()
-                    .empty());
+        REQUIRE(ExtractionContext::getInstance().getParentContext().empty());
+        REQUIRE(ExtractionContext::getInstance().getFollowsContext().empty());
         REQUIRE(
             !ExtractionContext::getInstance().getUsingStatement().has_value());
         REQUIRE(!ExtractionContext::getInstance()

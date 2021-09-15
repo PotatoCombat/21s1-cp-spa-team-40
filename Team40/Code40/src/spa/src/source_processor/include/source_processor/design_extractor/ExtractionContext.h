@@ -13,7 +13,8 @@ using namespace std;
 class ExtractionContext {
 private:
     optional<Procedure *> currentProcedure;
-    unordered_map<ProcName, unordered_set<ProcName>> procDependencyTree;
+    unordered_map<ProcName, unordered_set<ProcName>> procDependencyMap;
+    unordered_map<ProcName, int> procIndegreesCounter;
 
     static ExtractionContext *instance;
     EntityContext<Statement> parentContext;
@@ -29,8 +30,8 @@ public:
     void operator=(ExtractionContext const &) = delete;
     static ExtractionContext &getInstance();
 
-    EntityContext<Statement> &getFollowsContext();
-    EntityContext<Statement> &getParentContext();
+    EntityContext<Statement> getFollowsContext();
+    EntityContext<Statement> getParentContext();
 
     optional<Procedure *> getCurrentProcedure();
     void setCurrentProcedure(Procedure *procedure);

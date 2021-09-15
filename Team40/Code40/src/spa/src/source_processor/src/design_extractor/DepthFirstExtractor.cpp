@@ -20,13 +20,10 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
 
 void DepthFirstExtractor::extractStatement(Statement *statement) {
     pkb->insertStmt(statement);
-    if (!ExtractionContext::getInstance()
-             .getParentContext()
-             .getAllEntities()
-             .empty()) {
+    if (!ExtractionContext::getInstance().getParentContext().empty()) {
         Statement *parent = ExtractionContext::getInstance()
                                 .getParentContext()
-                                .getAllEntities()
+                                .getCopy()
                                 .back();
         pkb->insertParent(parent, statement);
     }
@@ -151,7 +148,7 @@ void DepthFirstExtractor::extractUsesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getAllEntities();
+        ExtractionContext::getInstance().getParentContext().getCopy();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtUsingVar(parentStatement, variable);
@@ -183,7 +180,7 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getAllEntities();
+        ExtractionContext::getInstance().getParentContext().getCopy();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtModifyingVar(parentStatement, variable);

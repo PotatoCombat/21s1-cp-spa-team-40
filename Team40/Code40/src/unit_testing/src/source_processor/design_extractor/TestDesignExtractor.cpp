@@ -10,24 +10,29 @@ struct TestDesignExtractor {
 
 DesignExtractorPKBStub TestDesignExtractor::pkbStub = DesignExtractorPKBStub();
 
-TEST_CASE("DesignExtractor: Correctly handles Call Statement") {
-    ProcName CALLED_PROC_NAME = "CALLED_PROC";
-    ProcName CALLING_PROC_NAME = "CALLING_PROC";
+TEST_CASE("DesignExtractor") {
+    ExtractionContext::getInstance().reset();
+    SECTION("Correctly handles Call Statement") {
 
-    Program program;
-    Procedure procedure(CALLING_PROC_NAME);
-    Statement statement(1, StatementType::CALL);
+        ProcName CALLED_PROC_NAME = "CALLED_PROC";
+        ProcName CALLING_PROC_NAME = "CALLING_PROC";
 
-    statement.setProcName(CALLED_PROC_NAME);
-    program.addToProcLst(&procedure);
-    procedure.addToStmtLst(&statement);
+        Program program;
+        Procedure procedure(CALLING_PROC_NAME);
+        Statement statement(1, StatementType::CALL);
 
-    DesignExtractor de(&TestDesignExtractor::pkbStub);
-    de.extract(&program);
+        statement.setProcName(CALLED_PROC_NAME);
+        program.addToProcLst(&procedure);
+        procedure.addToStmtLst(&statement);
 
-    REQUIRE(TestDesignExtractor::pkbStub.getNumProc() == 1);
-    REQUIRE(TestDesignExtractor::pkbStub.getNumStmt() == 1);
-    REQUIRE(ExtractionContext::getInstance()
-                .getProcDependencies(CALLING_PROC_NAME)
-                .count(CALLED_PROC_NAME));
+        DesignExtractor de(&TestDesignExtractor::pkbStub);
+        de.extract(&program);
+
+        REQUIRE(TestDesignExtractor::pkbStub.getNumProc() == 1);
+        REQUIRE(TestDesignExtractor::pkbStub.getNumStmt() == 1);
+        REQUIRE(ExtractionContext::getInstance()
+                    .getProcDependencies(CALLING_PROC_NAME)
+                    .count(CALLED_PROC_NAME));
+    }
+    ExtractionContext::getInstance().reset();
 }
