@@ -13,6 +13,12 @@ Iterator<VarName> PKBStub::getAllVars() {
     return iter;
 }
 
+Iterator<int> PKBStub::getAllConsts() {
+    vector<int> constants{1, 2, 3, 5};
+    Iterator<int> iter(constants);
+    return iter;
+}
+
 Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
     vector<int> allStmts = getAllStmts().asVector();
     vector<int> filteredStmts;
