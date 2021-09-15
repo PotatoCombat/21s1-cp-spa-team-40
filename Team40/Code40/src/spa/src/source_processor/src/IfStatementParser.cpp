@@ -20,12 +20,11 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     // ExpressionParser exprParser;
     // exprParser.parseExpression(condLst, stmt);
 
-    parseChildStatements();
-    programIndex = this->programIndex;
+    parseChildStatements(programIndex);
     return stmt;
 }
 
-void IfStatementParser::parseChildStatements() {
+void IfStatementParser::parseChildStatements(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
@@ -33,7 +32,7 @@ void IfStatementParser::parseChildStatements() {
         if (currContent[0] == "}") {
             terminator++;
             if (terminator == 2) {
-                this->programIndex = i;
+                programIndex = i;
                 break;
             }
             continue;

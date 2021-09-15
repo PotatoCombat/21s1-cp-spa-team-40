@@ -12,11 +12,10 @@ private:
     vector<string> content;
     int index;
     vector<Line> programLines;
-    int programIndex;
 
 public:
     WhileStatementParser(vector<string> content, int index,
                          vector<Line> programLines);
     Statement *parseWhileStatement(int &programIndex);
-    void parseChildStatements();
+    void parseChildStatements(int &programIndex);
 };
