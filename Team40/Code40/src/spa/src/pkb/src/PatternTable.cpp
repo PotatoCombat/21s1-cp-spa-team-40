@@ -16,13 +16,13 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     // Normal Records
     // ***************
     vector<string> postfix = createPostfix(exprList);
-    set<string> patterns = createPatterns(postfix);
+    vector<string> patterns = createPatterns(postfix);
 
-    set<Record> patternsOfStmt;
+    set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
 
     // Note
     // k : v means a map entry, where Key = k, Value = v
-    for (const auto &p : patterns) {
+    for (const auto &p : uniquePatterns) {
         // Complete Record, eg. ("x", _"y * 5"_)
         Record record = make_pair(varName, p);
 
@@ -46,12 +46,12 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     insertStmtWithPattern(recordWithoutPattern, stmtIndex);
 
     // Map stmt#1 : { ("x", _) }
-    insertPatternsOfStmt(stmtIndex, {patternsOfStmt});
+    insertPatternsOfStmt(stmtIndex, {recordWithoutPattern});
 
     // ***************
     // Exact Records
     // ***************
-    string exactPattern = createExactPattern(exprList);
+    string exactPattern = patterns.back();
 
     // Exact record with pattern, eg. ("x", "y * 5")
     Record exactRecord = make_pair(varName, exactPattern);
@@ -200,7 +200,7 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
     return postfix;
 }
 
-set<string> PatternTable::createPatterns(vector<string> &postfix) {
+vector<string> PatternTable::createPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 
@@ -217,24 +217,15 @@ set<string> PatternTable::createPatterns(vector<string> &postfix) {
             string leftTerm = stack.top();
             stack.pop();
 
-            string largerTerm = string("(")
-                                    .append(leftTerm)
-                                    .append(s)
-                                    .append(rightTerm)
-                                    .append(")");
+            // We need a symbol (comma ,) to separate the operands.
+            // If not, the following can happen:
+            // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
+            // xyz+ could mean x + yz or xy + z (soln. x.yz+)
+            string largerTerm = string(leftTerm).append(",").append(rightTerm).append(s);
 
             patterns.push_back(largerTerm);
             stack.push(largerTerm);
         }
     }
-    set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
-    return uniquePatterns;
-}
-
-string PatternTable::createExactPattern(vector<string> &exprList) {
-    string exactPattern;
-    for (const string &s : exprList) {
-        exactPattern.append(s);
-    }
-    return exactPattern;
+    return patterns;
 }
