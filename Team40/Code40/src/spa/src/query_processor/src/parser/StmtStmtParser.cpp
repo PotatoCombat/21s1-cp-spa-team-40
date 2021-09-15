@@ -3,19 +3,24 @@
 StmtStmtParser::StmtStmtParser(ClsTuple cls, vector<Reference *> &declList,
                                DesignEntityTypeHelper &deH,
                                ClauseTypeHelper &clsH)
-    : type(get<0> cls), ref1(get<1> cls), ref2(get<1> cls), declList(declList),
-      deHelper(deH), clsHelper(clsH) {}
+    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<1>(cls)),
+      declList(declList), deHelper(deH), clsHelper(clsH) {}
 
 Clause *StmtStmtParser::parse() {
     // FOLLOWS/FOLLOWS_T/PARENT/PARENT_T
     // number/synonym/wildcard, number/synonym/wildcard
 
-    auto it1 =
-        find_if(declList.begin(), declList.end(),
-                [&ref1](Reference *ref) { return ref->getValue() == ref1; });
-    auto it2 =
-        find_if(declList.begin(), declList.end(),
-                [&ref2](Reference *ref) { return ref->getValue() == ref2; });
+    string refString1 = this->ref1;
+    string refString2 = this->ref2;
+
+    auto it1 = find_if(declList.begin(), declList.end(),
+                       [&refString1](Reference *ref) {
+                           return ref->getValue() == refString1;
+                       });
+    auto it2 = find_if(declList.begin(), declList.end(),
+                       [&refString2](Reference *ref) {
+                           return ref->getValue() == refString2;
+                       });
 
     ClauseType clsT = clsHelper.getType(type);
     Reference *r1;
@@ -28,8 +33,8 @@ Clause *StmtStmtParser::parse() {
         }
         r1 = (*it1)->copy();
     } else {
-        ReferenceType refT =
-            checkRefType(ref1); // TODO: assert integer / wildcard
+        // TODO: assert integer / wildcard
+        ReferenceType refT = ParserUtil::checkRefType(ref1);
         DesignEntityType deT = clsHelper.chooseDeType1(clsT);
         r1 = new Reference(deT, refT, ref1);
     }
@@ -41,8 +46,8 @@ Clause *StmtStmtParser::parse() {
         }
         r2 = (*it2)->copy();
     } else {
-        ReferenceType refT =
-            checkRefType(ref2); // TODO: assert integer / wildcard
+        // TODO: assert integer / wildcard
+        ReferenceType refT = ParserUtil::checkRefType(ref2);
         DesignEntityType deT = clsHelper.chooseDeType2(clsT);
         r2 = new Reference(deT, refT, ref2);
     }

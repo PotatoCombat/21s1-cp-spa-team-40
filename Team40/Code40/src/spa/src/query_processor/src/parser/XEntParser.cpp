@@ -2,8 +2,8 @@
 
 XEntParser::XEntParser(ClsTuple cls, vector<Reference *> &declList,
                        DesignEntityTypeHelper &deH, ClauseTypeHelper &clsH)
-    : type(get<0> cls), ref1(get<1> cls), ref2(get<1> cls), declList(declList),
-      deHelper(deH), clsHelper(clsH) {}
+    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<1>(cls)),
+      declList(declList), deHelper(deH), clsHelper(clsH) {}
 
 Clause *XEntParser::parse() {
     // MODIFIES_S/USES_S
@@ -12,22 +12,17 @@ Clause *XEntParser::parse() {
     // MODIFIES_P/USES_P
     // quoted/synonym, quoted/synonym/wildcard
 
-    // number/synonym, quoted/synonym/wildcard
-    if (isQuoted(ref1) || isWildcard(ref1) || isInteger(ref2)) {
-        throw ValidityError("invalid clause argument");
-    }
+    string refString1 = this->ref1;
+    string refString2 = this->ref2;
 
-    // quoted/synonym, quoted/synonym/wildcard
-    if (isInteger(ref1) || isWildcard(ref1) || isInteger(ref2)) {
-        throw ValidityError("invalid clause argument");
-    }
-
-    auto it1 =
-        find_if(declList.begin(), declList.end(),
-                [&ref1](Reference *ref) { return ref->getValue() == ref1; });
-    auto it2 =
-        find_if(declList.begin(), declList.end(),
-                [&ref2](Reference *ref) { return ref->getValue() == ref2; });
+    auto it1 = find_if(declList.begin(), declList.end(),
+                       [&refString1](Reference *ref) {
+                           return ref->getValue() == refString1;
+                       });
+    auto it2 = find_if(declList.begin(), declList.end(),
+                       [&refString2](Reference *ref) {
+                           return ref->getValue() == refString2;
+                       });
 
     ClauseType clsT = clsHelper.getType(type);
     Reference *r1;
@@ -38,7 +33,7 @@ Clause *XEntParser::parse() {
         DesignEntityType foundType = (*it1)->getDeType();
         if (deHelper.isStatement(foundType)) {
             isStmtEnt = true;
-        } else if (deHelp.isProcedure(foundType)) {
+        } else if (deHelper.isProcedure(foundType)) {
             isStmtEnt = false;
         } else {
             throw ValidityError("invalid clause argument");
@@ -55,6 +50,7 @@ Clause *XEntParser::parse() {
         } else {
             throw ValidityError("invalid clause argument");
         }
+        ReferenceType refT = ReferenceType::CONSTANT;
         r1 = new Reference(deT, refT, ref1);
     }
 
@@ -65,11 +61,11 @@ Clause *XEntParser::parse() {
         }
         r2 = (*it2)->copy();
     } else {
-        ReferenceType refT = checkRefType(ref2); // TODO: assert quoted / wildcard
-        if (refT != ReferenceType::CONSTANT) {
-            throw ValidityError("invalid clause argument");
+        ReferenceType refT =
+            ParserUtil::checkRefType(ref2); // TODO: assert quoted / wildcard
+        if (refT == ReferenceType::CONSTANT) {
+            ref2 = ref2.substr(1, ref2.size() - 2);
         }
-        ref2 = ref2.substr(1, ref2.size() - 2);
         DesignEntityType deT = DesignEntityType::VARIABLE;
         r2 = new Reference(deT, refT, ref2);
     }
