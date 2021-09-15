@@ -144,3 +144,57 @@ TEST_CASE("DesignExtractor: Follows") {
         REQUIRE(followStar3.empty());
     }
 }
+TEST_CASE("DesignExtractor: Parent") {
+
+    ExtractionContext::getInstance().reset();
+    TestDesignExtractor::pkb = PKB();
+
+    SECTION("Correctly extracts Parent") {
+        vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "=", "2"};
+        ProcName PROC_NAME = "PROC";
+        VarName VAR_NAME = "VAR";
+
+        Program program;
+        Procedure procedure(PROC_NAME);
+        Statement statement1(1, StatementType::WHILE);
+        Statement statement2(2, StatementType::WHILE);
+        Statement statement3(3, StatementType::READ);
+        Variable variable(VAR_NAME);
+
+        statement1.setExpressionLst(DUMMY_EXPRESSION_LIST);
+        statement1.addThenStmt(&statement2);
+        statement2.setExpressionLst(DUMMY_EXPRESSION_LIST);
+        statement2.addThenStmt(&statement3);
+        statement3.setVariable(&variable);
+        procedure.addToStmtLst(&statement1);
+        program.addToProcLst(&procedure);
+
+        DesignExtractor de(&TestDesignExtractor::pkb);
+        de.extract(&program);
+
+        auto parent1 =
+            TestDesignExtractor::pkb.getParentStmt(statement1.getIndex());
+        auto parentStar1 =
+            TestDesignExtractor::pkb.getParentStarStmts(statement1.getIndex());
+        auto parent2 =
+            TestDesignExtractor::pkb.getParentStmt(statement2.getIndex());
+        auto parentStar2 =
+            TestDesignExtractor::pkb.getParentStarStmts(statement2.getIndex());
+        auto parent3 =
+            TestDesignExtractor::pkb.getParentStmt(statement3.getIndex());
+        auto parentStar3 =
+            TestDesignExtractor::pkb.getParentStarStmts(statement3.getIndex());
+
+        REQUIRE(parent1 == -1);
+        REQUIRE(parentStar1.empty());
+
+        REQUIRE(parent2 == statement1.getIndex());
+        REQUIRE(parentStar2.size() == 1);
+        REQUIRE(parentStar2.count(statement1.getIndex()));
+
+        REQUIRE(parent3 == statement2.getIndex());
+        REQUIRE(parentStar3.size() == 2);
+        REQUIRE(parentStar3.count(statement1.getIndex()));
+        REQUIRE(parentStar3.count(statement2.getIndex()));
+    }
+}
