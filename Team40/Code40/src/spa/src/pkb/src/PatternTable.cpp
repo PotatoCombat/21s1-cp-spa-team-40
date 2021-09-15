@@ -12,45 +12,78 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     VarName varName = stmt->getVariable()->getName();
     vector<string> exprList = stmt->getExpressionLst();
 
-    // Normal Records ============
+    // ***************
+    // Normal Records
+    // ***************
     vector<string> postfix = createPostfix(exprList);
     set<string> patterns = createPatterns(postfix);
 
+    set<Record> patternsOfStmt;
+
+    // Note
+    // k : v means a map entry, where Key = k, Value = v
     for (const auto &p : patterns) {
-        // Record with varName, eg. ("x", "y * 5")
-        Record recordWithVarName = make_pair(varName, p);
+        // Complete Record, eg. ("x", _"y * 5"_)
+        Record record = make_pair(varName, p);
 
-        // Record with wildcard, eg. (_, "y * 5")
-        Record recordWithWildcard = make_pair(WILDCARD, p);
+        // Record with wildcard varName, eg. (_, _"y * 5"_)
+        Record recordWithoutVarName = make_pair(WILDCARD, p);
 
-        insertStmtWithPattern(recordWithVarName, stmtIndex);
-        insertStmtWithPattern(recordWithWildcard, stmtIndex);
+        // Map ("x", _"y * 5"_) : { stmt#1 }
+        insertStmtWithPattern(record, stmtIndex);
 
-        insertPatternsOfStmt(stmtIndex,
-                             {recordWithVarName, recordWithWildcard});
+        // Map (_, _"y * 5"_) : { stmt#1 }
+        insertStmtWithPattern(recordWithoutVarName, stmtIndex);
+
+        // Map stmt#1 : { ("x", _"y * 5"_), (_, _"y * 5"_) }
+        insertPatternsOfStmt(stmtIndex, {record, recordWithoutVarName});
     }
 
-    // Exact Records ============
+    // Record with wildcard pattern, eg. ("x", _)
+    Record recordWithoutPattern = make_pair(varName, WILDCARD);
+
+    // Map ("x", _) : { stmt#1 }
+    insertStmtWithPattern(recordWithoutPattern, stmtIndex);
+
+    // Map stmt#1 : { ("x", _) }
+    insertPatternsOfStmt(stmtIndex, {patternsOfStmt});
+
+    // ***************
+    // Exact Records
+    // ***************
     string exactPattern = createExactPattern(exprList);
 
-    Record exactRecordWithVarName = make_pair(varName, exactPattern);
-    Record exactRecordWithWildcard = make_pair(WILDCARD, exactPattern);
+    // Exact record with pattern, eg. ("x", "y * 5")
+    Record exactRecord = make_pair(varName, exactPattern);
 
-    insertStmtWithExactPattern(exactRecordWithVarName, stmtIndex);
-    insertStmtWithExactPattern(exactRecordWithWildcard, stmtIndex);
+    // Exact record with wildcard varName, eg. (_, "y * 5")
+    Record exactRecordWithoutVarName = make_pair(WILDCARD, exactPattern);
 
-    insertExactPatternsOfStmt(
-        stmtIndex, {exactRecordWithVarName, exactRecordWithWildcard});
+    // Exact record with wildcard pattern, eg. ("x", _)
+    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD);
+
+    // Map ("x", "y * 5") : { stmt#1 }
+    insertStmtWithExactPattern(exactRecord, stmtIndex);
+
+    // Map (_, "y * 5") : { stmt#1 }
+    insertStmtWithExactPattern(exactRecordWithoutVarName, stmtIndex);
+
+    // Map ("x", _) : { stmt#1 }
+    insertStmtWithExactPattern(exactRecordWithoutPattern, stmtIndex);
+
+    // Map stmt#1 : { ("x", "y * 5"), (_, "y * 5"), ("x", _) }
+    insertExactPatternsOfStmt(stmtIndex,{
+                                             exactRecord,
+                                             exactRecordWithoutVarName,
+                                             exactRecordWithoutPattern
+                                         });
 }
 
 set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName,
                                                        Pattern pattern) {
     Record record = make_pair(varName, pattern);
-    auto kvp = stmtsWithPatternMap.find(
-        record); // kvp stands for Key-Value Pair (map entry).
-    if (kvp ==
-        stmtsWithPatternMap
-            .end()) { // Could not find a map entry with record as the key.
+    auto kvp = stmtsWithPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
+    if (kvp == stmtsWithPatternMap.end()) { // Could not find a map entry with record as the key.
         return {};
     }
     return kvp->second;
