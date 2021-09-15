@@ -10,5 +10,7 @@ TEST_CASE("ModuloByFactorTerm: Creates and retrieves value correctly") {
     SingleFactorTerm s(&cv);
     ConstantValue c(VALUE_2);
     ModuloByFactorTerm m = ModuloByFactorTerm(&s, &c);
-    REQUIRE(m.getValue() == VALUE_1 % VALUE_2);
+    REQUIRE(m.getTerm() == &s);
+    REQUIRE(m.getFactor() == &c);
+    REQUIRE(m.getTermType() == TermType::MODULO_TERM_BY_FACTOR);
 }

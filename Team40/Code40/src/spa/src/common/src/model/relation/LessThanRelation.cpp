@@ -4,8 +4,4 @@ class LessThanRelation : public Relation {
 public:
     LessThanRelation(Factor *leftFactor, Factor *rightFactor)
         : Relation(RelationType::LESS_THAN, leftFactor, rightFactor){};
-
-    bool getValue() override {
-        return getLeftFactor()->getValue() < getRightFactor()->getValue();
-    }
 };

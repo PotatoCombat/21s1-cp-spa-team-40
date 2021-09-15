@@ -10,5 +10,6 @@ TEST_CASE("DivideByFactorTerm: Creates and retrieves value correctly") {
     SingleFactorTerm s = SingleFactorTerm(&cv);
     auto c = ConstantValue(VALUE_2);
     DivideByFactorTerm m = DivideByFactorTerm(&s, &c);
-    REQUIRE(m.getValue() == VALUE_1 / VALUE_2);
+    REQUIRE(m.getTerm() == &s);
+    REQUIRE(m.getFactor() == &c);
 }

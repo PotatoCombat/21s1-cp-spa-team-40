@@ -11,5 +11,7 @@ TEST_CASE("MultiplyByFactorTerm: Creates and retrieves value correctly") {
     SingleFactorTerm s = SingleFactorTerm(f);
     auto c = ConstantValue(VALUE_2);
     MultiplyByFactorTerm m = MultiplyByFactorTerm(&s, &c);
-    REQUIRE(m.getValue() == VALUE_1 * VALUE_2);
+    REQUIRE(m.getTerm() == &s);
+    REQUIRE(m.getFactor() == &c);
+    REQUIRE(m.getTermType() == TermType::MULTIPLY_TERM_BY_FACTOR);
 }

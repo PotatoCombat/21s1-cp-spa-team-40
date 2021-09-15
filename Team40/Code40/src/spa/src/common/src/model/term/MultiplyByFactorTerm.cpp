@@ -4,12 +4,4 @@
 MultiplyByFactorTerm::MultiplyByFactorTerm(Term *term, Factor *factor)
     : term(term), Term(TermType::MULTIPLY_TERM_BY_FACTOR, factor){};
 
-int MultiplyByFactorTerm::getValue() {
-    if (!hasComputedValue) {
-        value = term->getValue() * getFactor()->getValue();
-        hasComputedValue = true;
-    }
-    return value;
-}
-
 Term *MultiplyByFactorTerm::getTerm() { return term; }
