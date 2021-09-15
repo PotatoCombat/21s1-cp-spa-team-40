@@ -14,7 +14,7 @@ Result ParentHandler::eval() {
     validate();
 
     // Parent(s, s)
-    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+    if (firstReference->getRefType() == ReferenceType::SYNONYM &&
         firstReference->equals(*secondReference)) {
         result.setValid(false);
         return result;
