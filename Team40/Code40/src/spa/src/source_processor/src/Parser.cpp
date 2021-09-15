@@ -143,6 +143,7 @@ void Parser::addString(string &input, vector<string> &inputVector) {
 
 string Parser::cleanString(string input) {
     input.erase(remove(input.begin(), input.end(), ' '), input.end());
+    input.erase(remove(input.begin(), input.end(), '\t'), input.end());
     return input;
 }
 
