@@ -19,6 +19,7 @@ Clause *XEntParser::parse() {
     string refString1 = this->ref1;
     string refString2 = this->ref2;
 
+    // check if references are declared
     auto it1 = find_if(declList.begin(), declList.end(),
                        [&refString1](Reference *ref) {
                            return ref->getValue() == refString1;
@@ -30,10 +31,13 @@ Clause *XEntParser::parse() {
 
     Reference *r1;
     Reference *r2;
+    // a StmtEnt is ModifiesS/UsesS
+    // a EntEnt is ModifiesP/UsesP
     bool isStmtEnt = true; // false for EntEnt
 
     if (it1 != declList.end()) {
         DesignEntityType foundType = (*it1)->getDeType();
+        // set isStmtEnt based on the type of first argument
         if (deHelper.isStatement(foundType)) {
             isStmtEnt = true;
         } else if (deHelper.isProcedure(foundType)) {
@@ -43,14 +47,15 @@ Clause *XEntParser::parse() {
         }
         r1 = (*it1)->copy();
     } else {
+        // first argument is not declared, so must be either constant or wildcard
         DesignEntityType deT;
-        if (ParserUtil::isInteger(ref1)) {
+        if (ParserUtil::isInteger(ref1)) { // integer constant
             isStmtEnt = true;
             deT = DesignEntityType::STMT;
-        } else if (ParserUtil::isQuoted(ref1)) {
+        } else if (ParserUtil::isQuoted(ref1)) { // string constant
             isStmtEnt = false;
             deT = DesignEntityType::PROCEDURE;
-            ref1 = ref1.substr(1, ref1.size() - 2);
+            ref1 = ref1.substr(1, ref1.size() - 2); // remove quotes
         } else {
             throw ValidityError("invalid clause argument");
         }
@@ -58,6 +63,7 @@ Clause *XEntParser::parse() {
         r1 = new Reference(deT, refT, ref1);
     }
 
+    // second argument must always be a variable
     if (it2 != declList.end()) {
         DesignEntityType foundType = (*it2)->getDeType();
         if (!deHelper.isVariable(foundType)) {
@@ -67,7 +73,7 @@ Clause *XEntParser::parse() {
     } else {
         ReferenceType refT =
             ParserUtil::checkRefType(ref2); // TODO: assert quoted / wildcard
-        if (refT == ReferenceType::CONSTANT) {
+        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
             ref2 = ref2.substr(1, ref2.size() - 2);
         }
         DesignEntityType deT = DesignEntityType::VARIABLE;
@@ -75,7 +81,9 @@ Clause *XEntParser::parse() {
     }
 
     if (isStmtEnt) {
+        // make ModifiesS/UsesS
         return new Clause(clsHelper.getType(type), *r1, *r2);
     }
+    // make ModifiesP/UsesP
     return new Clause(clsHelper.getType(type + "*"), *r1, *r2);
 }

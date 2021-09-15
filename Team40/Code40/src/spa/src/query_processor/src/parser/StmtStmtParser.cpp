@@ -13,6 +13,7 @@ Clause *StmtStmtParser::parse() {
     string refString1 = this->ref1;
     string refString2 = this->ref2;
 
+    // see if any declared synonyms used
     auto it1 = find_if(declList.begin(), declList.end(),
                        [&refString1](Reference *ref) {
                            return ref->getValue() == refString1;
@@ -26,6 +27,7 @@ Clause *StmtStmtParser::parse() {
     Reference *r1;
     Reference *r2;
 
+    // both r1 and r2 must be statements 
     if (it1 != declList.end()) {
         DesignEntityType foundType = (*it1)->getDeType();
         if (!deHelper.isStatement(foundType)) {
@@ -33,6 +35,7 @@ Clause *StmtStmtParser::parse() {
         }
         r1 = (*it1)->copy();
     } else {
+        // statement is a constant/wildcard
         // TODO: assert integer / wildcard
         ReferenceType refT = ParserUtil::checkRefType(ref1);
         DesignEntityType deT = clsHelper.chooseDeType1(clsT);
@@ -46,6 +49,7 @@ Clause *StmtStmtParser::parse() {
         }
         r2 = (*it2)->copy();
     } else {
+        // statement is a constant/wildcard
         // TODO: assert integer / wildcard
         ReferenceType refT = ParserUtil::checkRefType(ref2);
         DesignEntityType deT = clsHelper.chooseDeType2(clsT);
