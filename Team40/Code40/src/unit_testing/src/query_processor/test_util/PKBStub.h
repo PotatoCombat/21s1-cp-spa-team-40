@@ -16,6 +16,7 @@ class PKBStub : public PKB {
 public:
     Iterator<StmtIndex> getAllStmts();
     Iterator<VarName> getAllVars();
+    Iterator<int> getAllConsts();
 
     Iterator<StmtIndex> getAllStmts(StatementType stmtType);
 
