@@ -1,8 +1,5 @@
 #include "source_processor/ReadStatementParser.h"
-#include "common/model/Statement.h"
 #include <algorithm>
-#include <string>
-#include <vector>
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
     : content(content), index(index) {

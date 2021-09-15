@@ -1,8 +1,5 @@
 #include "source_processor/PrintStatementParser.h"
-#include "common/model/Statement.h"
 #include <algorithm>
-#include <string>
-#include <vector>
 
 PrintStatementParser::PrintStatementParser(vector<string> content, int index)
     : content(content), index(index) {
