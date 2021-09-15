@@ -5,7 +5,6 @@ file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/models/conditional/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/expression/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/relation/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/models/statement/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/models/term/*.cpp"
         )
 
@@ -15,4 +14,4 @@ target_sources(unit_testing PRIVATE ${srcs})
 add_executable(common_testing ${catch_main} ${srcs})
 
 # Ensures that unit_testing runs with spa library.
-target_link_libraries(common_testing spa)
+target_link_libraries(common_testing common)

@@ -1,8 +1,8 @@
 #include "common/model/Procedure.h"
 
-Procedure::Procedure(string name) : name(name) { this->stmtLst = {}; }
+Procedure::Procedure(string name) : name(name), stmtLst({}) {}
 
-void Procedure::addToStmtLst(Statement *stmt) { this->stmtLst.push_back(stmt); }
+void Procedure::addToStmtLst(Statement* stmt) { this->stmtLst.push_back(stmt); }
 
 string Procedure::getName() { return this->name; };
 

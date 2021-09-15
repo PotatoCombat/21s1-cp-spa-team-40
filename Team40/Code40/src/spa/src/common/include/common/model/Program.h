@@ -5,12 +5,12 @@ using namespace std;
 
 class Program {
 private:
-    vector<Procedure> procLst;
+    vector<Procedure *> procLst;
 
 public:
     Program();
 
-    void addToProcLst(Procedure proc);
+    void addToProcLst(Procedure* proc);
 
-    vector<Procedure> getProcLst();
+    vector<Procedure *> getProcLst();
 };

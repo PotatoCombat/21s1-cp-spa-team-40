@@ -5,5 +5,5 @@ using namespace std;
 class CallStatementParser : StatementParser {
 public:
     CallStatementParser(vector<string> content, int index);
-    Statement parseCallStatement();
+    Statement *parseCallStatement();
 };

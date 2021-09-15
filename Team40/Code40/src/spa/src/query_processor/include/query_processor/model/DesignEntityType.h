@@ -10,5 +10,6 @@ enum class DesignEntityType {
     PRINT,
     WHILE,
     IF,
-    CALL
+    CALL,
+    PROG_LINE
 };

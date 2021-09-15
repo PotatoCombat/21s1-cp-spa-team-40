@@ -132,6 +132,11 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
                 toString(stmts, result);
                 return result;
             }
+            if (returnReference->getDeType() == DesignEntityType::WHILE) {
+                vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::WHILE).asVector();
+                toString(stmts, result);
+                return result;
+            }
             if (returnReference->getDeType() == DesignEntityType::PRINT) {
                 vector<StmtIndex> stmts = pkb->getAllStmts(StatementType::PRINT).asVector();
                 toString(stmts, result);

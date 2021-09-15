@@ -19,7 +19,7 @@ void Query::addClause(Clause *clause) {
     addReference(clause->getSecondReference());
 }
 
-void Query::addReference(Reference* reference) {
+void Query::addReference(Reference *reference) {
     if (reference->getRefType() != ReferenceType::SYNONYM) {
         return;
     }
@@ -34,10 +34,10 @@ void Query::addReference(Reference* reference) {
 
 vector<Clause *> Query::getClauses() { return this->clauseList; }
 
-void Query::addPattern(Pattern* pattern) {
+void Query::addPattern(PatternClause *pattern) {
     patternList.push_back(pattern);
-    addReference(&pattern->getStmt());
-    addReference(&pattern->getVar());
+    addReference(pattern->getStmt());
+    addReference(pattern->getVar());
 }
 
 vector<Pattern *> Query::getPatterns() { return patternList; }

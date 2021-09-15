@@ -1,3 +1,4 @@
+#include <iostream>
 #include "TestWrapper.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines

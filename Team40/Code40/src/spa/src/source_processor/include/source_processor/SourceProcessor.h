@@ -3,7 +3,7 @@
 #include "pkb/PKB.h"
 #include "source_processor/Parser.h"
 #include "source_processor/ProgramParser.h"
-#include "source_processor/DesignExtractor.h"
+#include "source_processor/design_extractor/DesignExtractor.h"
 
 class SourceProcessor {
 public:
