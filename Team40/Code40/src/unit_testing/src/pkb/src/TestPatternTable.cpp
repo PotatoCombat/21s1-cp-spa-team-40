@@ -19,13 +19,6 @@ struct TestPatterns {
         };
     }
 
-    inline static vector<string> createExprList2() {
-        // v + x * y + z * t
-        return {
-            "v", "+", "x", "*", "y", "+", "z", "*", "t",
-        };
-    }
-
     inline static set<string> createPatterns1() {
         // ((x + 10) * (y - z) / 5)
         return {
@@ -39,6 +32,35 @@ struct TestPatterns {
             "5",
             "(((x+10)*(y-z))/5)",
         };
+    }
+
+    inline static string createExactPattern1() {
+        // ((x + 10) * (y - z) / 5)
+        return "(((x+10)*(y-z))/5)";
+    }
+
+    inline static vector<string> createExprList2() {
+        // v + x * y + z * t
+        return {
+            "v", "+", "x", "*", "y", "+", "z", "*", "t",
+        };
+    }
+
+    inline static set<string> createPatterns2() {
+        // v + x * y + z * t
+        return {
+            "v",     "x",         "y",
+            "(x*y)", "(v+(x*y))", "z",
+            "t",     "(z*t)",     "((v+(x*y))+(z*t))",
+        };
+    }
+
+    inline static Statement *createStatment1() {
+        auto *stmt = new Statement(1, StatementType::ASSIGN);
+        auto *var = new Variable("x");
+        stmt->setVariable(var);
+        stmt->setExpressionLst(TestPatterns::createExprList1());
+        return stmt;
     }
 };
 
@@ -58,50 +80,69 @@ TEST_CASE("PatternTable: createPostfix -> createPatterns") {
     REQUIRE(testPatterns.empty());
 }
 
-TEST_CASE("PatternTable: insertPattern") {
-    Variable v("x");
-    Statement stmt(1, StatementType::ASSIGN);
-    stmt.setVariable(&v);
-    stmt.setExpressionLst(TestPatterns::createExprList2());
+TEST_CASE("PatternTable: assignMatchesPattern (with insertPatternAssign)") {
+    Statement *stmt = TestPatterns::createStatment1();
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = stmt->getVariable()->getName();
+    set<string> testPatterns = TestPatterns::createPatterns1();
 
     PatternTable table;
-    table.insertPatternAssign(&stmt);
+    table.insertPatternAssign(stmt);
 
-    REQUIRE(table.assignMatchesPattern(1, v.getName(), "v+x*y"));
-    REQUIRE(table.assignMatchesPattern(1, "_", "v+x*y"));
+    REQUIRE(table.assignMatchesPattern(stmtIndex, varName, "_"));
+
+    for (auto pattern : testPatterns) {
+        REQUIRE(table.assignMatchesPattern(stmtIndex, varName, pattern));
+        REQUIRE(table.assignMatchesPattern(stmtIndex, "_", pattern));
+    }
+
+    delete stmt;
 }
 
-// TEST_CASE("PatternTable: ctor") {
-//     PatternTable table;
-//     REQUIRE(table.getSize() == 0);
-// }
+TEST_CASE(
+    "PatternTable: assignMatchesExactPattern (with insertPatternAssign)") {
+    throw runtime_error("Not required for Iteration 1");
+//    Statement *stmt = TestPatterns::createStatment1();
+//    StmtIndex stmtIndex = stmt->getIndex();
+//    VarName varName = stmt->getVariable()->getName();
+//    string testExactPattern = TestPatterns::createExactPattern1();
 //
-// TEST_CASE("PatternTable: insert/getEntity") {
-//     EntityTable<TestEntity, string> table;
-//     TestEntity test("hello");
-//     table.insert(&test);
+//    PatternTable table;
+//    table.insertPatternAssign(stmt);
 //
-//     REQUIRE(table.getSize() == 1);
-//     REQUIRE(table.getEntity("hello") == &test);
-// }
+//    REQUIRE(table.assignMatchesExactPattern(stmtIndex, varName, "_"));
+//    REQUIRE(
+//        table.assignMatchesExactPattern(stmtIndex, varName, testExactPattern));
+//    REQUIRE(table.assignMatchesExactPattern(stmtIndex, "_", testExactPattern));
 //
-// TEST_CASE("EntityTable: entity not stored in table") {
-//     auto table = TestEntityTable::createTable();
-//     REQUIRE(table.getEntity("goodbye") == nullptr);
-// }
-//
-// TEST_CASE("EntityTable: getNames") {
-//     auto table = TestEntityTable::createTable();
-//
-//     vector<TestEntity> test = TestEntityTable::createItems();
-//     vector<string> actual = table.getNames().asVector();
-//
-//     for (int i = 0; i < actual.size(); i++) {
-//         REQUIRE(test.at(i).getName() == actual.at(i));
-//     }
-// }
-//
-// TEST_CASE("EntityTable: getSize") {
-//     auto table = TestEntityTable::createTable();
-//     REQUIRE(table.getSize() == TestEntityTable::createItems().size());
-// }
+//    delete stmt;
+}
+
+TEST_CASE(
+    "PatternTable: getAssignsMatchingPattern (with insertPatternAssign)") {
+    Statement *stmt = TestPatterns::createStatment1();
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = stmt->getVariable()->getName();
+    set<string> testPatterns = TestPatterns::createPatterns1();
+
+    PatternTable table;
+    table.insertPatternAssign(stmt);
+
+    set<StmtIndex> assignsMatchingPattern;
+
+    assignsMatchingPattern = table.getAssignsMatchingPattern(varName, "_");
+    REQUIRE(assignsMatchingPattern.size() == 1);
+    REQUIRE(assignsMatchingPattern.count(stmtIndex) == 1);
+
+    for (auto pattern : testPatterns) {
+        assignsMatchingPattern = table.getAssignsMatchingPattern(varName, pattern);
+        REQUIRE(assignsMatchingPattern.size() == 1);
+        REQUIRE(assignsMatchingPattern.count(stmtIndex) == 1);
+
+        assignsMatchingPattern = table.getAssignsMatchingPattern("_", pattern);
+        REQUIRE(assignsMatchingPattern.size() == 1);
+        REQUIRE(assignsMatchingPattern.count(stmtIndex) == 1);
+    }
+
+    delete stmt;
+}
