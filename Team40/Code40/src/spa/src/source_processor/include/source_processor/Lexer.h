@@ -12,19 +12,19 @@
 
 using namespace std;
 
-class Parser {
+class Lexer {
 public:
-    // parse file input
-    vector<Line> parseFile(fstream &file);
-    vector<vector<string>> tokenizeFile(fstream &file);
+    // tokenize file input
+    vector<Line> tokenizeFile(fstream &file);
+    vector<vector<string>> mergeLine(fstream &file);
     tuple<vector<string>, vector<string>> splitLine(vector<string> inputLine);
-    vector<string> parseLine(string input);
+    vector<string> tokenizeLine(string input);
 
     // helper functions
-    void parseAndAddSymbol(string input, int &index, char curr,
-                           string &currString, vector<string> &inputLine);
-    void parseAndAddKeyword(string input, int &index, string &currString,
-                            vector<string> &inputLine);
+    void tokenizeAndAddSymbol(string input, int &index, char curr,
+                              string &currString, vector<string> &inputLine);
+    void tokenizeAndAddKeyword(string input, int &index, string &currString,
+                               vector<string> &inputLine);
     string cleanString(string input);
     void addString(string &input, vector<string> &inputVector);
 

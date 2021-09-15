@@ -10,7 +10,7 @@
 
 SourceProcessor::SourceProcessor(PKB *pkb) {
     this->pkb = pkb;
-    this->parser = Parser();
+    this->lexer = Lexer();
     this->programParser = ProgramParser();
     this->designExtractor = DesignExtractor(pkb);
 }
@@ -19,7 +19,7 @@ void SourceProcessor::processSource(string filename) {
     fstream file;
     file.open(filename, ios::in);
     if (file.is_open()) {
-        vector<Line> programLines = parser.parseFile(file);
+        vector<Line> programLines = lexer.tokenizeFile(file);
         Program program;
         programParser.parseProgram(programLines, program);
         designExtractor.extract(&program);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pkb/PKB.h"
-#include "source_processor/Parser.h"
+#include "source_processor/Lexer.h"
 #include "source_processor/ProgramParser.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 
@@ -13,7 +13,7 @@ public:
 
 private:
     PKB *pkb;
-    Parser parser;
+    Lexer lexer;
     ProgramParser programParser;
     DesignExtractor designExtractor = DesignExtractor(nullptr);
 };

@@ -1,13 +1,13 @@
-#include "source_processor/Parser.h"
+#include "source_processor/Lexer.h"
 #include <algorithm>
 #include <iostream>
 #include <tuple>
 
-// parse file input
+// tokenize file input
 
-vector<Line> Parser::parseFile(fstream &file) {
+vector<Line> Lexer::tokenizeFile(fstream &file) {
     vector<Line> programLines = {};
-    vector<vector<string>> programTokens = tokenizeFile(file);
+    vector<vector<string>> programTokens = mergeLine(file);
     int stmtNum = 0;
     vector<string> currString = {};
 
@@ -33,11 +33,11 @@ vector<Line> Parser::parseFile(fstream &file) {
     return programLines;
 }
 
-vector<vector<string>> Parser::tokenizeFile(fstream &file) {
+vector<vector<string>> Lexer::mergeLine(fstream &file) {
     string input;
     vector<vector<string>> programTokens = {};
     while (getline(file, input)) {
-        vector<string> line = parseLine(input);
+        vector<string> line = tokenizeLine(input);
         tuple<vector<string>, vector<string>> splitString = splitLine(line);
         vector<string> currString = get<0>(splitString);
         vector<string> nextString = get<1>(splitString);
@@ -59,7 +59,7 @@ vector<vector<string>> Parser::tokenizeFile(fstream &file) {
     return programTokens;
 }
 
-tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
+tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString = {};
     vector<string> nextString = {};
@@ -79,7 +79,7 @@ tuple<vector<string>, vector<string>> Parser::splitLine(vector<string> line) {
     return splitString;
 }
 
-vector<string> Parser::parseLine(string input) {
+vector<string> Lexer::tokenizeLine(string input) {
     vector<string> inputLine = {};
     string currString = "";
     for (int i = 0; i < input.size(); i++) {
@@ -90,12 +90,12 @@ vector<string> Parser::parseLine(string input) {
             // push back previous string before special character
             addString(currString, inputLine);
             currString.push_back(curr);
-            parseAndAddSymbol(input, i, curr, currString, inputLine);
+            tokenizeAndAddSymbol(input, i, curr, currString, inputLine);
 
         } else {
             currString.push_back(curr);
             if (isKeyword(currString)) {
-                parseAndAddKeyword(input, i, currString, inputLine);
+                tokenizeAndAddKeyword(input, i, currString, inputLine);
             }
         }
     }
@@ -108,8 +108,9 @@ vector<string> Parser::parseLine(string input) {
 
 // helper functions
 
-void Parser::parseAndAddSymbol(string input, int &i, char curr,
-                               string &currString, vector<string> &inputLine) {
+void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr,
+                                 string &currString,
+                                 vector<string> &inputLine) {
     // check if operator has an additional character
     if (i < input.size() - 1) {
         char next = input.at(i + 1);
@@ -121,8 +122,8 @@ void Parser::parseAndAddSymbol(string input, int &i, char curr,
     addString(currString, inputLine);
 }
 
-void Parser::parseAndAddKeyword(string input, int &i, string &currString,
-                                vector<string> &inputLine) {
+void Lexer::tokenizeAndAddKeyword(string input, int &i, string &currString,
+                                  vector<string> &inputLine) {
     // check if keyword has an additional character
     if (i < input.size() - 1) {
         if (!isalnum(input.at(i + 1))) {
@@ -133,7 +134,7 @@ void Parser::parseAndAddKeyword(string input, int &i, string &currString,
     }
 }
 
-void Parser::addString(string &input, vector<string> &inputVector) {
+void Lexer::addString(string &input, vector<string> &inputVector) {
     input = cleanString(input);
     if (!input.empty()) {
         inputVector.push_back(input);
@@ -141,7 +142,7 @@ void Parser::addString(string &input, vector<string> &inputVector) {
     input = "";
 }
 
-string Parser::cleanString(string input) {
+string Lexer::cleanString(string input) {
     input.erase(remove(input.begin(), input.end(), ' '), input.end());
     input.erase(remove(input.begin(), input.end(), '\t'), input.end());
     return input;
@@ -149,12 +150,12 @@ string Parser::cleanString(string input) {
 
 // special keywords
 
-bool Parser::isProc(vector<string> inputLine) {
+bool Lexer::isProc(vector<string> inputLine) {
     return find(inputLine.begin(), inputLine.end(), "procedure") !=
            inputLine.end();
 }
 
-bool Parser::isKeyword(string input) {
+bool Lexer::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
            input == "while" || input == "if" || input == "then" ||
            input == "procedure";
@@ -162,39 +163,39 @@ bool Parser::isKeyword(string input) {
 
 // special symbols
 
-bool Parser::isOperator(char input) { // logical, comparison, artihmetic and
-                                      // assignment (they all overlap)
+bool Lexer::isOperator(char input) { // logical, comparison, artihmetic and
+                                     // assignment (they all overlap)
     return input == '&' || input == '|' || input == '!' || input == '>' ||
            input == '<' || input == '=' || input == '+' || input == '-' ||
            input == '*' || input == '/' || input == '%';
 }
 
-bool Parser::isBracket(char input) {
+bool Lexer::isBracket(char input) {
     return input == '(' || input == ')' || input == '{' || input == '}';
 }
 
-bool Parser::isSemiColon(char input) { return input == ';'; }
+bool Lexer::isSemiColon(char input) { return input == ';'; }
 
-bool Parser::isArtihmeticOperator(string input) {
+bool Lexer::isArtihmeticOperator(string input) {
     return input == "+" || input == "-" || input == "*" || input == "/" ||
            input == "%";
 }
 
-bool Parser::isComparisonOperator(string input) {
+bool Lexer::isComparisonOperator(string input) {
     return input == ">" || input == ">=" || input == "<" || input == "<=" ||
            input == "==" || input == "!=";
 }
 
-bool Parser::isLogicalOperator(string input) {
+bool Lexer::isLogicalOperator(string input) {
     return input == "!" || input == "&&" || input == "||";
 }
 
-bool Parser::isCurlyBracket(string input) {
+bool Lexer::isCurlyBracket(string input) {
     return input == "{" || input == "}";
 }
 
-bool Parser::isRoundBracket(string input) {
+bool Lexer::isRoundBracket(string input) {
     return input == "(" || input == ")";
 }
 
-bool Parser::isSemiColon(string input) { return input == ";"; }
+bool Lexer::isSemiColon(string input) { return input == ";"; }
