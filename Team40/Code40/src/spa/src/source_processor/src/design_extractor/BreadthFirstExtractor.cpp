@@ -52,6 +52,7 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
     case StatementType::ASSIGN:
     case StatementType::PRINT:
     case StatementType::READ:
+        break;
     default:
         throw runtime_error("Invalid StatementType!");
     }
@@ -74,6 +75,10 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         throw runtime_error("Current procedure not set");
     }
     ProcName calleeName = callStatement->getProcName();
+    if (pkb->getProcByName(calleeName) == nullptr) {
+        throw runtime_error("Trying to call a non-existent procedure at line " +
+                            to_string(callStatement->getIndex()));
+    }
 
     // Handle transitive Modifies(proc, var) relationship set<VarName>
     set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
