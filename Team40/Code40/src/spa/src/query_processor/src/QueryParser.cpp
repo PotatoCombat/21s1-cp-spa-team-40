@@ -58,7 +58,7 @@ PatternClause* QueryParser::parsePattern(PatTuple pattern, vector<Reference*>& d
     if (it != declList.end()) {
         r = (*it)->copy();
     } else {
-        throw PreprocessorException("undeclared synonym");
+        throw ValidityError("undeclared synonym");
     }
 
     if (it1 != declList.end()) {
@@ -82,7 +82,7 @@ ReferenceType QueryParser::checkRefType(string &val) {
     } else if (isNamedSynonym(val)) {
         return ReferenceType::CONSTANT;
     }
-    throw PreprocessorException("undeclared synonym");
+    throw ValidityError("undeclared synonym");
 }
 
 bool QueryParser::isInteger(string val) {

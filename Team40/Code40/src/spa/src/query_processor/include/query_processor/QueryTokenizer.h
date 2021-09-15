@@ -8,7 +8,7 @@
 
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
-#include "query_processor/preprocessor/PreprocessorException.h"
+#include "query_processor/exception/SyntaxError.h"
 
 using namespace std;
 

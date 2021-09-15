@@ -4,7 +4,7 @@ pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     size_t split = input.rfind(SEMICOLON);
 
     if (split == string::npos) {
-        throw PreprocessorException("no declaration");
+        throw SyntaxError("no declaration");
     }
 
     string firstHalf = trim(input.substr(0, split + 1));
@@ -21,14 +21,14 @@ string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
     if (first_w == string::npos) {
         // remaining = "";
         // return "";
-        throw PreprocessorException("no return entity");
+        throw SyntaxError("no return entity");
     }
 
     sub = input.substr(0, first_w);
     rem = trimL(input.substr(first_w + 1));
 
     if (sub != KEYWORD_SELECT) {
-        throw PreprocessorException("no select clause");
+        throw SyntaxError("no select clause");
     }
 
     size_t next_w = findFirstWhitespace(rem);
@@ -112,7 +112,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                             cut_pos = cut_pos - (token.size() - size);
                         }
                     } else {
-                        throw PreprocessorException("invalid syntax");
+                        throw SyntaxError("invalid syntax");
                     }
                 } else {
                     token1 = token;
@@ -130,7 +130,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                             cut_pos = cut_pos - (token.size() - size);
                         }
                     } else {
-                        throw PreprocessorException("invalid syntax");
+                        throw SyntaxError("invalid syntax");
                     }
                 } else {
                     token2 = token;
@@ -143,7 +143,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     if (token[not_name_char_pos] == ')') {
                         token3 = token.substr(0, not_name_char_pos);
                     } else {
-                        throw PreprocessorException("invalid syntax");
+                        throw SyntaxError("invalid syntax");
                     }
                 } else {
                     token3 = token;
@@ -155,7 +155,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     pats.push_back(
                         make_pair(token1, vector<PatArg>{token2, token3}));
                 } else {
-                    throw PreprocessorException("something is very wrong");
+                    throw SyntaxError("something is very wrong");
                 }
                 isClause = 0;
             } else {
@@ -167,7 +167,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     ++suchThatCounter;
                 } else {
                     // such is misplaced!
-                    throw PreprocessorException("invalid syntax");
+                    throw SyntaxError("invalid syntax");
                 }
             } else if (token == KEYWORD_THAT) {
                 if (suchThatCounter == 1) {
@@ -175,14 +175,14 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     isClause = 1;
                 } else {
                     // that is misplaced!
-                    throw PreprocessorException("invalid syntax"); 
+                    throw SyntaxError("invalid syntax"); 
                 }
             } else if (token == KEYWORD_PATTERN) {
                 isClause = 2;
             } else {
                 // error in the keyword counting or some
                 // irrevelant text
-                throw PreprocessorException("invalid syntax");
+                throw SyntaxError("invalid syntax");
             }
         }
 

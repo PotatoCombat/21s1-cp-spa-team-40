@@ -24,7 +24,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         }
     }
     if (!found) {
-        throw PreprocessorException("return entity is undeclared");
+        throw ValidityError("return entity is undeclared");
     }
 
     if (clauses.size() == 0) {

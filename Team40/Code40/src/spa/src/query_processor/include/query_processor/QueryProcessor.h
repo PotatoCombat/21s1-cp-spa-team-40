@@ -1,15 +1,14 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <list>
+#include <stdexcept>
 #include <string>
-#include <iostream>
 
 #include "QueryEvaluator.h"
 #include "QueryPreprocessor.h"
-#include "query_processor/preprocessor/PreprocessorException.h"
-
 
 using namespace std;
 

@@ -10,7 +10,7 @@ void QueryProcessor::processQuery(string query, list<string>& results) {
 	Query q;
 	try {
 		preprocessor.preprocessQuery(query, q);
-	} catch (PreprocessorException e) { // no result required, just return
+	} catch (invalid_argument e) { // no result required, just return
 		//cout << e.what();
 		return;
 	}

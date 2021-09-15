@@ -10,7 +10,7 @@
 #include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Reference.h"
-#include "query_processor/preprocessor/PreprocessorException.h"
+#include "query_processor/exception/ValidityError.h"
 
 using namespace std;
 
