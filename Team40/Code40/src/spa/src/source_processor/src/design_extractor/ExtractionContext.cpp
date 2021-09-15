@@ -114,7 +114,25 @@ ExtractionContext::getProcDependencies(ProcName caller) {
     return procDependencyTree[caller];
 }
 
-void ExtractionContext::resetStatementContexts() {
+vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
+    vector<ProcName> result;
+    vector<ProcName> callers;
+    // Add all top-level prcs into callers
+    for (auto &it : procDependencyTree) {
+        ProcName caller = it.first;
+        callers.push_back(caller);
+    }
+    while (!callers.empty()) {
+        ProcName c = callers.back();
+        result.push_back(c);
+        callers.pop_back();
+        copy(procDependencyTree[c].begin(), procDependencyTree[c].end(),
+             back_inserter(callers));
+    }
+    return result;
+}
+
+void ExtractionContext::resetTransientContexts() {
     followsContext.getAllEntities().clear();
     parentContext.getAllEntities().clear();
     currentProcedure.reset();
@@ -123,6 +141,6 @@ void ExtractionContext::resetStatementContexts() {
 }
 
 void ExtractionContext::reset() {
-    resetStatementContexts();
+    resetTransientContexts();
     procDependencyTree.clear();
 }

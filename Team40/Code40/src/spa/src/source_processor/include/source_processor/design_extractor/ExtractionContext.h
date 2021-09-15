@@ -45,7 +45,8 @@ public:
     void addProcDependency(ProcName caller, ProcName callee);
     bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
     unordered_set<ProcName> getProcDependencies(ProcName from);
+    vector<ProcName> getTopologicallySortedProcNames();
 
-    void resetStatementContexts();
+    void resetTransientContexts();
     void reset();
 };

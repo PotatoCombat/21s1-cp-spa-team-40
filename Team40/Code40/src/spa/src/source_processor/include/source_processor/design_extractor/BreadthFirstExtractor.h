@@ -7,7 +7,6 @@
 class BreadthFirstExtractor {
 private:
     vector<vector<Statement *>> statementLists;
-    EntityContext<Statement> ctx;
     PKB *pkb;
 
 public:
@@ -15,7 +14,12 @@ public:
     // Program
     void extract(Program *program);
 
+    // Procedure
+    void extractProcedure(Procedure *procedure);
+
     // Statement
     void extractStatement(Statement *statement);
-    void extractStatementList(vector<Statement *> statementList);
+    void extractIfStatement(Statement *ifStatement);
+    void extractWhileStatement(Statement *whileStatement);
+    void extractCallStatement(Statement *callStatement);
 };

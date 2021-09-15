@@ -88,24 +88,6 @@ StmtIndex DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
     ExtractionContext::getInstance().addProcDependency(
         currentProcedure.value()->getName(), calledProcName);
 
-    //    set<VarName> modifiedVarNames =
-    //        pkb->getVarsModifiedByProc(procedure.getName());
-    //    if (!modifiedVarNames.empty()) {
-    //        for (VarName modifiedVarName : modifiedVarNames) {
-    //            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
-    //            extractModifiesRelationship(*modifiedVar);
-    //        }
-    //    }
-    //
-    //    set<VarName> usedVarNames =
-    //    pkb->getVarsUsedByProc(procedure.getName()); if
-    //    (!usedVarNames.empty()) {
-    //        for (VarName usedVarName : usedVarNames) {
-    //            Variable *usedVar = pkb->getVarByName(usedVarName);
-    //            extractUsesRelationship(*usedVar);
-    //        }
-    //    }
-    //
     return stmtIndex;
 }
 
@@ -199,14 +181,17 @@ void DepthFirstExtractor::extractUsesRelationship(Variable *variable) {
         }
     }
 
-    // 3. Handle all enclosing procedures
-    //    vector<Procedure *> usingProcedures =
-    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    //    if (!usingProcedures.empty()) {
-    //        for (Procedure *usingProcedure : usingProcedures) {
-    //            pkb->insertProcUsingVar(usingProcedure, &variable);
-    //        }
-    //    }
+    // 3. Handle current procedure
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
+    }
+    pkb->insertProcUsingVar(currentProcedure.value(), variable);
+
+    /// NOTE: Transitivity with other Procedures via CallStatements is handled
+    /// in the BreadthFirstExtractor::extractCallStatement since we have yet
+    /// to form the procedure dependency tree at this point
 }
 
 void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
@@ -228,14 +213,17 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
         }
     }
 
-    // 3. Handle all enclosing procedures
-    //    vector<Procedure *> modifyingProcedures =
-    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    //    if (!modifyingProcedures.empty()) {
-    //        for (Procedure *modifyingProcedure : modifyingProcedures) {
-    //            pkb->insertProcModifyingVar(modifyingProcedure, &variable);
-    //        }
-    //    }
+    // 3. Handle current procedure
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
+    }
+    pkb->insertProcModifyingVar(currentProcedure.value(), variable);
+
+    /// NOTE: Transitivity with other Procedures via CallStatements is handled
+    /// in the BreadthFirstExtractor::extractCallStatement since we have yet
+    /// to form the procedure dependency tree at this point
 }
 
 /**
