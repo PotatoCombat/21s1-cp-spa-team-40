@@ -12,6 +12,13 @@ Result FollowsHandler::eval() {
     // assertions
     validate();
 
+    // Follows(s, s)
+    if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+        firstReference->equals(*secondReference)) {
+        result.setValid(false);
+        return result;
+    }
+
 	// WILDCARD WILDCARD
 	if (firstReference->getRefType() == ReferenceType::WILDCARD &&
         secondReference->getRefType() == ReferenceType::WILDCARD) {
