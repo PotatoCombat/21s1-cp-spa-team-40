@@ -5,6 +5,7 @@
 
 struct TestStmtStmtParser {
     static Reference DECLARED_SYN;
+    static Reference DECLARED_SYN1;
     static Reference WILDCARD;
     static Reference CONSTANT1;
     static Reference CONSTANT4;
@@ -13,6 +14,9 @@ struct TestStmtStmtParser {
 
 Reference TestStmtStmtParser::DECLARED_SYN =
     Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "s");
+
+Reference TestStmtStmtParser::DECLARED_SYN1 =
+    Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
 
 Reference TestStmtStmtParser::WILDCARD =
     Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
@@ -101,14 +105,25 @@ TEST_CASE("StmtStmtParser") {
         delete actual;
     }
 
-    /*SECTION("test synonym/synonym") {
+    SECTION("test synonym/synonym") {
+        declList.push_back(&TestStmtStmtParser::DECLARED_SYN1);
         Clause* expected = TestStmtStmtParser::createParentClause(
-            TestStmtStmtParser::WILDCARD, TestStmtStmtParser::WILDCARD);
-        ClsTuple tup = make_tuple("Parent", "_", "_");
+            TestStmtStmtParser::DECLARED_SYN, TestStmtStmtParser::DECLARED_SYN1);
+        ClsTuple tup = make_tuple("Parent", "s", "a");
         StmtStmtParser p(tup, declList, deHelper, clsHelper);
         Clause* actual = p.parse();
 
         REQUIRE(expected->equals(*actual));
-    }*/
+        delete expected;
+        delete actual;
+    }
 
+    SECTION("test undeclared synonym - FAIL") {
+        Clause* expected = TestStmtStmtParser::createParentClause(
+            TestStmtStmtParser::DECLARED_SYN, TestStmtStmtParser::DECLARED_SYN1);
+        ClsTuple tup = make_tuple("Parent", "s", "a");
+        StmtStmtParser p(tup, declList, deHelper, clsHelper);
+
+        REQUIRE_THROWS_AS(p.parse(), ValidityError);
+    }
 };
