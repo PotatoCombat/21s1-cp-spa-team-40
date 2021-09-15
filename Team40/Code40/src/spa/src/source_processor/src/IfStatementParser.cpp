@@ -14,9 +14,9 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
     vector<string> condLst(next(next(ifItr)), prev(endItr));
-
     stmt->setExpressionLst(condLst);
     parseExpression(condLst, stmt);
+
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;

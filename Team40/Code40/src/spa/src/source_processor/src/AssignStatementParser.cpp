@@ -10,16 +10,13 @@ Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
-
     auto stmt = new Statement(index, StatementType::ASSIGN);
-
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);
 
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
     stmt->setExpressionLst(exprLst);
-
     parseExpression(exprLst, stmt);
     return stmt;
 }
