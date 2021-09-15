@@ -27,19 +27,17 @@ struct TestPatterns {
     }
 
     inline static set<string> createPatterns1() {
+        // ((x + 10) * (y - z) / 5)
         return {
             "x",
             "10",
-            "x+10",
             "(x+10)",
             "y",
             "z",
-            "y-z",
             "(y-z)",
-            "(x+10)*(y-z)",
+            "((x+10)*(y-z))",
             "5",
-            "(x+10)*(y-z)/5",
-            "((x+10)*(y-z)/5)",
+            "(((x+10)*(y-z))/5)",
         };
     }
 };
