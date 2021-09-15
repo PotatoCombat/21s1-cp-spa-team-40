@@ -104,7 +104,7 @@ TEST_CASE("DesignExtractor: Follows") {
         Procedure procedure(PROC_NAME);
         Statement statement1(1, StatementType::READ);
         Statement statement2(2, StatementType::READ);
-        Statement statement3(2, StatementType::READ);
+        Statement statement3(3, StatementType::READ);
         Variable variable(VAR_NAME);
 
         statement1.setVariable(&variable);
