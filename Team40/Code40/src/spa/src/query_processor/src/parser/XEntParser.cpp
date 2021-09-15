@@ -2,7 +2,7 @@
 
 XEntParser::XEntParser(ClsTuple cls, vector<Reference *> &declList,
                        DesignEntityTypeHelper &deH, ClauseTypeHelper &clsH)
-    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<1>(cls)),
+    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<2>(cls)),
       declList(declList), deHelper(deH), clsHelper(clsH) {}
 
 Clause *XEntParser::parse() {
@@ -24,7 +24,6 @@ Clause *XEntParser::parse() {
                            return ref->getValue() == refString2;
                        });
 
-    ClauseType clsT = clsHelper.getType(type);
     Reference *r1;
     Reference *r2;
     bool isStmtEnt = true; // false for EntEnt

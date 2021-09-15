@@ -54,7 +54,7 @@ PatternClause *QueryParser::parsePattern(PatTuple pattern,
         r1 = (*it1)->copy();
     } else {
         ReferenceType refT =
-            ParserUtil::checkRefType(LHS); // TODO: assert quoted or constant
+            ParserUtil::checkRefType(LHS); // TODO: assert quoted
         DesignEntityType deT = DesignEntityType::VARIABLE;
         r1 = new Reference(deT, refT, LHS);
     }

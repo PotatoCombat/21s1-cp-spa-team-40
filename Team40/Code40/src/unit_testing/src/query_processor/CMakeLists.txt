@@ -2,6 +2,7 @@ file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/../main.cpp")
 file(GLOB srcs 
 	"${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/model/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/parser/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/relationship_handler/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/test_util/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/test_util/*.h"

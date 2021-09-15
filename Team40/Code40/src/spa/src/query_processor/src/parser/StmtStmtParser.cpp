@@ -3,7 +3,7 @@
 StmtStmtParser::StmtStmtParser(ClsTuple cls, vector<Reference *> &declList,
                                DesignEntityTypeHelper &deH,
                                ClauseTypeHelper &clsH)
-    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<1>(cls)),
+    : type(get<0>(cls)), ref1(get<1>(cls)), ref2(get<2>(cls)),
       declList(declList), deHelper(deH), clsHelper(clsH) {}
 
 Clause *StmtStmtParser::parse() {

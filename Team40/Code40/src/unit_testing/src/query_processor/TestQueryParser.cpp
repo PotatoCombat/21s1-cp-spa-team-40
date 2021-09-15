@@ -1,7 +1,5 @@
 #include "catch.hpp"
 
-#include <cstdarg>
-
 #include "query_processor/Abstractions.h"
 #include "query_processor/QueryParser.h"
 
