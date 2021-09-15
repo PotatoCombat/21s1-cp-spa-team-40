@@ -22,7 +22,7 @@ Clause *QueryParser::parseClause(ClsTuple clause,
         StmtStmtParser p(clause, declList, deHelper, clsHelper);
         return p.parse();
     }
-    
+
     XEntParser p(clause, declList, deHelper, clsHelper);
     return p.parse();
 }

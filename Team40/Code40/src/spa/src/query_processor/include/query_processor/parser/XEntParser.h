@@ -13,6 +13,10 @@
 
 using namespace std;
 
+// the X in XEntParser is used to represent either a Stmt or Ent
+// since it is not clear which it is at first glance, whether to
+// process the first argument of a Modifies/Uses clause as
+// a statement or a procedure
 class XEntParser {
 private:
     DesignEntityTypeHelper deHelper;

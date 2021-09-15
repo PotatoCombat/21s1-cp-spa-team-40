@@ -12,6 +12,10 @@ Clause *XEntParser::parse() {
     // MODIFIES_P/USES_P
     // quoted/synonym, quoted/synonym/wildcard
 
+    if (ParserUtil::isWildcard(ref1)) {
+        throw ValidityError("first argument cannot be wildcard");
+    }
+
     string refString1 = this->ref1;
     string refString2 = this->ref2;
 
@@ -46,6 +50,7 @@ Clause *XEntParser::parse() {
         } else if (ParserUtil::isQuoted(ref1)) {
             isStmtEnt = false;
             deT = DesignEntityType::PROCEDURE;
+            ref1 = ref1.substr(1, ref1.size() - 2);
         } else {
             throw ValidityError("invalid clause argument");
         }
