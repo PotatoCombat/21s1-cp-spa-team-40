@@ -16,9 +16,7 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {"Follows*", ClauseType::FOLLOWS_T},
         {"Parent", ClauseType::PARENT},
         {"Parent*", ClauseType::PARENT_T},
-        //{ClauseType::MODIFIES_P, "Modifies"},
         {"Modifies", ClauseType::MODIFIES_S},
-        //{ClauseType::USES_P, "Uses"},
         {"Uses", ClauseType::USES_S}
     };
     deTypeMap1 = {
@@ -46,7 +44,24 @@ ClauseTypeHelper::ClauseTypeHelper() {
 ClauseType ClauseTypeHelper::getType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw "invalid clause type";
+        throw ValidityError("invalid clause type");
+    }
+    return type->second;
+}
+
+
+// get type from clause string, first ref type, first de type
+ClauseType ClauseTypeHelper::getType(string val, RefType rt, DesignEntityType det = DesignEntityType::CONSTANT) {
+    auto type = stringToTypeMap.find(val);
+    if (type == stringToTypeMap.end()) {
+        throw ValidityError("invalid clause type");
+    }
+    if (rt == RefType::QUOTED || det == DesignEntityType::PROCEDURE) {
+        if (type->second == ClauseType::MODIFIES_S) {
+            return ClauseType::MODIFIES_P;
+        } else if (type->second == ClauseType::USES_S) {
+            return ClauseType::USES_P;
+        }
     }
     return type->second;
 }
@@ -59,6 +74,7 @@ string ClauseTypeHelper::getValue(ClauseType type) {
     return val->second;
 }
 
+// only used with wildcard/constant/quoted arguments
 DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
     auto de = deTypeMap1.find(type);
     if (de == deTypeMap1.end()) {
@@ -67,6 +83,7 @@ DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
     return de->second;
 }
 
+// only used with wildcard/constant/quoted arguments
 DesignEntityType ClauseTypeHelper::chooseDeType2(ClauseType type) {
     auto de = deTypeMap2.find(type);
     if (de == deTypeMap2.end()) {

@@ -3,8 +3,10 @@
 #include <map>
 #include <string>
 
+#include "query_processor/exception/ValidityError.h"
 #include "ClauseType.h"
 #include "DesignEntityType.h"
+#include "query_processor/parser/RefType.h"
 
 using namespace std;
 
@@ -23,6 +25,9 @@ public:
 
     // get type from string
     ClauseType getType(string val);
+
+    // get type from clause string, first ref type, first de type
+    ClauseType getType(string val, RefType rt, DesignEntityType det);
 
     // get value from type
     string getValue(ClauseType type);

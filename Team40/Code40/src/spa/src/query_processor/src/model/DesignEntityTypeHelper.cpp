@@ -32,7 +32,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
 DesignEntityType DesignEntityTypeHelper::getType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw "invalid design entity type";
+        throw ValidityError("invalid design entity type");
     }
     return type->second;
 }
@@ -40,7 +40,7 @@ DesignEntityType DesignEntityTypeHelper::getType(string val) {
 string DesignEntityTypeHelper::getValue(DesignEntityType type) {
     auto val = typeToStringMap.find(type);
     if (val == typeToStringMap.end()) { // typically should not reach here
-        throw "invalid design entity type";
+        throw ValidityError("invalid design entity type");
     }
     return val->second;
 }

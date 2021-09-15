@@ -3,7 +3,8 @@
 #include <string>
 #include <map>
 
-#include "DesignEntityType.h"
+#include "query_processor/model/DesignEntityType.h"
+#include "query_processor/exception/ValidityError.h"
 
 using namespace std;
 
