@@ -98,4 +98,50 @@ TEST_CASE("TestExtractionContext") {
             ExtractionContext::getInstance().getProcDependencies(proc5);
         REQUIRE(deps5.empty());
     }
+
+    SECTION("Permits one-to-many dependencies") {
+        ExtractionContext::getInstance().reset();
+        const ProcName proc1 = "PROC_1";
+        const ProcName proc2 = "PROC_2";
+        const ProcName proc3 = "PROC_3";
+
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc1, proc2));
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc1, proc3));
+    }
+
+    SECTION("Permits many-to-one dependencies") {
+        ExtractionContext::getInstance().reset();
+        const ProcName proc1 = "PROC_1";
+        const ProcName proc2 = "PROC_2";
+        const ProcName proc3 = "PROC_3";
+
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc1, proc3));
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc2, proc3));
+    }
+
+    SECTION("Correctly detects recursion") {
+        ExtractionContext::getInstance().reset();
+        const ProcName proc1 = "PROC_1";
+
+        REQUIRE_THROWS(
+            ExtractionContext::getInstance().addProcDependency(proc1, proc1));
+    }
+
+    SECTION("Correctly detects cyclical dependency") {
+        ExtractionContext::getInstance().reset();
+        const ProcName proc1 = "PROC_1";
+        const ProcName proc2 = "PROC_2";
+        const ProcName proc3 = "PROC_3";
+
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc1, proc2));
+        REQUIRE_NOTHROW(
+            ExtractionContext::getInstance().addProcDependency(proc2, proc3));
+        REQUIRE_THROWS(
+            ExtractionContext::getInstance().addProcDependency(proc3, proc1));
+    }
 }

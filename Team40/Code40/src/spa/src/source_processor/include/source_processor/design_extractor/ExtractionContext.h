@@ -42,7 +42,8 @@ public:
     void setModifyingStatement(Statement *statement);
     void unsetModifyingStatement(Statement *statement);
 
-    void addProcDependency(ProcName from, ProcName to);
+    void addProcDependency(ProcName caller, ProcName callee);
+    bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
     unordered_set<ProcName> getProcDependencies(ProcName from);
 
     void resetStatementContexts();

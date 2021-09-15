@@ -81,7 +81,32 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
 void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {
     // Note: We are guaranteed that there will be no circular dependencies in
     // SIMPLE (i.e. recursion)
+    if (hasCyclicalProcDependency(caller, callee)) {
+        throw runtime_error("There exists a cyclical dependency between " +
+                            caller + " and " + callee);
+    }
     procDependencyTree[caller].insert(callee);
+}
+
+bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
+                                                  ProcName callee) {
+    if (caller == callee) {
+        return true;
+    }
+    unordered_set<ProcName> transitiveCallees;
+    vector<ProcName> callers;
+    callers.push_back(callee);
+    while (!callers.empty()) {
+        ProcName c = callers.back();
+        if (c == caller) {
+            return true;
+        }
+        callers.pop_back();
+        transitiveCallees.insert(c);
+        copy(procDependencyTree[c].begin(), procDependencyTree[c].end(),
+             back_inserter(callers));
+    }
+    return false;
 }
 
 unordered_set<ProcName>
