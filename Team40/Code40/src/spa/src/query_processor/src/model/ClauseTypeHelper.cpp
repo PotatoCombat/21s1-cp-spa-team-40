@@ -17,7 +17,9 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {"Parent", ClauseType::PARENT},
         {"Parent*", ClauseType::PARENT_T},
         {"Modifies", ClauseType::MODIFIES_S},
-        {"Uses", ClauseType::USES_S}
+        {"Modifies*", ClauseType::MODIFIES_P}, // workaround differentiating S and P
+        {"Uses", ClauseType::USES_S},
+        {"Uses*", ClauseType::USES_P} // workaround differentiating S and P
     };
     deTypeMap1 = {
         {ClauseType::FOLLOWS, DesignEntityType::STMT},
@@ -45,23 +47,6 @@ ClauseType ClauseTypeHelper::getType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
         throw ValidityError("invalid clause type");
-    }
-    return type->second;
-}
-
-
-// get type from clause string, first ref type, first de type
-ClauseType ClauseTypeHelper::getType(string val, RefType rt, DesignEntityType det = DesignEntityType::CONSTANT) {
-    auto type = stringToTypeMap.find(val);
-    if (type == stringToTypeMap.end()) {
-        throw ValidityError("invalid clause type");
-    }
-    if (rt == RefType::QUOTED || det == DesignEntityType::PROCEDURE) {
-        if (type->second == ClauseType::MODIFIES_S) {
-            return ClauseType::MODIFIES_P;
-        } else if (type->second == ClauseType::USES_S) {
-            return ClauseType::USES_P;
-        }
     }
     return type->second;
 }

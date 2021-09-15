@@ -27,6 +27,19 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {"call", DesignEntityType::CALL},
         {"prog_line", DesignEntityType::PROG_LINE}
     };
+    typeToIsStmtMap = {
+        {DesignEntityType::STMT, true},
+        {DesignEntityType::ASSIGN, true},
+        {DesignEntityType::VARIABLE, false},
+        {DesignEntityType::CONSTANT, false},
+        {DesignEntityType::PROCEDURE, false},
+        {DesignEntityType::READ, true},
+        {DesignEntityType::PRINT, true},
+        {DesignEntityType::WHILE, true},
+        {DesignEntityType::IF, true},
+        {DesignEntityType::CALL, true},
+        {DesignEntityType::PROG_LINE, false}
+    };
 }
 
 DesignEntityType DesignEntityTypeHelper::getType(string val) {
@@ -40,7 +53,23 @@ DesignEntityType DesignEntityTypeHelper::getType(string val) {
 string DesignEntityTypeHelper::getValue(DesignEntityType type) {
     auto val = typeToStringMap.find(type);
     if (val == typeToStringMap.end()) { // typically should not reach here
-        throw ValidityError("invalid design entity type");
+        throw ValidityError("invalid design entity type"); // TODO: throw runtime error instead
     }
     return val->second;
+}
+
+bool DesignEntityTypeHelper::isStatement(DesignEntityType type) {
+    auto val = typeToIsStmtMap.find(type);
+    if (val == typeToIsStmtMap.end()) {
+        throw ValidityError("invalid design entity type"); // TODO: throw runtime error instead
+    }
+    return val->second;
+}
+
+bool DesignEntityTypeHelper::isVariable(DesignEntityType type) {
+    return type == DesignEntityType::VARIABLE;
+}
+
+bool DesignEntityTypeHelper::isProcedure(DesignEntityType type) {
+    return type == DesignEntityType::PROCEDURE;
 }
