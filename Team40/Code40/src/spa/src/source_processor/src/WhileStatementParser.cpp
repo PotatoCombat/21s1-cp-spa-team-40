@@ -1,5 +1,5 @@
 #include "source_processor/WhileStatementParser.h"
-//#include "source_processor/ExpressionParser.h"
+#include "source_processor/ExpressionParser.h"
 #include "source_processor/ProgramParser.h"
 #include <algorithm>
 
@@ -16,8 +16,8 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
 
     vector<string> condLst(next(next(whileItr)), prev(endItr));
     stmt->setExpressionLst(condLst);
-    // ExpressionParser exprParser;
-    // exprParser.parseExpression(condLst, stmt);
+     ExpressionParser exprParser;
+     exprParser.parseExpression(condLst, stmt);
 
     parseChildStatements(programIndex);
     return stmt;

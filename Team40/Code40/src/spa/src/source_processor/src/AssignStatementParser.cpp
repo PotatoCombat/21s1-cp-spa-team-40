@@ -1,5 +1,5 @@
 #include "source_processor/AssignStatementParser.h"
-//#include "source_processor/ExpressionParser.h"
+#include "source_processor/ExpressionParser.h"
 #include <algorithm>
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
@@ -17,7 +17,7 @@ Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     vector<string> exprLst(next(assignItr), endItr);
     stmt->setExpressionLst(exprLst);
-    // ExpressionParser exprParser;
-    // exprParser.parseExpression(exprLst, stmt);
+     ExpressionParser exprParser;
+     exprParser.parseExpression(exprLst, stmt);
     return stmt;
 }
