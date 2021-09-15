@@ -11,9 +11,12 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
     auto stmt = new Statement(index, StatementType::WHILE);
+
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     vector<string> condLst(next(next(whileItr)), prev(endItr));
     stmt->setExpressionLst(condLst);
+    parseExpression(condLst, stmt);
+
     parseChildStatements(stmt);
     programIndex = this->programIndex;
     return stmt;
