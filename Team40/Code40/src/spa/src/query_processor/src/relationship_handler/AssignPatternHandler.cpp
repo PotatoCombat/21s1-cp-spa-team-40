@@ -9,17 +9,17 @@ Result AssignPatternHandler::eval() {
     validate();
 
     // pattern = WILDCARD => ModifiesStmtHandler
-    /*if (pattern == "_") {
+    if (pattern == "_") {
         Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
         ModifiesStmtHandler handler(&clause, pkb);
         return handler.eval();
-    }*/
+    }
 
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
         vector<string> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingExactPattern(variable->getValue(), pattern);
+            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults.push_back(to_string(stmt));
         }
@@ -33,7 +33,7 @@ Result AssignPatternHandler::eval() {
     set<int> stmtsSet;
     vector<string> vars = pkb->getAllVars().asVector();
     for (auto var : vars) {
-        set<int> stmts = pkb->getAssignsMatchingExactPattern(var, pattern);
+        set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern);
         if (stmts.size() > 0) {
             varResults.push_back(var);
             stmtsSet.insert(stmts.begin(), stmts.end());
@@ -62,6 +62,6 @@ void AssignPatternHandler::validate() {
 
     if (var->getDeType() == DesignEntityType::VARIABLE) {
         throw ClauseHandlerError(
-            "AssignPatternHandler: second argument must be statement type");
+            "AssignPatternHandler: second argument must be variable");
     }
 }
