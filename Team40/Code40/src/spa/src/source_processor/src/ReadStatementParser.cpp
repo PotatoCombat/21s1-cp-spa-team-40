@@ -3,7 +3,7 @@
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
     : content(content), index(index) {
-    auto stmt = new Statement(index, StatementType::READ);
+    stmt = new Statement(index, StatementType::READ);
 };
 
 Statement *ReadStatementParser::parseReadStatement() {

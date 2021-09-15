@@ -12,9 +12,19 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
         } else if (isName(currString)) {
             auto variable = new Variable(currString);
             stmt->addExpressionVar(variable);
-        } else {
-            throw runtime_error(
-                "Invalid SIMPLE program: invalid variable or constant");
+        } else if (stmt->getStatementType() == StatementType::ASSIGN) {
+            if (!isValidAssignOperator(stmt, currString)) {
+                throw runtime_error(
+                    "Invalid SIMPLE program: invalid variable or "
+                    "constant in assign statement");
+            }
+        } else if (stmt->getStatementType() == StatementType::WHILE ||
+                   stmt->getStatementType() == StatementType::IF) {
+            if (!isValidWhileIfOperator(stmt, currString)) {
+                throw runtime_error(
+                    "Invalid SIMPLE program: invalid variable or "
+                    "constant in while or if statement");
+            }
         }
     }
 }
@@ -35,4 +45,31 @@ bool ExpressionParser::isName(string input) {
     }
     return find_if(input.begin(), input.end(),
                    [](char c) { return !(isalnum(c)); }) == input.end();
+}
+
+bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
+    return (isArtihmeticOperator(input) || isRoundBracket(input));
+}
+
+bool ExpressionParser::isValidWhileIfOperator(Statement *stmt, string input) {
+    return (isLogicalOperator(input) || isComparisonOperator(input) ||
+             isRoundBracket(input));
+}
+
+bool ExpressionParser::isRoundBracket(string input) {
+    return input == "(" || input == ")";
+}
+
+bool ExpressionParser::isArtihmeticOperator(string input) {
+    return input == "+" || input == "-" || input == "*" || input == "/" ||
+           input == "%";
+}
+
+bool ExpressionParser::isComparisonOperator(string input) {
+    return input == ">" || input == ">=" || input == "<" || input == "<=" ||
+           input == "==" || input == "!=";
+}
+
+bool ExpressionParser::isLogicalOperator(string input) {
+    return input == "!" || input == "&&" || input == "||";
 }
