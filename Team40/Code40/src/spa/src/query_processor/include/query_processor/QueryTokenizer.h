@@ -8,6 +8,7 @@
 
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
+#include "query_processor/preprocessor/PreprocessorException.h"
 
 using namespace std;
 
@@ -20,8 +21,8 @@ private:
     inline static const string KEYWORD_AND = "and";
     inline static const string KEYWORD_WITH = "with";
 
-    inline static const string NAME_SET = 
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    //inline static const string NAME_SET = 
+    //    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     inline static const string WHITESPACE_SET = " \n\t\r";
     inline static const char WHITESPACE = ' ';
     inline static const char L_BRACKET = '(';

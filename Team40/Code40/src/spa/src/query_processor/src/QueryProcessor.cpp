@@ -10,7 +10,8 @@ void QueryProcessor::processQuery(string query, list<string>& results) {
 	Query q;
 	try {
 		preprocessor.preprocessQuery(query, q);
-	} catch (const char *msg) { // no result required, just return
+	} catch (PreprocessorException e) { // no result required, just return
+		//cout << e.what();
 		return;
 	}
 	vector<string> e = evaluator.evaluateQuery(q);
