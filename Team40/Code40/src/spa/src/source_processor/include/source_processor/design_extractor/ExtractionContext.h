@@ -22,7 +22,7 @@ private:
     optional<Statement *> modifyingStatement;
     optional<Statement *> usingStatement;
     vector<Statement *> parentStatements;
-    vector<Statement *> previousStatements;
+    vector<Statement *> precedingStatements;
 
     // NOTE: Do not autofix to default constructor here
     ExtractionContext() {}
@@ -43,10 +43,10 @@ public:
     void setUsingStatement(Statement *statement);
     void unsetUsingStatement(Statement *statement);
 
-    vector<Statement *> getPreviousStatements();
-    void setPreviousStatement(Statement *statement);
-    void unsetPreviousStatement(Statement *statement);
-    void clearPreviousStatements();
+    vector<Statement *> getPrecedingStatements();
+    void setPrecedingStatement(Statement *statement);
+    void unsetPrecedingStatement(Statement *statement);
+    void clearPrecedingStatements();
     vector<Statement *> getParentStatements();
     void setParentStatement(Statement *statement);
     void unsetParentStatement(Statement *statement);

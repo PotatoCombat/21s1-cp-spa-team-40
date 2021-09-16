@@ -11,7 +11,7 @@ TEST_CASE("TestExtractionContext") {
                      .has_value());
         REQUIRE(ExtractionContext::getInstance().getParentStatements().empty());
         REQUIRE(
-            ExtractionContext::getInstance().getPreviousStatements().empty());
+            ExtractionContext::getInstance().getPrecedingStatements().empty());
         REQUIRE(
             !ExtractionContext::getInstance().getUsingStatement().has_value());
         REQUIRE(!ExtractionContext::getInstance()

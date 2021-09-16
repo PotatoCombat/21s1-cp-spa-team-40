@@ -93,26 +93,26 @@ void ExtractionContext::unsetParentStatement(Statement *statement) {
 
 void ExtractionContext::clearParentStatements() { parentStatements.clear(); }
 
-vector<Statement *> ExtractionContext::getPreviousStatements() {
-    return previousStatements;
+vector<Statement *> ExtractionContext::getPrecedingStatements() {
+    return precedingStatements;
 }
 
-void ExtractionContext::setPreviousStatement(Statement *statement) {
-    previousStatements.push_back(statement);
+void ExtractionContext::setPrecedingStatement(Statement *statement) {
+    precedingStatements.push_back(statement);
 }
 
-void ExtractionContext::unsetPreviousStatement(Statement *statement) {
-    if (previousStatements.empty()) {
+void ExtractionContext::unsetPrecedingStatement(Statement *statement) {
+    if (precedingStatements.empty()) {
         throw runtime_error("Trying to unset a null value.");
     }
-    if (previousStatements.back() != statement) {
+    if (precedingStatements.back() != statement) {
         throw runtime_error("Trying to unset another previous statement.");
     }
-    previousStatements.pop_back();
+    precedingStatements.pop_back();
 }
 
-void ExtractionContext::clearPreviousStatements() {
-    previousStatements.clear();
+void ExtractionContext::clearPrecedingStatements() {
+    precedingStatements.clear();
 }
 
 void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {
@@ -178,7 +178,7 @@ vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
 }
 
 void ExtractionContext::resetTransientContexts() {
-    previousStatements.clear();
+    precedingStatements.clear();
     parentStatements.clear();
     currentProcedure.reset();
     usingStatement.reset();
