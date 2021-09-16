@@ -34,6 +34,9 @@ public:
     void extractModifiesRelationship(Variable *variable);
     void extractUsesRelationship(Variable *variable);
 
+    // ConstantValue
+    void extractConstantValue(ConstantValue *constantValue);
+
     // Condition
     //    void extractCondition(Condition condition);
     //    void extractSingleCondition(Condition singleCondition);
@@ -57,7 +60,4 @@ public:
 
     // Factor
     //    void extractFactor(Factor factor);
-
-    // ConstantValue
-    //    void extractConstantValue(ConstantValue constantValue);
 };

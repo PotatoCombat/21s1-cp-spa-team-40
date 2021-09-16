@@ -62,6 +62,10 @@ void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
     for (Variable *variable : assignStatement->getExpressionVars()) {
         extractVariable(variable);
     }
+    for (ConstantValue *constantValue :
+         assignStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
 }
 
@@ -83,6 +87,9 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
     for (Variable *variable : ifStatement->getExpressionVars()) {
         extractVariable(variable);
+    }
+    for (ConstantValue *constantValue : ifStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
     }
     ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
 
@@ -116,6 +123,9 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : whileStatement->getExpressionVars()) {
         extractVariable(variable);
+    }
+    for (ConstantValue *constantValue : whileStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
     }
     ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
 
@@ -195,6 +205,10 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
     /// NOTE: Transitivity with other Procedures via CallStatements is handled
     /// in the BreadthFirstExtractor::extractCallStatement since we have yet
     /// to form the procedure dependency tree at this point
+}
+
+void DepthFirstExtractor::extractConstantValue(ConstantValue *constantValue) {
+    pkb->insertConst(constantValue);
 }
 
 /**
@@ -302,7 +316,3 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 //     }
 // }
 //
-
-// void DepthFirstExtractor::extractConstantValue(ConstantValue constantValue) {
-//     pkb->insertConst(&constantValue);
-// }
