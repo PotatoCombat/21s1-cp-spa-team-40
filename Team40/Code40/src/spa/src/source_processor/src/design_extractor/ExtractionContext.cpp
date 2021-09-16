@@ -131,7 +131,6 @@ bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
     if (caller == callee) {
         return true;
     }
-    unordered_set<ProcName> transitiveCallees;
     vector<ProcName> callers;
     callers.push_back(callee);
     while (!callers.empty()) {
@@ -140,7 +139,6 @@ bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
             return true;
         }
         callers.pop_back();
-        transitiveCallees.insert(c);
         copy(procDependencyMap[c].begin(), procDependencyMap[c].end(),
              back_inserter(callers));
     }
