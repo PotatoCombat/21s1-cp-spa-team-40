@@ -11,7 +11,11 @@ Statement *PrintStatementParser::parsePrintStatement() {
         find(content.begin(), content.end(), "print");
     string var_name = *next(printItr);
     if (!isValidName(var_name)) {
-        throw("invalid procedure name");
+        throw("invalid variable name");
+    }
+    // print: 'print' var_name';'
+    if (*next(next(printItr)) != ";") {
+        throw("invalid print statement");
     }
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);

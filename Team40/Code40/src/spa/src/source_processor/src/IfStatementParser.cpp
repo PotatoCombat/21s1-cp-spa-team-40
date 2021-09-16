@@ -13,6 +13,10 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
+    // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
+    if (*next(ifItr) != "(" || *prev(endItr) != ")" || *next(endItr) != "{") {
+        throw("invalid if statement");
+    }
 
     vector<string> condLst(next(next(ifItr)), prev(endItr));
     stmt->setExpressionLst(condLst);
@@ -30,6 +34,12 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
         vector<string> currContent = programLines[i].getContent();
         if (currContent[0] == "}") {
             terminator++;
+            // ... stmtLst '}' 'else' '{'stmtLst '}'
+            if (terminator == 1 &&
+                programLines[i + 1].getContent()[0] != "else" &&
+                programLines[i + 1].getContent()[1] != "{") {
+                throw("invalid if statement");
+            }
             if (terminator == 2) {
                 programIndex = i;
                 break;
@@ -46,5 +56,9 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
                 stmt->addElseStmt(nestedStmt);
             }
         }
+    }
+    // ... stmtLst '}' 'else' '{'stmtLst '}'
+    if (terminator != 2) {
+        throw("invalid if statement");
     }
 }

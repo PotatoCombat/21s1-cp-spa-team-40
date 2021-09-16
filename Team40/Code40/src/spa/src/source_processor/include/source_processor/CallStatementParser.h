@@ -13,4 +13,5 @@ private:
 public:
     CallStatementParser(vector<string> content, int index);
     Statement *parseCallStatement();
+    bool isValidName(string input);
 };

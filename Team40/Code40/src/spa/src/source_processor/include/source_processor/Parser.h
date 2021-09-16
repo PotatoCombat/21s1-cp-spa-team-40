@@ -24,10 +24,17 @@ public:
             int currIndex = programLines[i].getIndex();
             vector<string> currContent = programLines[i].getContent();
             if (isProc(currContent)) {
+                // ... stmtLst '}'
+                if (i > 0) {
+                    if (programLines[i - 1].getContent()[0] != "}") {
+                        throw("invalid program");
+                    }
+                }
                 if (currProc != nullptr) {
                     // stmtLst: stmt+
                     if (currProc->getStmtLst().size() == 0) {
-                        throw("procedure should have at least one statement.");
+                        throw("procedure should have at least one "
+                              "statement.");
                     }
                     program.addToProcLst(currProc);
                 }

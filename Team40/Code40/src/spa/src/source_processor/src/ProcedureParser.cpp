@@ -10,6 +10,10 @@ Procedure *ProcedureParser::parseProcedure() {
     if (!isValidName(proc_name)) {
         throw("invalid procedure name");
     }
+    // procedure: 'procedure' proc_name '{' stmtLst '}'
+    if (*next(next(procItr)) != "{") {
+        throw("invalid procedure");
+    }
     auto procedure = new Procedure(proc_name);
     return procedure;
 }
