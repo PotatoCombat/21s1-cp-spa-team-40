@@ -30,6 +30,10 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
         currString = {};
     }
 
+    if (!brackets.empty()) {
+        throw("invalid program, brackets do not match");
+    }
+
     return programLines;
 }
 
@@ -91,6 +95,22 @@ vector<string> Lexer::tokenizeLine(string input) {
             addString(currString, inputLine);
             currString.push_back(curr);
             tokenizeAndAddSymbol(input, i, curr, currString, inputLine);
+            if (isBracket(curr)) {
+                if (curr == '(' || curr == '{') {
+                    brackets.push(curr);
+                }
+                if (curr == ')' || curr == '}') {
+                    if (brackets.empty()) {
+                        throw("invalid program, brackets do not match");
+                    }
+                    if ((curr == ')' && brackets.top() == '(') ||
+                        (curr == '}' && brackets.top() == '{')) {
+                        brackets.pop();
+                    } else {
+                        throw("invalid program, brackets do not match");
+                    }
+                }
+            }
 
         } else {
             currString.push_back(curr);

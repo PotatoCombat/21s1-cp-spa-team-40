@@ -7,6 +7,8 @@
 #include "common/model/expression/Expression.h"
 #include "source_processor/Line.h"
 #include <fstream>
+#include <map>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -14,6 +16,9 @@ using namespace std;
 
 class Lexer {
 public:
+    // for bracket matching
+    stack<char> brackets;
+
     // tokenize file input
     vector<Line> tokenizeFile(fstream &file);
     vector<vector<string>> mergeLine(fstream &file);
