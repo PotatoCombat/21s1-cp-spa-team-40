@@ -145,8 +145,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (isClause == 1) {
                     clss.push_back(make_tuple(token1, token2, token3));
                 } else if (isClause == 2) {
-                    pats.push_back(
-                        make_pair(token1, vector<PatArg>{token2, token3}));
+                    token3 = extractPatternString(token3);
+                    pats.push_back(make_tuple(token1, token2, token3));
                 } else {
                     throw SyntaxError("something is very wrong");
                 }
@@ -236,8 +236,14 @@ void QueryTokenizer::splitComma(string input, vector<string> &vec) {
 }
 
 size_t QueryTokenizer::findFirstWhitespace(string input) {
-    size_t first_w = input.find_first_of(WHITESPACE_SET);
-    return first_w;
+    return input.find_first_of(WHITESPACE_SET);
+}
+
+string QueryTokenizer::extractPatternString(string input) {
+    if (count(input.begin(), input.end(), '"') == 2) {
+        return trim(input.substr(1, input.size() - 2));
+    }
+    return input;
 }
 
 bool QueryTokenizer::isValidName(string name) {

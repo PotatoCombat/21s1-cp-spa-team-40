@@ -40,7 +40,7 @@ private:
     string trimR(string input);
     void splitComma(string input, vector<string> &vec);
     size_t findFirstWhitespace(string input);
-    void splitBCBRel(string input, ClsTuple &tup);
+    string extractPatternString(string input);
     bool isValidName(string name);
 
 public:
