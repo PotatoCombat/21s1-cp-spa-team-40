@@ -12,7 +12,6 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
-
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
         throw("invalid while statement");

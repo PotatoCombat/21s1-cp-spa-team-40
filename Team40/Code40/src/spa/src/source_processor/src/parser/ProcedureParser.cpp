@@ -6,7 +6,6 @@ ProcedureParser::ProcedureParser(vector<string> content) : content(content) {}
 Procedure *ProcedureParser::parseProcedure() {
     vector<string>::iterator procItr =
         find(content.begin(), content.end(), "procedure");
-
     string proc_name = *next(procItr);
     if (!isValidName(proc_name)) {
         throw("invalid procedure name");

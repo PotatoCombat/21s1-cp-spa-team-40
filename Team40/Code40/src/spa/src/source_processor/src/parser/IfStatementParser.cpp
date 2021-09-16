@@ -15,7 +15,6 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
         find(content.begin(), content.end(), "then");
     if (endItr == content.end())
         throw("invalid if statement");
-
     // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
     if (*next(ifItr) != "(" || *prev(endItr) != ")" || *next(endItr) != "{") {
         throw("invalid if statement");
@@ -25,7 +24,6 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;
     exprParser.parseExpression(condLst, stmt);
-
     parseChildStatements(programIndex);
     return stmt;
 }

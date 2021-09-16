@@ -14,7 +14,6 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
                 }
             }
             checkAndAddValidProcedure(currProc, program);
-
             ProcedureParser procParser(currContent);
             currProc = procParser.parseProcedure();
 

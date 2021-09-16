@@ -9,7 +9,6 @@ CallStatementParser::CallStatementParser(vector<string> content, int index)
 Statement *CallStatementParser::parseCallStatement() {
     vector<string>::iterator callItr =
         find(content.begin(), content.end(), "call");
-
     string proc_name = *next(callItr);
     if (!isValidName(proc_name)) {
         throw("invalid procedure name");
