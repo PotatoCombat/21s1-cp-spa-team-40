@@ -3,6 +3,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <cctype>
 
 #include "query_processor/Abstractions.h"
 
@@ -39,6 +40,7 @@ private:
     void splitComma(string input, vector<string> &vec);
     size_t findFirstWhitespace(string input);
     void splitBCBRel(string input, ClsTuple &tup);
+    bool isValidName(string name);
 
 public:
     QueryTokenizer() = default;
