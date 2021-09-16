@@ -12,68 +12,52 @@ Clause *QueryParser::parseClause(ClsTuple clause,
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
-    ClauseType clsT = clsHelper.getType(cls);
+    bool isStmtStmt = clsHelper.chooseDeType2(clsHelper.getType(cls)) ==
+                      DesignEntityType::STMT;
+    if (isStmtStmt) {
+        // number/synonym/wildcard, number/synonym/wildcard
+        if (ParserUtil::isQuoted(ref1) || ParserUtil::isQuoted(ref2)) {
+            throw ValidityError("invalid clause argument");
+        }
+        StmtStmtParser p(clause, declList, deHelper, clsHelper);
+        return p.parse();
+    }
 
-    vector<Reference *> x;
+    XEntParser p(clause, declList, deHelper, clsHelper);
+    return p.parse();
+}
 
-    auto it1 = find_if(declList.begin(), declList.end(), 
-        [&ref1](Reference *ref) { return ref->getValue() == ref1; });
-    auto it2 = find_if(declList.begin(), declList.end(),
-        [&ref2](Reference *ref) { return ref->getValue() == ref2; });
+PatternClause *QueryParser::parsePattern(PatTuple pattern,
+                                         vector<Reference *> &declList) {
+    string identity = get<0>(pattern);
+    vector<PatArg> patArgs = get<1>(pattern);
+    string LHS = patArgs[0];
+    string RHS = patArgs[1];
+
+    Reference *r;
+    Reference *r1;
+    auto it =
+        find_if(declList.begin(), declList.end(), [&identity](Reference *ref) {
+            return ref->getValue() == identity;
+        });
+    auto it1 =
+        find_if(declList.begin(), declList.end(),
+                [&LHS](Reference *ref) { return ref->getValue() == LHS; });
+
+    if (it != declList.end()) {
+        r = (*it)->copy();
+    } else {
+        throw ValidityError("undeclared synonym");
+    }
 
     if (it1 != declList.end()) {
-        Reference* r = *it1; //(*it1)->copy();
-        x.push_back(r);
+        r1 = (*it1)->copy();
     } else {
-        ReferenceType refT = checkRefType(ref1);
-        DesignEntityType deT = clsHelper.chooseDeType1(clsT);
-        x.push_back(new Reference(deT, refT, ref1));
+        ReferenceType refT =
+            ParserUtil::checkRefType(LHS); // TODO: assert quoted
+        DesignEntityType deT = DesignEntityType::VARIABLE;
+        r1 = new Reference(deT, refT, LHS);
     }
 
-    if (it2 != declList.end()) {
-        Reference* r = *it2; //(*it2)->copy();
-        x.push_back(r);
-    } else {
-        ReferenceType refT = checkRefType(ref2);
-        DesignEntityType deT = clsHelper.chooseDeType2(clsT);
-        x.push_back(new Reference(deT, refT, ref2));
-    }
-
-    return new Clause(clsT, *x[0], *x[1]);
-}
-
-// helper methods
-
-ReferenceType QueryParser::checkRefType(string val) {
-    if (isWildcard(val)) {
-        return ReferenceType::WILDCARD;
-    } else if (isInteger(val)) {
-        return ReferenceType::CONSTANT;
-    } else if (isNamedSynonym(val)) {
-        return ReferenceType::CONSTANT;
-    }
-    return ReferenceType::SYNONYM;
-}
-
-bool QueryParser::isInteger(string val) {
-    return all_of(val.begin(), val.end(), isdigit);
-}
-
-// " "
-bool QueryParser::isNamedSynonym(string val) {
-    int c = count(val.begin(), val.end(), '"');
-
-    if (c != 2) {
-        return false;
-    }
-    
-    size_t pos1 = val.find_first_of('"');
-    size_t pos2 = val.find_last_of('"');
-
-    return pos1 == 0 && pos2 == val.size() - 1;
-}
-
-// _
-bool QueryParser::isWildcard(string val) {
-    return val == "_";
+    return new PatternClause(*r, *r1, RHS);
 }

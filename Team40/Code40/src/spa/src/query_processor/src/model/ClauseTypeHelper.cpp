@@ -16,10 +16,10 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {"Follows*", ClauseType::FOLLOWS_T},
         {"Parent", ClauseType::PARENT},
         {"Parent*", ClauseType::PARENT_T},
-        //{ClauseType::MODIFIES_P, "Modifies"},
         {"Modifies", ClauseType::MODIFIES_S},
-        //{ClauseType::USES_P, "Uses"},
-        {"Uses", ClauseType::USES_S}
+        {"Modifies*", ClauseType::MODIFIES_P}, // workaround differentiating S and P
+        {"Uses", ClauseType::USES_S},
+        {"Uses*", ClauseType::USES_P} // workaround differentiating S and P
     };
     deTypeMap1 = {
         {ClauseType::FOLLOWS, DesignEntityType::STMT},
@@ -46,7 +46,7 @@ ClauseTypeHelper::ClauseTypeHelper() {
 ClauseType ClauseTypeHelper::getType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw "invalid clause type";
+        throw ValidityError("invalid clause type");
     }
     return type->second;
 }
@@ -59,6 +59,7 @@ string ClauseTypeHelper::getValue(ClauseType type) {
     return val->second;
 }
 
+// only used with wildcard/constant/quoted arguments
 DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
     auto de = deTypeMap1.find(type);
     if (de == deTypeMap1.end()) {
@@ -67,6 +68,7 @@ DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
     return de->second;
 }
 
+// only used with wildcard/constant/quoted arguments
 DesignEntityType ClauseTypeHelper::chooseDeType2(ClauseType type) {
     auto de = deTypeMap2.find(type);
     if (de == deTypeMap2.end()) {

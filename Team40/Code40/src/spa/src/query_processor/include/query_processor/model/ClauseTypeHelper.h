@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+#include "query_processor/exception/ValidityError.h"
 #include "ClauseType.h"
 #include "DesignEntityType.h"
 
@@ -12,6 +13,9 @@ class ClauseTypeHelper {
 private:
     map<ClauseType, string> typeToStringMap;
     map<string, ClauseType> stringToTypeMap;
+
+    // only used to represent a wildcard/constant used in Clause 
+    // since it cannot be declared
     map<ClauseType, DesignEntityType> deTypeMap1;
     map<ClauseType, DesignEntityType> deTypeMap2;
 

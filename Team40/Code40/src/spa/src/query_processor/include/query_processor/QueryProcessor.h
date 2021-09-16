@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <list>
+#include <stdexcept>
 #include <string>
 
 #include "QueryEvaluator.h"

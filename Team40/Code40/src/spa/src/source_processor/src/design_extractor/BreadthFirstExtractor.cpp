@@ -1,40 +1,95 @@
 #include "source_processor/design_extractor/BreadthFirstExtractor.h"
 
-BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb)
-    : pkb(pkb), ctx(ExtractionContext::getInstance().getFollowsContext()){};
+BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 
 void BreadthFirstExtractor::extract(Program *program) {
-    // Here, we only reset statement contexts since we need to persist the
-    // procedure dependency tree
-    ExtractionContext::getInstance().resetStatementContexts();
+    ExtractionContext::getInstance().resetTransientContexts();
+
+    unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
-        statementLists.push_back(procedure->getStmtLst());
+        procMap[procedure->getName()] = procedure;
     }
-    while (!statementLists.empty()) {
-        vector<Statement *> statementList = statementLists.back();
-        statementLists.pop_back();
-        extractStatementList(statementList);
+    vector<ProcName> sortedProcNames =
+        ExtractionContext::getInstance().getTopologicallySortedProcNames();
+    for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
+         it++) {
+        string procName = *it;
+        extractProcedure(procMap[procName]);
     }
 }
 
-void BreadthFirstExtractor::extractStatementList(
-    vector<Statement *> statementList) {
-    for (Statement *statement : statementList) {
-        extractStatement(statement);
+void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
+    ExtractionContext::getInstance().setCurrentProcedure(procedure);
+    statementLists.push_back(procedure->getStmtLst());
+    while (!statementLists.empty()) {
+        ExtractionContext::getInstance().clearPrecedingStatements();
+        vector<Statement *> statementList = statementLists.back();
+        statementLists.pop_back();
+        for (Statement *statement : statementList) {
+            extractStatement(statement);
+        }
     }
-    ctx.clear();
+    ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
 
 void BreadthFirstExtractor::extractStatement(Statement *statement) {
-    for (Statement *prev : ctx.getAllEntities()) {
-        pkb->insertFollows(prev, statement);
+    vector<Statement *> previousStatements =
+        ExtractionContext::getInstance().getPrecedingStatements();
+    if (!previousStatements.empty()) {
+        pkb->insertFollows(previousStatements.back(), statement);
     }
-    StatementType type = statement->getStatementType();
-    if (type == StatementType::IF || type == StatementType::WHILE) {
-        statementLists.push_back(statement->getThenStmtLst());
+    switch (statement->getStatementType()) {
+    case StatementType::WHILE:
+        extractWhileStatement(statement);
+        break;
+    case StatementType::IF:
+        extractIfStatement(statement);
+        break;
+    case StatementType::CALL:
+        extractCallStatement(statement);
+        break;
+    case StatementType::ASSIGN:
+    case StatementType::PRINT:
+    case StatementType::READ:
+        break;
+    default:
+        throw runtime_error("Invalid StatementType!");
     }
-    if (type == StatementType::IF) {
-        statementLists.push_back(statement->getElseStmtLst());
+    ExtractionContext::getInstance().setPrecedingStatement(statement);
+}
+
+void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
+    statementLists.push_back(ifStatement->getThenStmtLst());
+    statementLists.push_back(ifStatement->getElseStmtLst());
+}
+
+void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
+    statementLists.push_back(whileStatement->getThenStmtLst());
+}
+
+void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure().value();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set");
     }
-    ctx.push(statement);
+    ProcName calleeName = callStatement->getProcName();
+    if (pkb->getProcByName(calleeName) == nullptr) {
+        throw runtime_error("Trying to call a non-existent procedure at line " +
+                            to_string(callStatement->getIndex()));
+    }
+
+    // Handle transitive Modifies(proc, var) relationship set<VarName>
+    set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
+    for (VarName modifiedVarName : modifiedVarNames) {
+        Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
+        pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
+    }
+
+    // Handle transitive Uses(proc, var) relationship
+    set<VarName> usedVarNames = pkb->getVarsUsedByProc(calleeName);
+    for (VarName usedVarName : usedVarNames) {
+        Variable *usedVar = pkb->getVarByName(usedVarName);
+        pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
+    }
 }

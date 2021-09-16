@@ -18,51 +18,43 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
 
-StmtIndex DepthFirstExtractor::extractStatement(Statement *statement) {
-    if (!ExtractionContext::getInstance()
-             .getParentContext()
-             .getAllEntities()
-             .empty()) {
-        Statement *parent = ExtractionContext::getInstance()
-                                .getParentContext()
-                                .getAllEntities()
-                                .back();
-        pkb->insertParent(parent, statement);
+void DepthFirstExtractor::extractStatement(Statement *statement) {
+    pkb->insertStmt(statement);
+    vector<Statement *> parentStatement =
+        ExtractionContext::getInstance().getParentStatements();
+    if (!parentStatement.empty()) {
+        pkb->insertParent(parentStatement.back(), statement);
     }
-    StmtIndex stmtIndex;
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
-        stmtIndex = extractAssignStatement(statement);
+        extractAssignStatement(statement);
         break;
     case StatementType::CALL:
-        stmtIndex = extractCallStatement(statement);
+        extractCallStatement(statement);
         break;
     case StatementType::IF:
-        stmtIndex = extractIfStatement(statement);
+        extractIfStatement(statement);
         break;
     case StatementType::PRINT:
-        stmtIndex = extractPrintStatement(statement);
+        extractPrintStatement(statement);
         break;
     case StatementType::READ:
-        stmtIndex = extractReadStatement(statement);
+        extractReadStatement(statement);
         break;
     case StatementType::WHILE:
-        stmtIndex = extractWhileStatement(statement);
+        extractWhileStatement(statement);
         break;
     default:
         throw runtime_error("Invalid StatementType!");
     }
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(assignStatement);
+void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
+    pkb->insertPatternAssign(assignStatement);
 
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
     extractVariable(assignStatement->getVariable());
-    extractModifiesRelationship(assignStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(assignStatement);
 
     // Handle RHS
@@ -70,13 +62,14 @@ DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
     for (Variable *variable : assignStatement->getExpressionVars()) {
         extractVariable(variable);
     }
+    for (ConstantValue *constantValue :
+         assignStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
-
-    return stmtIndex;
 }
 
-StmtIndex DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(callStatement);
+void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
     ProcName calledProcName = callStatement->getProcName();
 
@@ -87,41 +80,21 @@ StmtIndex DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
     }
     ExtractionContext::getInstance().addProcDependency(
         currentProcedure.value()->getName(), calledProcName);
-
-    //    set<VarName> modifiedVarNames =
-    //        pkb->getVarsModifiedByProc(procedure.getName());
-    //    if (!modifiedVarNames.empty()) {
-    //        for (VarName modifiedVarName : modifiedVarNames) {
-    //            Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
-    //            extractModifiesRelationship(*modifiedVar);
-    //        }
-    //    }
-    //
-    //    set<VarName> usedVarNames =
-    //    pkb->getVarsUsedByProc(procedure.getName()); if
-    //    (!usedVarNames.empty()) {
-    //        for (VarName usedVarName : usedVarNames) {
-    //            Variable *usedVar = pkb->getVarByName(usedVarName);
-    //            extractUsesRelationship(*usedVar);
-    //        }
-    //    }
-    //
-    return stmtIndex;
 }
 
-StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(ifStatement);
-
+void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
     for (Variable *variable : ifStatement->getExpressionVars()) {
         extractVariable(variable);
     }
+    for (ConstantValue *constantValue : ifStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(ifStatement);
+    ExtractionContext::getInstance().setParentStatement(ifStatement);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
@@ -130,48 +103,38 @@ StmtIndex DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(ifStatement);
-
-    return stmtIndex;
+    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
 }
 
-StmtIndex DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(readStatement);
+void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
     ExtractionContext::getInstance().setModifyingStatement(readStatement);
     extractVariable(readStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
-    StmtIndex stmtIndex = pkb->insertStmt(printStatement);
+void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
     ExtractionContext::getInstance().setUsingStatement(printStatement);
     extractVariable(printStatement->getVariable());
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
-    return stmtIndex;
 }
 
-StmtIndex
-DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
-    // 0. Insert statement into PKB
-    StmtIndex stmtIndex = pkb->insertStmt(whileStatement);
-
+void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     // 1. Handle condition
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : whileStatement->getExpressionVars()) {
         extractVariable(variable);
     }
+    for (ConstantValue *constantValue : whileStatement->getExpressionConsts()) {
+        extractConstantValue(constantValue);
+    }
     ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
 
     // 2. Handle THEN statements
-    ExtractionContext::getInstance().getParentContext().push(whileStatement);
+    ExtractionContext::getInstance().setParentStatement(whileStatement);
     for (Statement *statement : whileStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().getParentContext().pop(whileStatement);
-
-    return stmtIndex;
+    ExtractionContext::getInstance().unsetParentStatement(whileStatement);
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
@@ -192,21 +155,24 @@ void DepthFirstExtractor::extractUsesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getAllEntities();
+        ExtractionContext::getInstance().getParentStatements();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtUsingVar(parentStatement, variable);
         }
     }
 
-    // 3. Handle all enclosing procedures
-    //    vector<Procedure *> usingProcedures =
-    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    //    if (!usingProcedures.empty()) {
-    //        for (Procedure *usingProcedure : usingProcedures) {
-    //            pkb->insertProcUsingVar(usingProcedure, &variable);
-    //        }
-    //    }
+    // 3. Handle current procedure
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
+    }
+    pkb->insertProcUsingVar(currentProcedure.value(), variable);
+
+    /// NOTE: Transitivity with other Procedures via CallStatements is handled
+    /// in the BreadthFirstExtractor::extractCallStatement since we have yet
+    /// to form the procedure dependency tree at this point
 }
 
 void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
@@ -221,21 +187,28 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 
     // 2. Handle all parent statements
     vector<Statement *> parentStatements =
-        ExtractionContext::getInstance().getParentContext().getAllEntities();
+        ExtractionContext::getInstance().getParentStatements();
     if (!parentStatements.empty()) {
         for (Statement *parentStatement : parentStatements) {
             pkb->insertStmtModifyingVar(parentStatement, variable);
         }
     }
 
-    // 3. Handle all enclosing procedures
-    //    vector<Procedure *> modifyingProcedures =
-    //        ExtractionContext::getInstance().getProcedureContext().getAllEntities();
-    //    if (!modifyingProcedures.empty()) {
-    //        for (Procedure *modifyingProcedure : modifyingProcedures) {
-    //            pkb->insertProcModifyingVar(modifyingProcedure, &variable);
-    //        }
-    //    }
+    // 3. Handle current procedure
+    optional<Procedure *> currentProcedure =
+        ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProcedure.has_value()) {
+        throw runtime_error("Current procedure not set.");
+    }
+    pkb->insertProcModifyingVar(currentProcedure.value(), variable);
+
+    /// NOTE: Transitivity with other Procedures via CallStatements is handled
+    /// in the BreadthFirstExtractor::extractCallStatement since we have yet
+    /// to form the procedure dependency tree at this point
+}
+
+void DepthFirstExtractor::extractConstantValue(ConstantValue *constantValue) {
+    pkb->insertConst(constantValue);
 }
 
 /**
@@ -343,7 +316,3 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 //     }
 // }
 //
-
-// void DepthFirstExtractor::extractConstantValue(ConstantValue constantValue) {
-//     pkb->insertConst(&constantValue);
-// }
