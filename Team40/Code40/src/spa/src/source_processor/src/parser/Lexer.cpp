@@ -32,7 +32,6 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
     if (!brackets.empty()) {
         throw("invalid program, brackets do not match");
     }
-
     return programLines;
 }
 
