@@ -101,52 +101,46 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
         // check if it's a comma
         if (isClause) { // handle tokenizing of X1(X2,X3) here
             if (portionOfClause == 0) {
-                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
-                size_t not_name_char_pos = token.find(L_BRACKET);
+                size_t not_name_char_pos = input.find(L_BRACKET, curr_pos);
                 if (not_name_char_pos != string::npos) {
-                    if (token[not_name_char_pos] == '(') {
-                        token1 = token.substr(0, not_name_char_pos);
-                        size_t size = not_name_char_pos + 1;
-                        if (size < token.size()) { // something after the '('
-                            // change the next position to search to after '('
-                            cut_pos = cut_pos - (token.size() - size);
-                        }
-                    } else {
-                        throw SyntaxError("invalid syntax");
+                    size_t size = not_name_char_pos + 1 - curr_pos;
+                    if (size > token.size()) { // space between token and '('
+                        token1 = token;
+                    } else if (size <= token.size()) { // something after '('
+                        token1 = token.substr(0, size-1);
                     }
+                    cut_pos = not_name_char_pos + 1;
                 } else {
-                    token1 = token;
+                    throw SyntaxError("invalid syntax");
                 }
                 ++portionOfClause; // 1
             } else if (portionOfClause == 1) {
-                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
-                size_t not_name_char_pos = token.find(COMMA);
+                size_t not_name_char_pos = input.find(COMMA, curr_pos);
                 if (not_name_char_pos != string::npos) {
-                    if (token[not_name_char_pos] == ',') {
-                        token2 = token.substr(0, not_name_char_pos);
-                        size_t size = not_name_char_pos + 1;
-                        if (size < token.size()) { // something after the ','
-                            // change the next position to search to after ','
-                            cut_pos = cut_pos - (token.size() - size);
-                        }
-                    } else {
-                        throw SyntaxError("invalid syntax");
+                    size_t size = not_name_char_pos + 1 - curr_pos;
+                    if (size > token.size()) { // space between token and ','
+                        token2 = token;
+                    } else if (size <= token.size()) { // something after ','
+                        token2 = token.substr(0, size-1);
                     }
+                    cut_pos = not_name_char_pos + 1;
                 } else {
-                    token2 = token;
+                    throw SyntaxError("invalid syntax");
                 }
                 ++portionOfClause; // 2
             } else if (portionOfClause == 2) {
-                // size_t not_name_char_pos = token.find_first_not_of(NAME_SET);
-                size_t not_name_char_pos = token.find(R_BRACKET);
+                size_t not_name_char_pos = input.find(R_BRACKET, curr_pos);
                 if (not_name_char_pos != string::npos) {
-                    if (token[not_name_char_pos] == ')') {
-                        token3 = token.substr(0, not_name_char_pos);
-                    } else {
-                        throw SyntaxError("invalid syntax");
+                    size_t size = not_name_char_pos + 1 - curr_pos;
+                    if (size > token.size()) { // space between token and ')'
+                        token3 = token;
                     }
+                    else if (size <= token.size()) { // something after ')'
+                        token3 = token.substr(0, size-1);
+                    }
+                    cut_pos = not_name_char_pos + 1;
                 } else {
-                    token3 = token;
+                    throw SyntaxError("invalid syntax");
                 }
                 portionOfClause = 0;
                 if (isClause == 1) {

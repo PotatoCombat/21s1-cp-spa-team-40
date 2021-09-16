@@ -113,6 +113,102 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
         REQUIRE(pat.size() == 0);
     }
+
+    SECTION("test extra whitespace 1") {
+        string input = "such that    Follows(s, p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 2") {
+        string input = "such      that Follows(s, p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 3") {
+        string input = "such that Follows (s, p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 4") {
+        string input = "such that Follows( s,p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 5") {
+        string input = "such that Follows(s , p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 6") {
+        string input = "such that Follows(s ,p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test extra whitespace 7") {
+        string input = "such that Follows(s, p1 )";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
+
+    SECTION("test no whitespace") {
+        string input = "such that Follows(s,p1)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<ClsTuple> expected = vector<ClsTuple>{ make_tuple("Follows", "s", "p1") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
+        REQUIRE(pat.size() == 0);
+    }
 }
 
 //TEST_CASE("QueryTokenizer: trim") {
