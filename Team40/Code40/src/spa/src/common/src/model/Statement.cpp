@@ -32,11 +32,9 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-unordered_set<Variable *> Statement::getExpressionVars() {
-    return expressionVars;
-};
+set<Variable *> Statement::getExpressionVars() { return expressionVars; };
 
-unordered_set<ConstantValue *> Statement::getExpressionConsts() {
+set<ConstantValue *> Statement::getExpressionConsts() {
     return expressionConsts;
 };
 
