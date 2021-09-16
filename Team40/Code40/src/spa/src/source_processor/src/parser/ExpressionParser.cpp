@@ -13,15 +13,18 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
             stmt->addExpressionVar(variable);
         } else if (stmt->getStatementType() == StatementType::ASSIGN) {
             if (!isValidAssignOperator(stmt, currString)) {
-                throw("invalid variable or constant in assign statement");
+                throw invalid_argument(
+                    "invalid variable or constant in assign statement");
             }
         } else if (stmt->getStatementType() == StatementType::WHILE) {
             if (!isValidWhileIfOperator(stmt, currString)) {
-                throw("invalid variable or constant in while statement");
+                throw invalid_argument(
+                    "invalid variable or constant in while statement");
             }
         } else if (stmt->getStatementType() == StatementType::IF) {
             if (!isValidWhileIfOperator(stmt, currString)) {
-                throw("invalid variable or constant in if statement");
+                throw invalid_argument(
+                    "invalid variable or constant in if statement");
             }
         }
     }

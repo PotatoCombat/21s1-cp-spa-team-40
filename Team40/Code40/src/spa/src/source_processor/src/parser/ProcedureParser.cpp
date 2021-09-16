@@ -8,11 +8,11 @@ Procedure *ProcedureParser::parseProcedure() {
         find(content.begin(), content.end(), "procedure");
     string proc_name = *next(procItr);
     if (!isValidName(proc_name)) {
-        throw("invalid procedure name");
+        throw invalid_argument("invalid procedure name");
     }
     // procedure: 'procedure' proc_name '{' stmtLst '}'
     if (*next(next(procItr)) != "{") {
-        throw("invalid procedure");
+        throw invalid_argument("invalid procedure");
     }
     auto procedure = new Procedure(proc_name);
     return procedure;

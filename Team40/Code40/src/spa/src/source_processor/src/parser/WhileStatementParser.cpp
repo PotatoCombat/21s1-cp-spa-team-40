@@ -14,10 +14,10 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
         find(content.begin(), content.end(), "while");
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
-        throw("invalid while statement");
+        throw invalid_argument("invalid while statement");
     // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
     if (*next(whileItr) != "(" || *prev(endItr) != ")") {
-        throw("invalid while statement");
+        throw invalid_argument("invalid while statement");
     }
 
     vector<string> condLst(next(next(whileItr)), prev(endItr));
@@ -48,6 +48,6 @@ void WhileStatementParser::parseChildStatements(int &programIndex) {
     }
     // ... stmtLst '}'
     if (terminator != 1) {
-        throw("invalid while statement");
+        throw invalid_argument("invalid while statement");
     }
 }

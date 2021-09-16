@@ -12,14 +12,14 @@ Statement *AssignStatementParser::parseAssignStatement() {
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
     if (!isValidName(var_name)) {
-        throw("invalid variable name");
+        throw invalid_argument("invalid variable name");
     }
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);
 
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     if (endItr == content.end())
-        throw("invalid assign statement");
+        throw invalid_argument("invalid assign statement");
     vector<string> exprLst(next(assignItr), endItr);
     stmt->setExpressionLst(exprLst);
     ExpressionParser exprParser;

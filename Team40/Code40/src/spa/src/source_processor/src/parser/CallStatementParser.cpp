@@ -11,11 +11,11 @@ Statement *CallStatementParser::parseCallStatement() {
         find(content.begin(), content.end(), "call");
     string proc_name = *next(callItr);
     if (!isValidName(proc_name)) {
-        throw("invalid procedure name");
+        throw invalid_argument("invalid procedure name");
     }
     // call: 'call' proc_name ';'
     if (*next(next(callItr)) != ";") {
-        throw("invalid call statement");
+        throw invalid_argument("invalid call statement");
     }
     stmt->setProcName(proc_name);
     return stmt;

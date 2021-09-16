@@ -14,10 +14,10 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
     if (endItr == content.end())
-        throw("invalid if statement");
+        throw invalid_argument("invalid if statement");
     // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
     if (*next(ifItr) != "(" || *prev(endItr) != ")" || *next(endItr) != "{") {
-        throw("invalid if statement");
+        throw invalid_argument("invalid if statement");
     }
 
     vector<string> condLst(next(next(ifItr)), prev(endItr));
@@ -39,7 +39,7 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
             if (terminator == 1 &&
                 programLines[i + 1].getContent()[0] != "else" &&
                 programLines[i + 1].getContent()[1] != "{") {
-                throw("invalid if statement");
+                throw invalid_argument("invalid if statement");
             }
             if (terminator == 2) {
                 programIndex = i;
@@ -60,6 +60,6 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
     }
     // ... stmtLst '}' 'else' '{'stmtLst '}'
     if (terminator != 2) {
-        throw("invalid if statement");
+        throw invalid_argument("invalid if statement");
     }
 }

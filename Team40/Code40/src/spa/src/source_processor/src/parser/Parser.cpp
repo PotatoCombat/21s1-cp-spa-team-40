@@ -10,7 +10,7 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
             // ... stmtLst '}'
             if (i > 0) {
                 if (programLines[i - 1].getContent()[0] != "}") {
-                    throw("invalid program");
+                    throw invalid_argument("invalid program");
                 }
             }
             checkAndAddValidProcedure(currProc, program);
@@ -61,8 +61,8 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
     if (currProc != nullptr) {
         // stmtLst: stmt+
         if (currProc->getStmtLst().size() == 0) {
-            throw("procedure should have at least one "
-                  "statement.");
+            throw invalid_argument("procedure should have at least one "
+                                   "statement.");
         }
         program.addToProcLst(currProc);
     }
@@ -71,6 +71,6 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
 void Parser::checkValidProgram(Program program) {
     // program: procedure+
     if (program.getProcLst().size() == 0) {
-        throw("program should have at least one procedure.");
+        throw invalid_argument("program should have at least one procedure.");
     }
 }

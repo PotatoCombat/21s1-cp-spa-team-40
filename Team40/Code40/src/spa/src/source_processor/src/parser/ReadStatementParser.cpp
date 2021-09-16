@@ -11,11 +11,11 @@ Statement *ReadStatementParser::parseReadStatement() {
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
     if (!isValidName(var_name)) {
-        throw("invalid variable name");
+        throw invalid_argument("invalid variable name");
     }
     // read: 'read' var_name';'
     if (*next(next(readItr)) != ";") {
-        throw("invalid read statement");
+        throw invalid_argument("invalid read statement");
     }
     auto var = new Variable(var_name);
     stmt->setVariable(var);
