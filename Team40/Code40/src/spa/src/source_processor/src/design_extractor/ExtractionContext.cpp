@@ -5,10 +5,6 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-optional<Statement *> ExtractionContext::getModifyingStatement() {
-    return modifyingStatement;
-}
-
 optional<Procedure *> ExtractionContext::getCurrentProcedure() {
     return currentProcedure;
 }
@@ -33,6 +29,10 @@ void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
         throw runtime_error("Trying to unset another procedure.");
     }
     currentProcedure = nullopt;
+}
+
+optional<Statement *> ExtractionContext::getModifyingStatement() {
+    return modifyingStatement;
 }
 
 void ExtractionContext::setModifyingStatement(Statement *statement) {
