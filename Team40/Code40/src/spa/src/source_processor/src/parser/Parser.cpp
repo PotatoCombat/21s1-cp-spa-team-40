@@ -53,7 +53,7 @@ Statement *Parser::parseStatement(vector<string> content, int index,
         IfStatementParser ifParser(content, index, programLines);
         return ifParser.parseIfStatement(programIndex);
     } else {
-        throw("invalid statement type");
+        throw invalid_argument("invalid statement type");
     }
 }
 

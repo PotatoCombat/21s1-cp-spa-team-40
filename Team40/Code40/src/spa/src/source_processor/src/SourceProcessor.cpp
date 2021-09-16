@@ -17,10 +17,15 @@ void SourceProcessor::processSource(string filename) {
     fstream file;
     file.open(filename, ios::in);
     if (file.is_open()) {
-        vector<Line> programLines = lexer.tokenizeFile(file);
-        Program program;
-        parser.parseProgram(programLines, program);
-        designExtractor.extract(&program);
+        try {
+            vector<Line> programLines = lexer.tokenizeFile(file);
+            Program program;
+            parser.parseProgram(programLines, program);
+            designExtractor.extract(&program);
+        } catch (const std::exception &e) {
+            cout << e.what();
+            exit(1);
+        }
     } else {
         cout << "No such file";
     }
