@@ -1,3 +1,4 @@
+#include <iterator>
 #include "source_processor/design_extractor/ExtractionContext.h"
 
 ExtractionContext &ExtractionContext::getInstance() {
