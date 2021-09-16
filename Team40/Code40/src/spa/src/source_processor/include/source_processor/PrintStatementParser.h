@@ -13,4 +13,5 @@ private:
 public:
     PrintStatementParser(vector<string> content, int index);
     Statement *parsePrintStatement();
+    bool isValidName(string input);
 };

@@ -10,7 +10,21 @@ Statement *ReadStatementParser::parseReadStatement() {
     vector<string>::iterator readItr =
         find(content.begin(), content.end(), "read");
     string var_name = *next(readItr);
+    if (!isValidName(var_name)) {
+        throw("invalid procedure name");
+    }
     auto var = new Variable(var_name);
     stmt->setVariable(var);
     return stmt;
+}
+
+bool ReadStatementParser::isValidName(string input) {
+    // NAME: LETTER (LETTER | DIGIT)*
+    // procedure names and variables are strings of letters, and digits,
+    // starting with a letter
+    if (!isalpha(input.at(0))) {
+        return false;
+    }
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isalnum(c)); }) == input.end();
 }

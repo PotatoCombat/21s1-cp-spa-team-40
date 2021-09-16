@@ -11,6 +11,9 @@ Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
     string var_name = *prev(assignItr);
+    if (!isValidName(var_name)) {
+        throw("invalid procedure name");
+    }
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);
 
@@ -20,4 +23,15 @@ Statement *AssignStatementParser::parseAssignStatement() {
     ExpressionParser exprParser;
     exprParser.parseExpression(exprLst, stmt);
     return stmt;
+}
+
+bool AssignStatementParser::isValidName(string input) {
+    // NAME: LETTER (LETTER | DIGIT)*
+    // procedure names and variables are strings of letters, and digits,
+    // starting with a letter
+    if (!isalpha(input.at(0))) {
+        return false;
+    }
+    return find_if(input.begin(), input.end(),
+                   [](char c) { return !(isalnum(c)); }) == input.end();
 }

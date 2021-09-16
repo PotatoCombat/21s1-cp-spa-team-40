@@ -12,7 +12,6 @@
 #include "source_processor/StatementParser.h"
 #include "source_processor/WhileStatementParser.h"
 #include <algorithm>
-#include <stdexcept>
 #include <string>
 #include <vector>
 using namespace std;
@@ -26,6 +25,10 @@ public:
             vector<string> currContent = programLines[i].getContent();
             if (isProc(currContent)) {
                 if (currProc != nullptr) {
+                    // stmtLst: stmt+
+                    if (currProc->getStmtLst().size() == 0) {
+                        throw("procedure should have at least one statement.");
+                    }
                     program.addToProcLst(currProc);
                 }
                 ProcedureParser procParser(currContent);
@@ -38,12 +41,15 @@ public:
             }
         }
         if (currProc != nullptr) {
+            // stmtLst: stmt+
+            if (currProc->getStmtLst().size() == 0) {
+                throw("procedure should have at least one statement.");
+            }
             program.addToProcLst(currProc);
         }
         // program: procedure+
         if (program.getProcLst().size() == 0) {
-            throw runtime_error("Invalid SIMPLE program: program should have "
-                                "at least one procedure.");
+            throw("program should have at least one procedure.");
         }
         return program;
     }
@@ -70,7 +76,7 @@ public:
             IfStatementParser ifParser(content, index, programLines);
             return ifParser.parseIfStatement(programIndex);
         } else {
-            throw runtime_error("Invalid statement!");
+            throw("invalid statement type");
         }
     }
 

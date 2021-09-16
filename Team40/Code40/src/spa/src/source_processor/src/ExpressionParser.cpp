@@ -1,6 +1,5 @@
 #include "source_processor/ExpressionParser.h"
 #include <algorithm>
-#include <stdexcept>
 
 void ExpressionParser::parseExpression(vector<string> exprLst,
                                        Statement *stmt) {
@@ -14,16 +13,15 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
             stmt->addExpressionVar(variable);
         } else if (stmt->getStatementType() == StatementType::ASSIGN) {
             if (!isValidAssignOperator(stmt, currString)) {
-                throw runtime_error(
-                    "Invalid SIMPLE program: invalid variable or "
-                    "constant in assign statement");
+                throw("invalid variable or constant in assign statement");
             }
-        } else if (stmt->getStatementType() == StatementType::WHILE ||
-                   stmt->getStatementType() == StatementType::IF) {
+        } else if (stmt->getStatementType() == StatementType::WHILE) {
             if (!isValidWhileIfOperator(stmt, currString)) {
-                throw runtime_error(
-                    "Invalid SIMPLE program: invalid variable or "
-                    "constant in while or if statement");
+                throw("invalid variable or constant in while statement");
+            }
+        } else if (stmt->getStatementType() == StatementType::IF) {
+            if (!isValidWhileIfOperator(stmt, currString)) {
+                throw("invalid variable or constant in if statement");
             }
         }
     }
@@ -38,8 +36,8 @@ bool ExpressionParser::isInteger(string input) {
 
 bool ExpressionParser::isName(string input) {
     // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
+    // variables names are strings of letters, and digits, starting with a
+    // letter
     if (!isalpha(input.at(0))) {
         return false;
     }
