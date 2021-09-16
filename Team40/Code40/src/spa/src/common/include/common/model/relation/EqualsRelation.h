@@ -5,5 +5,4 @@ class EqualsRelation : public Relation {
 
 public:
     EqualsRelation(Factor *leftFactor, Factor *rightFactor);
-    bool getValue() override;
 };

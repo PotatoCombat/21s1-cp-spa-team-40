@@ -15,11 +15,14 @@ Result AssignPatternHandler::eval() {
         return handler.eval();
     }
 
+    // for iter1, non-wildcard patterns are passed with double quote
+    // so the handler needs to trim
+    // will change in iter2
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
         vector<string> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
+            pkb->getAssignsMatchingPattern(variable->getValue(), pattern.substr(2, pattern.size() - 4));
         for (auto stmt : stmts) {
             stmtResults.push_back(to_string(stmt));
         }
@@ -33,7 +36,7 @@ Result AssignPatternHandler::eval() {
     set<int> stmtsSet;
     vector<string> vars = pkb->getAllVars().asVector();
     for (auto var : vars) {
-        set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern);
+        set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern.substr(2, pattern.size() - 4));
         if (stmts.size() > 0) {
             varResults.push_back(var);
             stmtsSet.insert(stmts.begin(), stmts.end());

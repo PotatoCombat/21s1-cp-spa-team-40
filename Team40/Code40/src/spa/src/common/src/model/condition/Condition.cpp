@@ -1,8 +1,5 @@
 #include "common/model/condition/Condition.h"
 
-Condition::Condition(ConditionType condType, bool value)
-    : condType(condType), value(value) {}
+Condition::Condition(ConditionType condType) : condType(condType) {}
 
 ConditionType Condition::getConditionType() { return this->condType; }
-
-bool Condition::getValue() { return this->value; }

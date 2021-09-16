@@ -27,15 +27,14 @@ vector<Procedure> TestPKB::createProcs() {
 }
 
 vector<Statement> TestPKB::createStatements() {
-    return vector<Statement>{Statement(0, StatementType::ASSIGN),
-                             Statement(1, StatementType::CALL),
-                             Statement(2, StatementType::IF)};
+    return vector<Statement>{Statement(1, StatementType::ASSIGN),
+                             Statement(2, StatementType::CALL),
+                             Statement(3, StatementType::IF)};
 }
 
 vector<Variable> TestPKB::createVariables() {
-    return vector<Variable>{Variable(0, "var_name_1"),
-                            Variable(0, "var_name_1"),
-                            Variable(0, "var_name_1")};
+    return vector<Variable>{Variable("var_name_1"), Variable("var_name_1"),
+                            Variable("var_name_1")};
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
@@ -112,4 +111,30 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
     for (int i = 0; i < actual.size(); i++) {
         REQUIRE(test.at(i) == actual.at(i));
     }
+}
+
+TEST_CASE("Can handle transitive Follows") {
+    PKB pkb;
+    vector<Statement> items = TestPKB::createStatements();
+    pkb.insertFollows(&items.at(0), &items.at(1));
+    pkb.insertFollows(&items.at(1), &items.at(2));
+
+    auto follow1 = pkb.getFollowingStmt(1);
+    auto followStar1 = pkb.getFollowingStarStmts(1);
+    auto follow2 = pkb.getFollowingStmt(2);
+    auto followStar2 = pkb.getFollowingStarStmts(2);
+    auto follow3 = pkb.getFollowingStmt(3);
+    auto followStar3 = pkb.getFollowingStarStmts(3);
+
+    REQUIRE(follow1 == 2);
+    REQUIRE(followStar1.size() == 2);
+    REQUIRE(followStar1.count(2));
+    REQUIRE(followStar1.count(3));
+
+    REQUIRE(follow2 == 3);
+    REQUIRE(followStar2.size() == 1);
+    REQUIRE(followStar2.count(3));
+
+    REQUIRE(follow3 == -1);
+    REQUIRE(followStar3.empty());
 }

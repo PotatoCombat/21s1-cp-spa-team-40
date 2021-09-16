@@ -12,45 +12,78 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     VarName varName = stmt->getVariable()->getName();
     vector<string> exprList = stmt->getExpressionLst();
 
-    // Normal Records ============
+    // ***************
+    // Normal Records
+    // ***************
     vector<string> postfix = createPostfix(exprList);
-    set<string> patterns = createPatterns(postfix);
+    vector<string> patterns = createPatterns(postfix);
 
-    for (const auto &p : patterns) {
-        // Record with varName, eg. ("x", "y * 5")
-        Record recordWithVarName = make_pair(varName, p);
+    set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
 
-        // Record with wildcard, eg. (_, "y * 5")
-        Record recordWithWildcard = make_pair(WILDCARD, p);
+    // Note
+    // k : v means a map entry, where Key = k, Value = v
+    for (const auto &p : uniquePatterns) {
+        // Complete Record, eg. ("x", _"y * 5"_)
+        Record record = make_pair(varName, p);
 
-        insertStmtWithPattern(recordWithVarName, stmtIndex);
-        insertStmtWithPattern(recordWithWildcard, stmtIndex);
+        // Record with wildcard varName, eg. (_, _"y * 5"_)
+        Record recordWithoutVarName = make_pair(WILDCARD, p);
 
-        insertPatternsOfStmt(stmtIndex,
-                             {recordWithVarName, recordWithWildcard});
+        // Map ("x", _"y * 5"_) : { stmt#1 }
+        insertStmtWithPattern(record, stmtIndex);
+
+        // Map (_, _"y * 5"_) : { stmt#1 }
+        insertStmtWithPattern(recordWithoutVarName, stmtIndex);
+
+        // Map stmt#1 : { ("x", _"y * 5"_), (_, _"y * 5"_) }
+        insertPatternsOfStmt(stmtIndex, {record, recordWithoutVarName});
     }
 
-    // Exact Records ============
-    string exactPattern = createExactPattern(exprList);
+    // Record with wildcard pattern, eg. ("x", _)
+    Record recordWithoutPattern = make_pair(varName, WILDCARD);
 
-    Record exactRecordWithVarName = make_pair(varName, exactPattern);
-    Record exactRecordWithWildcard = make_pair(WILDCARD, exactPattern);
+    // Map ("x", _) : { stmt#1 }
+    insertStmtWithPattern(recordWithoutPattern, stmtIndex);
 
-    insertStmtWithExactPattern(exactRecordWithVarName, stmtIndex);
-    insertStmtWithExactPattern(exactRecordWithWildcard, stmtIndex);
+    // Map stmt#1 : { ("x", _) }
+    insertPatternsOfStmt(stmtIndex, {recordWithoutPattern});
 
-    insertExactPatternsOfStmt(
-        stmtIndex, {exactRecordWithVarName, exactRecordWithWildcard});
+    // ***************
+    // Exact Records
+    // ***************
+    string exactPattern = patterns.back();
+
+    // Exact record with pattern, eg. ("x", "y * 5")
+    Record exactRecord = make_pair(varName, exactPattern);
+
+    // Exact record with wildcard varName, eg. (_, "y * 5")
+    Record exactRecordWithoutVarName = make_pair(WILDCARD, exactPattern);
+
+    // Exact record with wildcard pattern, eg. ("x", _)
+    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD);
+
+    // Map ("x", "y * 5") : { stmt#1 }
+    insertStmtWithExactPattern(exactRecord, stmtIndex);
+
+    // Map (_, "y * 5") : { stmt#1 }
+    insertStmtWithExactPattern(exactRecordWithoutVarName, stmtIndex);
+
+    // Map ("x", _) : { stmt#1 }
+    insertStmtWithExactPattern(exactRecordWithoutPattern, stmtIndex);
+
+    // Map stmt#1 : { ("x", "y * 5"), (_, "y * 5"), ("x", _) }
+    insertExactPatternsOfStmt(stmtIndex,{
+                                             exactRecord,
+                                             exactRecordWithoutVarName,
+                                             exactRecordWithoutPattern
+                                         });
 }
 
 set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName,
                                                        Pattern pattern) {
     Record record = make_pair(varName, pattern);
-    auto kvp = stmtsWithPatternMap.find(
-        record); // kvp stands for Key-Value Pair (map entry).
-    if (kvp ==
-        stmtsWithPatternMap
-            .end()) { // Could not find a map entry with record as the key.
+    auto kvp = stmtsWithPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
+    if (kvp == stmtsWithPatternMap.end()) { // Could not find a map entry with record as the key.
         return {};
     }
     return kvp->second;
@@ -139,21 +172,18 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
         if (isTerm) {
             postfix.push_back(s);
         } else if (s == "(") { // Apparently string comparison is fine using ==
-            postfix.emplace_back("(");
             stack.push("(");
         } else if (s == ")") {
             while (stack.top() != "(") {
                 postfix.push_back(stack.top());
                 stack.pop();
             }
-            postfix.emplace_back(")");
             stack.pop();
         } else {
             if (PRECEDENCE.at(s) > PRECEDENCE.at(stack.top())) {
                 stack.push(s);
             } else {
-                while (stack.top() != "#" &&
-                       PRECEDENCE.at(s) <= PRECEDENCE.at(stack.top())) {
+                while (stack.top() != "#" && PRECEDENCE.at(s) <= PRECEDENCE.at(stack.top())) {
                     postfix.push_back(stack.top());
                     stack.pop();
                 }
@@ -163,15 +193,14 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
     }
 
     while (stack.top() != "#") {
-        postfix.push_back(
-            stack.top()); // store and pop until stack is not empty.
+        postfix.push_back(stack.top()); // store and pop until stack is not empty.
         stack.pop();
     }
 
     return postfix;
 }
 
-set<string> PatternTable::createPatterns(vector<string> &postfix) {
+vector<string> PatternTable::createPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 
@@ -181,16 +210,6 @@ set<string> PatternTable::createPatterns(vector<string> &postfix) {
         if (isTerm) {
             patterns.push_back(s);
             stack.push(s);
-        } else if (s == "(") { // Apparently string comparison is fine using ==
-            continue;
-        } else if (s == ")") {
-            string lastTerm = stack.top();
-            stack.pop();
-
-            string largerTerm = string("(").append(lastTerm).append(")");
-
-            patterns.push_back(largerTerm);
-            stack.push(largerTerm);
         } else {
             string rightTerm = stack.top();
             stack.pop();
@@ -198,20 +217,15 @@ set<string> PatternTable::createPatterns(vector<string> &postfix) {
             string leftTerm = stack.top();
             stack.pop();
 
-            string largerTerm = string(leftTerm).append(s).append(rightTerm);
+            // We need a symbol (comma ,) to separate the operands.
+            // If not, the following can happen:
+            // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
+            // xyz+ could mean x + yz or xy + z (soln. x.yz+)
+            string largerTerm = string(leftTerm).append(",").append(rightTerm).append(s);
 
             patterns.push_back(largerTerm);
             stack.push(largerTerm);
         }
     }
-    set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
-    return uniquePatterns;
-}
-
-string PatternTable::createExactPattern(vector<string> &exprList) {
-    string exactPattern;
-    for (const string &s : exprList) {
-        exactPattern.append(s);
-    }
-    return exactPattern;
+    return patterns;
 }

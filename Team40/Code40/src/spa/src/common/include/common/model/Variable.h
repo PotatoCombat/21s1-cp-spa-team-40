@@ -8,12 +8,11 @@ private:
     string name;
 
 public:
-    Variable(int value, string name);
     Variable(string name);
 
     // getter
     string getName() override;
 
-    bool operator< (const Variable& other) const;
-    bool operator== (const Variable& other) const;
+    bool operator<(const Variable &other) const;
+    bool operator==(const Variable &other) const;
 };

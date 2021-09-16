@@ -29,9 +29,7 @@ public:
     // THESE STATIC METHODS WILL BE PRIVATE
     // USE THEM ONLY FOR TESTING PURPOSES
     static vector<string> createPostfix(vector<string> &infix);
-    static set<string> createPatterns(vector<string> &postfix);
-
-    static string createExactPattern(vector<string> &exprList);
+    static vector<string> createPatterns(vector<string> &postfix); // Contains duplicates
 
 private:
     inline static map<string, int> PRECEDENCE{

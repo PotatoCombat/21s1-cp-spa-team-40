@@ -10,17 +10,14 @@ enum class ConditionType { SINGLE, AND, OR, NOT };
 class Condition {
 private:
     ConditionType condType;
-    const bool value;
 
 protected:
     // constructor
-    Condition(ConditionType condType, bool value);
+    Condition(ConditionType condType);
 
 public:
     // getters
     ConditionType getConditionType();
-
-    bool getValue();
 
     // Overriden by: SingleCondition
     virtual Relation *getRelation() {
