@@ -1,6 +1,6 @@
-#include "source_processor/WhileStatementParser.h"
-#include "source_processor/ExpressionParser.h"
-#include "source_processor/Parser.h"
+#include "source_processor/parser/WhileStatementParser.h"
+#include "source_processor/parser/ExpressionParser.h"
+#include "source_processor/parser/Parser.h"
 #include <algorithm>
 
 WhileStatementParser::WhileStatementParser(vector<string> content, int index,
@@ -12,7 +12,10 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string>::iterator whileItr =
         find(content.begin(), content.end(), "while");
+
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
+    if (endItr == content.end())
+        throw("invalid while statement");
     // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
     if (*next(whileItr) != "(" || *prev(endItr) != ")") {
         throw("invalid while statement");

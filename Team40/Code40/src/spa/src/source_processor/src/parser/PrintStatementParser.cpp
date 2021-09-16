@@ -1,4 +1,4 @@
-#include "source_processor/PrintStatementParser.h"
+#include "source_processor/parser/PrintStatementParser.h"
 #include <algorithm>
 
 PrintStatementParser::PrintStatementParser(vector<string> content, int index)
@@ -9,6 +9,7 @@ PrintStatementParser::PrintStatementParser(vector<string> content, int index)
 Statement *PrintStatementParser::parsePrintStatement() {
     vector<string>::iterator printItr =
         find(content.begin(), content.end(), "print");
+
     string var_name = *next(printItr);
     if (!isValidName(var_name)) {
         throw("invalid variable name");

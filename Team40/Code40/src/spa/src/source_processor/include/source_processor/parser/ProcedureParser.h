@@ -1,6 +1,6 @@
 #pragma once
 #include "common/model/Procedure.h"
-#include "source_processor/Line.h"
+#include "source_processor/parser/Line.h"
 #include <string>
 #include <vector>
 

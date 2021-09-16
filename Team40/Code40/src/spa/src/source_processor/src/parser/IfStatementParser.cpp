@@ -1,6 +1,6 @@
-#include "source_processor/IfStatementParser.h"
-#include "source_processor/ExpressionParser.h"
-#include "source_processor/Parser.h"
+#include "source_processor/parser/IfStatementParser.h"
+#include "source_processor/parser/ExpressionParser.h"
+#include "source_processor/parser/Parser.h"
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index,
@@ -13,6 +13,9 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), "then");
+    if (endItr == content.end())
+        throw("invalid if statement");
+
     // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
     if (*next(ifItr) != "(" || *prev(endItr) != ")" || *next(endItr) != "{") {
         throw("invalid if statement");

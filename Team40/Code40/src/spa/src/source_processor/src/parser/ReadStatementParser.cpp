@@ -1,4 +1,4 @@
-#include "source_processor/ReadStatementParser.h"
+#include "source_processor/parser/ReadStatementParser.h"
 #include <algorithm>
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
@@ -9,6 +9,7 @@ ReadStatementParser::ReadStatementParser(vector<string> content, int index)
 Statement *ReadStatementParser::parseReadStatement() {
     vector<string>::iterator readItr =
         find(content.begin(), content.end(), "read");
+
     string var_name = *next(readItr);
     if (!isValidName(var_name)) {
         throw("invalid variable name");

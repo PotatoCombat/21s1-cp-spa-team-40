@@ -3,10 +3,8 @@
 #include <vector>
 
 #include "common/model/Program.h"
-
-#include "source_processor/Line.h"
 #include "source_processor/SourceProcessor.h"
-#include "source_processor/design_extractor/DesignExtractor.h"
+#include "source_processor/parser/Line.h"
 
 SourceProcessor::SourceProcessor(PKB *pkb) {
     this->pkb = pkb;

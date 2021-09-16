@@ -1,12 +1,12 @@
 #pragma once
 #include "common/model/Statement.h"
-#include "source_processor/Line.h"
+#include "source_processor/parser/Line.h"
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class WhileStatementParser {
+class IfStatementParser {
 private:
     Statement *stmt;
     vector<string> content;
@@ -14,8 +14,8 @@ private:
     vector<Line> programLines;
 
 public:
-    WhileStatementParser(vector<string> content, int index,
-                         vector<Line> programLines);
-    Statement *parseWhileStatement(int &programIndex);
+    IfStatementParser(vector<string> content, int index,
+                      vector<Line> programLines);
+    Statement *parseIfStatement(int &programIndex);
     void parseChildStatements(int &programIndex);
 };

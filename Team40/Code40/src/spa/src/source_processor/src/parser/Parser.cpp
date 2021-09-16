@@ -1,4 +1,4 @@
-#include "source_processor/Parser.h"
+#include "source_processor/parser/Parser.h"
 
 Program Parser::parseProgram(vector<Line> programLines, Program &program) {
     Procedure *currProc = nullptr;

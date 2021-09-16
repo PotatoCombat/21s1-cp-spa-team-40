@@ -1,5 +1,5 @@
-#include "source_processor/AssignStatementParser.h"
-#include "source_processor/ExpressionParser.h"
+#include "source_processor/parser/AssignStatementParser.h"
+#include "source_processor/parser/ExpressionParser.h"
 #include <algorithm>
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
@@ -10,14 +10,18 @@ AssignStatementParser::AssignStatementParser(vector<string> content, int index)
 Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), "=");
+
     string var_name = *prev(assignItr);
     if (!isValidName(var_name)) {
-        throw("invalid procedure name");
+        throw("invalid variable name");
     }
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);
 
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
+    if (endItr == content.end())
+        throw("invalid assign statement");
+
     vector<string> exprLst(next(assignItr), endItr);
     stmt->setExpressionLst(exprLst);
     ExpressionParser exprParser;
