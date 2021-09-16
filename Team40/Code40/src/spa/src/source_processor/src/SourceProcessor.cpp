@@ -22,7 +22,7 @@ void SourceProcessor::processSource(string filename) {
             Program program;
             parser.parseProgram(programLines, program);
             designExtractor.extract(&program);
-        } catch (const std::exception &e) {
+        } catch (const exception &e) {
             cout << e.what();
             exit(1);
         }
