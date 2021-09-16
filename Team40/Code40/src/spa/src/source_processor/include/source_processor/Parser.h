@@ -21,5 +21,6 @@ public:
     Program parseProgram(vector<Line> programLines, Program &program);
     Statement *parseStatement(vector<string> content, int index,
                               vector<Line> programLines, int &programIndex);
-    bool isProc(vector<string> inputLine);
+    void checkAndAddValidProcedure(Procedure *currProc, Program &program);
+    void Parser::checkValidProgram(Program program);
 };

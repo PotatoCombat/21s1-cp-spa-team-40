@@ -10,7 +10,6 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
     vector<vector<string>> programTokens = mergeLine(file);
     int stmtNum = 0;
     vector<string> currString = {};
-
     for (int i = 0; i < programTokens.size(); i++) {
         vector<string> subString = programTokens[i];
         currString.insert(currString.end(), subString.begin(), subString.end());
@@ -40,6 +39,7 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
 vector<vector<string>> Lexer::mergeLine(fstream &file) {
     string input;
     vector<vector<string>> programTokens = {};
+
     while (getline(file, input)) {
         vector<string> line = tokenizeLine(input);
         tuple<vector<string>, vector<string>> splitString = splitLine(line);
@@ -49,8 +49,8 @@ vector<vector<string>> Lexer::mergeLine(fstream &file) {
         if (!currString.empty()) {
             programTokens.push_back(currString);
         }
-        while (nextString.size() > 0) {
 
+        while (nextString.size() > 0) {
             splitString = splitLine(nextString);
             currString = get<0>(splitString);
             nextString = get<1>(splitString);
@@ -95,22 +95,7 @@ vector<string> Lexer::tokenizeLine(string input) {
             addString(currString, inputLine);
             currString.push_back(curr);
             tokenizeAndAddSymbol(input, i, curr, currString, inputLine);
-            if (isBracket(curr)) {
-                if (curr == '(' || curr == '{') {
-                    brackets.push(curr);
-                }
-                if (curr == ')' || curr == '}') {
-                    if (brackets.empty()) {
-                        throw("invalid program, brackets do not match");
-                    }
-                    if ((curr == ')' && brackets.top() == '(') ||
-                        (curr == '}' && brackets.top() == '{')) {
-                        brackets.pop();
-                    } else {
-                        throw("invalid program, brackets do not match");
-                    }
-                }
-            }
+            checkValidBracket(curr);
 
         } else {
             currString.push_back(curr);
@@ -119,6 +104,7 @@ vector<string> Lexer::tokenizeLine(string input) {
             }
         }
     }
+
     currString = cleanString(currString);
     if (!currString.empty()) {
         inputLine.push_back(currString);
@@ -168,12 +154,26 @@ string Lexer::cleanString(string input) {
     return input;
 }
 
-// special keywords
-
-bool Lexer::isProc(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "procedure") !=
-           inputLine.end();
+void Lexer::checkValidBracket(char curr) {
+    if (isBracket(curr)) {
+        if (curr == '(' || curr == '{') {
+            brackets.push(curr);
+        }
+        if (curr == ')' || curr == '}') {
+            if (brackets.empty()) {
+                throw("invalid program, brackets do not match");
+            }
+            if ((curr == ')' && brackets.top() == '(') ||
+                (curr == '}' && brackets.top() == '{')) {
+                brackets.pop();
+            } else {
+                throw("invalid program, brackets do not match");
+            }
+        }
+    }
 }
+
+// special keywords
 
 bool Lexer::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
@@ -196,26 +196,8 @@ bool Lexer::isBracket(char input) {
 
 bool Lexer::isSemiColon(char input) { return input == ';'; }
 
-bool Lexer::isArtihmeticOperator(string input) {
-    return input == "+" || input == "-" || input == "*" || input == "/" ||
-           input == "%";
-}
-
-bool Lexer::isComparisonOperator(string input) {
-    return input == ">" || input == ">=" || input == "<" || input == "<=" ||
-           input == "==" || input == "!=";
-}
-
-bool Lexer::isLogicalOperator(string input) {
-    return input == "!" || input == "&&" || input == "||";
-}
-
 bool Lexer::isCurlyBracket(string input) {
     return input == "{" || input == "}";
-}
-
-bool Lexer::isRoundBracket(string input) {
-    return input == "(" || input == ")";
 }
 
 bool Lexer::isSemiColon(string input) { return input == ";"; }

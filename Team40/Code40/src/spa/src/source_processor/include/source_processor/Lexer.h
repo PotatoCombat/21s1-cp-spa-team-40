@@ -32,9 +32,9 @@ public:
                                vector<string> &inputLine);
     string cleanString(string input);
     void addString(string &input, vector<string> &inputVector);
+    void checkValidBracket(char curr);
 
     // special keywords
-    bool isProc(vector<string> inputLine);
     bool isKeyword(string input);
 
     // special symbols
@@ -42,9 +42,5 @@ public:
     bool isOperator(char input);
     bool isSemiColon(char input);
     bool isCurlyBracket(string input);
-    bool isRoundBracket(string input);
-    bool isArtihmeticOperator(string input);
-    bool isComparisonOperator(string input);
-    bool isLogicalOperator(string input);
     bool isSemiColon(string input);
 };

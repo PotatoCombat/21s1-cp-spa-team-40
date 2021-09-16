@@ -5,23 +5,19 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
     for (int i = 0; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
-        if (isProc(currContent)) {
+
+        if (currContent[0] == "procedure") {
             // ... stmtLst '}'
             if (i > 0) {
                 if (programLines[i - 1].getContent()[0] != "}") {
                     throw("invalid program");
                 }
             }
-            if (currProc != nullptr) {
-                // stmtLst: stmt+
-                if (currProc->getStmtLst().size() == 0) {
-                    throw("procedure should have at least one "
-                          "statement.");
-                }
-                program.addToProcLst(currProc);
-            }
+            checkAndAddValidProcedure(currProc, program);
+
             ProcedureParser procParser(currContent);
             currProc = procParser.parseProcedure();
+
         } else if (!currContent.empty() && currContent[0] != "}" &&
                    currContent[0] != "else") {
             Statement *stmt =
@@ -29,17 +25,9 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
             currProc->addToStmtLst(stmt);
         }
     }
-    if (currProc != nullptr) {
-        // stmtLst: stmt+
-        if (currProc->getStmtLst().size() == 0) {
-            throw("procedure should have at least one statement.");
-        }
-        program.addToProcLst(currProc);
-    }
-    // program: procedure+
-    if (program.getProcLst().size() == 0) {
-        throw("program should have at least one procedure.");
-    }
+
+    checkAndAddValidProcedure(currProc, program);
+    checkValidProgram(program);
     return program;
 }
 
@@ -70,7 +58,20 @@ Statement *Parser::parseStatement(vector<string> content, int index,
     }
 }
 
-bool Parser::isProc(vector<string> inputLine) {
-    return find(inputLine.begin(), inputLine.end(), "procedure") !=
-           inputLine.end();
+void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
+    if (currProc != nullptr) {
+        // stmtLst: stmt+
+        if (currProc->getStmtLst().size() == 0) {
+            throw("procedure should have at least one "
+                  "statement.");
+        }
+        program.addToProcLst(currProc);
+    }
+}
+
+void Parser::checkValidProgram(Program program) {
+    // program: procedure+
+    if (program.getProcLst().size() == 0) {
+        throw("program should have at least one procedure.");
+    }
 }
