@@ -61,7 +61,7 @@ TEST_CASE("DesignExtractor: Basic statement parsing") {
         REQUIRE(TestDesignExtractor::pkb.getAllStmts().asVector().size() == 1);
     }
 
-    SECTION("Correctly handles transitive Uses in CallStatements.") {
+    SECTION("Correctly handles transitive Modifies in CallStatements.") {
         ProcName CALLED_PROC_NAME = "CALLED_PROC";
         ProcName CALLING_PROC_NAME = "CALLING_PROC";
         VarName ASSIGNED_VAR_NAME = "ASSIGNED_VAR";
