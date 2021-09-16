@@ -242,8 +242,8 @@ size_t QueryTokenizer::findFirstWhitespace(string input) {
 
 bool QueryTokenizer::isValidName(string name) {
     if (isalpha(name[0])) {
-        auto it = find_if(name.begin(), name.end(), isalnum);
-        return it != name.end();
+        auto it = find_if_not(begin(name), end(name), isalnum);
+        return it == name.end();
     }
     return false;
 }
