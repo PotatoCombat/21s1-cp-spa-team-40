@@ -9,12 +9,15 @@ struct TestQPreprocessor {
     static const string INPUT_1;
     static const string INPUT_2;
     static const string INPUT_3;
+    static const string INPUT_4;
 };
 
 const string TestQPreprocessor::INPUT_1 =
     "stmt s;\nSelect s such that Follows(s, 4)";
 const string TestQPreprocessor::INPUT_2 = "stmt s;\nSelect s";
 const string TestQPreprocessor::INPUT_3 = "stmt s;\nSelect p";
+const string TestQPreprocessor::INPUT_4 =
+    "stmt s; Select s such that Follows ( 4      ,   s)";
 
 TEST_CASE("QueryPreprocessor") {
     QueryPreprocessor qp;
@@ -31,16 +34,10 @@ TEST_CASE("QueryPreprocessor") {
             expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::INPUT_1, actual);
-            /*cout << (*actual.getClauses()[0]).getFirstReference()->getValue()
-            << endl; cout << (cls.getFirstReference()->getValue()) << endl; cout
-            << (*actual.getClauses()[0]).getSecondReference()->getValue() <<
-            endl; cout << (cls.getSecondReference()->getValue()) << endl;*/
 
             REQUIRE((actual.getClauses()[0])->equals(*cls));
             REQUIRE(
-                (actual.getClauses()[0])->equals(*expected.getClauses()[0]));
-            //REQUIRE((actual.getReturnReference()->equals(
-            //    *expected.getReturnReference())));
+                (actual.getClauses()[0])->equals(*expected.getClauses()[0]));\
         }
 
         SECTION("test 2") {
@@ -50,6 +47,18 @@ TEST_CASE("QueryPreprocessor") {
             REQUIRE(actual.getClauses().size() == 0);
             REQUIRE((actual.getReturnReference()->equals(
                 *expected.getReturnReference())));
+        }
+
+        SECTION("test 4") {
+            Clause* cls = new Clause(ClauseType::FOLLOWS, ref, ret);
+            expected.setReturnReference(&ret);
+            expected.addClause(cls);
+
+            qp.preprocessQuery(TestQPreprocessor::INPUT_4, actual);
+
+            REQUIRE(cls->equals(*actual.getClauses()[0]));
+            REQUIRE(
+                expected.getClauses()[0]->equals(*actual.getClauses()[0]));
         }
     }
 

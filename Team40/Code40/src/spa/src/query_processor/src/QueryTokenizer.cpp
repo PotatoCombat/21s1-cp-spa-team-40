@@ -107,7 +107,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     if (size > token.size()) { // space between token and '('
                         token1 = token;
                     } else if (size <= token.size()) { // something after '('
-                        token1 = token.substr(0, size-1);
+                        token1 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
                 } else {
@@ -121,7 +121,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     if (size > token.size()) { // space between token and ','
                         token2 = token;
                     } else if (size <= token.size()) { // something after ','
-                        token2 = token.substr(0, size-1);
+                        token2 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
                 } else {
@@ -134,9 +134,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ')'
                         token3 = token;
-                    }
-                    else if (size <= token.size()) { // something after ')'
-                        token3 = token.substr(0, size-1);
+                    } else if (size <= token.size()) { // something after ')'
+                        token3 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
                 } else {
@@ -169,7 +168,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     isClause = 1;
                 } else {
                     // that is misplaced!
-                    throw SyntaxError("invalid syntax"); 
+                    throw SyntaxError("invalid syntax");
                 }
             } else if (token == KEYWORD_PATTERN) {
                 isClause = 2;
