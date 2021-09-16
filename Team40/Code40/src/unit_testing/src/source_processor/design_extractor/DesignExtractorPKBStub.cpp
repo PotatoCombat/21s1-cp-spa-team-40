@@ -60,4 +60,17 @@ public:
     int getNumStmtModifiesVar() { return numStmtModifiesVar; }
     int getNumProcUsesVar() { return numProcUsesVar; }
     int getNumStmtUsesVar() { return numStmtUsesVar; }
+
+    void reset() {
+        numProc = 0;
+        numStmt = 0;
+        numVar = 0;
+        numConst = 0;
+        numFollows = 0;
+        numParents = 0;
+        numProcModifiesVar = 0;
+        numStmtModifiesVar = 0;
+        numProcUsesVar = 0;
+        numStmtUsesVar = 0;
+    }
 };

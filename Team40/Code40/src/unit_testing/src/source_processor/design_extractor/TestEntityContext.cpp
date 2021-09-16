@@ -7,8 +7,8 @@ TEST_CASE("EntityContext: Pushes and pops correctly") {
     ConstantValue cv(VALUE);
     EntityContext<ConstantValue> entityContext;
     entityContext.push(&cv);
-    REQUIRE(entityContext.getAllEntities().size() == 1);
-    REQUIRE(entityContext.getAllEntities().front()->getValue() == VALUE);
+    REQUIRE(entityContext.getCopy().size() == 1);
+    REQUIRE(entityContext.getCopy().front()->getValue() == VALUE);
     entityContext.pop(&cv);
-    REQUIRE(entityContext.getAllEntities().empty());
+    REQUIRE(entityContext.empty());
 }

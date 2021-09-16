@@ -21,18 +21,21 @@ public:
     void extractProcedure(Procedure *program);
 
     // Statement
-    StmtIndex extractStatement(Statement *statement);
-    StmtIndex extractAssignStatement(Statement *assignStatement);
-    StmtIndex extractCallStatement(Statement *callStatement);
-    StmtIndex extractIfStatement(Statement *ifStatement);
-    StmtIndex extractPrintStatement(Statement *printStatement);
-    StmtIndex extractReadStatement(Statement *readStatement);
-    StmtIndex extractWhileStatement(Statement *whileStatement);
+    void extractStatement(Statement *statement);
+    void extractAssignStatement(Statement *assignStatement);
+    void extractCallStatement(Statement *callStatement);
+    void extractIfStatement(Statement *ifStatement);
+    void extractPrintStatement(Statement *printStatement);
+    void extractReadStatement(Statement *readStatement);
+    void extractWhileStatement(Statement *whileStatement);
 
     // Variable
     void extractVariable(Variable *variable);
     void extractModifiesRelationship(Variable *variable);
     void extractUsesRelationship(Variable *variable);
+
+    // ConstantValue
+    void extractConstantValue(ConstantValue *constantValue);
 
     // Condition
     //    void extractCondition(Condition condition);
@@ -57,7 +60,4 @@ public:
 
     // Factor
     //    void extractFactor(Factor factor);
-
-    // ConstantValue
-    //    void extractConstantValue(ConstantValue constantValue);
 };
