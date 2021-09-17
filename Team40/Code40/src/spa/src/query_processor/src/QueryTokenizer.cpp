@@ -46,17 +46,17 @@ string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
 
 void QueryTokenizer::tokenizeDeclaration(string input,
                                          vector<DeclPair> &decls) {
-    size_t sem_pos;
+    size_t curr_pos;
     size_t space_pos;
     string type;
-    string rem = input;
+    string rem = input; // remaining string
 
-    sem_pos = rem.find(SEMICOLON); // position of semicolon
-    while (sem_pos != string::npos) {
-        string sub = trim(rem.substr(0, sem_pos)); // e.g. assign x, y
-        rem = trim(rem.substr(sem_pos + 1));
+    curr_pos = rem.find(SEMICOLON); // position of semicolon
+    while (curr_pos != string::npos) {
+        string sub = trim(rem.substr(0, curr_pos)); // e.g. assign x, y
+        rem = trim(rem.substr(curr_pos + 1));
 
-        space_pos = sub.find(WHITESPACE); // position of whitespace
+        space_pos = sub.find_first_of(WHITESPACE_SET); // position of whitespace
         string type = sub.substr(0, space_pos);
 
         // check if first part is a design entity type
@@ -71,7 +71,7 @@ void QueryTokenizer::tokenizeDeclaration(string input,
         for (auto x : declSyn) {
             decls.push_back(make_pair(type, x));
         }
-        sem_pos = rem.find(SEMICOLON);
+        curr_pos = rem.find(SEMICOLON);
     }
 
     return;
@@ -133,7 +133,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (not_name_char_pos != string::npos) {
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ')'
-                        token3 = token;
+                        token3 = trimR(input.substr(curr_pos, size - 1));
                     } else if (size <= token.size()) { // something after ')'
                         token3 = token.substr(0, size - 1);
                     }
@@ -145,8 +145,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (isClause == 1) {
                     clss.push_back(make_tuple(token1, token2, token3));
                 } else if (isClause == 2) {
-                    pats.push_back(
-                        make_pair(token1, vector<PatArg>{token2, token3}));
+                    token3 = extractPatternString(token3);
+                    pats.push_back(make_tuple(token1, token2, token3));
                 } else {
                     throw SyntaxError("something is very wrong");
                 }
@@ -218,11 +218,17 @@ void QueryTokenizer::splitComma(string input, vector<string> &vec) {
     size_t split = rem.find(COMMA);
     while (split != string::npos) {
         string sub = trimR(rem.substr(0, split));
+        if (!isValidName(sub)) {
+            throw SyntaxError("invalid syntax");
+        }
         vec.push_back(sub);
         rem = trimL(rem.substr(split + 1));
         split = rem.find(COMMA);
     }
     if (rem.size() > 0) {
+        if (!isValidName(rem)) {
+            throw SyntaxError("invalid syntax");
+        }
         vec.push_back(rem);
     }
 
@@ -230,36 +236,20 @@ void QueryTokenizer::splitComma(string input, vector<string> &vec) {
 }
 
 size_t QueryTokenizer::findFirstWhitespace(string input) {
-    size_t first_w = input.find_first_of(WHITESPACE_SET);
-    return first_w;
+    return input.find_first_of(WHITESPACE_SET);
 }
 
-// void QueryTokenizer::splitBCBRel(string input, ClsTuple &tup) {
-//    // check count
-//    int l_c = count(input.begin(), input.end(), L_BRACKET);
-//    int r_c = count(input.begin(), input.end(), R_BRACKET);
-//    int c_c = count(input.begin(), input.end(), COMMA);
-//
-//    if (!(l_c == 1 && r_c == 1 && c_c == 1)) {
-//        throw "error"; // unmatched ( , ) syntax
-//    }
-//
-//    size_t l_b = input.find(L_BRACKET);
-//    size_t r_b = input.find(R_BRACKET);
-//    size_t c = input.find(COMMA);
-//
-//    if (!(l_b < c && c < r_b) || l_b == 0) {
-//        throw "error"; // unmatched Keyword( , ) syntax
-//    }
-//
-//    if (l_b + 1 == c || c + 1 == r_b) {
-//        throw "error"; // no arguments
-//    }
-//
-//    string key = trim(input.substr(0, l_b));
-//    string a1 = trim(input.substr(l_b + 1, c - (l_b + 1)));
-//    string a2 = trim(input.substr(c + 1, r_b - (c + 1)));
-//    tup = make_tuple(key, a1, a2);
-//
-//    return;
-//}
+string QueryTokenizer::extractPatternString(string input) {
+    if (count(input.begin(), input.end(), '"') == 2) {
+        return trim(input.substr(1, input.size() - 2));
+    }
+    return input;
+}
+
+bool QueryTokenizer::isValidName(string name) {
+    if (isalpha(name[0])) {
+        auto it = find_if_not(begin(name), end(name), isalnum);
+        return it == name.end();
+    }
+    return false;
+}
