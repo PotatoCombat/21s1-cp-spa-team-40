@@ -5,13 +5,31 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
                                        Statement *stmt) {
     // if false, must be number. if true, must be operator
     bool oprtrFlag = false;
-    for (int i = 0; i < exprLst.size(); i++) {
-        string currString = exprLst[i];
-        if (isRoundBracket(currString) || currString == "!") {
-            // TODO: implement proper checking for bracket and !
-            continue;
+    vector<string> tempLst = exprLst;
+    for (int i = 0; i < tempLst.size(); i++) { // remove brackets
+        string currString = tempLst[i];
+        if (isRoundBracket(currString)) {
+            int start = i;
+            string nextString = currString;
+            while (currString == "(") {
+                nextString = tempLst[i];
+                i++;
+                if (i == tempLst.size()) {
+                    break;
+                }
+            }
+            int end = i - 1;
+            if (currString == "(") {
+
+            } else if (currString == ")") {
+            }
         }
-        if (!oprtrFlag) { // currString must be a factor
+    }
+    for (int i = 0; i < tempLst.size(); i++) { // brackets removed
+        string currString = tempLst[i];
+        if (currString == "!") {
+            oprtrFlag = false;
+        } else if (!oprtrFlag) { // currString must be a factor
             handleFactor(stmt, currString);
             oprtrFlag = true;
         } else if (oprtrFlag) { // currString must be an operator
@@ -29,8 +47,7 @@ void ExpressionParser::handleFactor(Statement *stmt, string currString) {
         auto variable = new Variable(currString);
         stmt->addExpressionVar(variable);
     } else {
-        throw invalid_argument(
-            "invalid variable or constant in assign statement");
+        throw invalid_argument("invalid variable or constant in statement");
     }
 }
 
