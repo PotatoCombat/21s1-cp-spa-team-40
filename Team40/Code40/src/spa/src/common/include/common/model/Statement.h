@@ -23,8 +23,8 @@ public:
     ProcName getProcName();
 
     vector<string> getExpressionLst();
-    set<Variable *> getExpressionVars();
-    set<ConstantValue *> getExpressionConsts();
+    set<Variable *, Comparator<Variable>> getExpressionVars();
+    set<ConstantValue *, Comparator<ConstantValue>> getExpressionConsts();
 
     vector<Statement *> getThenStmtLst();
     vector<Statement *> getElseStmtLst();
@@ -47,8 +47,8 @@ private:
     optional<ProcName> procName;
 
     optional<vector<string>> expressionLst;
-    set<Variable *> expressionVars;
-    set<ConstantValue *> expressionConsts;
+    set<Variable *, Comparator<Variable>> expressionVars;
+    set<ConstantValue *, Comparator<ConstantValue>> expressionConsts;
 
     optional<vector<Statement *>> thenStmtLst;
     optional<vector<Statement *>> elseStmtLst;

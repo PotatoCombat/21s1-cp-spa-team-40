@@ -32,11 +32,11 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-set<Variable *> Statement::getExpressionVars() {
+set<Variable *, Comparator<Variable>> Statement::getExpressionVars() {
     return expressionVars;
 };
 
-set<ConstantValue *> Statement::getExpressionConsts() {
+set<ConstantValue *, Comparator<ConstantValue>> Statement::getExpressionConsts() {
     return expressionConsts;
 };
 
