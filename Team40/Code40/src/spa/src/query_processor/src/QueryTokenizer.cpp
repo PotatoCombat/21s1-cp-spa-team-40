@@ -133,7 +133,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (not_name_char_pos != string::npos) {
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ')'
-                        token3 = token;
+                        token3 = trimR(input.substr(curr_pos, size - 1));
                     } else if (size <= token.size()) { // something after ')'
                         token3 = token.substr(0, size - 1);
                     }
