@@ -3,29 +3,45 @@
 
 void ExpressionParser::parseExpression(vector<string> exprLst,
                                        Statement *stmt) {
+    // if false, must be number. if true, must be operator
+    bool oprtrFlag = false;
     for (int i = 0; i < exprLst.size(); i++) {
         string currString = exprLst[i];
-        if (isInteger(currString)) {
-            auto constant = new ConstantValue(stoi(currString));
-            stmt->addExpressionConst(constant);
-        } else if (isName(currString)) {
-            auto variable = new Variable(currString);
-            stmt->addExpressionVar(variable);
-        } else if (stmt->getStatementType() == StatementType::ASSIGN) {
-            if (!isValidAssignOperator(stmt, currString)) {
+        if (isRoundBracket(currString) || currString == "!") {
+            // TODO: implement proper checking
+            continue;
+        }
+        if (!oprtrFlag) { // currString must be a factor
+            if (isInteger(currString)) {
+                auto constant = new ConstantValue(stoi(currString));
+                stmt->addExpressionConst(constant);
+            } else if (isName(currString)) {
+                auto variable = new Variable(currString);
+                stmt->addExpressionVar(variable);
+            } else {
                 throw invalid_argument(
                     "invalid variable or constant in assign statement");
             }
-        } else if (stmt->getStatementType() == StatementType::WHILE) {
-            if (!isValidWhileIfOperator(stmt, currString)) {
-                throw invalid_argument(
-                    "invalid variable or constant in while statement");
+            oprtrFlag = true;
+        } else if (oprtrFlag) { // currString must be an operator
+            if (stmt->getStatementType() == StatementType::ASSIGN) {
+                if (!isValidAssignOperator(stmt, currString)) {
+                    throw invalid_argument(
+                        "invalid operator in assign statement");
+                }
+            } else if (stmt->getStatementType() == StatementType::WHILE) {
+                if (!isValidWhileIfOperator(stmt, currString)) {
+                    throw invalid_argument(
+                        "invalid operator in while statement");
+                }
+            } else if (stmt->getStatementType() == StatementType::IF) {
+                if (!isValidWhileIfOperator(stmt, currString)) {
+                    throw invalid_argument("invalid operator in if statement");
+                }
+            } else {
+                throw invalid_argument("invalid operator");
             }
-        } else if (stmt->getStatementType() == StatementType::IF) {
-            if (!isValidWhileIfOperator(stmt, currString)) {
-                throw invalid_argument(
-                    "invalid variable or constant in if statement");
-            }
+            oprtrFlag = false;
         }
     }
 }
@@ -39,8 +55,8 @@ bool ExpressionParser::isInteger(string input) {
 
 bool ExpressionParser::isName(string input) {
     // NAME: LETTER (LETTER | DIGIT)*
-    // variables names are strings of letters, and digits, starting with a
-    // letter
+    // variables names are strings of letters, and digits, starting with
+    // a letter
     if (!isalpha(input.at(0))) {
         return false;
     }
@@ -49,12 +65,12 @@ bool ExpressionParser::isName(string input) {
 }
 
 bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
-    return (isArtihmeticOperator(input) || isRoundBracket(input));
+    return (isArtihmeticOperator(input));
 }
 
 bool ExpressionParser::isValidWhileIfOperator(Statement *stmt, string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) ||
-            isArtihmeticOperator(input) || isRoundBracket(input));
+            isArtihmeticOperator(input));
 }
 
 bool ExpressionParser::isRoundBracket(string input) {
