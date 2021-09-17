@@ -1,5 +1,5 @@
 #pragma once
-
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -8,6 +8,7 @@ template<typename T>
 class Iterator {
 public:
     Iterator(vector<T> items);
+    Iterator(set<T> items);
 
     template<typename Predicate>
     Iterator<T> filter(Predicate pred);
@@ -20,6 +21,11 @@ private:
 template<typename T>
 Iterator<T>::Iterator(vector<T> items) {
     this->items = items;
+}
+
+template<typename T>
+Iterator<T>::Iterator(set<T> items) {
+    this->items = vector<T>(items.begin(), items.end());
 }
 
 template<typename T>
