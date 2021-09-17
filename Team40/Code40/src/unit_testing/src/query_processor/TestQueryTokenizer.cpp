@@ -234,6 +234,23 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
     }
 }
 
+TEST_CASE("QueryTokenizer: tokenizeClause for pattern") {
+    QueryTokenizer tokenizer;
+
+    SECTION("test partial match pattern") {
+        string input = "pattern a(_, _\" x \"_)";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<PatTuple> expected =
+            vector<PatTuple>{ make_tuple("a", "_", "x") };
+        tokenizer.tokenizeClause(input, rel, pat);
+        CHECK(rel.size() == 0);
+        REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));
+        REQUIRE(get<1>(pat[0]) == get<1>(expected[0]));
+        REQUIRE(get<2>(pat[0]) == get<2>(expected[0]));
+    }
+}
+
 // TEST_CASE("QueryTokenizer: trim") {
 //    QueryTokenizer tokenizer;
 //    string input = "    \t\n\n       some thing\n   ";
