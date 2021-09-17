@@ -31,20 +31,23 @@ using namespace std;
 class QueryEvaluator {
 private:
     PKB *pkb;
+    Reference *returnReference;
+    vector<Reference *> references;
+    vector<Clause *> clauses;
+    vector<PatternClause *> patterns;
+    vector<bool> referenceAppearInClauses;
+    vector<vector<string>> results;
+    bool allQueriesReturnTrue;
 
-    void evalPattern(vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<PatternClause *> &patterns, vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void clear();
 
-    void evalSuchThat(vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<Clause *> &clauses, vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void evalPattern();
 
-    vector<string> finaliseResult(Reference* returnReference, vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void evalSuchThat();
 
-    void combineResult(vector<vector<string>> &results,
-                       vector<Reference *> &references, vector<string> result,
-                       Reference *referenceToCombine,
-                       vector<bool> &referenceAppearInClauses);
+    vector<string> finaliseResult();
+
+    void combineResult(vector<string> result, Reference *referenceToCombine);
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);
 

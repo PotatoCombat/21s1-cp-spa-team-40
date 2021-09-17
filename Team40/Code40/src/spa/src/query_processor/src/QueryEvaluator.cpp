@@ -1,22 +1,36 @@
 #include "query_processor/QueryEvaluator.h"
 
-QueryEvaluator::QueryEvaluator(PKB* pkb) { this->pkb = pkb; }
+void QueryEvaluator::clear() {
+    results.clear();
+    references.clear();
+    clauses.clear();
+    patterns.clear();
+    referenceAppearInClauses.clear();
+    allQueriesReturnTrue = true;
+    returnReference = NULL;
+}
+
+QueryEvaluator::QueryEvaluator(PKB *pkb)
+    : pkb(pkb), allQueriesReturnTrue(true), returnReference(NULL) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
-        Reference *returnReference = query.getReturnReference();
-        vector<Reference *> references = query.getReferences();
-        vector<Clause *> clauses = query.getClauses();
-        vector<PatternClause *> patterns = query.getPatterns();
+        clear();
+        returnReference = query.getReturnReference();
+        references = query.getReferences();
+        clauses = query.getClauses();
+        patterns = query.getPatterns();
         vector<vector<string>> results(references.size(), vector<string>());
+        this->results = results;
         vector<bool> referenceAppearInClauses(references.size(), false);
+        this->referenceAppearInClauses = referenceAppearInClauses;
         bool allQueriesReturnTrue = true;
 
-        evalPattern(results, references, patterns, referenceAppearInClauses, allQueriesReturnTrue);
+        evalPattern();
 
-        evalSuchThat(results, references, clauses, referenceAppearInClauses, allQueriesReturnTrue);
+        evalSuchThat();
 
-        return finaliseResult(returnReference, results, references, referenceAppearInClauses, allQueriesReturnTrue);
+        return finaliseResult();
         
     } catch (ClauseHandlerError &e) {
         // to be implemented later
@@ -24,8 +38,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-void QueryEvaluator::evalPattern(vector<vector<string>>& results, vector<Reference*>& references,
-    vector<PatternClause*>& patterns, vector<bool>& referenceAppearInClauses, bool& allQueriesReturnTrue) {
+void QueryEvaluator::evalPattern() {
     for (PatternClause *pattern : patterns) {
         Result tempResult;
         AssignPatternHandler* patternHandler;
@@ -37,23 +50,21 @@ void QueryEvaluator::evalPattern(vector<vector<string>>& results, vector<Referen
 
         // eval and combine result
         tempResult = patternHandler->eval();
+
         allQueriesReturnTrue =
             allQueriesReturnTrue && tempResult.isResultValid();
 
         if (tempResult.hasResultList1()) {
-            combineResult(results, references, tempResult.getResultList1(),
-                          tempResult.getReference1(), referenceAppearInClauses);
+            combineResult(tempResult.getResultList1(), tempResult.getReference1());
         }
 
         if (tempResult.hasResultList2()) {
-            combineResult(results, references, tempResult.getResultList2(),
-                          tempResult.getReference2(), referenceAppearInClauses);
+            combineResult(tempResult.getResultList2(), tempResult.getReference2());
         }
     }
  }
 
-void QueryEvaluator::evalSuchThat(vector<vector<string>>& results, vector<Reference*>& references,
-    vector<Clause*>& clauses, vector<bool>& referenceAppearInClauses, bool& allQueriesReturnTrue) {
+void QueryEvaluator::evalSuchThat() {
     // handle clauses
     for (Clause *clause : clauses) {
         Result tempResult;
@@ -107,19 +118,16 @@ void QueryEvaluator::evalSuchThat(vector<vector<string>>& results, vector<Refere
             allQueriesReturnTrue && tempResult.isResultValid();
 
         if (tempResult.hasResultList1()) {
-            combineResult(results, references, tempResult.getResultList1(),
-                          tempResult.getReference1(), referenceAppearInClauses);
+            combineResult(tempResult.getResultList1(), tempResult.getReference1());
         }
 
         if (tempResult.hasResultList2()) {
-            combineResult(results, references, tempResult.getResultList2(),
-                          tempResult.getReference2(), referenceAppearInClauses);
+            combineResult(tempResult.getResultList2(), tempResult.getReference2());
         }
     }
 }
 
-vector<string> QueryEvaluator::finaliseResult(Reference* returnReference, vector<vector<string>>& results, vector<Reference*>& references,
-    vector<bool>& referenceAppearInClauses, bool& allQueriesReturnTrue) {
+vector<string> QueryEvaluator::finaliseResult() {
     // returns empty result if one of the boolean clauses returns false
     if (!allQueriesReturnTrue) {
         return vector<string>();
@@ -201,8 +209,7 @@ vector<string> QueryEvaluator::finaliseResult(Reference* returnReference, vector
     return results[resultIndex];
 }
 
-void QueryEvaluator::combineResult(vector<vector<string>> &results, vector<Reference *> &references,
-                                   vector<string> result, Reference* referenceToCombine, vector<bool> &referenceAppearInClauses) {
+void QueryEvaluator::combineResult(vector<string> result, Reference* referenceToCombine) {
     int index = -1;
     for (int i = 0; i < references.size(); i++) {
         if (references[i]->equals(*referenceToCombine)) {
