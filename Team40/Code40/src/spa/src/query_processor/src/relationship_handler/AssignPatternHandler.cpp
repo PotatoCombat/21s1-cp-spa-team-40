@@ -15,6 +15,7 @@ Result AssignPatternHandler::eval() {
         Result temp = handler.eval();
         // have to copy back because the Reference passed into clause is deleted
         // when this function finishes
+        result.setValid(temp.isResultValid());
         if (temp.hasResultList1()) {
             result.setResultList1(assign, temp.getResultList1());
         }
