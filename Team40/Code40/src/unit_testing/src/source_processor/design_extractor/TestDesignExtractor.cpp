@@ -12,7 +12,7 @@ struct TestDesignExtractor {
 
 PKB TestDesignExtractor::pkb = PKB();
 
-TEST_CASE("DesignExtractor: Handle AssignStatement") {
+TEST_CASE("DesignExtractor: AssignStatement") {
     ExtractionContext::getInstance().reset();
     TestDesignExtractor::pkb = PKB();
 
@@ -40,7 +40,7 @@ TEST_CASE("DesignExtractor: Handle AssignStatement") {
     }
 }
 
-TEST_CASE("DesignExtractor: Handle CallStatement") {
+TEST_CASE("DesignExtractor: CallStatement") {
     ExtractionContext::getInstance().reset();
     TestDesignExtractor::pkb = PKB();
 
@@ -116,6 +116,107 @@ TEST_CASE("DesignExtractor: Handle CallStatement") {
     }
 }
 
+TEST_CASE("DesignExtractor: IfStatement") {
+    ExtractionContext::getInstance().reset();
+    TestDesignExtractor::pkb = PKB();
+
+    ProcName PROC_NAME = "PROC";
+    VarName VAR_NAME = "VAR";
+    vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "+", "2"};
+
+    SECTION("Correctly extracts a simple IfStatement") {
+        Program program;
+        Procedure procedure(PROC_NAME);
+        Statement ifStatement(1, StatementType::IF);
+        Statement thenStatement(2, StatementType::READ);
+        Statement elseStatement(3, StatementType::READ);
+        Variable variable(VAR_NAME);
+
+        ifStatement.setProcName(procedure.getName());
+        ifStatement.addThenStmt(&thenStatement);
+        ifStatement.addElseStmt(&elseStatement);
+        thenStatement.setVariable(&variable);
+        elseStatement.setVariable(&variable);
+        procedure.addToStmtLst(&ifStatement);
+        program.addToProcLst(&procedure);
+
+        DesignExtractor de(&TestDesignExtractor::pkb);
+        de.extract(&program);
+
+        REQUIRE(TestDesignExtractor::pkb.getAllProcs().asVector().size() == 1);
+        REQUIRE(TestDesignExtractor::pkb.getAllStmts().asVector().size() == 3);
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    thenStatement.getIndex()) == ifStatement.getIndex());
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    elseStatement.getIndex()) == ifStatement.getIndex());
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(thenStatement.getIndex())
+                    .size() == 1);
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(thenStatement.getIndex())
+                    .count(ifStatement.getIndex()));
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(elseStatement.getIndex())
+                    .size() == 1);
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(elseStatement.getIndex())
+                    .count(ifStatement.getIndex()));
+    }
+
+    SECTION("Correctly extracts a nested IfStatement") {
+        Program program;
+        Procedure procedure(PROC_NAME);
+        Statement ifStatement(1, StatementType::IF);
+        Statement thenIfStatement(2, StatementType::IF);
+        Statement elseStatement(3, StatementType::READ);
+        Statement thenIfThenStatement(5, StatementType::READ);
+        Statement thenIfElseStatement(6, StatementType::READ);
+        Variable variable(VAR_NAME);
+
+        ifStatement.setProcName(procedure.getName());
+        ifStatement.addThenStmt(&thenIfStatement);
+        ifStatement.addElseStmt(&elseStatement);
+        elseStatement.setVariable(&variable);
+        thenIfStatement.addThenStmt(&thenIfThenStatement);
+        thenIfStatement.addElseStmt(&thenIfElseStatement);
+        thenIfThenStatement.setVariable(&variable);
+        thenIfElseStatement.setVariable(&variable);
+        procedure.addToStmtLst(&ifStatement);
+        program.addToProcLst(&procedure);
+
+        DesignExtractor de(&TestDesignExtractor::pkb);
+        de.extract(&program);
+
+        REQUIRE(TestDesignExtractor::pkb.getAllProcs().asVector().size() == 1);
+        REQUIRE(TestDesignExtractor::pkb.getAllStmts().asVector().size() == 5);
+
+        // Check that top level ifStatement is parent of thenIfStatement &
+        // elseStatement
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    thenIfStatement.getIndex()) == ifStatement.getIndex());
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    elseStatement.getIndex()) == ifStatement.getIndex());
+
+        // Check that thenIfStatement is parent of thenIfThenStatement &
+        // thenIfElseStatement
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    thenIfThenStatement.getIndex()) ==
+                thenIfStatement.getIndex());
+        REQUIRE(TestDesignExtractor::pkb.getParentStmt(
+                    thenIfElseStatement.getIndex()) ==
+                thenIfStatement.getIndex());
+
+        // Check that thenIfThenStatement & thenIfElseStatement have 2
+        // transitive parents each
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(thenIfThenStatement.getIndex())
+                    .size() == 2);
+        REQUIRE(TestDesignExtractor::pkb
+                    .getParentStarStmts(thenIfElseStatement.getIndex())
+                    .size() == 2);
+    }
+}
+
 TEST_CASE("DesignExtractor: Follows") {
 
     ExtractionContext::getInstance().reset();
@@ -169,6 +270,7 @@ TEST_CASE("DesignExtractor: Follows") {
         REQUIRE(followStar3.empty());
     }
 }
+
 TEST_CASE("DesignExtractor: Parent") {
 
     ExtractionContext::getInstance().reset();
