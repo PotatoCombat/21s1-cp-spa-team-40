@@ -11,7 +11,7 @@ int Statement::getIndex() { return index; }
 
 StatementType Statement::getStatementType() { return statementType; }
 
-Variable* Statement::getVariable() {
+Variable *Statement::getVariable() {
     if (!variable.has_value()) {
         throw runtime_error("This statement does not use a variable.");
     }
@@ -32,9 +32,7 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-set<Variable *, Comparator<Variable>> Statement::getExpressionVars() {
-    return expressionVars;
-};
+set<Variable *, Comparator<Variable>> Statement::getExpressionVars() { return expressionVars; };
 
 set<ConstantValue *, Comparator<ConstantValue>> Statement::getExpressionConsts() {
     return expressionConsts;

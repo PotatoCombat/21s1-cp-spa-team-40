@@ -1,6 +1,6 @@
 #pragma once
 #include "common/model/Procedure.h"
-#include "source_processor/Line.h"
+#include "source_processor/parser/Line.h"
 #include <string>
 #include <vector>
 
@@ -12,5 +12,6 @@ protected:
 
 public:
     ProcedureParser(vector<string> content);
-    Procedure* parseProcedure();
+    Procedure *parseProcedure();
+    bool isValidName(string input);
 };
