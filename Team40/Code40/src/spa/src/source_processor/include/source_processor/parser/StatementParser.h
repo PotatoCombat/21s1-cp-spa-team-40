@@ -12,7 +12,7 @@ private:
 
 public:
     StatementParser(vector<string> content);
-    Statement *parseStatement();
+    Statement *parseStatement(); // TODO: Remove unused method
     bool isReadStmt();
     bool isPrintStmt();
     bool isCallStmt();
