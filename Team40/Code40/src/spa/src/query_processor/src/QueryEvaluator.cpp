@@ -50,17 +50,7 @@ void QueryEvaluator::evalPattern() {
 
         // eval and combine result
         tempResult = patternHandler->eval();
-
-        allQueriesReturnTrue =
-            allQueriesReturnTrue && tempResult.isResultValid();
-
-        if (tempResult.hasResultList1()) {
-            combineResult(tempResult.getResultList1(), tempResult.getReference1());
-        }
-
-        if (tempResult.hasResultList2()) {
-            combineResult(tempResult.getResultList2(), tempResult.getReference2());
-        }
+        comebineResult(tempResult);
     }
  }
 
@@ -114,16 +104,8 @@ void QueryEvaluator::evalSuchThat() {
 
         // eval and combine result
         tempResult = clauseHandler->eval();
-        allQueriesReturnTrue =
-            allQueriesReturnTrue && tempResult.isResultValid();
-
-        if (tempResult.hasResultList1()) {
-            combineResult(tempResult.getResultList1(), tempResult.getReference1());
-        }
-
-        if (tempResult.hasResultList2()) {
-            combineResult(tempResult.getResultList2(), tempResult.getReference2());
-        }
+        comebineResult(tempResult);
+        
     }
 }
 
@@ -209,7 +191,7 @@ vector<string> QueryEvaluator::finaliseResult() {
     return results[resultIndex];
 }
 
-void QueryEvaluator::combineResult(vector<string> result, Reference* referenceToCombine) {
+void QueryEvaluator::combineVectorResult(vector<string> result, Reference* referenceToCombine) {
     int index = -1;
     for (int i = 0; i < references.size(); i++) {
         if (references[i]->equals(*referenceToCombine)) {
@@ -228,6 +210,19 @@ void QueryEvaluator::combineResult(vector<string> result, Reference* referenceTo
             }
         }
         results[index] = filteredResult;
+    }
+}
+
+void QueryEvaluator::comebineResult(Result result) {
+    allQueriesReturnTrue =
+            allQueriesReturnTrue && result.isResultValid();
+
+    if (result.hasResultList1()) {
+        combineVectorResult(result.getResultList1(), result.getReference1());
+    }
+
+    if (result.hasResultList2()) {
+        combineVectorResult(result.getResultList2(), result.getReference2());
     }
 }
 
