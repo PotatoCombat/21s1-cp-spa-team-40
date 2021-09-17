@@ -12,15 +12,15 @@ struct TestDesignExtractor {
 
 PKB TestDesignExtractor::pkb = PKB();
 
-TEST_CASE("DesignExtractor: Basic statement parsing") {
+TEST_CASE("DesignExtractor: Handle AssignStatement") {
     ExtractionContext::getInstance().reset();
     TestDesignExtractor::pkb = PKB();
 
-    SECTION("Correctly extracts AssignStatement.") {
-        ProcName PROC_NAME = "PROC";
-        VarName ASSIGNED_VAR_NAME = "ASSIGNED_VAR";
-        vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "+", "2"};
+    ProcName PROC_NAME = "PROC";
+    VarName ASSIGNED_VAR_NAME = "ASSIGNED_VAR";
+    vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "+", "2"};
 
+    SECTION("Correctly extracts a simple AssignStatement.") {
         Program program;
         Procedure procedure(PROC_NAME);
         Statement statement(1, StatementType::ASSIGN);
@@ -38,21 +38,27 @@ TEST_CASE("DesignExtractor: Basic statement parsing") {
         REQUIRE(TestDesignExtractor::pkb.getProcsModifyingVar(ASSIGNED_VAR_NAME)
                     .size() == 1);
     }
+}
 
-    SECTION("Correctly handles Call Statement") {
+TEST_CASE("DesignExtractor: Handle CallStatement") {
+    ExtractionContext::getInstance().reset();
+    TestDesignExtractor::pkb = PKB();
 
-        ProcName CALLING_PROC_NAME = "CALLING_PROC";
-        ProcName CALLED_PROC_NAME = "CALLED_PROC";
+    ProcName PROC_NAME_1 = "PROC_1";
+    ProcName PROC_NAME_2 = "PROC_2";
+    VarName VAR_NAME = "VAR";
+    vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "+", "2"};
 
+    SECTION("Correctly extracts a simple CallStatement") {
         Program program;
-        Procedure procedure1(CALLING_PROC_NAME);
-        Procedure procedure2(CALLED_PROC_NAME);
+        Procedure callingProc(PROC_NAME_1);
+        Procedure calledProc(PROC_NAME_2);
         Statement statement(1, StatementType::CALL);
 
-        statement.setProcName(CALLED_PROC_NAME);
-        program.addToProcLst(&procedure1);
-        program.addToProcLst(&procedure2);
-        procedure1.addToStmtLst(&statement);
+        statement.setProcName(calledProc.getName());
+        program.addToProcLst(&callingProc);
+        program.addToProcLst(&calledProc);
+        callingProc.addToStmtLst(&statement);
 
         DesignExtractor de(&TestDesignExtractor::pkb);
         de.extract(&program);
@@ -62,31 +68,50 @@ TEST_CASE("DesignExtractor: Basic statement parsing") {
     }
 
     SECTION("Correctly handles transitive Modifies in CallStatements.") {
-        ProcName CALLED_PROC_NAME = "CALLED_PROC";
-        ProcName CALLING_PROC_NAME = "CALLING_PROC";
-        VarName ASSIGNED_VAR_NAME = "ASSIGNED_VAR";
-        vector<string> DUMMY_EXPRESSION_LIST = vector<string>{"1", "+", "2"};
-
         Program program;
-        Procedure procedure1(CALLING_PROC_NAME);
-        Procedure procedure2(CALLED_PROC_NAME);
+        Procedure callingProc(PROC_NAME_1);
+        Procedure calledProc(PROC_NAME_2);
         Statement statement1(1, StatementType::CALL);
         Statement statement2(2, StatementType::ASSIGN);
-        Variable variable(ASSIGNED_VAR_NAME);
+        Variable variable(VAR_NAME);
 
-        statement1.setProcName(CALLED_PROC_NAME);
+        statement1.setProcName(calledProc.getName());
         statement2.setVariable(&variable);
         statement2.setExpressionLst(DUMMY_EXPRESSION_LIST);
-        procedure1.addToStmtLst(&statement1);
-        procedure2.addToStmtLst(&statement2);
-        program.addToProcLst(&procedure1);
-        program.addToProcLst(&procedure2);
+        callingProc.addToStmtLst(&statement1);
+        calledProc.addToStmtLst(&statement2);
+        program.addToProcLst(&callingProc);
+        program.addToProcLst(&calledProc);
 
         DesignExtractor de(&TestDesignExtractor::pkb);
         de.extract(&program);
 
         REQUIRE(TestDesignExtractor::pkb.getAllStmts().asVector().size() == 2);
-        REQUIRE(TestDesignExtractor::pkb.getProcsModifyingVar(ASSIGNED_VAR_NAME)
+        REQUIRE(
+            TestDesignExtractor::pkb.getProcsModifyingVar(variable.getName())
+                .size() == 2);
+    }
+
+    SECTION("Correctly handles transitive Uses in CallStatements.") {
+        Program program;
+        Procedure callingProc(PROC_NAME_1);
+        Procedure calledProc(PROC_NAME_2);
+        Statement callStatement(1, StatementType::CALL);
+        Statement printStatement(2, StatementType::PRINT);
+        Variable variable(VAR_NAME);
+
+        callStatement.setProcName(calledProc.getName());
+        printStatement.setVariable(&variable);
+        callingProc.addToStmtLst(&callStatement);
+        calledProc.addToStmtLst(&printStatement);
+        program.addToProcLst(&callingProc);
+        program.addToProcLst(&calledProc);
+
+        DesignExtractor de(&TestDesignExtractor::pkb);
+        de.extract(&program);
+
+        REQUIRE(TestDesignExtractor::pkb.getAllStmts().asVector().size() == 2);
+        REQUIRE(TestDesignExtractor::pkb.getProcsUsingVar(variable.getName())
                     .size() == 2);
     }
 }
