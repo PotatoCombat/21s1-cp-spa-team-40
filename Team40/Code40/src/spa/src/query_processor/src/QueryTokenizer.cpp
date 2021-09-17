@@ -143,6 +143,8 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 }
                 portionOfClause = 0;
                 if (isClause == 1) {
+                    token2 = removeWhitespaceWithinQuotes(token2);
+                    token3 = removeWhitespaceWithinQuotes(token3);
                     clss.push_back(make_tuple(token1, token2, token3));
                 } else if (isClause == 2) {
                     token3 = extractPatternString(token3);
@@ -239,9 +241,22 @@ size_t QueryTokenizer::findFirstWhitespace(string input) {
     return input.find_first_of(WHITESPACE_SET);
 }
 
+string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
+    if (count(input.begin(), input.end(), QUOTE) == 2) {
+        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
+            string trimmed = trim(input.substr(1, input.size() - 2));
+            return "\"" + trimmed + "\"";
+        } else {
+            throw SyntaxError("misplaced quotes");
+        }
+    }
+
+    return input;
+}
+
 string QueryTokenizer::extractPatternString(string input) {
-    if (count(input.begin(), input.end(), '"') == 2) {
-        size_t n_underscore = count(input.begin(), input.end(), '_');
+    if (count(input.begin(), input.end(), QUOTE) == 2) {
+        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
         if (n_underscore == 2) {
             string underscored_r = trim(input.substr(1, input.size() - 2));
             return trim(underscored_r.substr(1, underscored_r.size() - 2));
