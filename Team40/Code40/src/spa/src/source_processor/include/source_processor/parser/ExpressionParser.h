@@ -11,6 +11,8 @@ using namespace std;
 class ExpressionParser {
 public:
     void parseExpression(vector<string> exprLst, Statement *stmt);
+    void handleOperator(Statement *stmt, string currString);
+    void handleFactor(Statement *stmt, string currString);
     bool isInteger(string input);
     bool isName(string input);
     bool isValidAssignOperator(Statement *stmt, string input);
