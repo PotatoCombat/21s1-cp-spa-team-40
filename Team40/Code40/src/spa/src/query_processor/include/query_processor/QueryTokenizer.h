@@ -1,14 +1,16 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <string>
 #include <tuple>
 #include <vector>
 
 #include "query_processor/Abstractions.h"
 
+#include "query_processor/exception/SyntaxError.h"
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
-#include "query_processor/exception/SyntaxError.h"
 
 using namespace std;
 
@@ -21,7 +23,7 @@ private:
     inline static const string KEYWORD_AND = "and";
     inline static const string KEYWORD_WITH = "with";
 
-    //inline static const string NAME_SET = 
+    // inline static const string NAME_SET =
     //    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     inline static const string WHITESPACE_SET = " \n\t\r";
     inline static const char WHITESPACE = ' ';
@@ -38,7 +40,8 @@ private:
     string trimR(string input);
     void splitComma(string input, vector<string> &vec);
     size_t findFirstWhitespace(string input);
-    void splitBCBRel(string input, ClsTuple &tup);
+    string extractPatternString(string input);
+    bool isValidName(string name);
 
 public:
     QueryTokenizer() = default;
