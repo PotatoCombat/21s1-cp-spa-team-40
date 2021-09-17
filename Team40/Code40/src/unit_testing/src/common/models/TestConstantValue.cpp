@@ -1,8 +1,8 @@
 #include "common/model/ConstantValue.h"
 #include "catch.hpp"
 
-TEST_CASE("ConstantValue: Creates and retrieves value correctly") {
-    const int VALUE = 10;
+TEST_CASE("ConstantValue: Creates and retrieves name correctly") {
+    const string VALUE = "10";
     ConstantValue c(VALUE);
-    REQUIRE(c.getValue() == VALUE);
+    REQUIRE(c.getName() == VALUE);
 }

@@ -38,8 +38,8 @@ vector<Variable> TestPKB::createVariables() {
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
-    return vector<ConstantValue>{ConstantValue(0), ConstantValue(1),
-                                 ConstantValue(2)};
+    return vector<ConstantValue>{ConstantValue("0"), ConstantValue("1"),
+                                 ConstantValue("2")};
 }
 
 vector<int> TestPKB::createIndices() { return vector<int>{0, 1, 2}; }

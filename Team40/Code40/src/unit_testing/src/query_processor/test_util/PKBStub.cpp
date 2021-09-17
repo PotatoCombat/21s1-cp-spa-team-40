@@ -13,9 +13,9 @@ Iterator<VarName> PKBStub::getAllVars() {
     return iter;
 }
 
-Iterator<int> PKBStub::getAllConsts() {
-    vector<int> constants{1, 2, 3, 5};
-    Iterator<int> iter(constants);
+Iterator<ConstName> PKBStub::getAllConsts() {
+    vector<ConstName> constants{"1", "2", "3", "5"};
+    Iterator<ConstName> iter(constants);
     return iter;
 }
 

@@ -26,7 +26,7 @@ void AssignStatementParser::parseExpression(vector<string> exprLst,
     for (int i = 0; i < exprLst.size(); i++) {
         string currString = exprLst[i];
         if (isInteger(currString)) {
-            auto constant = new ConstantValue(stoi(currString));
+            auto constant = new ConstantValue(currString);
             stmt->addExpressionConst(constant);
         } else if (isName(currString)) {
             auto variable = new Variable(currString);
