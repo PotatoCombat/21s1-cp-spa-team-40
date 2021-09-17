@@ -15,14 +15,11 @@ Result AssignPatternHandler::eval() {
         return handler.eval();
     }
 
-    // for iter1, non-wildcard patterns are passed with double quote
-    // so the handler needs to trim
-    // will change in iter2
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
         vector<string> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(variable->getValue(), pattern.substr(2, pattern.size() - 4));
+            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults.push_back(to_string(stmt));
         }
@@ -36,7 +33,7 @@ Result AssignPatternHandler::eval() {
     set<int> stmtsSet;
     vector<string> vars = pkb->getAllVars().asVector();
     for (auto var : vars) {
-        set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern.substr(2, pattern.size() - 4));
+        set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern);
         if (stmts.size() > 0) {
             varResults.push_back(var);
             stmtsSet.insert(stmts.begin(), stmts.end());
@@ -63,7 +60,7 @@ void AssignPatternHandler::validate() {
             "AssignPatternHandler: statement must be a synonym assignment");
     }
 
-    if (var->getDeType() == DesignEntityType::VARIABLE) {
+    if (var->getDeType() != DesignEntityType::VARIABLE) {
         throw ClauseHandlerError(
             "AssignPatternHandler: second argument must be variable");
     }
