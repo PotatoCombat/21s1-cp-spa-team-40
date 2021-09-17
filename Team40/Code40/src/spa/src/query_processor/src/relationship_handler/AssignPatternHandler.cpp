@@ -2,9 +2,9 @@
 
 Result AssignPatternHandler::eval() {
 	Result result;
-    string pattern = patternClause->getPattern();
-    Reference* variable = patternClause->getVar();
     Reference *assign = patternClause->getStmt();
+    Reference* variable = patternClause->getVar();
+    string pattern = patternClause->getPattern();
 
     validate();
 
@@ -12,7 +12,16 @@ Result AssignPatternHandler::eval() {
     if (pattern == "_") {
         Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
         ModifiesStmtHandler handler(&clause, pkb);
-        return handler.eval();
+        Result temp = handler.eval();
+        // have to copy back because the Reference passed into clause is deleted
+        // when this function finishes
+        result.setValid(temp.isResultValid());
+        if (temp.hasResultList1()) {
+            result.setResultList1(assign, temp.getResultList1());
+        }
+        if (temp.hasResultList2()) {
+            result.setResultList2(assign, temp.getResultList2());
+        }
     }
 
     // SYNONYM CONST
@@ -60,7 +69,7 @@ void AssignPatternHandler::validate() {
             "AssignPatternHandler: statement must be a synonym assignment");
     }
 
-    if (var->getDeType() == DesignEntityType::VARIABLE) {
+    if (var->getDeType() != DesignEntityType::VARIABLE) {
         throw ClauseHandlerError(
             "AssignPatternHandler: second argument must be variable");
     }

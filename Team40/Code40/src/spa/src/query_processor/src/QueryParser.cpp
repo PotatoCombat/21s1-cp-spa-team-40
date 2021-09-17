@@ -30,9 +30,8 @@ Clause *QueryParser::parseClause(ClsTuple clause,
 PatternClause *QueryParser::parsePattern(PatTuple pattern,
                                          vector<Reference *> &declList) {
     string identity = get<0>(pattern);
-    vector<PatArg> patArgs = get<1>(pattern);
-    string LHS = patArgs[0];
-    string RHS = patArgs[1];
+    PatArg LHS = get<1>(pattern);
+    PatArg RHS = get<2>(pattern);
 
     Reference *r;
     Reference *r1;
@@ -45,7 +44,11 @@ PatternClause *QueryParser::parsePattern(PatTuple pattern,
                 [&LHS](Reference *ref) { return ref->getValue() == LHS; });
 
     if (it != declList.end()) {
-        r = (*it)->copy();
+        if ((*it)->getDeType() == DesignEntityType::ASSIGN) {
+            r = (*it)->copy();
+        } else {
+            throw ValidityError("invalid symbol");
+        }
     } else {
         throw ValidityError("undeclared synonym");
     }
@@ -53,9 +56,12 @@ PatternClause *QueryParser::parsePattern(PatTuple pattern,
     if (it1 != declList.end()) {
         r1 = (*it1)->copy();
     } else {
-        ReferenceType refT =
-            ParserUtil::checkRefType(LHS); // TODO: assert quoted
+        // TODO: assert quoted
+        ReferenceType refT = ParserUtil::checkRefType(LHS);
         DesignEntityType deT = DesignEntityType::VARIABLE;
+        if (ParserUtil::isQuoted(LHS)) {
+            LHS = LHS.substr(1, LHS.size() - 2);
+        }
         r1 = new Reference(deT, refT, LHS);
     }
 
