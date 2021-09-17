@@ -34,7 +34,10 @@ Statement *Parser::parseStatement(vector<string> content, int index,
                                   vector<Line> programLines,
                                   int &programIndex) {
     StatementParser stmtParser(content);
-    if (stmtParser.isReadStmt()) {
+    if (stmtParser.isAssignStmt()) {
+        AssignStatementParser assignParser(content, index);
+        return assignParser.parseAssignStatement();
+    } else if(stmtParser.isReadStmt()) {
         ReadStatementParser readParser(content, index);
         return readParser.parseReadStatement();
     } else if (stmtParser.isPrintStmt()) {
@@ -43,10 +46,7 @@ Statement *Parser::parseStatement(vector<string> content, int index,
     } else if (stmtParser.isCallStmt()) {
         CallStatementParser callParser(content, index);
         return callParser.parseCallStatement();
-    } else if (stmtParser.isAssignStmt()) {
-        AssignStatementParser assignParser(content, index);
-        return assignParser.parseAssignStatement();
-    } else if (stmtParser.isWhileStmt()) {
+    }  else if (stmtParser.isWhileStmt()) {
         WhileStatementParser whileParser(content, index, programLines);
         return whileParser.parseWhileStatement(programIndex);
     } else if (stmtParser.isIfStmt()) {
