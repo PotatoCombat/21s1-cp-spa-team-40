@@ -30,6 +30,7 @@ public:
 
     // special keywords
     bool isKeyword(string input);
+    bool isAssignStmt(vector<string> content);
 
     // special symbols
     bool isBracket(char input);

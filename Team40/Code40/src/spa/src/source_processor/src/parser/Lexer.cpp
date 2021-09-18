@@ -19,8 +19,9 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
             continue;
         }
 
-        if (currString.front() != "}" && currString.front() != "else" &&
-            currString.front() != "procedure") {
+        if ((currString.front() != "}" && currString.front() != "else" &&
+             currString.front() != "procedure") ||
+            (currString.front() == "procedure" && isAssignStmt(currString))) {
             stmtNum++;
         }
 
@@ -179,6 +180,10 @@ bool Lexer::isKeyword(string input) {
     return input == "read" || input == "print" || input == "call" ||
            input == "while" || input == "if" || input == "then" ||
            input == "procedure";
+}
+
+bool Lexer::isAssignStmt(vector<string> content) {
+    return find(content.begin(), content.end(), "=") != content.end();
 }
 
 // special symbols

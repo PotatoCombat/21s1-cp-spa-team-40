@@ -6,7 +6,7 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
 
-        if (currContent[0] == "procedure") {
+        if ((currContent[0] == "procedure") && (!isAssignStmt(currContent))) {
             // ... stmtLst '}'
             if (i > 0) {
                 if (programLines[i - 1].getContent()[0] != "}") {
@@ -30,6 +30,10 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
     return program;
 }
 
+bool Parser::isAssignStmt(vector<string> content) {
+    return find(content.begin(), content.end(), "=") != content.end();
+}
+
 Statement *Parser::parseStatement(vector<string> content, int index,
                                   vector<Line> programLines,
                                   int &programIndex) {
@@ -37,7 +41,7 @@ Statement *Parser::parseStatement(vector<string> content, int index,
     if (stmtParser.isAssignStmt()) {
         AssignStatementParser assignParser(content, index);
         return assignParser.parseAssignStatement();
-    } else if(stmtParser.isReadStmt()) {
+    } else if (stmtParser.isReadStmt()) {
         ReadStatementParser readParser(content, index);
         return readParser.parseReadStatement();
     } else if (stmtParser.isPrintStmt()) {
@@ -46,7 +50,7 @@ Statement *Parser::parseStatement(vector<string> content, int index,
     } else if (stmtParser.isCallStmt()) {
         CallStatementParser callParser(content, index);
         return callParser.parseCallStatement();
-    }  else if (stmtParser.isWhileStmt()) {
+    } else if (stmtParser.isWhileStmt()) {
         WhileStatementParser whileParser(content, index, programLines);
         return whileParser.parseWhileStatement(programIndex);
     } else if (stmtParser.isIfStmt()) {
