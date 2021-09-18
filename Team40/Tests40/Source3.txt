@@ -1,0 +1,39 @@
+procedure Oneee { read x;
+    print y;
+    read y;
+    print x;
+    x = x + 5;
+    y = x * z + 4;
+    while ( x != 7) {
+        read z;
+        x = x + 5;
+        z = a + b + c;
+        while (1 ==1) {
+            x = x * x;
+            y = 4 * x;
+            if ( x == 27) then {
+                print m;
+                m = n * l + k;
+                y = 4044;
+                while ( x == 1) {
+                    print z;
+                    read z;
+                } x = x + 1;
+            } else { read z;
+                z = z - 1;
+            } d = a * c + b;
+        } m = m * n;
+        l = l * l;
+        if ( x == x) then {
+            read y;
+            read z;
+        } else { print z;
+            read y;
+            if ( y > 3 ) then {
+                x = 22;
+                z = 55;
+            } else { read x;
+                print x;
+            } } } read l;
+    read m;
+}

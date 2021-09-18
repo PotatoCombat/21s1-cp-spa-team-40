@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ConstTable.h"
 #include "EntityTable.h"
 #include "FollowsStarTable.h"
 #include "FollowsTable.h"
@@ -9,10 +8,8 @@
 #include "ParentStarTable.h"
 #include "ParentTable.h"
 #include "PatternTable.h"
-#include "ProcedureTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
-#include "VarTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -22,11 +19,18 @@ using namespace std;
 
 class PKB {
 public:
+    typedef EntityTable<Procedure, ProcName> ProcedureTable;
+    typedef EntityTable<Variable, VarName> VarTable;
+    typedef EntityTable<ConstantValue, ConstName> ConstTable;
+
     /// Returns the procedure with the given procedure name \param procName.
     virtual Procedure *getProcByName(ProcName procName);
 
     /// Returns the variable with the given variable name \param varName.
     virtual Variable *getVarByName(VarName varName);
+
+    /// Returns the constant with the given variable name \param constName.
+    virtual ConstantValue *getConstByName(ConstName constName);
 
     /// Returns the statement with the given statement index \param stmtIndex.
     virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
@@ -71,7 +75,7 @@ public:
 
     virtual Iterator<ProcName> getAllProcs();
     virtual Iterator<VarName> getAllVars();
-    virtual Iterator<int> getAllConsts();
+    virtual Iterator<ConstName> getAllConsts();
 
     virtual Iterator<StmtIndex> getAllStmts();
     virtual Iterator<StmtIndex> getAllStmts(StatementType type);

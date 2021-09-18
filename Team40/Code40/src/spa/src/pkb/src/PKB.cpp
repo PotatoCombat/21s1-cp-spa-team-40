@@ -12,6 +12,10 @@ Variable *PKB::getVarByName(VarName varName) {
     return varTable.getEntity(move(varName));
 }
 
+ConstantValue *PKB::getConstByName(ConstName constName) {
+    return constTable.getEntity(move(constName));
+}
+
 Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
     return statementTable.getStmt(stmtIndex);
 }
@@ -72,7 +76,7 @@ Iterator<ProcName> PKB::getAllProcs() { return procTable.getNames(); }
 
 Iterator<VarName> PKB::getAllVars() { return varTable.getNames(); }
 
-Iterator<int> PKB::getAllConsts() { return constTable.getValues(); }
+Iterator<ConstName> PKB::getAllConsts() { return constTable.getNames(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 

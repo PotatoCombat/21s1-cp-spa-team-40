@@ -225,7 +225,7 @@ Select s such that Parent (4,6)
 5000
 45 - synonym is not in parent clause which is true and made of variables
 stmt s; if ifs;
-Select s such that Parent (9, ifs)
+Select s such that Parent (ifs, 9)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 5000
 46 - synonym is not in parent clause which is false and made of constants
@@ -289,11 +289,6 @@ Select ifs such that Parent (6, _)
 
 5000
 58 - Parent with one wildcard
-assign a;
-Select a such that Parent (a, _)
-
-5000
-58 - Parent with one wildcard
 if a;
 Select a such that Parent (a, _)
 8, 14
@@ -321,7 +316,7 @@ Select a such that Uses (a, "x")
 62 - assignment statement uses any variable
 assign a;
 Select a such that Uses (a, _)
-2, 3, 5, 6, 7, 12
+3, 5, 6, 7, 12
 5000
 63 - print statement uses a variable
 print p;
@@ -335,7 +330,7 @@ Select p such that Uses (p, _)
 5000
 65 - if statement uses a variable
 if ifs;
-Select ifs such that Uses (if, "z")
+Select ifs such that Uses (ifs, "z")
 8, 14
 5000
 66 - while statement uses a variable
@@ -365,7 +360,7 @@ x, y, z, i
 5000
 71 - all statements that use a particular variable
 stmt s;
-Select s such that Uses (s, "z")
+Select s such that Uses (s, "   z")
 4, 5, 7, 8, 11, 12, 13, 14, 15
 5000
 72 - assignment statement modifies a variable
@@ -380,7 +375,7 @@ Select a such that Modifies (a, _)
 5000
 74 - read statement modifies a variable
 read r;
-Select r such that Modifies (r, "z")
+Select r such that Modifies (r, "   z")
 
 5000
 75 - read statement modifies a variable
@@ -395,7 +390,7 @@ Select r such that Modifies (r, _)
 5000
 77 - if statement modifies a variable
 if ifs;
-Select ifs such that Modifies (if, "z")
+Select ifs such that Modifies (ifs, "z")
 8
 5000
 78 - while statement modifies a variable
@@ -425,61 +420,221 @@ x, y, z, i
 5000
 83 - one pattern where both are wild cards
 assign a;
-Select a such that pattern a (_, _)
+Select a pattern a (_, _)
 2, 3, 5, 6, 7, 12
 5000
 84 - pattern with first as wild card, second as variable with space
 assign a;
-Select a such that pattern a (_, " x ")
+Select a pattern a (_, _" x "_)
 3, 7
 5000
 85 - pattern with first as wild card, second as constant
 assign a;
-Select a such that pattern a (_, " 5")
+Select a pattern a (_, _" 5"_)
 7
 5000
 86 - pattern with second as wild card, first as variable
 assign a;
-Select a such that pattern a ("z", _)
-3, 12
+Select a pattern a ("z", _)
+3, 12, 5
 5000
 87 - true pattern with synonym not in pattern
 assign a; stmt s;
-Select s such that pattern a ("z", "x")
+Select s pattern a ("z", _"x"_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 5000
 88 - false pattern with synonym not in pattern
 assign a; stmt s;
-Select s such that pattern a ("y", "x")
+Select s pattern a ("y", _"x"_)
 
 5000
 89 - pattern with one variable and one constant
 assign a; stmt s;
-Select s such that pattern a ("y", "1")
+Select s pattern a ("y", _"1"_)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 5000
 90 - pattern with one variable and one constant
 assign a;
-Select a such that pattern a ("y", "1")
+Select a pattern a ("y", _"1"_)
 2
 5000
 91 - pattern with two variables
 assign a;
-Select a such that pattern a ("z", "z")
+Select a pattern a ("z", _"z"_)
 5, 12
 5000
 92 - pattern with two variables
 assign a;
-Select a such that pattern a ("z", "x ")
+Select a pattern a ("z", _"x "_)
 3
 5000
+93 - one such that one pattern with one constant
+assign a;
+Select a such that Modifies (1, _) pattern a(_,_)
+2, 3, 5, 6, 7, 12
+5000
+94 - one such that one pattern with one constant
+assign a; procedure p;
+Select a such that Uses (p, "x") pattern a(_,_)
+2, 3, 5, 6, 7, 12
+5000
+95 - one such that one pattern with one constant
+assign a; stmt s;
+Select a such that Uses (s, "x") pattern a(_,_)
+2, 3, 5, 6, 7, 12
+5000
+96 - one such that one pattern with one constant
+assign a; stmt s;
+Select a such that Uses (s, _) pattern a("z",_)
+3, 5, 12
+5000
+97 - one such that one pattern with one constant
+assign a; stmt s;
+Select a such that Uses (s, _) pattern a(_,_"z"_)
+5, 7, 12
+5000
+98 - one such that one pattern with two constants
+stmt s; assign a;
+Select s such that Uses ("Examp1le", "x") pattern a(_,_)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+99 - one such that one pattern with two constants
+stmt s; assign a;
+Select s such that Modifies ("Examp1le", "x") pattern a(_,_)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+100 - one such that one pattern with two constants
+stmt s; assign a;
+Select a such that Modifies ("Examp1le", _) pattern a("z",_)
+3, 5, 12
+5000
+101 - one such that one pattern with three constants
+stmt s; assign a;
+Select s such that Modifies ("Examp1le", "x") pattern a("z",_)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+5000
+102 - one such that one pattern with one variable
+stmt s; assign a;
+Select a such that Uses (a, _) pattern a(_,_)
+3, 5, 6, 7, 12
+5000
+103 - one such that one pattern with one variable
+stmt s; assign a;
+Select a such that Follows (5, 6) pattern a("i",_)
+6, 7
+5000
+104 - one such that one pattern with one variable
+stmt s; assign a;
+Select a such that Follows (5, a) pattern a("i",_)
+6
+5000
+105 - one such that one pattern with one variable
+stmt s; assign a;
+Select a such that Follows (5, a) pattern a("i",_)
+6
+5000
+106 - one such that one pattern with two variables
+assign a; while w;
+Select a such that Follows (w, a) pattern a(_,_)
+7
+5000
+107 - one such that one pattern with two variables
+assign a; while w;
+Select a such that Follows* (3, a) pattern a(_,_"   10"_)
+7
+5000
+108 - one such that one pattern with synonym not in pattern
+stmt s; assign a; assign a1;
+Select a such that Follows* (3, a) pattern a1(_,_"10"_)
+7
+5000
+109 - one such that one pattern with synonym not in pattern
+stmt s; assign a; assign a1;
+Select a such that Modifies(a, "i") pattern a(_, _" x"_)
+7
+5000
+110 - one such that one pattern with synonym not in pattern
+stmt s; assign a; assign a1;
+Select a such that Uses(a, "z") pattern a("z", _)
+5, 12
+5000
+111 - invalid query
+stmt s; assign a1;
+Select a such that Uses(a, "z") pattern a("z", _)
 
+5000
+112 - invalid query - synonym not declare
+stmt s; assign a1;
+Select a such that Uses(a, "z") pattern a("z", _)
 
+5000
+113 - invalid query - typo in select keyword
+stmt s; assign a1;
+Selct a such that Uses(a, "z") pattern a("z", _)
 
+5000
+114 - invalid query - typo in such that keyword
+stmt s; assign a1;
+Select a sch that Uses(a, "z") pattern a("z", _)
 
+5000
+115 - invalid query - broken keyword
+stmt s; assign a1;
+Select a such that Uses(a, "z" pattern a("z", _)
 
+5000
+116 - invalid query - improper brakcet matching
+stmt s; assign a1;
+Select a such that Uses(a, "z")) pattern a("z", _)
 
+5000
+117 - invalid query - non capitalized select
+stmt s; assign a1;
+select a such that Uses(a, "z") pattern a("z", _)
 
+5000
+118 - invalid query - non capitalized uses
+stmt s; assign a1;
+Select a such that uses(a, "z") pattern a("z", _)
 
+5000
+119 - invalid query - capitalized pattern
+stmt s; assign a;
+Select a such that Modifies ("Examp1le", _) Pattern a("z",_)
 
+5000
+120 - invalid query - missing such that clause
+stmt s; assign a;
+Select a Modifies ("Examp1le", _) pattern a("z",_)
 
+5000
+121 - invalid query - missing identifier in select clause
+stmt s; assign a;
+Select such that Modifies ("Examp1le", _) pattern a("z",_)
+
+5000
+122 - invalid query - no pattern synonym
+stmt s; assign a;
+Select a such that Modifies ("Examp1le", _) pattern ("z",_)
+
+5000
+123 - invalid query - wild card as first clause of modifies
+stmt s; assign a;
+Select a such that Modifies (_, _) pattern a("z",_)
+
+5000
+124 - invalid query - variable as clause in follows
+stmt s; assign a;
+Select a such that Modifies ("x"", _) pattern a("z",_)
+
+5000
+125 - Parent with one wildcard
+assign a;
+Select a such that Parent (a, _)
+
+5000
+126 - follows* and pattern
+stmt s; assign a;
+Select s such that Follows*(s, a) pattern a(_, _"x"_)
+1, 2, 3, 4
+5000
