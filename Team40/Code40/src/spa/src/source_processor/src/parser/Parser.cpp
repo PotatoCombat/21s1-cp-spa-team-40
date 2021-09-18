@@ -38,8 +38,8 @@ bool Parser::isProc(vector<string> content) {
 }
 
 bool Parser::isStmt(vector<string> content) {
-    return (!content.empty() && content[0] != "}" && content[0] != "else") ||
-           content[0] == "else" && isAssignStmt(content);
+    return ((!content.empty() && content[0] != "}" && content[0] != "else") ||
+            isAssignStmt(content));
 }
 
 Statement *Parser::parseStatement(vector<string> content, int index,

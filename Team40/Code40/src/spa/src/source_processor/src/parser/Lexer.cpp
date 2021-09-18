@@ -187,8 +187,7 @@ bool Lexer::isAssignStmt(vector<string> content) {
 bool Lexer::isStmt(vector<string> content) {
     return ((content.front() != "}" && content.front() != "else" &&
              content.front() != "procedure") ||
-            (content.front() == "procedure" && isAssignStmt(content)) ||
-            (content.front() == "else" && isAssignStmt(content)));
+            (isAssignStmt(content)));
 }
 
 // special symbols

@@ -41,7 +41,7 @@ void WhileStatementParser::parseChildStatements(int &programIndex) {
         }
         Parser parser;
         if ((currContent[0] != "}" && currContent[0] != "else") ||
-            content[0] == "else" && parser.isAssignStmt(content)) {
+            parser.isAssignStmt(content)) {
             auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             stmt->addThenStmt(nestedStmt);
