@@ -47,6 +47,9 @@ TEST_CASE(
             1);
     REQUIRE(TestExtractWhileStatement::pkb.getAllStmts().asVector().size() ==
             2);
+    REQUIRE(TestExtractWhileStatement::pkb.getAllStmts(StatementType::WHILE)
+                .asVector()
+                .size() == 1);
     REQUIRE(TestExtractWhileStatement::pkb.getParentStmt(
                 thenStatement.getIndex()) == whileStatement.getIndex());
     REQUIRE(TestExtractWhileStatement::pkb
@@ -84,6 +87,9 @@ TEST_CASE(
             1);
     REQUIRE(TestExtractWhileStatement::pkb.getAllStmts().asVector().size() ==
             3);
+    REQUIRE(TestExtractWhileStatement::pkb.getAllStmts(StatementType::WHILE)
+                .asVector()
+                .size() == 2);
 
     // Check that top level whileStatement is parent of thenWhileStatement
     REQUIRE(TestExtractWhileStatement::pkb.getParentStmt(

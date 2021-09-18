@@ -39,6 +39,9 @@ TEST_CASE(
             1);
     REQUIRE(TestExtractPrintStatement::pkb.getAllStmts().asVector().size() ==
             1);
+    REQUIRE(TestExtractPrintStatement::pkb.getAllStmts(StatementType::PRINT)
+                .asVector()
+                .size() == 1);
 
     // Check that procedure modifies variable correctly extracted
     REQUIRE(TestExtractPrintStatement::pkb.getProcsUsingVar(printVar.getName())

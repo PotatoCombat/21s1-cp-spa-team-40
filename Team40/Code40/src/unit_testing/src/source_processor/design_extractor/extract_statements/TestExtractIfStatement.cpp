@@ -47,6 +47,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
 
     REQUIRE(TestExtractIfStatement::pkb.getAllProcs().asVector().size() == 1);
     REQUIRE(TestExtractIfStatement::pkb.getAllStmts().asVector().size() == 3);
+    REQUIRE(TestExtractIfStatement::pkb.getAllStmts(StatementType::IF)
+                .asVector()
+                .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
                 thenStatement.getIndex()) == ifStatement.getIndex());
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
@@ -95,6 +98,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
 
     REQUIRE(TestExtractIfStatement::pkb.getAllProcs().asVector().size() == 1);
     REQUIRE(TestExtractIfStatement::pkb.getAllStmts().asVector().size() == 5);
+    REQUIRE(TestExtractIfStatement::pkb.getAllStmts(StatementType::IF)
+                .asVector()
+                .size() == 2);
 
     // Check that top level ifStatement is parent of thenIfStatement &
     // elseStatement

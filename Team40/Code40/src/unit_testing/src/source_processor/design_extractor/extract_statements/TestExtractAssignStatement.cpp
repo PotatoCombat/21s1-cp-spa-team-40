@@ -45,6 +45,9 @@ TEST_CASE("TestExtractAssignStatement: Correctly extracts a simple "
 
     REQUIRE(TestExtractAssignStatement::pkb.getAllStmts().asVector().size() ==
             1);
+    REQUIRE(TestExtractAssignStatement::pkb.getAllStmts(StatementType::ASSIGN)
+                .asVector()
+                .size() == 1);
     REQUIRE(TestExtractAssignStatement::pkb
                 .getProcsModifyingVar(TestExtractAssignStatement::VAR_NAME)
                 .size() == 1);

@@ -42,6 +42,9 @@ TEST_CASE(
 
     REQUIRE(TestExtractCallStatement::pkb.getAllProcs().asVector().size() == 2);
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts().asVector().size() == 1);
+    REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
+                .asVector()
+                .size() == 1);
 }
 
 TEST_CASE("TestExtractCallStatement: Correctly handles transitive Modifies in "
@@ -68,6 +71,9 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Modifies in "
     de.extract(&program);
 
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts().asVector().size() == 2);
+    REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
+                .asVector()
+                .size() == 1);
     REQUIRE(
         TestExtractCallStatement::pkb.getProcsModifyingVar(variable.getName())
             .size() == 2);
@@ -95,6 +101,9 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Uses in "
     de.extract(&program);
 
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts().asVector().size() == 2);
+    REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
+                .asVector()
+                .size() == 1);
     REQUIRE(TestExtractCallStatement::pkb.getProcsUsingVar(variable.getName())
                 .size() == 2);
 }
