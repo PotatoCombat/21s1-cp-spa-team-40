@@ -1,7 +1,10 @@
 #include "common/model/Variable.h"
+#include <utility>
 using namespace std;
 
-Variable::Variable(string name) : name(name), Factor(FactorType::VARIABLE) {}
+Variable::Variable(string name) : Factor(FactorType::VARIABLE) {
+    this->name = move(name);
+}
 
 string Variable::getName() { return this->name; }
 

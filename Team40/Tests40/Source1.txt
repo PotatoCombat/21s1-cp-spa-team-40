@@ -1,28 +1,28 @@
 procedure Examp1le    {
-    read x; (1)
-    y = 1; (2)
-    z = x + y; (3)
+    read x;
+    y = 1;
+    z = x + y;
 
-    while ( i>9) { (4)
-        z = z + i; (5)
-        i = i - 1; (6)
+    while ( i>9) {
+        z = z + i;
+        i = i - 1;
     }
 
-    i = 10      + y * z /    x + 5 * x - 3 *    y; (7)
+    i = 10      + y * z /    x + 5 * x - 3 *    y;
 
-    if (z ==        10) then { (8)
-        print x; (9)
-        print    y; (10)
+    if (z ==        10) then {
+        print x;
+        print    y;
     } else {
-        while ( z!= 4 ) { (11)
-            z = z - 1; (12)
-            print z; (13)
+        while ( z!= 4 ) {
+            z = z - 1;
+            print z;
         }
     }
 
-    if (z == 6) then { (14)
-        print z; (15)
+    if (z == 6) then {
+        print z;
      } else {
-        print y; (16)
+        print y;
      }
 }
