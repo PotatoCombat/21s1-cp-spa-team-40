@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,8 @@
 #include "ClauseHandlerError.h"
 
 #include "pkb/PKB.h"
+
+#include "query_processor/ValueToPointersMap.h"
 
 #include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
@@ -21,5 +24,5 @@ private:
 public:
     ModifiesProcHandler(Clause *clause, PKB *pkb)
         : ClauseHandler(clause, pkb) {}
-    Result eval();
+    Result eval(int ref1Index, int ref2Index);
 };

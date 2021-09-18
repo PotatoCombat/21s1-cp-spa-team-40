@@ -26,6 +26,13 @@ void ResultTable::addValue(int refIndex, string value, set<pair<int, string>> po
         mapTable[refIndex][mapIndex].insert(pointers);
     }
 }
+
+void ResultTable::addValue(int refIndex, vector<ValueToPointersMap> maps) {
+    for (auto map : maps) {
+        addValue(refIndex, map.getValue(), map.getPointers());
+    }
+}
+
 set<pair<int, string>> ResultTable::getPointers(int refIndex, string value) {
     int mapIndex = findMapIndex(refIndex, value);
     if (mapIndex == -1) {
@@ -51,10 +58,15 @@ bool ResultTable::hasPointerToRef(int sourceRefIndex, string sourceValue,
 }
 
 void ResultTable::removeMap(int refIndex, string value) {
+    set<pair<int, string>> visited;
     vector<pair<int, string>> toRemove{make_pair(refIndex, value)};
     while (!toRemove.empty()) {
         pair<int, string> ref = toRemove.back();
         toRemove.pop_back();
+        if (visited.find(ref) != visited.end()) {
+            continue;
+        }
+        visited.insert(ref);
         set<pair<int, string>> refPointers = getPointers(ref.first, ref.second);
         // remove pointers to ref
         for (auto refPointer : refPointers) {

@@ -1,27 +1,27 @@
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
 
-Result FollowsStarHandler::eval() {
+Result FollowsStarHandler::eval(int ref1Index, int ref2Index) {
     Result result;
-    //Reference *firstReference = clause->getFirstReference();
-    //Reference *secondReference = clause->getSecondReference();
-    //string firstValue = firstReference->getValue();
-    //string secondValue = secondReference->getValue();
+    // Reference *firstReference = clause->getFirstReference();
+    // Reference *secondReference = clause->getSecondReference();
+    // string firstValue = firstReference->getValue();
+    // string secondValue = secondReference->getValue();
 
     //// Todo: handle stmts by different design enity types
     //// Todo: use variable instead of magic number -1
 
     //// assertions
-    //validate();
+    // validate();
 
     //// Follows*(s, s)
-    //if (firstReference->getRefType() == ReferenceType::SYNONYM &&
+    // if (firstReference->getRefType() == ReferenceType::SYNONYM &&
     //    firstReference->equals(*secondReference)) {
     //    result.setValid(false);
     //    return result;
     //}
 
     //// WILDCARD WILDCARD
-    //if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+    // if (firstReference->getRefType() == ReferenceType::WILDCARD &&
     //    secondReference->getRefType() == ReferenceType::WILDCARD) {
     //    vector<int> allStmts = pkb->getAllStmts().asVector();
     //    for (auto stmt : allStmts) {
@@ -35,34 +35,38 @@ Result FollowsStarHandler::eval() {
     //}
 
     ///// CONSTANT CONSTANT
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::CONSTANT) {
-    //    result.setValid(pkb->followsStar(stoi(firstValue), stoi(secondValue)));
-    //    return result;
+    //    result.setValid(pkb->followsStar(stoi(firstValue),
+    //    stoi(secondValue))); return result;
     //}
 
     //// CONSTANT WILDCARD
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::WILDCARD) {
     //    result.setValid(pkb->getFollowingStmt(stoi(firstValue)) != -1);
     //    return result;
     //}
 
     //// WILDCARD CONSTANT
-    //if (firstReference->getRefType() == ReferenceType::WILDCARD &&
+    // if (firstReference->getRefType() == ReferenceType::WILDCARD &&
     //    secondReference->getRefType() == ReferenceType::CONSTANT) {
     //    result.setValid(pkb->getPrecedingStmt(stoi(secondValue)) != -1);
     //    return result;
     //}
 
     //// SYNONYM CONSTANT
-    //if (firstReference->getRefType() == ReferenceType::SYNONYM &&
+    // if (firstReference->getRefType() == ReferenceType::SYNONYM &&
     //    secondReference->getRefType() == ReferenceType::CONSTANT) {
-    //    vector<string> firstStmtResults;
-    //    set<int> precedingStarStmts = pkb->getPrecedingStarStmts(stoi(secondValue));
-    //    for (auto precedingStarStmt : precedingStarStmts) {
-    //        if (isDesTypeStmtType(firstReference->getDeType(), pkb->getStmtType(precedingStarStmt))) {
-    //            firstStmtResults.push_back(to_string(precedingStarStmt));
+    //    vector<ValueToPointersMap> firstStmtResults;
+    //    set<int> precedingStarStmts =
+    //    pkb->getPrecedingStarStmts(stoi(secondValue)); for (auto
+    //    precedingStarStmt : precedingStarStmts) {
+    //        if (isDesTypeStmtType(firstReference->getDeType(),
+    //        pkb->getStmtType(precedingStarStmt))) {
+    //            ValueToPointersMap map(to_string(precedingStarStmt),
+    //                                   POINTER_SET{});
+    //            firstStmtResults.push_back(map);
     //        }
     //    }
     //    result.setResultList1(firstReference, firstStmtResults);
@@ -70,13 +74,17 @@ Result FollowsStarHandler::eval() {
     //}
 
     //// CONSTANT SYNONYM
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::SYNONYM) {
-    //    vector<string> secondStmtResults;
-    //    set<int> followingStarStmts = pkb->getFollowingStarStmts(stoi(firstValue));
-    //    for (auto followingStarStmt : followingStarStmts) {
-    //        if (isDesTypeStmtType(secondReference->getDeType(), pkb->getStmtType(followingStarStmt))) {
-    //            secondStmtResults.push_back(to_string(followingStarStmt));
+    //    vector<ValueToPointersMap> secondStmtResults;
+    //    set<int> followingStarStmts =
+    //    pkb->getFollowingStarStmts(stoi(firstValue)); for (auto
+    //    followingStarStmt : followingStarStmts) {
+    //        if (isDesTypeStmtType(secondReference->getDeType(),
+    //        pkb->getStmtType(followingStarStmt))) {
+    //            ValueToPointersMap map(to_string(followingStarStmt),
+    //                                   POINTER_SET{});
+    //            secondStmtResults.push_back(map);
     //        }
     //    }
     //    result.setResultList2(secondReference, secondStmtResults);
@@ -84,54 +92,73 @@ Result FollowsStarHandler::eval() {
     //}
 
     //// NEITHER IS CONSTANT
-    //vector<string> firstStmtResults;
-    //vector<string> secondStmtResults;
+    //// if first arg is SYNONYM
+    // if (firstReference->getRefType() != ReferenceType::WILDCARD) {
+    //    vector<ValueToPointersMap> firstStmtResults;
+    //    vector<int> precedingStmts;
+    //    if (firstReference->getDeType() == DesignEntityType::STMT) {
+    //        precedingStmts = pkb->getAllStmts().asVector();
+    //    } else {
+    //        StatementType firstStmtType =
+    //            desTypeToStmtType(firstReference->getDeType());
+    //        precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
+    //    }
 
-    //vector<int> precedingStmts;
-    //if (firstReference->getDeType() == DesignEntityType::STMT) {
-    //    precedingStmts = pkb->getAllStmts().asVector();
-    //} else {
-    //    StatementType firstStmtType = desTypeToStmtType(firstReference->getDeType());
-    //    precedingStmts = pkb->getAllStmts(firstStmtType).asVector();
-    //}
-    //sort(precedingStmts.begin(), precedingStmts.end());
-
-    //while (precedingStmts.size() > 0) {
-    //    int precedingStmt = precedingStmts.at(0);
-    //    vector<int> tempStmts;
-    //    tempStmts.push_back(precedingStmt);
-    //    bool hasFollowsStar = false;
-    //    int currStmt = pkb->getFollowingStmt(precedingStmt);
-    //    while (currStmt != -1) {
-    //        StatementType stmtType = pkb->getStmtType(currStmt);
-    //        if (isDesTypeStmtType(secondReference->getDeType(), stmtType)) {
-    //            for (auto stmt : tempStmts) {
-    //                firstStmtResults.push_back(to_string(stmt));
-    //                precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), stmt),
-    //                                     precedingStmts.end());
+    //    for (int precedingStmt : precedingStmts) {
+    //        set<int> followingStmts =
+    //        pkb->getFollowingStarStmts(precedingStmt); POINTER_SET related;
+    //        bool valid = false;
+    //        for (auto stmt : followingStmts) {
+    //            if (isDesTypeStmtType(secondReference->getDeType(),
+    //                                  pkb->getStmtType(stmt))) {
+    //                valid = true;
+    //                if (secondReference->getRefType() ==
+    //                ReferenceType::SYNONYM) {
+    //                    related.insert(make_pair(ref2Index, to_string(stmt)));
+    //                }
     //            }
-    //            tempStmts.clear();
-    //            secondStmtResults.push_back(to_string(currStmt));
-    //            hasFollowsStar = true;
     //        }
-    //        if (isDesTypeStmtType(firstReference->getDeType(), stmtType)) {
-    //            tempStmts.push_back(currStmt);
+    //        if (valid) {
+    //            ValueToPointersMap map(to_string(precedingStmt), related);
+    //            firstStmtResults.push_back(map);
     //        }
-    //        currStmt = pkb->getFollowingStmt(currStmt);
     //    }
 
-    //    // still removed from the precedingStmts when don't have followsStar
-    //    if (!hasFollowsStar) {
-    //        precedingStmts.erase(remove(precedingStmts.begin(), precedingStmts.end(), precedingStmt),
-    //                         precedingStmts.end());
-    //    }
-    //}
-
-    //if (firstReference->getRefType() != ReferenceType::WILDCARD) {
     //    result.setResultList1(firstReference, firstStmtResults);
     //}
 
-    //if (secondReference->getRefType() != ReferenceType::WILDCARD) {
+    //// if second arg is SYNONYM
+    // if (secondReference->getRefType() != ReferenceType::WILDCARD) {
+    //    vector<ValueToPointersMap> secondStmtResults;
+    //    vector<int> followingStmts;
+    //    if (secondReference->getDeType() == DesignEntityType::STMT) {
+    //        followingStmts = pkb->getAllStmts().asVector();
+    //    } else {
+    //        StatementType secondStmtType =
+    //            desTypeToStmtType(secondReference->getDeType());
+    //        followingStmts = pkb->getAllStmts(secondStmtType).asVector();
+    //    }
+
+    //    for (int followingStmt : followingStmts) {
+    //        set<int> precedingStmts =
+    //        pkb->getPrecedingStarStmts(followingStmt); POINTER_SET related;
+    //        bool valid = false;
+    //        for (auto stmt : precedingStmts) {
+    //            if (isDesTypeStmtType(firstReference->getDeType(),
+    //                                  pkb->getStmtType(stmt))) {
+    //                valid = true;
+    //                if (firstReference->getRefType() ==
+    //                ReferenceType::SYNONYM) {
+    //                    related.insert(make_pair(ref1Index, to_string(stmt)));
+    //                }
+    //            }
+    //        }
+    //        if (valid) {
+    //            ValueToPointersMap map(to_string(followingStmt), related);
+    //            secondStmtResults.push_back(map);
+    //        }
+    //    }
+
     //    result.setResultList2(secondReference, secondStmtResults);
     //}
 
@@ -143,15 +170,18 @@ void FollowsStarHandler::validate() {
     Reference *secondReference = clause->getSecondReference();
     if (firstReference->getDeType() == DesignEntityType::PROCEDURE ||
         firstReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("FollowsStarHandler: first argument must be statement type");
+        throw ClauseHandlerError(
+            "FollowsStarHandler: first argument must be statement type");
     }
 
     if (secondReference->getDeType() == DesignEntityType::PROCEDURE ||
         secondReference->getDeType() == DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("FollowsStarHandler: second argument must be statement type");
+        throw ClauseHandlerError(
+            "FollowsStarHandler: second argument must be statement type");
     }
 
     if (clause->getType() != ClauseType::FOLLOWS_T) {
-        throw ClauseHandlerError("FollowsStarHandler: relation type must be FOLLOWS_T");
+        throw ClauseHandlerError(
+            "FollowsStarHandler: relation type must be FOLLOWS_T");
     }
 }

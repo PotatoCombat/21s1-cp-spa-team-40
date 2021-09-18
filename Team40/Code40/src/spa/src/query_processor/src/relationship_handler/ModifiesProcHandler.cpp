@@ -1,74 +1,98 @@
 #include "query_processor/relationship_handler/ModifiesProcHandler.h"
 
-Result ModifiesProcHandler::eval() {
+Result ModifiesProcHandler::eval(int ref1Index, int ref2Index) {
     Result result;
-    //Reference *firstReference = clause->getFirstReference();
-    //Reference *secondReference = clause->getSecondReference();
-    //string firstValue = firstReference->getValue();
-    //string secondValue = secondReference->getValue();
+    // Reference *firstReference = clause->getFirstReference();
+    // Reference *secondReference = clause->getSecondReference();
+    // string firstValue = firstReference->getValue();
+    // string secondValue = secondReference->getValue();
 
     //// assertions
-    //validate();
+    // validate();
 
     ///// CONSTANT CONSTANT
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::CONSTANT) {
     //    result.setValid(pkb->procModifies(firstValue, secondValue));
     //    return result;
     //}
 
     //// CONSTANT WILDCARD
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::WILDCARD) {
     //    result.setValid(pkb->getVarsModifiedByProc(firstValue).size() > 0);
     //    return result;
     //}
 
     //// SYNONYM CONSTANT
-    //if (firstReference->getRefType() == ReferenceType::SYNONYM &&
+    // if (firstReference->getRefType() == ReferenceType::SYNONYM &&
     //    secondReference->getRefType() == ReferenceType::CONSTANT) {
-    //    vector<string> procResults;
+    //    vector<ValueToPointersMap> procResults;
     //    set<string> procs = pkb->getProcsModifyingVar(secondValue);
     //    for (auto proc : procs) {
-    //        procResults.push_back(proc);
+    //        ValueToPointersMap map(proc, POINTER_SET{});
+    //        procResults.push_back(map);
     //    }
     //    result.setResultList1(firstReference, procResults);
     //    return result;
     //}
 
     //// CONSTANT SYNONYM
-    //if (firstReference->getRefType() == ReferenceType::CONSTANT &&
+    // if (firstReference->getRefType() == ReferenceType::CONSTANT &&
     //    secondReference->getRefType() == ReferenceType::SYNONYM) {
-    //    vector<string> varResults;
+    //    vector<ValueToPointersMap> varResults;
     //    set<string> vars = pkb->getVarsModifiedByProc(firstValue);
     //    for (auto var : vars) {
-    //        varResults.push_back(var);
+    //        ValueToPointersMap map(var, POINTER_SET{});
+    //        varResults.push_back(map);
     //    }
     //    result.setResultList2(secondReference, varResults);
     //    return result;
     //}
 
     //// NEITHER IS CONSTANT, FIRST ARGUMENT NOT WILDCARD
-    //vector<string> procResults;
-    //vector<string> varResults;
-    //vector<string> procs = pkb->getAllProcs().asVector();
-    //for (auto proc : procs) {
+    //// first arg must be SYNONYM
+    // vector<ValueToPointersMap> procResults;
+    // vector<string> procs = pkb->getAllProcs().asVector();
+
+    // for (string proc : procs) {
     //    set<string> vars = pkb->getVarsModifiedByProc(proc);
-    //    if (vars.size() == 0) {
-    //        continue;
-    //    }
-    //    procResults.push_back(proc);
+    //    POINTER_SET related;
+    //    bool valid = false;
     //    for (auto var : vars) {
-    //        if (find(varResults.begin(), varResults.end(), var) ==
-    //            varResults.end()) {
-    //            varResults.push_back(var);
+    //        valid = true;
+    //        if (secondReference->getRefType() == ReferenceType::SYNONYM) {
+    //            related.insert(make_pair(ref2Index, var));
     //        }
+    //    }
+    //    if (valid) {
+    //        ValueToPointersMap map(proc, related);
+    //        procResults.push_back(map);
     //    }
     //}
 
-    //result.setResultList1(firstReference, procResults);
+    // result.setResultList1(firstReference, procResults);
 
-    //if (secondReference->getRefType() != ReferenceType::WILDCARD) {
+    //// if second arg is SYNONYM
+    // if (secondReference->getRefType() != ReferenceType::WILDCARD) {
+    //    vector<ValueToPointersMap> varResults;
+    //    vector<string> vars = pkb->getAllVars().asVector();
+    //    for (string var : vars) {
+    //        set<string> procs = pkb->getProcsModifyingVar(var);
+    //        POINTER_SET related;
+    //        bool valid = false;
+    //        for (auto proc : procs) {
+    //            valid = true;
+    //            if (firstReference->getRefType() == ReferenceType::SYNONYM) {
+    //                related.insert(make_pair(ref1Index, proc));
+    //            }
+    //        }
+    //        if (valid) {
+    //            ValueToPointersMap map(var, related);
+    //            varResults.push_back(map);
+    //        }
+    //    }
+
     //    result.setResultList2(secondReference, varResults);
     //}
 
@@ -79,18 +103,22 @@ void ModifiesProcHandler::validate() {
     Reference *firstReference = clause->getFirstReference();
     Reference *secondReference = clause->getSecondReference();
     if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
-        throw ClauseHandlerError("ModifiesProcHandler: first argument must be procedure type");
+        throw ClauseHandlerError(
+            "ModifiesProcHandler: first argument must be procedure type");
     }
 
     if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("ModifiesProcHandler: second argument must be variable type");
+        throw ClauseHandlerError(
+            "ModifiesProcHandler: second argument must be variable type");
     }
 
     if (clause->getType() != ClauseType::MODIFIES_P) {
-        throw ClauseHandlerError("ModifiesProcHandler: relation type must be MODIFIES_P");
+        throw ClauseHandlerError(
+            "ModifiesProcHandler: relation type must be MODIFIES_P");
     }
 
     if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw ClauseHandlerError("ModifiesProcHandler: first argument cannot be wildcard");
+        throw ClauseHandlerError(
+            "ModifiesProcHandler: first argument cannot be wildcard");
     }
 }

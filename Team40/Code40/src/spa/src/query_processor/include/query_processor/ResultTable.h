@@ -22,6 +22,8 @@ public:
 
     void addValue(int refIndex, string value, set<pair<int, string>> pointers);
 
+    void addValue(int refIndex, vector<ValueToPointersMap> maps);
+
     set<pair<int, string>> getPointers(int refIndex, string value);
 
     void removePointer(int refIndex, string value, pair<int, string> pointer);

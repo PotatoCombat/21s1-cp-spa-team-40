@@ -1,7 +1,7 @@
 #include "query_processor/QueryEvaluator.h"
 
 void QueryEvaluator::clear() {
-    results.clear();
+    resultTable.clear();
     references.clear();
     clauses.clear();
     patterns.clear();
@@ -20,8 +20,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         references = query.getReferences();
         clauses = query.getClauses();
         patterns = query.getPatterns();
-        vector<vector<string>> results(references.size(), vector<string>());
-        this->results = results;
+        resultTable.init(references.size());
         vector<bool> referenceAppearInClauses(references.size(), false);
         this->referenceAppearInClauses = referenceAppearInClauses;
         bool allQueriesReturnTrue = true;
@@ -31,7 +30,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         evalSuchThat();
 
         return finaliseResult();
-        
+
     } catch (ClauseHandlerError &e) {
         // to be implemented later
         return vector<string>{};
@@ -41,7 +40,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 void QueryEvaluator::evalPattern() {
     for (PatternClause *pattern : patterns) {
         Result tempResult;
-        AssignPatternHandler* patternHandler;
+        AssignPatternHandler *patternHandler;
 
         if (pattern->getStmt()->getDeType() == DesignEntityType::ASSIGN) {
             AssignPatternHandler handler(pattern, pkb);
@@ -49,10 +48,10 @@ void QueryEvaluator::evalPattern() {
         }
 
         // eval and combine result
-        tempResult = patternHandler->eval();
-        comebineResult(tempResult);
+        // tempResult = patternHandler->eval();
+        // comebineResult(tempResult);
     }
- }
+}
 
 void QueryEvaluator::evalSuchThat() {
     // handle clauses
@@ -102,10 +101,19 @@ void QueryEvaluator::evalSuchThat() {
             clauseHandler = &usesStmtHandler;
         }
 
+        int ref1Index = -1, ref2Index = -1;
+        if (clause->getFirstReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
+            ref1Index = getRefIndex(clause->getFirstReference());
+        }
+        if (clause->getSecondReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
+            ref2Index = getRefIndex(clause->getSecondReference());
+        }
+
         // eval and combine result
-        tempResult = clauseHandler->eval();
+        tempResult = clauseHandler->eval(ref1Index, ref2Index);
         comebineResult(tempResult);
-        
     }
 }
 
@@ -117,7 +125,7 @@ vector<string> QueryEvaluator::finaliseResult() {
 
     // returns empty result if one of the references has no matching result
     for (int i = 0; i < references.size(); i++) {
-        if (referenceAppearInClauses[i] && results[i].empty()) {
+        if (referenceAppearInClauses[i] && resultTable.getValues(i).empty()) {
             return vector<string>();
         }
     }
@@ -188,15 +196,93 @@ vector<string> QueryEvaluator::finaliseResult() {
         return result;
     }
 
-    return results[resultIndex];
+    return resultTable.getValues(resultIndex);
 }
-
 
 void QueryEvaluator::comebineResult(Result result) {
-    
+    allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
+
+    bool hasResultList1 = false, hasResultList2 = false;
+    Reference *ref1 = NULL, *ref2 = NULL;
+    vector<ValueToPointersMap> res1;
+    vector<ValueToPointersMap> res2;
+    vector<pair<int, string>> toRemoveLater;
+
+    if (result.hasResultList1()) {
+        res1 = result.getResultList1();
+        ref1 = result.getReference1();
+        int refIndex1 = getRefIndex(ref1);
+        // create sets
+        set<string> refsInTable;
+        set<string> refsInResult;
+        for (string refInTable : resultTable.getValues(refIndex1)) {
+            refsInTable.insert(refInTable);
+        }
+        for (ValueToPointersMap map : res1) {
+            refsInResult.insert(map.getValue());
+        }
+        if (referenceAppearInClauses[refIndex1]) {
+            for (auto ref : refsInTable) {
+                if (refsInResult.find(ref) == refsInResult.end()) {
+                    toRemoveLater.push_back(make_pair(refIndex1, ref));
+                }
+            }
+            for (auto ref : refsInResult) {
+                if (refsInTable.find(ref) == refsInTable.end()) {
+                    toRemoveLater.push_back(make_pair(refIndex1, ref));
+                }
+            }
+        }
+        referenceAppearInClauses[refIndex1] = true;
+        resultTable.addValue(refIndex1, res1);
+    }
+
+    if (result.hasResultList2()) {
+        res2 = result.getResultList2();
+        ref2 = result.getReference2();
+        int refIndex2 = getRefIndex(ref2);
+        // create sets
+        set<string> refsInTable;
+        set<string> refsInResult;
+        for (string refInTable : resultTable.getValues(refIndex2)) {
+            refsInTable.insert(refInTable);
+        }
+        for (ValueToPointersMap map : res2) {
+            refsInResult.insert(map.getValue());
+        }
+        if (referenceAppearInClauses[refIndex2]) {
+            for (auto ref : refsInTable) {
+                if (refsInResult.find(ref) == refsInResult.end()) {
+                    toRemoveLater.push_back(make_pair(refIndex2, ref));
+                }
+            }
+            for (auto ref : refsInResult) {
+                if (refsInTable.find(ref) == refsInTable.end()) {
+                    toRemoveLater.push_back(make_pair(refIndex2, ref));
+                }
+            }
+        }
+        referenceAppearInClauses[refIndex2] = true;
+        resultTable.addValue(refIndex2, res2);
+    }
+
+    for (auto mapCoord : toRemoveLater) {
+        resultTable.removeMap(mapCoord.first, mapCoord.second);
+    }
 }
 
-void QueryEvaluator::toString(vector<int> &vectorIn, vector<string> &vectorOut) {
+void QueryEvaluator::toString(vector<int> &vectorIn,
+                              vector<string> &vectorOut) {
     transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
               [](int i) { return std::to_string(i); });
+}
+
+int QueryEvaluator::getRefIndex(Reference *ref) {
+    int index = -1;
+    for (int i = 0; i < references.size(); i++) {
+        if (references[i]->equals(*ref)) {
+            index = i;
+        }
+    }
+    return index;
 }

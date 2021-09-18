@@ -10,12 +10,14 @@
 #include "pkb/PKB.h"
 
 #include "query_processor/ResultTable.h"
+#include "query_processor/ValueToPointersMap.h"
 
 #include "query_processor/model/Clause.h"
+#include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
-#include "query_processor/model/PatternClause.h"
 
+#include "query_processor/relationship_handler/AssignPatternHandler.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
@@ -26,7 +28,6 @@
 #include "query_processor/relationship_handler/ParentStarHandler.h"
 #include "query_processor/relationship_handler/UsesProcHandler.h"
 #include "query_processor/relationship_handler/UsesStmtHandler.h"
-#include "query_processor/relationship_handler/AssignPatternHandler.h"
 
 using namespace std;
 
@@ -38,7 +39,7 @@ private:
     vector<Clause *> clauses;
     vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
-    vector<vector<string>> results;
+    ResultTable resultTable;
     bool allQueriesReturnTrue;
 
     void clear();
@@ -52,6 +53,8 @@ private:
     void comebineResult(Result result);
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);
+
+    int getRefIndex(Reference *ref);
 
 public:
     QueryEvaluator(PKB *pkb);
