@@ -15,6 +15,7 @@ struct TestQPreprocessor {
     static const string PATTERN_1;
     static const string PATTERN_2;
     static const string SUCH_THAT_PATTERN_1;
+    static const string SUCH_THAT_PATTERN_2;
 };
 
 const string TestQPreprocessor::INPUT_1 =
@@ -34,6 +35,9 @@ const string TestQPreprocessor::PATTERN_2 =
 const string TestQPreprocessor::SUCH_THAT_PATTERN_1 =
     "\rstmt s; procedure PROC3DURE; assign a; Select s such that "
     "Uses(PROC3DURE, \"y\") pattern a(\"x\", \" y \")\r";
+
+const string TestQPreprocessor::SUCH_THAT_PATTERN_2 =
+"stmt s; assign a; Select s such that Follows*(s, a) pattern a(\"   d\", _\"a \"_)";
 
 TEST_CASE("QueryPreprocessor: single clause") {
     QueryPreprocessor qp;
@@ -153,6 +157,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
                         "PROC3DURE");
     Reference stmt(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference assign(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
+    Reference variableD(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "d");
     Reference variableX(DesignEntityType::VARIABLE, ReferenceType::CONSTANT,
                         "x");
     Reference variableY(DesignEntityType::VARIABLE, ReferenceType::CONSTANT,
@@ -171,5 +176,20 @@ TEST_CASE("QueryPreprocessor: two clauses") {
         REQUIRE((actual.getPatterns()[0])->equals(*pat));
         REQUIRE((actual.getReturnReference()->equals(stmt)));
         REQUIRE((actual.getReferences().size() == 3));
+    }
+
+    SECTION("test 2") {
+        Clause* cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
+        PatternClause* pat = new PatternClause(assign, variableD, "a");
+        expected.setReturnReference(&stmt);
+        expected.addClause(cls);
+        expected.addPattern(pat);
+
+        qp.preprocessQuery(TestQPreprocessor::SUCH_THAT_PATTERN_2, actual);
+
+        REQUIRE((actual.getClauses()[0])->equals(*cls));
+        REQUIRE((actual.getPatterns()[0])->equals(*pat));
+        REQUIRE((actual.getReturnReference()->equals(stmt)));
+        REQUIRE((actual.getReferences().size() == 2));
     }
 }
