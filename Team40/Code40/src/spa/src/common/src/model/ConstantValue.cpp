@@ -1,20 +1,18 @@
 #include "common/model/ConstantValue.h"
-
+#include <utility>
 using namespace std;
 
-ConstantValue::ConstantValue(int value)
-    : Factor(FactorType::CONSTANT), value(value) {
-    this->name = to_string(value);
+ConstantValue::ConstantValue(string name)
+    : Factor(FactorType::CONSTANT) {
+    this->name = move(name);
 }
-
-int ConstantValue::getValue() const { return value; }
 
 string ConstantValue::getName() { return name; }
 
 bool ConstantValue::operator<(const ConstantValue &other) const {
-    return value < other.value;
+    return name < other.name;
 }
 
 bool ConstantValue::operator==(const ConstantValue &other) const {
-    return value == other.value;
+    return name == other.name;
 }

@@ -1,18 +1,17 @@
 #pragma once
-#include "Factor.h"
 #include <string>
+#include "Factor.h"
 using namespace std;
 
 class Variable : public Factor {
-private:
-    string name;
-
 public:
-    Variable(string name);
+    explicit Variable(string name);
 
-    // getter
-    string getName() override;
+    string getName();
 
     bool operator<(const Variable &other) const;
     bool operator==(const Variable &other) const;
+
+private:
+    string name;
 };

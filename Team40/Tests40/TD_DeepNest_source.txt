@@ -1,0 +1,21 @@
+procedure loopTest {read x;
+	if (a < 1) then{
+		if (b < 1) then{
+			if(c < 1) then {
+				print x;
+			} else {print c;}
+		} else {print b;}
+	} else {print a;}
+	while (a < b){
+		while (b < c){
+			while (c < x) {
+				y = 0;
+				print y;}}}
+	read y;
+	if (y > a) then{
+		read y;
+	} else {while (y < b) {
+			if (y == c) then{
+				print y;
+			} else {while (y != x){
+					z = x * a * b * c / y;}}}}}

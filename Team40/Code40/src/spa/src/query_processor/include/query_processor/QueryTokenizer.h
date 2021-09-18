@@ -31,6 +31,8 @@ private:
     inline static const char COMMA = ',';
     inline static const char R_BRACKET = ')';
     inline static const char SEMICOLON = ';';
+    inline static const char QUOTE = '"';
+    inline static const char UNDERSCORE = '_';
 
     // helpers
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
@@ -40,6 +42,7 @@ private:
     string trimR(string input);
     void splitComma(string input, vector<string> &vec);
     size_t findFirstWhitespace(string input);
+    string removeWhitespaceWithinQuotes(string input);
     string extractPatternString(string input);
     bool isValidName(string name);
 
