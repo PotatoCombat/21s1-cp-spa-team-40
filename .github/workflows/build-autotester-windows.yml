@@ -21,7 +21,7 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
     strategy:
       fail-fast: true
 
@@ -47,9 +47,18 @@ jobs:
   test:
     needs: build
     runs-on: windows-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     strategy:
-      fail-fast: true
+      matrix:
+        test-files:
+          - { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
+          - { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
+          - { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
+          - { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
+          - { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 } 
+          - { source: Source1, queries: Queries1, output: out1 } 
+          - { source: Source2, queries: Queries2, output: out2 } 
+          - { source: Source3, queries: Queries3, output: out3 } 
 
     steps:
       - uses: actions/checkout@v2
@@ -61,35 +70,13 @@ jobs:
           path: ./*
           key: ${{ runner.os }}-build
       - name: Run Tests
-        run: |
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source1.txt Team40\Tests40\Queries1.txt Team40\Code40\tests\out1.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source2.txt Team40\Tests40\Queries2.txt Team40\Code40\tests\out2.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\Source3.txt Team40\Tests40\Queries3.txt Team40\Code40\tests\out3.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TA_source.txt Team40\Tests40\TA_queries.txt Team40\Code40\tests\out4.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_BasicSource_source.txt Team40\Tests40\TD_BasicSource_queries.txt Team40\Code40\tests\out5.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_ComplexSource_source.txt Team40\Tests40\TD_ComplexSource_queries.txt Team40\Code40\tests\out6.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_DeepNest_source.txt Team40\Tests40\TD_DeepNest_queries.txt Team40\Code40\tests\out7.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_1_source.txt Team40\Tests40\TD_SIMPLE_1_queries.txt Team40\Code40\tests\out8.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_2_source.txt Team40\Tests40\TD_SIMPLE_2_queries.txt Team40\Code40\tests\out9.xml
-          Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_3_source.txt Team40\Tests40\TD_SIMPLE_3_queries.txt Team40\Code40\tests\out10.xml
-          # Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\TD_SIMPLE_4_source.txt Team40\Tests40\TD_SIMPLE_4_queries.txt Team40\Code40\tests\out11.xml
+        run: Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\${{ matrix.test-files.source }}.txt Team40\Tests40\${{ matrix.test-files.queries }}.txt Team40\Code40\tests\${{ matrix.test-files.output }}.xml
       - name: Archive System Test Results
         uses: actions/upload-artifact@v2
         with:
           name: system-test-report
           path: |
-            Team40/Code40/tests/out1.xml
-            Team40/Code40/tests/out2.xml
-            Team40/Code40/tests/out2.xml
-            Team40/Code40/tests/out3.xml
-            Team40/Code40/tests/out4.xml
-            Team40/Code40/tests/out5.xml
-            Team40/Code40/tests/out6.xml
-            Team40/Code40/tests/out7.xml
-            Team40/Code40/tests/out8.xml
-            Team40/Code40/tests/out9.xml
-            Team40/Code40/tests/out10.xml
-            # Team40/Code40/tests/out11.xml
+            Team40/Code40/tests/*.xml
             Team40/Code40/tests/analysis.xsl
 
 # might need test-2 test-3 etc. with the same structure if testing all source/query combinations tgt takes too long
