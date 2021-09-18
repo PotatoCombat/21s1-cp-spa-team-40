@@ -191,39 +191,9 @@ vector<string> QueryEvaluator::finaliseResult() {
     return results[resultIndex];
 }
 
-void QueryEvaluator::combineVectorResult(vector<string> result, Reference* referenceToCombine) {
-    int index = -1;
-    for (int i = 0; i < references.size(); i++) {
-        if (references[i]->equals(*referenceToCombine)) {
-            index = i;
-        }
-    }
-
-    if (referenceAppearInClauses[index] == false) {
-        results[index] = result;
-        referenceAppearInClauses[index] = true;
-    } else {
-        vector<string> filteredResult;
-        for (string element : results[index]) {
-            if (find(result.begin(), result.end(), element) != result.end()) {
-                filteredResult.push_back(element);
-            }
-        }
-        results[index] = filteredResult;
-    }
-}
 
 void QueryEvaluator::comebineResult(Result result) {
-    allQueriesReturnTrue =
-            allQueriesReturnTrue && result.isResultValid();
-
-    if (result.hasResultList1()) {
-        combineVectorResult(result.getResultList1(), result.getReference1());
-    }
-
-    if (result.hasResultList2()) {
-        combineVectorResult(result.getResultList2(), result.getReference2());
-    }
+    
 }
 
 void QueryEvaluator::toString(vector<int> &vectorIn, vector<string> &vectorOut) {

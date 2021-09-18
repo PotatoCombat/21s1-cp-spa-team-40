@@ -6,6 +6,8 @@
 
 using namespace std;
 
+typedef set<pair<int, string>> POINTER_SET;
+
 class ValueToPointersMap {
 private:
     string value;
@@ -27,4 +29,6 @@ public:
     bool hasPointerToRef(int refIndex);
 
     string getValue();
+
+    bool equals(ValueToPointersMap &rhs);
 };

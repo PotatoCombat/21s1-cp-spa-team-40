@@ -49,8 +49,6 @@ private:
 
     vector<string> finaliseResult();
 
-    void combineVectorResult(vector<string> result, Reference *referenceToCombine);
-
     void comebineResult(Result result);
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);

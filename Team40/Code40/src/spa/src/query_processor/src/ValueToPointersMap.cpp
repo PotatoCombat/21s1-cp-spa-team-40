@@ -31,3 +31,8 @@ bool ValueToPointersMap::hasPointerToRef(int refIndex) {
 }
 
 string ValueToPointersMap::getValue() { return value; }
+
+bool ValueToPointersMap::equals(ValueToPointersMap& rhs) {
+    return this->getValue() == rhs.getValue() &&
+           this->getPointers() == rhs.getPointers();
+}
