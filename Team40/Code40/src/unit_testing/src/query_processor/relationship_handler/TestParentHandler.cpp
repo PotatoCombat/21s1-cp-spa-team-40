@@ -1,22 +1,22 @@
-//#include "../test_util/PKBStub.h"
-//#include "../test_util/PKBStub2.h"
-//#include "query_processor/Result.h"
-//#include "query_processor/model/Clause.h"
-//#include "query_processor/model/Reference.h"
-//#include "query_processor/relationship_handler/ParentHandler.h"
-//
-//#include "catch.hpp"
-//
-//using namespace std;
-//
-//struct TestParentHandler {
-//    static PKBStub pkbStub;
-//    static PKBStub2 pkbStubNoParent;
-//};
-//
-//PKBStub TestParentHandler::pkbStub = PKBStub();
-//PKBStub2 TestParentHandler::pkbStubNoParent = PKBStub2();
-//
+#include "../test_util/PKBStub.h"
+#include "../test_util/PKBStub2.h"
+#include "query_processor/Result.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
+#include "query_processor/relationship_handler/ParentHandler.h"
+
+#include "catch.hpp"
+
+using namespace std;
+
+struct TestParentHandler {
+    static PKBStub pkbStub;
+    static PKBStub2 pkbStubNoParent;
+};
+
+PKBStub TestParentHandler::pkbStub = PKBStub();
+PKBStub2 TestParentHandler::pkbStubNoParent = PKBStub2();
+
 //TEST_CASE("ParentHandler: eval - WILDCARD WILDCARD - source has parent") {
 //    Result expectedResult;
 //    expectedResult.setValid(true);

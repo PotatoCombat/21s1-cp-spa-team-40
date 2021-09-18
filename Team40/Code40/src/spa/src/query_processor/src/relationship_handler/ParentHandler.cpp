@@ -102,13 +102,17 @@ Result ParentHandler::eval(int ref1Index, int ref2Index) {
         for (int parentStmt : parentStmts) {
             set<int> childStmts = pkb->getChildStmts(parentStmt);
             POINTER_SET related;
+            bool valid = false;
             for (auto stmt : childStmts) {
                 if (isDesTypeStmtType(secondReference->getDeType(),
                                       pkb->getStmtType(stmt))) {
-                    related.insert(make_pair(ref2Index, to_string(stmt)));
+                    valid = true;
+                    if (secondReference->getRefType() == ReferenceType::SYNONYM) {
+                        related.insert(make_pair(ref2Index, to_string(stmt)));
+                    }
                 }
             }
-            if (related.size() > 0) {
+            if (valid) {
                 ValueToPointersMap map(to_string(parentStmt), related);
                 firstStmtResults.push_back(map);
             }
@@ -131,11 +135,10 @@ Result ParentHandler::eval(int ref1Index, int ref2Index) {
 
         for (int childStmt : childStmts) {
             int parentStmt = pkb->getParentStmt(childStmt);
-            if (isDesTypeStmtType(firstReference->getDeType(),
+            if (parentStmt != -1 && isDesTypeStmtType(firstReference->getDeType(),
                                   pkb->getStmtType(parentStmt))) {
-                ValueToPointersMap map(
-                    to_string(childStmt),
-                    POINTER_SET{make_pair(ref1Index, to_string(parentStmt))});
+                ValueToPointersMap map(to_string(childStmt),
+                        POINTER_SET{make_pair(ref1Index, to_string(parentStmt))});
                 secondStmtResults.push_back(map);
             }
         }

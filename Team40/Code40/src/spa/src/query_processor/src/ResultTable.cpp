@@ -77,7 +77,9 @@ void ResultTable::removeMap(int refIndex, string value) {
             }
         }
         int mapIndex = findMapIndex(ref.first, ref.second);
-        mapTable[ref.first].erase(mapTable[ref.first].begin() + mapIndex);
+        if (mapIndex != -1) {
+            mapTable[ref.first].erase(mapTable[ref.first].begin() + mapIndex);
+        }
     }
 }
 
