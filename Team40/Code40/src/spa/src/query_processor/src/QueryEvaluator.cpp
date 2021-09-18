@@ -212,6 +212,21 @@ void QueryEvaluator::comebineResult(Result result) {
     vector<ValueToPointersMap> res2;
     vector<pair<int, string>> toRemoveLater;
 
+    if (result.hasResultList1() && result.hasResultList2()) {
+        ref1 = result.getReference1();
+        int refIndex1 = getRefIndex(ref1);
+        ref2 = result.getReference2();
+        int refIndex2 = getRefIndex(ref2);
+        if (referenceAppearInClauses[refIndex1] && referenceAppearInClauses[refIndex2]) {
+            res1 = result.getResultList1();
+            res2 = result.getResultList2();
+            for (ValueToPointersMap map : res1) {
+            
+            }
+
+        }
+    }
+
     if (result.hasResultList1()) {
         res1 = result.getResultList1();
         ref1 = result.getReference1();

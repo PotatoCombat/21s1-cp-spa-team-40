@@ -90,3 +90,21 @@ vector<string> ResultTable::getValues(int refIndex) {
     }
     return res;
 }
+
+bool ResultTable::hasLink(int refIndex1, string value1, int refIndex2, string value2) {
+    int i = findMapIndex(refIndex1, value1);
+    if (i == -1) {
+        return false;
+    }
+    return mapTable[refIndex1][i].hasLink(refIndex2, value2);
+}
+
+void ResultTable::removeLink(int refIndex1, string value1, int refIndex2, string value2) {
+    if (!hasLink(refIndex1, value1, refIndex2, value2)) {
+        return;
+    }
+    int i = findMapIndex(refIndex1, value1);
+    mapTable[refIndex1][i].erasePointer(make_pair(refIndex2, value2));
+    int i2 = findMapIndex(refIndex2, value2);
+    mapTable[refIndex2][i].erasePointer(make_pair(refIndex1, value1));
+}

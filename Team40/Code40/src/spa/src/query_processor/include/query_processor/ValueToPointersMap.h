@@ -28,6 +28,8 @@ public:
 
     bool hasPointerToRef(int refIndex);
 
+    bool hasLink(int refIndex, string value);
+
     string getValue();
 
     bool equals(ValueToPointersMap &rhs);

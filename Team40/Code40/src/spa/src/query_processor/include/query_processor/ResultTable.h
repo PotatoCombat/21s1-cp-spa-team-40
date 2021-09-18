@@ -34,4 +34,8 @@ public:
     void removeMap(int refIndex, string value);
 
     vector<string> getValues(int refIndex);
+
+    bool hasLink(int refIndex1, string value1, int refIndex2, string value2);
+
+    void removeLink(int refIndex1, string value1, int refIndex2, string value2);
 };

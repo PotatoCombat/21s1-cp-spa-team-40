@@ -30,6 +30,10 @@ bool ValueToPointersMap::hasPointerToRef(int refIndex) {
     return false;
 }
 
+bool ValueToPointersMap::hasLink(int refIndex, string value) {
+    return pointers.find(make_pair(refIndex, value)) != pointers.end();
+}
+
 string ValueToPointersMap::getValue() { return value; }
 
 bool ValueToPointersMap::equals(ValueToPointersMap& rhs) {
