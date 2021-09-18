@@ -85,3 +85,73 @@ void Statement::addElseStmt(Statement *stmt) {
     }
     this->elseStmtLst->push_back(stmt);
 }
+
+bool Statement::operator==(const Statement &other) const {
+    bool sameIndex = index == other.index;
+    bool sameType = statementType == other.statementType;
+
+    bool sameVar = variable.has_value() == other.variable.has_value();
+    if (variable.has_value() && other.variable.has_value()) {
+        sameVar = *variable.value() == *other.variable.value();
+    }
+
+    bool sameProc = procName.has_value() == other.procName.has_value();
+    if (procName.has_value() && other.procName.has_value()) {
+        sameProc = procName.value() == other.procName.value();
+    }
+
+    bool sameExpressionLst = expressionLst.has_value() == other.expressionLst.has_value();
+    if (expressionLst.has_value() && other.expressionLst.has_value()) {
+        sameExpressionLst = expressionLst.value() == other.expressionLst.value();
+    }
+
+    bool sameExpressionVars = expressionVars.size() == other.expressionVars.size()
+                              && equal(
+                                     expressionVars.begin(),
+                                     expressionVars.end(),
+                                     other.expressionVars.begin(),
+                                     [] (const Variable *lhs, const Variable *rhs) {
+                                         return *lhs == *rhs;
+                                     });
+
+    bool sameExpressionConsts = expressionConsts.size() == other.expressionConsts.size()
+                                && equal(
+                                       expressionConsts.begin(),
+                                       expressionConsts.end(),
+                                       other.expressionConsts.begin(),
+                                       [] (const ConstantValue *lhs, const ConstantValue *rhs) {
+                                           return *lhs == *rhs;
+                                       });
+
+    bool sameThenStmtList = thenStmtLst.has_value() == other.thenStmtLst.has_value();
+    if (thenStmtLst.has_value() && other.thenStmtLst.has_value()) {
+        sameThenStmtList = equal(
+            thenStmtLst->begin(),
+            thenStmtLst->end(),
+            other.thenStmtLst->begin(),
+            [] (const Statement *lhs, const Statement *rhs) {
+                return *lhs == *rhs;
+            });
+    }
+
+    bool sameElseStmtList = elseStmtLst.has_value() == other.elseStmtLst.has_value();
+    if (elseStmtLst.has_value() && other.thenStmtLst.has_value()) {
+        sameThenStmtList = equal(
+            elseStmtLst->begin(),
+            elseStmtLst->end(),
+            other.elseStmtLst->begin(),
+            [] (const Statement *lhs, const Statement *rhs) {
+                return *lhs == *rhs;
+            });
+    }
+
+    return sameIndex
+        && sameType
+        && sameVar
+        && sameProc
+        && sameExpressionLst
+        && sameExpressionVars
+        && sameExpressionConsts
+        && sameThenStmtList
+        && sameElseStmtList;
+}
