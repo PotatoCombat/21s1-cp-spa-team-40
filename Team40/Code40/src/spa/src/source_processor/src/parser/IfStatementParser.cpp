@@ -49,7 +49,7 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
         }
         Parser parser;
         if ((currContent[0] != "}" && currContent[0] != "else") ||
-            parser.isAssignStmt(content)) {
+            parser.isAssignStmt(currContent)) {
             auto nestedStmt =
                 parser.parseStatement(currContent, currIndex, programLines, i);
             if (terminator == 0) {
