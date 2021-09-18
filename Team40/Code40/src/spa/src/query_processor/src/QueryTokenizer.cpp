@@ -119,7 +119,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                 if (not_name_char_pos != string::npos) {
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ','
-                        token2 = token;
+                        token2 = trimR(input.substr(curr_pos, size - 1));
                     } else if (size <= token.size()) { // something after ','
                         token2 = token.substr(0, size - 1);
                     }
@@ -147,6 +147,7 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
                     token3 = removeWhitespaceWithinQuotes(token3);
                     clss.push_back(make_tuple(token1, token2, token3));
                 } else if (isClause == 2) {
+                    token2 = removeWhitespaceWithinQuotes(token2);
                     token3 = extractPatternString(token3);
                     pats.push_back(make_tuple(token1, token2, token3));
                 } else {
