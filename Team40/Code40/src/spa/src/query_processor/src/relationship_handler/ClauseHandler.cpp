@@ -4,7 +4,8 @@ StatementType ClauseHandler::desTypeToStmtType(DesignEntityType desType) {
     if (desType == DesignEntityType::PROCEDURE ||
         desType == DesignEntityType::CONSTANT ||
         desType == DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError("RelationshipHandler.desTypeToStmtType(): desType is not of type stmt");
+        throw ClauseHandlerError("RelationshipHandler.desTypeToStmtType(): "
+                                 "desType is not of type stmt");
     }
 
     switch (desType) {
@@ -32,9 +33,10 @@ StatementType ClauseHandler::desTypeToStmtType(DesignEntityType desType) {
     }
 }
 
-bool ClauseHandler::isDesTypeStmtType(DesignEntityType desType, StatementType stmtType) {
-    if (desType == DesignEntityType::PROCEDURE || 
-        desType == DesignEntityType::CONSTANT || 
+bool ClauseHandler::isDesTypeStmtType(DesignEntityType desType,
+                                      StatementType stmtType) {
+    if (desType == DesignEntityType::PROCEDURE ||
+        desType == DesignEntityType::CONSTANT ||
         desType == DesignEntityType::VARIABLE) {
         return false;
     }
@@ -42,6 +44,6 @@ bool ClauseHandler::isDesTypeStmtType(DesignEntityType desType, StatementType st
     if (desType == DesignEntityType::STMT) {
         return true;
     }
-    
+
     return desTypeToStmtType(desType) == stmtType;
 }

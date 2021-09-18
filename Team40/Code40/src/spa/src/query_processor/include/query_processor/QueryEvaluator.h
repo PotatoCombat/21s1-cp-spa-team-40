@@ -4,16 +4,22 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <map>
+#include <utility>
 
 #include "Result.h"
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ResultTable.h"
+#include "query_processor/ValueToPointersMap.h"
+
 #include "query_processor/model/Clause.h"
+#include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
-#include "query_processor/model/PatternClause.h"
 
+#include "query_processor/relationship_handler/AssignPatternHandler.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
@@ -24,29 +30,33 @@
 #include "query_processor/relationship_handler/ParentStarHandler.h"
 #include "query_processor/relationship_handler/UsesProcHandler.h"
 #include "query_processor/relationship_handler/UsesStmtHandler.h"
-#include "query_processor/relationship_handler/AssignPatternHandler.h"
 
 using namespace std;
 
 class QueryEvaluator {
 private:
     PKB *pkb;
+    Reference *returnReference;
+    vector<Reference *> references;
+    vector<Clause *> clauses;
+    vector<PatternClause *> patterns;
+    vector<bool> referenceAppearInClauses;
+    ResultTable resultTable;
+    bool allQueriesReturnTrue;
 
-    void evalPattern(vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<PatternClause *> &patterns, vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void clear();
 
-    void evalSuchThat(vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<Clause *> &clauses, vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void evalPattern();
 
-    vector<string> finaliseResult(Reference* returnReference, vector<vector<string>> &results, vector<Reference *> &references,
-                        vector<bool> &referenceAppearInClauses, bool &allQueriesReturnTrue);
+    void evalSuchThat();
 
-    void combineResult(vector<vector<string>> &results,
-                       vector<Reference *> &references, vector<string> result,
-                       Reference *referenceToCombine,
-                       vector<bool> &referenceAppearInClauses);
+    vector<string> finaliseResult();
+
+    void comebineResult(Result result);
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);
+
+    int getRefIndex(Reference *ref);
 
 public:
     QueryEvaluator(PKB *pkb);

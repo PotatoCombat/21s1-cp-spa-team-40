@@ -256,12 +256,12 @@ Select s such that Follows*(s, a) pattern a("   d", _"a "_)
 52 - uses and pattern
 assign a; variable v;
 Select a such that Uses(a, v) pattern a(v, _)
-1, 3, 7, 11, 15, 16, 21
+3, 11, 16, 21
 5000
 53 - uses and pattern with no wildcards
 assign a; while w; variable v;
 Select a such that Uses(w, v) pattern a(v, _"y"_)
-21, 15, 7
+21
 5000
 54 - two synonyms in follows
 print p; read r;
