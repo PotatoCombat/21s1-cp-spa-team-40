@@ -11,7 +11,6 @@ struct TestExtractIfStatement {
     static PKB pkb;
     static ProcName PROC_NAME;
     static VarName VAR_NAME;
-    static vector<string> DUMMY_EXPRESSION_LIST;
 
 public:
     static void reset() {
@@ -23,8 +22,6 @@ public:
 PKB TestExtractIfStatement::pkb = PKB();
 ProcName TestExtractIfStatement::PROC_NAME = "PROC";
 VarName TestExtractIfStatement::VAR_NAME = "VAR";
-vector<string> TestExtractIfStatement::DUMMY_EXPRESSION_LIST =
-    vector<string>{"1", "+", "2"};
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     TestExtractIfStatement::reset();
