@@ -52,7 +52,7 @@ private:
 
     vector<string> finaliseResult();
 
-    void comebineResult(Result result);
+    void combineResult(Result result);
 
     void toString(vector<int> &vectorIn, vector<string> &vectorOut);
 
