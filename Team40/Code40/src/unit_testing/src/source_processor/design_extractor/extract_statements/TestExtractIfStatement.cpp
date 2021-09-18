@@ -2,10 +2,16 @@
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 
+/**
+ * TODO: Refactor tests once we fix validation for cond_expr
+ * https://github.com/nus-cs3203/21s1-cp-spa-team-40/issues/148
+ */
+
 struct TestExtractIfStatement {
     static PKB pkb;
     static ProcName PROC_NAME;
     static VarName VAR_NAME;
+    static vector<string> DUMMY_EXPRESSION_LIST;
 
 public:
     static void reset() {
@@ -17,6 +23,8 @@ public:
 PKB TestExtractIfStatement::pkb = PKB();
 ProcName TestExtractIfStatement::PROC_NAME = "PROC";
 VarName TestExtractIfStatement::VAR_NAME = "VAR";
+vector<string> TestExtractIfStatement::DUMMY_EXPRESSION_LIST =
+    vector<string>{"1", "+", "2"};
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     TestExtractIfStatement::reset();
@@ -31,6 +39,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenStatement);
     ifStatement.addElseStmt(&elseStatement);
+    ifStatement.addExpressionVar(&variable);
     thenStatement.setVariable(&variable);
     elseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);
@@ -74,9 +83,11 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseStatement);
+    ifStatement.addExpressionVar(&variable);
     elseStatement.setVariable(&variable);
     thenIfStatement.addThenStmt(&thenIfThenStatement);
     thenIfStatement.addElseStmt(&thenIfElseStatement);
+    thenIfStatement.addExpressionVar(&variable);
     thenIfThenStatement.setVariable(&variable);
     thenIfElseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);

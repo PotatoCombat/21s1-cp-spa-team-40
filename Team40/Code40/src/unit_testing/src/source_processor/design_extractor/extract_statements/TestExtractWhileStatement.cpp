@@ -2,6 +2,11 @@
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 
+/**
+ * TODO: Refactor tests once we fix validation for cond_expr
+ * https://github.com/nus-cs3203/21s1-cp-spa-team-40/issues/148
+ */
+
 struct TestExtractWhileStatement {
     static PKB pkb;
     static ProcName PROC_NAME;
@@ -30,6 +35,7 @@ TEST_CASE(
 
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenStatement);
+    whileStatement.addExpressionVar(&variable);
     thenStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
     program.addToProcLst(&procedure);
@@ -64,7 +70,9 @@ TEST_CASE(
 
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenWhileStatement);
+    whileStatement.addExpressionVar(&variable);
     thenWhileStatement.addThenStmt(&thenWhileThenStatement);
+    thenWhileStatement.addExpressionVar(&variable);
     thenWhileThenStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
     program.addToProcLst(&procedure);
@@ -97,5 +105,57 @@ TEST_CASE(
     REQUIRE(TestExtractWhileStatement::pkb
                 .getParentStarStmts(thenWhileThenStatement.getIndex())
                 .count(whileStatement.getIndex()));
+}
 
+TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
+          "in THEN StatementList") {
+    TestExtractWhileStatement::reset();
+
+    Program program;
+    Procedure procedure(TestExtractWhileStatement::PROC_NAME);
+    Statement whileStatement(1, StatementType::WHILE);
+    Statement thenStatement1(2, StatementType::READ);
+    Statement thenStatement2(3, StatementType::READ);
+    Statement thenStatement3(4, StatementType::READ);
+    Variable variable(TestExtractWhileStatement::VAR_NAME);
+
+    whileStatement.addExpressionVar(&variable);
+    whileStatement.addThenStmt(&thenStatement1);
+    whileStatement.addThenStmt(&thenStatement2);
+    thenStatement1.setVariable(&variable);
+    thenStatement2.setVariable(&variable);
+    thenStatement3.setVariable(&variable);
+    procedure.addToStmtLst(&whileStatement);
+    procedure.addToStmtLst(&thenStatement1);
+    procedure.addToStmtLst(&thenStatement2);
+    procedure.addToStmtLst(&thenStatement3);
+    program.addToProcLst(&procedure);
+
+    DesignExtractor de(&TestExtractWhileStatement::pkb);
+    de.extract(&program);
+
+    auto follow1 = TestExtractWhileStatement::pkb.getFollowingStmt(
+        thenStatement1.getIndex());
+    auto followStar1 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
+        thenStatement1.getIndex());
+    auto follow2 = TestExtractWhileStatement::pkb.getFollowingStmt(
+        thenStatement2.getIndex());
+    auto followStar2 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
+        thenStatement2.getIndex());
+    auto follow3 = TestExtractWhileStatement::pkb.getFollowingStmt(
+        thenStatement3.getIndex());
+    auto followStar3 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
+        thenStatement3.getIndex());
+
+    REQUIRE(follow1 == thenStatement2.getIndex());
+    REQUIRE(followStar1.size() == 2);
+    REQUIRE(followStar1.count(thenStatement2.getIndex()));
+    REQUIRE(followStar1.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow2 == thenStatement3.getIndex());
+    REQUIRE(followStar2.size() == 1);
+    REQUIRE(followStar2.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow3 == -1);
+    REQUIRE(followStar3.empty());
 }
