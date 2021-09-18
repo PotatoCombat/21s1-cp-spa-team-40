@@ -16,4 +16,4 @@ typedef string PatArg;
 
 typedef pair<DeclType, DeclValue> DeclPair;
 typedef tuple<ClsType, ClsArg, ClsArg> ClsTuple;
-typedef pair<PatIdent, vector<PatArg>> PatTuple;
+typedef tuple<PatIdent, PatArg, PatArg> PatTuple;
