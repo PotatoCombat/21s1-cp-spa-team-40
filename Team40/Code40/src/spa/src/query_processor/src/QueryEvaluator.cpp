@@ -56,7 +56,7 @@ void QueryEvaluator::evalPattern() {
             ref2Index = getRefIndex(pattern->getVar());
         }
         tempResult = patternHandler->eval(ref1Index, ref2Index);
-        comebineResult(tempResult);
+        combineResult(tempResult);
     }
 }
 
@@ -118,7 +118,7 @@ void QueryEvaluator::evalSuchThat() {
 
         // eval and combine result
         tempResult = clauseHandler->eval(ref1Index, ref2Index);
-        comebineResult(tempResult);
+        combineResult(tempResult);
     }
 }
 
@@ -203,7 +203,7 @@ vector<string> QueryEvaluator::finaliseResult() {
     return resultTable.getValues(resultIndex);
 }
 
-void QueryEvaluator::comebineResult(Result result) {
+void QueryEvaluator::combineResult(Result result) {
     allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
 
     Reference *ref1 = NULL, *ref2 = NULL;
