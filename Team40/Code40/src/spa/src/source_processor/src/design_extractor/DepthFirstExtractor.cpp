@@ -84,8 +84,8 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     // 1. Handle condition
-    set<Variable *> variables = ifStatement->getExpressionVars();
-    set<ConstantValue *> constantValues = ifStatement->getExpressionConsts();
+    auto variables = ifStatement->getExpressionVars();
+    auto constantValues = ifStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
         throw runtime_error(to_string(ifStatement->getIndex()) +
                             ": IfStatement is missing cond_expr.");
@@ -126,8 +126,8 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     // 1. Handle condition
-    set<Variable *> variables = whileStatement->getExpressionVars();
-    set<ConstantValue *> constantValues = whileStatement->getExpressionConsts();
+    auto variables = whileStatement->getExpressionVars();
+    auto constantValues = whileStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
         throw runtime_error(to_string(whileStatement->getIndex()) +
                             ": WhileStatement is missing cond_expr.");
