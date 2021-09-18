@@ -4,7 +4,6 @@
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
 
-
 #include <optional>
 #include <set>
 #include <stdexcept>
@@ -19,7 +18,7 @@ public:
     int getIndex();
     StatementType getStatementType();
 
-    Variable* getVariable();
+    Variable *getVariable();
     ProcName getProcName();
 
     vector<string> getExpressionLst();

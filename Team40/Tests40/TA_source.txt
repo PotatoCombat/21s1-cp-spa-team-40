@@ -1,0 +1,39 @@
+procedure    procedure {     
+    if (0 == 0) then {
+        LHS = LHS;
+        print RHS;
+        read LLMAX;
+        if (1 == 2) then {
+            normSq = z + (((((y)))));
+        } else {
+            a = 1 + (1 / 2) + (1 / 3) + (1 / 4) + (1 / 5);
+
+            if (1 == 2) then {
+                while (1 == 2) {
+                    if = if + else + while + then + procedure;
+                }
+            } else {
+                while (x > z) {
+                    while (while > while) {
+                        read read;
+                    }
+                    x = y;
+                    y = normSq + 3;
+                    if (!((x < y) || (((y <= z) && (x > y)) || (x + 5 - 6 % 8 >= 90000)))) then {
+                        y = 1;
+                    } else {
+                        while (1 == 2) {
+                            while (1 == 2) {
+                                LHS = LHS;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        LHS = LHS99;
+        print RHS99;
+    } else {
+        supppppppppppppppppppppperrrrrrrrrrrrrrrrrlongvarrrrrrrrrrriablename = 123456789;
+    }
+}

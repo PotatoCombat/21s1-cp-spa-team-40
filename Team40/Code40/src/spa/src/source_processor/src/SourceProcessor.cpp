@@ -3,15 +3,13 @@
 #include <vector>
 
 #include "common/model/Program.h"
-
-#include "source_processor/Line.h"
 #include "source_processor/SourceProcessor.h"
-#include "source_processor/design_extractor/DesignExtractor.h"
+#include "source_processor/parser/Line.h"
 
 SourceProcessor::SourceProcessor(PKB *pkb) {
     this->pkb = pkb;
+    this->lexer = Lexer();
     this->parser = Parser();
-    this->programParser = ProgramParser();
     this->designExtractor = DesignExtractor(pkb);
 }
 
@@ -19,10 +17,15 @@ void SourceProcessor::processSource(string filename) {
     fstream file;
     file.open(filename, ios::in);
     if (file.is_open()) {
-        vector<Line> programLines = parser.parseFile(file);
-        Program program;
-        programParser.parseProgram(programLines, program);
-        designExtractor.extract(&program);
+        try {
+            vector<Line> programLines = lexer.tokenizeFile(file);
+            Program program;
+            parser.parseProgram(programLines, program);
+            designExtractor.extract(&program);
+        } catch (const exception &e) {
+            cout << e.what();
+            exit(1);
+        }
     } else {
         cout << "No such file";
     }
