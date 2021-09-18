@@ -206,7 +206,6 @@ vector<string> QueryEvaluator::finaliseResult() {
 void QueryEvaluator::comebineResult(Result result) {
     allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
 
-    bool hasResultList1 = false, hasResultList2 = false;
     Reference *ref1 = NULL, *ref2 = NULL;
     vector<ValueToPointersMap> res1;
     vector<ValueToPointersMap> res2;
