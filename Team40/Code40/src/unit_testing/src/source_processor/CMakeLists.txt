@@ -5,7 +5,7 @@ file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/../main.cpp")
 file(GLOB srcs
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/design_extractor/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/design_extractor/statements/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/design_extractor/extract_statements/*.cpp"
         )
 
 # This adds all source files into unit_testing executable

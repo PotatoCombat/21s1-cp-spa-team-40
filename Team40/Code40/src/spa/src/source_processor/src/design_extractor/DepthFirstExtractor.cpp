@@ -84,6 +84,12 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     // 1. Handle condition
+    set<Variable *> variables = ifStatement->getExpressionVars();
+    set<ConstantValue *> constants = ifStatement->getExpressionConsts();
+    if (variables.empty() && constants.empty()) {
+        throw runtime_error(to_string(ifStatement->getIndex()) +
+                            ": IfStatement is missing cond_expr.");
+    }
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
     for (Variable *variable : ifStatement->getExpressionVars()) {
         extractVariable(variable);
@@ -120,6 +126,12 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     // 1. Handle condition
+    set<Variable *> variables = whileStatement->getExpressionVars();
+    set<ConstantValue *> constants = whileStatement->getExpressionConsts();
+    if (variables.empty() && constants.empty()) {
+        throw runtime_error(to_string(whileStatement->getIndex()) +
+                            ": WhileStatement is missing cond_expr.");
+    }
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : whileStatement->getExpressionVars()) {
         extractVariable(variable);
