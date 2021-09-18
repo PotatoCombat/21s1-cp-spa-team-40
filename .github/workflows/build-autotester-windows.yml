@@ -52,17 +52,17 @@ jobs:
       fail-fast: false
       matrix:
         test-files:
-          - { source: Source1, queries: Queries1, output: out1 } 
-          - { source: Source2, queries: Queries2, output: out2 } 
+          #- { source: Source1, queries: Queries1, output: out1 } 
+          #- { source: Source2, queries: Queries2, output: out2 } 
           - { source: Source3, queries: Queries3, output: out3 } 
           - { source: TA_source, queries: TA_queries, output: TA } 
-          - { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
-          - { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
-          - { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
+          #- { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
+          #- { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
+          #- { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
           - { source: TD_SIMPLE_1_source, queries: TD_SIMPLE_1_queries, output: TD_SIMPLE_1 } 
-          - { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
+          #- { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
           - { source: TD_SIMPLE_3_source, queries: TD_SIMPLE_3_queries, output: TD_SIMPLE_3 } 
-          - { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 } 
+          #- { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 } 
 
     steps:
       - uses: actions/checkout@v2
