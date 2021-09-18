@@ -1,11 +1,9 @@
 #pragma once
-
+#include <map>
+#include <set>
+#include <vector>
 #include "Iterator.h"
 #include "common/model/Abstractions.h"
-
-
-#include <map>
-#include <vector>
 
 using namespace std;
 
@@ -17,8 +15,8 @@ public:
     /// Stores the pointer \param entity in the map.
     virtual void insert(T *entity) {
         string name = entity->getName();
-        names.push_back(name);
-        entities.push_back(entity);
+        names.insert(name);
+//        entities.push_back(entity);
         nameToEntityMap[name] = entity;
         ++size;
     }
@@ -41,7 +39,7 @@ public:
 
 private:
     int size = 0;
-    vector<Name> names;
-    vector<T*> entities;
+    set<Name> names;
+//    vector<T*> entities;
     map<Name, T *> nameToEntityMap;
 };

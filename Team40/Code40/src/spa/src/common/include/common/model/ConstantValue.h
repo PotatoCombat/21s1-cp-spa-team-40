@@ -1,18 +1,17 @@
 #pragma once
-
+#include <string>
 #include "Factor.h"
-#include "string"
+using namespace std;
 
 class ConstantValue : public Factor {
-    int value;
-    string name;
-
 public:
-    explicit ConstantValue(int value);
+    explicit ConstantValue(string name);
 
-    int getValue() const;
-    string getName() override;
+    string getName();
 
     bool operator<(const ConstantValue &other) const;
     bool operator==(const ConstantValue &other) const;
+
+private:
+    string name;
 };

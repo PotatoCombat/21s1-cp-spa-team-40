@@ -151,8 +151,7 @@ vector<string> QueryEvaluator::finaliseResult(Reference* returnReference, vector
             return result;
         }
         if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
-            vector<int> consts = pkb->getAllConsts().asVector();
-            toString(consts, result);
+            result = pkb->getAllConsts().asVector();
             return result;
         }
         if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
