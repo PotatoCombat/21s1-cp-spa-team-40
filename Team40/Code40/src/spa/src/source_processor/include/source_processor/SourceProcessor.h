@@ -1,9 +1,9 @@
 #pragma once
 
 #include "pkb/PKB.h"
-#include "source_processor/Parser.h"
-#include "source_processor/ProgramParser.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
+#include "source_processor/parser/Lexer.h"
+#include "source_processor/parser/Parser.h"
 
 class SourceProcessor {
 public:
@@ -13,7 +13,7 @@ public:
 
 private:
     PKB *pkb;
+    Lexer lexer;
     Parser parser;
-    ProgramParser programParser;
     DesignExtractor designExtractor = DesignExtractor(nullptr);
 };
