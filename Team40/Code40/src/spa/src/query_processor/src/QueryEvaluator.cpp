@@ -48,8 +48,15 @@ void QueryEvaluator::evalPattern() {
         }
 
         // eval and combine result
-        // tempResult = patternHandler->eval();
-        // comebineResult(tempResult);
+        int ref1Index = -1, ref2Index = -1;
+        if (pattern->getStmt()->getRefType() == ReferenceType::SYNONYM) {
+            ref1Index = getRefIndex(pattern->getStmt());
+        }
+        if (pattern->getVar()->getRefType() == ReferenceType::SYNONYM) {
+            ref2Index = getRefIndex(pattern->getVar());
+        }
+        tempResult = patternHandler->eval(ref1Index, ref2Index);
+        comebineResult(tempResult);
     }
 }
 
@@ -102,12 +109,10 @@ void QueryEvaluator::evalSuchThat() {
         }
 
         int ref1Index = -1, ref2Index = -1;
-        if (clause->getFirstReference()->getRefType() ==
-            ReferenceType::SYNONYM) {
+        if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
             ref1Index = getRefIndex(clause->getFirstReference());
         }
-        if (clause->getSecondReference()->getRefType() ==
-            ReferenceType::SYNONYM) {
+        if (clause->getSecondReference()->getRefType() == ReferenceType::SYNONYM) {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 

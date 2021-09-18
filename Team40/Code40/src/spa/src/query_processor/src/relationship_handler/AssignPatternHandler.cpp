@@ -1,62 +1,85 @@
 #include "query_processor/relationship_handler/AssignPatternHandler.h"
 
-Result AssignPatternHandler::eval() {
+Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
     Result result;
-    //   Reference *assign = patternClause->getStmt();
-    //   Reference* variable = patternClause->getVar();
-    //   string pattern = patternClause->getPattern();
+    Reference *assign = patternClause->getStmt();
+    Reference *variable = patternClause->getVar();
+    string pattern = patternClause->getPattern();
 
-    //   validate();
+    validate();
 
-    //   // pattern = WILDCARD => ModifiesStmtHandler
-    //   if (pattern == "_") {
-    //       Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
-    //       ModifiesStmtHandler handler(&clause, pkb);
-    //       Result temp = handler.eval();
-    //       // have to copy back because the Reference passed into clause is
-    //       deleted
-    //       // when this function finishes
-    //       if (temp.hasResultList1()) {
-    //           result.setResultList1(assign, temp.getResultList1());
-    //       }
-    //       if (temp.hasResultList2()) {
-    //           result.setResultList2(assign, temp.getResultList2());
-    //       }
-    //   }
+    // pattern = WILDCARD => ModifiesStmtHandler
+    if (pattern == "_") {
+        Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
+        ModifiesStmtHandler handler(&clause, pkb);
+        Result temp = handler.eval(ref1Index, ref2Index);
+        // have to copy back because the Reference passed into clause is deleted
+        // when this function finishes
+        result.setValid(temp.isResultValid());
+        if (temp.hasResultList1()) {
+            result.setResultList1(assign, temp.getResultList1());
+        }
+        if (temp.hasResultList2()) {
+            result.setResultList2(assign, temp.getResultList2());
+        }
+    }
 
-    //   // SYNONYM CONST
-    //   if (variable->getRefType() == ReferenceType::CONSTANT) {
-    //       vector<string> stmtResults;
-    //       set<int> stmts =
-    //           pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
-    //       for (auto stmt : stmts) {
-    //           stmtResults.push_back(to_string(stmt));
-    //       }
-    //       result.setResultList1(assign, stmtResults);
-    //       return result;
-    //   }
+    // SYNONYM CONST
+    if (variable->getRefType() == ReferenceType::CONSTANT) {
+        vector<ValueToPointersMap> stmtResults;
+        set<int> stmts =
+            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
+        for (auto stmt : stmts) {
+            stmtResults.push_back(ValueToPointersMap(to_string(stmt), POINTER_SET{}));
+        }
+        result.setResultList1(assign, stmtResults);
+        return result;
+    }
 
-    //   // SYNONYM SYNONYM, SYNONYM WILDCARD
-    //   vector<string> stmtResults;
-    //   vector<string> varResults;
-    //   set<int> stmtsSet;
-    //   vector<string> vars = pkb->getAllVars().asVector();
-    //   for (auto var : vars) {
-    //       set<int> stmts = pkb->getAssignsMatchingPattern(var, pattern);
-    //       if (stmts.size() > 0) {
-    //           varResults.push_back(var);
-    //           stmtsSet.insert(stmts.begin(), stmts.end());
-    //       }
-    //   }
-    //   for (auto stmt : stmtsSet) {
-    //       stmtResults.push_back(to_string(stmt));
-    //   }
+    // SYNONYM SYNONYM, SYNONYM WILDCARD
+    vector<ValueToPointersMap> stmtResults;
+    vector<ValueToPointersMap> varResults;
+    vector<int> assigns = pkb->getAllStmts(StatementType::ASSIGN).asVector();
+    vector<string> vars = pkb->getAllVars().asVector();
 
-    //   result.setResultList1(assign, stmtResults);
+    for (int assign : assigns) {
+        POINTER_SET related;
+        bool valid = false;
+        for (string var : vars) {
+            if (pkb->assignMatchesPattern(assign, var, pattern)) {
+                valid = true;
+                if (variable->getRefType() == ReferenceType::SYNONYM) {
+                    related.insert(make_pair(ref2Index, var));
+                }
+            }
+        }
+        if (valid) {
+            stmtResults.push_back(
+                ValueToPointersMap(to_string(assign), related));
+        }
+    }
+    
+    for (string var : vars) {
+        POINTER_SET related;
+        bool valid = false;
+        for (int assignStmt : assigns) {
+            if (pkb->assignMatchesPattern(assignStmt, var, pattern)) {
+                valid = true;
+                if (assign->getRefType() == ReferenceType::SYNONYM) {
+                    related.insert(make_pair(ref1Index, to_string(assignStmt)));
+                }
+            }
+        }
+        if (valid) {
+            varResults.push_back(ValueToPointersMap(var, related));
+        }
+    }
 
-    //   if (variable->getRefType() != ReferenceType::WILDCARD) {
-    //       result.setResultList2(variable, varResults);
-    //   }
+    result.setResultList1(assign, stmtResults);
+
+    if (variable->getRefType() != ReferenceType::WILDCARD) {
+        result.setResultList2(variable, varResults);
+    }
 
     return result;
 }
