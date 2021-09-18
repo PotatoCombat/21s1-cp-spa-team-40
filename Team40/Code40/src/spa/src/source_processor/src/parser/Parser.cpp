@@ -6,7 +6,7 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
 
-        if ((currContent[0] == "procedure") && (!isAssignStmt(currContent))) {
+        if (isProc(currContent)) {
             // ... stmtLst '}'
             if (i > 0) {
                 if (programLines[i - 1].getContent()[0] != "}") {
@@ -17,8 +17,7 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
             ProcedureParser procParser(currContent);
             currProc = procParser.parseProcedure();
 
-        } else if (!currContent.empty() && currContent[0] != "}" &&
-                   currContent[0] != "else") {
+        } else if (isStmt(currContent)) {
             Statement *stmt =
                 parseStatement(currContent, currIndex, programLines, i);
             currProc->addToStmtLst(stmt);
@@ -32,6 +31,15 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
 
 bool Parser::isAssignStmt(vector<string> content) {
     return find(content.begin(), content.end(), "=") != content.end();
+}
+
+bool Parser::isProc(vector<string> content) {
+    return (content[0] == "procedure") && (!isAssignStmt(content));
+}
+
+bool Parser::isStmt(vector<string> content) {
+    return ((!content.empty() && content[0] != "}" && content[0] != "else") ||
+            isAssignStmt(content));
 }
 
 Statement *Parser::parseStatement(vector<string> content, int index,
