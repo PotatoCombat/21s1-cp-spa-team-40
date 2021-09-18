@@ -220,10 +220,51 @@ void QueryEvaluator::comebineResult(Result result) {
         if (referenceAppearInClauses[refIndex1] && referenceAppearInClauses[refIndex2]) {
             res1 = result.getResultList1();
             res2 = result.getResultList2();
+            // remove links
+            for (ValueToPointersMap &map : res1) {
+                for (auto pointer : map.getPointers()) {
+                    if (!resultTable.hasLink(refIndex1, map.getValue(), 
+                                             pointer.first, pointer.second)) {
+                        map.erasePointer(pointer);
+                    }
+                } 
+            }
+            for (ValueToPointersMap &map : res2) {
+                for (auto pointer : map.getPointers()) {
+                    if (!resultTable.hasLink(refIndex2, map.getValue(),
+                                             pointer.first, pointer.second)) {
+                        map.erasePointer(pointer);
+                    }
+                }
+            }
+            map<string, set<pair<int, string>>> m;
             for (ValueToPointersMap map : res1) {
-            
+                m[map.getValue()] = map.getPointers();
             }
 
+            vector<string> existingValues = resultTable.getValues(refIndex1);
+            for (auto value : existingValues) {
+                for (auto pointer : resultTable.getPointers(refIndex1, value)) {
+                    if (m[value].find(pointer) == m[value].end()) {
+                        resultTable.removeLink(refIndex1, value, pointer.first, pointer.second);
+                    }
+                }
+            }
+            // add all
+            resultTable.addValue(refIndex1, res1);
+            resultTable.addValue(refIndex2, res2);
+            // remove those with no link
+            for (string refValue : resultTable.getValues(refIndex1)) {
+                if (!resultTable.hasPointerToRef(refIndex1, refValue, refIndex2)) {
+                    resultTable.removeMap(refIndex1, refValue);
+                }
+            }
+            for (string refValue : resultTable.getValues(refIndex2)) {
+                if (!resultTable.hasPointerToRef(refIndex2, refValue, refIndex1)) {
+                    resultTable.removeMap(refIndex2, refValue);
+                }
+            }
+            return;
         }
     }
 

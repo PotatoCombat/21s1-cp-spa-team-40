@@ -106,5 +106,5 @@ void ResultTable::removeLink(int refIndex1, string value1, int refIndex2, string
     int i = findMapIndex(refIndex1, value1);
     mapTable[refIndex1][i].erasePointer(make_pair(refIndex2, value2));
     int i2 = findMapIndex(refIndex2, value2);
-    mapTable[refIndex2][i].erasePointer(make_pair(refIndex1, value1));
+    mapTable[refIndex2][i2].erasePointer(make_pair(refIndex1, value1));
 }

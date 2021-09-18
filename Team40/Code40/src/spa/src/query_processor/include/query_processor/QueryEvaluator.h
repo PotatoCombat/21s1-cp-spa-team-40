@@ -4,6 +4,8 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <map>
+#include <utility>
 
 #include "Result.h"
 
