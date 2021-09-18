@@ -125,3 +125,56 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
                 .getParentStarStmts(thenIfElseStatement.getIndex())
                 .size() == 2);
 }
+
+TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
+          "in THEN StatementList") {
+    TestExtractIfStatement::reset();
+
+    Program program;
+    Procedure procedure(TestExtractIfStatement::PROC_NAME);
+    Statement whileStatement(1, StatementType::WHILE);
+    Statement thenStatement1(2, StatementType::READ);
+    Statement thenStatement2(3, StatementType::READ);
+    Statement thenStatement3(4, StatementType::READ);
+    Variable variable(TestExtractIfStatement::VAR_NAME);
+
+    whileStatement.addExpressionVar(&variable);
+    whileStatement.addThenStmt(&thenStatement1);
+    whileStatement.addThenStmt(&thenStatement2);
+    thenStatement1.setVariable(&variable);
+    thenStatement2.setVariable(&variable);
+    thenStatement3.setVariable(&variable);
+    procedure.addToStmtLst(&whileStatement);
+    procedure.addToStmtLst(&thenStatement1);
+    procedure.addToStmtLst(&thenStatement2);
+    procedure.addToStmtLst(&thenStatement3);
+    program.addToProcLst(&procedure);
+
+    DesignExtractor de(&TestExtractIfStatement::pkb);
+    de.extract(&program);
+
+    auto follow1 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement1.getIndex());
+    auto followStar1 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement1.getIndex());
+    auto follow2 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement2.getIndex());
+    auto followStar2 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement2.getIndex());
+    auto follow3 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement3.getIndex());
+    auto followStar3 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement3.getIndex());
+
+    REQUIRE(follow1 == thenStatement2.getIndex());
+    REQUIRE(followStar1.size() == 2);
+    REQUIRE(followStar1.count(thenStatement2.getIndex()));
+    REQUIRE(followStar1.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow2 == thenStatement3.getIndex());
+    REQUIRE(followStar2.size() == 1);
+    REQUIRE(followStar2.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow3 == -1);
+    REQUIRE(followStar3.empty());
+}
