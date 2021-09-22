@@ -7,7 +7,7 @@ Program Parser::parseProgram(vector<Line> programLines) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
 
-        if (currContent[0] == "procedure") {
+        if (isProc(currContent)) {
             // ... stmtLst '}'
             if (i > 0) {
                 if (programLines[i - 1].getContent()[0] != "}") {
