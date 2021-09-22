@@ -19,8 +19,7 @@ void SourceProcessor::processSource(string filename) {
     if (file.is_open()) {
         try {
             vector<Line> programLines = lexer.tokenizeFile(file);
-            Program program;
-            parser.parseProgram(programLines, program);
+            Program program = parser.parseProgram(programLines);
             designExtractor.extract(&program);
         } catch (const exception &e) {
             cout << e.what();

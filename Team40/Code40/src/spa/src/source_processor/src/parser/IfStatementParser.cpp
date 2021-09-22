@@ -33,6 +33,7 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
+        programIndex = i;
         if (currContent[0] == "}") {
             terminator++;
             // ... stmtLst '}' 'else' '{'stmtLst '}'
@@ -42,15 +43,14 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
                 throw invalid_argument("invalid if statement");
             }
             if (terminator == 2) {
-                programIndex = i;
                 break;
             }
             continue;
         }
-        if (currContent[0] != "}" && currContent[0] != "else") {
-            Parser parser;
-            auto nestedStmt =
-                parser.parseStatement(currContent, currIndex, programLines, i);
+        Parser parser;
+        if (parser.isStmt(currContent)) {
+            StatementParser stmtParser(currContent, currIndex, programLines, i);
+            auto nestedStmt = stmtParser.parseStatement();
             if (terminator == 0) {
                 stmt->addThenStmt(nestedStmt);
             } else if (terminator == 1) {
