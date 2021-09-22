@@ -17,6 +17,6 @@ public:
     Reference *getSecondReference();
     ClauseType getType();
     bool equals(Clause &other);
-    Clause* copy(); // not working
+    Clause* copy();
     ~Clause();
 };

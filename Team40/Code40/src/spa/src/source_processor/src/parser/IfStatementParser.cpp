@@ -11,16 +11,16 @@ IfStatementParser::IfStatementParser(vector<string> content, int index,
 
 Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
-    vector<string>::iterator endItr =
-        find(content.begin(), content.end(), "then");
+    vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
         throw invalid_argument("invalid if statement");
     // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
-    if (*next(ifItr) != "(" || *prev(endItr) != ")" || *next(endItr) != "{") {
+    if (*next(ifItr) != "(" || *prev(endItr) != "then" ||
+        *prev(prev(endItr)) != ")") {
         throw invalid_argument("invalid if statement");
     }
 
-    vector<string> condLst(next(next(ifItr)), prev(endItr));
+    vector<string> condLst(next(next(ifItr)), prev(prev(endItr)));
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;
     exprParser.parseExpression(condLst, stmt);

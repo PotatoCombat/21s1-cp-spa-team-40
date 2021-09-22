@@ -1,0 +1,175 @@
+1 - Select All Statements
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+2 - Select All Procedures
+procedure p; 
+Select p
+procedure
+5000
+3 - Select All Variables
+variable v;
+Select v
+LHS, RHS, LLMAX, normSq, z, y, a, if, else, while, then, procedure, read, x, LHS99, RHS99,supppppppppppppppppppppperrrrrrrrrrrrrrrrrlongvarrrrrrrrrrriablename
+5000
+4 - Select All Read Statements
+read r;
+Select r
+4, 13
+5000
+5 - Select All Print Statements
+print r;
+Select r
+3, 22 
+5000
+6 - Select All Call Statements
+call r;
+Select r
+
+5000
+7 - Select All While Statements
+while r;
+Select r
+9, 11, 12, 18, 19
+5000
+8 - Select All If Statements
+if r;
+Select r
+1, 5, 8, 16
+5000
+9 - Select All Assign Statements
+assign r;
+Select r
+2, 6, 7, 10, 14, 15, 17, 20, 21, 23
+5000
+10 - Select All Constants
+constant r;
+Select r
+0, 1, 2, 3, 4, 5, 6, 8, 90000, 123456789
+5000
+11 - Multiple Spaces
+stmt  s1;	stmt         s2;
+Select s1
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+12 - Multiple Tabs
+stmt  		s1;	stmt         		s2;					
+Select s1
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+13 - Invalid Queries (Select statement wrong)
+stmt s; variable v;
+Selec s
+none
+5000
+14 - Invalid Queries (no semicolon)
+stmt stmt
+Select stmt
+none
+5000
+15 - Same keyword name
+stmt  s1, Select;
+Select Select
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+16 - Vacuosly True
+stmt s, Select;
+Select s such that Follows(2, 3)
+2, 3, 4, 6, 7, 10, 9, 13, 12, 14, 15, 17, 20, 19, 18, 16, 11, 8, 5, 21, 22, 23, 1 
+5000
+17 - Parent(STMT_NO, STMT_NO)
+stmt s, Select;
+Select s such that Parent(11, 12)
+2, 3, 4, 6, 7, 10, 9, 13, 12, 14, 15, 17, 20, 19, 18, 16, 11, 8, 5, 21, 22, 23, 1 
+5000
+18 - Parent(STMT_NO, ENT_TYPE)
+stmt s, Select;
+Select s such that Parent(16, s)
+17, 18
+5000
+19 - Parent(STMT_NO, ENT_TYPE), no children
+stmt s, Select;
+Select s such that Parent(23, s)
+
+5000
+20 - Parent(STMT_NO, ENT_TYPE), no parent
+stmt s, Select;
+Select s such that Parent(3, s)
+
+5000
+21 - Parent(ENT_TYPE, STMT_NO)
+stmt s, Select;
+Select s such that Parent(s, 16)
+11
+5000
+22 - Parent(STMT_NO, STMT_NO)
+stmt s1, s2;
+Select s1 such that Parent(s1, s2)
+1, 5, 8, 9, 16, 11, 12, 18, 19
+5000
+23 - Parent(STMT_NO, STMT_NO), edge case, non-reflexivity
+stmt s;
+Select s such that Parent(s, s)
+
+5000
+24 - Parent*, testing closure
+stmt s, Select;
+Select s such that Parent*(s, 20)
+19, 18, 16, 11, 8, 5, 1
+5000
+25 - Follows(STMT_NO, STMT_NO)
+stmt s, Select;
+Select s such that Follows(2, 3)
+2, 3, 4, 6, 7, 10, 9, 13, 12, 14, 15, 17, 20, 19, 18, 16, 11, 8, 5, 21, 22, 23, 1 
+5000
+26 - Follows(STMT_NO, ENT_TYPE)
+stmt s, Select;
+Select s such that Follows(12, s)
+14
+5000
+27 - Follows(ENT_TYPE, STMT_NO)
+stmt s, Select;
+Select s such that Follows(s, 15)
+14
+5000
+28 - Follows(STMT_NO, ENT_TYPE), stmt no followee
+stmt s, Select;
+Select s such that Follows(6, s)
+
+5000
+27 - Follows(STMT_NO, ENT_TYPE), stmt no follower
+stmt s, Select;
+Select s such that Follows(s, 6)
+
+5000
+28 - Follows(STMT_NO, ENT_TYPE), (while) container stmt no followee
+stmt s, Select;
+Select s such that Follows(11, s)
+
+5000
+29 - Follows(STMT_NO, ENT_TYPE), (while) container stmt no follower
+stmt s, Select;
+Select s such that Follows(s, 12)
+
+5000
+30 - Follows(STMT_NO, STMT_NO)
+stmt s1, s2;
+Select s1 such that Follows(s1, s2)
+2, 3, 12, 15, 4, 7, 5, 14, 21
+5000
+31 - Follows*, testing closure
+stmt s, Select;
+Select s such that Follows*(14, s)
+15, 16
+5000
+32 - Follows*, testing closure
+stmt s, Select;
+Select s such that Follows*(2, s)
+3, 4, 5, 21, 22
+5000
+33 - Follows*, edge case, non-reflexive
+stmt s, Select;
+Select s such that Follows*(s, s)
+
+5000

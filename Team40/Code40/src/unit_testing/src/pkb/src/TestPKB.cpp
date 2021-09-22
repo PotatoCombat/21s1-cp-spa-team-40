@@ -38,8 +38,8 @@ vector<Variable> TestPKB::createVariables() {
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
-    return vector<ConstantValue>{ConstantValue(0), ConstantValue(1),
-                                 ConstantValue(2)};
+    return vector<ConstantValue>{ConstantValue("0"), ConstantValue("1"),
+                                 ConstantValue("2")};
 }
 
 vector<int> TestPKB::createIndices() { return vector<int>{0, 1, 2}; }
@@ -75,10 +75,10 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
         pkb.insertConst(&i);
     }
 
-    vector<int> actual = pkb.getAllConsts().asVector();
+    vector<ConstName> actual = pkb.getAllConsts().asVector();
 
     for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(items.at(i).getValue() == actual.at(i));
+        REQUIRE(items.at(i).getName() == actual.at(i));
     }
 }
 

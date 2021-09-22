@@ -1,14 +1,16 @@
 #pragma once
 
+#include <algorithm>
 #include <set>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 #include "ClauseHandler.h"
 #include "ClauseHandlerError.h"
 
 #include "pkb/PKB.h"
+
+#include "query_processor/ValueToPointersMap.h"
 
 #include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
@@ -21,7 +23,6 @@ private:
     void validate();
 
 public:
-    FollowsStarHandler(Clause *clause, PKB *pkb)
-        : ClauseHandler(clause, pkb) {}
-    Result eval();
+    FollowsStarHandler(Clause *clause, PKB *pkb) : ClauseHandler(clause, pkb) {}
+    Result eval(int ref1Index, int ref2Index);
 };

@@ -17,4 +17,7 @@ public:
     Reference *getStmt();
     Reference *getVar();
     string getPattern();
+    bool equals(PatternClause& other);
+    PatternClause* copy();
+    ~PatternClause();
 };

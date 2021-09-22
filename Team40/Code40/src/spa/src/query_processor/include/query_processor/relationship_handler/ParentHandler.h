@@ -9,6 +9,8 @@
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ValueToPointersMap.h"
+
 #include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
@@ -21,5 +23,5 @@ private:
 
 public:
     ParentHandler(Clause *clause, PKB *pkb) : ClauseHandler(clause, pkb) {}
-    Result eval();
+    Result eval(int ref1Index, int ref2Index);
 };
