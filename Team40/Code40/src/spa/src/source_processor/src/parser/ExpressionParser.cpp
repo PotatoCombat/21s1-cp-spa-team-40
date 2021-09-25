@@ -41,7 +41,7 @@ void ExpressionParser::parseExpression(vector<string> exprLst,
 
 void ExpressionParser::handleFactor(Statement *stmt, string currString) {
     if (isInteger(currString)) {
-        auto constant = new ConstantValue(stoi(currString));
+        auto constant = new ConstantValue(currString);
         stmt->addExpressionConst(constant);
     } else if (isName(currString)) {
         auto variable = new Variable(currString);
