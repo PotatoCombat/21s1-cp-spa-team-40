@@ -128,7 +128,7 @@ TEST_CASE("QueryEvaluator: multiple matching elements between results - "
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
-    REQUIRE(actual == vector<string>{"2", "3", "4", "6", "9", "10"});
+    REQUIRE(actual == vector<string>{"10", "2", "3", "4", "6", "9"});
 }
 
 TEST_CASE("QueryEvaluator: intersection not return element") {
