@@ -7,14 +7,19 @@
 
 #include <string>
 
-#include "query_processor/Abstractions.h";
-#include "query_processor/exception/SyntaxError.h";
+#include "query_processor/Abstractions.h"
+#include "query_processor/exception/SyntaxError.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
+#include <algorithm>
 
 using namespace std;
 
 char SEMICOLON = ';';
+char COMMA = ',';
 string WHITESPACE_SET = " \n\t\r";
 string KEYWORD_SELECT = "Select";
+
+DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
 
 /**
  * Separates a query string into declaration string and select clause string.
@@ -35,19 +40,66 @@ pair<string, string> separateQueryString(string input) {
 }
 
 /**
- * Tokenizes the entire declaration string into individual declaration pairs and
+ * Tokenizes the entire declaration string into individual declaration pairs and 
  * adds them to a vector.
- * @param input The declarations string.
+ * @param input The declarations string (assumes at least one declaration).
  * @param &decls Vector of declaration pairs.
  */
 void tokenizeDeclarations(string input, vector<DeclPair> &decls) {
-    
+    size_t nextSemicolonPos = input.find(SEMICOLON);
+    while (nextSemicolonPos != string::npos) {
+        size_t firstWhitespacePos = findNextWhitespace(input, 0);
+        string type = input.substr(0, firstWhitespacePos);
+        
+        deHelper.getType(type); // throws exception if not a type
+
+        // synoyms lie between whitespace and semicolon
+        string synonyms = trim(input.substr(firstWhitespacePos, nextSemicolonPos - firstWhitespacePos));
+        
+        // add tuples to the vector
+        vector<string> syns = tokenizeDeclarationSynonym(synonyms);
+        for (auto s : syns) {
+            decls.push_back(make_pair(type, s));
+        }
+
+        // prepare for next iteration of while loop
+        input = trimL(input.substr(nextSemicolonPos + 1));
+        nextSemicolonPos = input.find(SEMICOLON);
+    }
+    return;
 }
 
 /**
- * Extracts the return synonym from the select clause and passes the remaining
+ * Tokenizes the synonyms part of a single declaration.
+ * @param input The synonyms string (assumes at least one synonym).
+ * @return Vector of synonym strings.
+ */
+vector<string> tokenizeDeclarationSynonym(string input) {
+    vector<string> syns;
+    string remaining = input;
+
+    size_t nextCommaPos = remaining.find(COMMA);
+    while (nextCommaPos != string::npos) {
+        string s = trimR(remaining.substr(0, nextCommaPos));
+        s = parseValidName(s);
+        syns.push_back(s);
+
+        remaining = trimL(remaining.substr(nextCommaPos + 1));
+        nextCommaPos = remaining.find(COMMA);
+    }
+
+    // last synonym with no comma behind
+    if (!remaining.empty()) {
+        string s = parseValidName(remaining);
+        syns.push_back(s);
+    }
+    return syns;
+}
+
+/**
+ * Extracts the return synonym from the select clause and passes the remaining 
  * of the clause to a string.
- * @param input The select clause string.
+ * @param input The select clause string (assumes non-empty string).
  * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
  */
@@ -177,4 +229,34 @@ size_t findNextWhitespace(string input, size_t pos) {
 
 size_t findNextToken(string input, size_t pos) {
     return input.find_first_not_of(WHITESPACE_SET, pos);
+}
+
+/**
+ * Validates whether given string is valid name. 
+ * A valid name is one that starts with a LETTER and contains only LETTERs and DIGITs.
+ * @param input The string to validate.
+ * @return `true` if valid name and `false` otherwise.
+ */
+bool isValidName(string input) {
+    if (isalpha(input[0])) {
+        auto it = find_if_not(begin(input), end(input), isalnum);
+        return it == input.end();
+    }
+    return false;
+}
+
+/**
+ * Parses valid name. A valid name is one that starts with a LETTER and contains only LETTERs and DIGITs.
+ * @param input The string to parse.
+ * @return Valid name.
+ * @exception SyntaxError if name is invalid.
+ */
+string parseValidName(string input) {
+    if (isalpha(input[0])) {
+        auto it = find_if_not(begin(input), end(input), isalnum);
+        if (it == input.end()) {
+            return input;
+        }
+    }
+    throw SyntaxError("QP-ERROR: invalid name");
 }
