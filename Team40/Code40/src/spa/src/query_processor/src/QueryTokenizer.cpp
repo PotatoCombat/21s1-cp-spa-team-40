@@ -14,6 +14,7 @@ using namespace std;
 
 char SEMICOLON = ';';
 string WHITESPACE_SET = " \n\t\r";
+string KEYWORD_SELECT = "Select";
 
 /**
  * Separates a query string into declaration string and select clause string.
@@ -40,6 +41,7 @@ pair<string, string> separateQueryString(string input) {
  * @param &decls Vector of declaration pairs.
  */
 void tokenizeDeclarations(string input, vector<DeclPair> &decls) {
+    
 }
 
 /**
@@ -49,8 +51,42 @@ void tokenizeDeclarations(string input, vector<DeclPair> &decls) {
  * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
  */
-void tokenizeReturnSynonym(string input, string &returnSynonym, string &remaining) {
+void tokenizeReturnSynonym(string input, string& returnSynonym, string& remaining) {
+    size_t nextWhitespacePos = findNextWhitespace(input, 0);
+    string keyword = input.substr(0, nextWhitespacePos);
+    if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
+        throw SyntaxError("QP-ERROR: no select clause");
+    }
+    
+    string rest = trimL(input.substr(nextWhitespacePos + 1));
 
+    nextWhitespacePos = findNextWhitespace(rest, 0);
+
+    if (nextWhitespacePos == string::npos) {
+        remaining = "";
+        returnSynonym = rest;
+        return;
+    }
+
+    returnSynonym = rest.substr(0, nextWhitespacePos);
+    remaining = trimL(rest.substr(nextWhitespacePos + 1));
+    return;
+
+    //size_t nextWhitespacePos = findNextWhitespace(input, 0);
+    //string keyword = input.substr(0, nextWhitespacePos);
+    //if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
+    //    throw SyntaxError("QP-ERROR: no select clause");
+    //}
+    //
+    //size_t nextTokenPos = findNextToken(input, nextWhitespacePos + 1);
+    //nextWhitespacePos = findNextWhitespace(input, nextTokenPos);
+    //if (nextWhitespacePos == string::npos) {
+    //    remaining = "";
+    //} else {
+    //    remaining = trimL(input.substr(nextWhitespacePos + 1));
+    //}
+    //returnSynonym = input.substr(nextTokenPos, nextWhitespacePos - nextTokenPos);
+    //return;
 }
 
 
@@ -98,12 +134,12 @@ void tokenizeWith(string input, size_t startPos, WithTuple& clause) {}
 /**
  * Removes whitespace from the front and back of a given string.
  * @param input The input string.
- * @return The trimmed string.
+ * @return The trimmed string, or empty string if there is no string to trim.
  */
 string trim(string input) {
     size_t firstPos = input.find_first_not_of(WHITESPACE_SET);
     size_t lastPos = input.find_last_not_of(WHITESPACE_SET);
-    if (firstPos != string::npos) {
+    if (firstPos != string::npos && lastPos != string::npos) {
         return input.substr(firstPos, lastPos - firstPos + 1);
     }
     return "";
@@ -112,7 +148,7 @@ string trim(string input) {
 /**
  * Removes whitespace from the front of a given string.
  * @param input The input string.
- * @return The front-trimmed string.
+ * @return The trimmed string, or empty string if there is no string to trim.
  */
 string trimL(string input) {
     size_t firstPos = input.find_first_not_of(WHITESPACE_SET);
@@ -125,7 +161,7 @@ string trimL(string input) {
 /**
  * Removes whitespace from the back of a given string.
  * @param input The input string.
- * @return The back-trimmed string.
+ * @return The trimmed string, or empty string if there is no string to trim.
  */
 string trimR(string input) {
     size_t lastPos = input.find_last_not_of(WHITESPACE_SET);
@@ -133,4 +169,12 @@ string trimR(string input) {
         return input.substr(0, lastPos + 1);
     }
     return "";
+}
+
+size_t findNextWhitespace(string input, size_t pos) {
+    return input.find_first_of(WHITESPACE_SET, pos);
+}
+
+size_t findNextToken(string input, size_t pos) {
+    return input.find_first_not_of(WHITESPACE_SET, pos);
 }
