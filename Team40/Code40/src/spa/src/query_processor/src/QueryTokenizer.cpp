@@ -37,15 +37,14 @@ enum STATE_CODES {
     READ_TYPE_STATE,
     SUCH_INTERMEDIATE_STATE,
     READ_ARGS_STATE,
-    AND_STATE,
     INVALID_STATE
 };
 
 map<enum STATE_CODES, set<enum STATE_CODES>> stateTransitions = {
     {READ_TYPE_STATE, {READ_ARGS_STATE, SUCH_INTERMEDIATE_STATE}},
     {SUCH_INTERMEDIATE_STATE, {READ_ARGS_STATE}},
-    {READ_ARGS_STATE, {READ_TYPE_STATE, AND_STATE}},
-    {AND_STATE, {READ_ARGS_STATE}}};
+    {READ_ARGS_STATE, {READ_TYPE_STATE}}
+};
 
 /**
  * Separates a query string into declaration string and select clause string.
@@ -237,30 +236,6 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
             }
             break;
         }
-        case AND_STATE: {
-            switch (type) {
-            case SUCH_THAT_CLAUSE: {
-                ClsTuple clause;
-                tokenPos = tokenizeSuchThat(input, whitespacePos, clause);
-                suchThatClauses.push_back(clause);
-            }
-            case PATTERN_CLAUSE: {
-                PatTuple clause;
-                tokenPos = tokenizePattern(input, whitespacePos, clause);
-                patternClauses.push_back(clause);
-            }
-            case WITH_CLAUSE: {
-                WithTuple clause;
-                tokenPos = tokenizeWith(input, whitespacePos, clause);
-                withClauses.push_back(clause);
-            }
-            default:
-                // won't reach here
-                throw SyntaxError("QP-ERROR: error in the default matrix.");
-                break;
-            }
-            break;
-        }
         default: // INVALID_STATE
             // won't reach here
             throw SyntaxError("QP-ERROR: error in the matrix.");
@@ -273,6 +248,7 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
         // find the start position of the next token
         tokenPos = findNextToken(input, whitespacePos);
     }
+    return;
 }
 
 /**
@@ -282,7 +258,9 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
  * @param &clause ClsTuple.
  * @return Position of end of clause.
  */
-size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {}
+size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
+    
+}
 
 /**
  * Tokenizes a pattern clause into a tuple.
