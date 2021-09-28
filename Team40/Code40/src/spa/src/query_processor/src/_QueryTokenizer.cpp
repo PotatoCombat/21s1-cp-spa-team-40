@@ -1,12 +1,5 @@
 #include "query_processor/QueryTokenizer.h"
 
-// steps to take:
-// split the query into two parts - declaration and the select clause
-// process declaration
-// process the return synonym
-// process clauses
-// how to make a state machine?
-
 pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     size_t split = input.rfind(SEMICOLON);
 
