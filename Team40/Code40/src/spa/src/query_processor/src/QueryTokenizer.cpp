@@ -1,5 +1,11 @@
 #include "query_processor/QueryTokenizer.h"
 
+/**
+ * Separates a query string into declaration string and select clause string.
+ * @param input The query string.
+ * @return Pair of strings where first is the declaration string and second is
+ * the select clause string.
+ */
 pair<string, string> QueryTokenizer::separateQueryString(string input) {
     size_t lastSemicolon = input.rfind(SEMICOLON);
 
@@ -12,7 +18,14 @@ pair<string, string> QueryTokenizer::separateQueryString(string input) {
     return make_pair(decl, slct);
 }
 
-void QueryTokenizer::tokenizeDeclarations(string input, vector<DeclPair> &decls) {
+/**
+ * Tokenizes the entire declaration string into individual declaration pairs and
+ * adds them to a vector.
+ * @param input The declarations string (assumes at least one declaration).
+ * @param &decls Vector of declaration pairs.
+ */
+void QueryTokenizer::tokenizeDeclarations(string input,
+                                          vector<DeclPair> &decls) {
     size_t nextSemicolonPos = input.find(SEMICOLON);
     while (nextSemicolonPos != string::npos) {
         size_t firstWhitespacePos = findNextWhitespace(input, 0);
@@ -37,6 +50,11 @@ void QueryTokenizer::tokenizeDeclarations(string input, vector<DeclPair> &decls)
     return;
 }
 
+/**
+ * Tokenizes the synonyms part of a single declaration.
+ * @param input The synonyms string (assumes at least one synonym).
+ * @return Vector of synonym strings.
+ */
 vector<string> QueryTokenizer::tokenizeDeclarationSynonym(string input) {
     vector<string> syns;
     string remaining = input;
@@ -59,8 +77,16 @@ vector<string> QueryTokenizer::tokenizeDeclarationSynonym(string input) {
     return syns;
 }
 
+/**
+ * Extracts the return synonym from the select clause and passes the remaining
+ * of the clause to a string.
+ * @param input The select clause string (assumes non-empty string).
+ * @param &returnSynonym The return synonym.
+ * @param &remaining The remaining of the select clause.
+ * @todo Implement returning tuples (require vector structure)
+ */
 void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
-                           string &remaining) {
+                                           string &remaining) {
     size_t nextWhitespacePos = findNextWhitespace(input, 0);
     string keyword = input.substr(0, nextWhitespacePos);
     if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
@@ -98,9 +124,18 @@ void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
     // nextTokenPos); return;
 }
 
-void QueryTokenizer::tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
-                     vector<PatTuple> &patternClauses,
-                     vector<WithTuple> &withClauses) {
+/**
+ * Tokenizes each clause into individual clause tuples and adds them to a vector 
+ * based on what kind of clause, i.e. such that, pattern or with.
+ * @param input The clauses string (assumed non-empty).
+ * @param &suchThatClauses Vector of such that tuples.
+ * @param &patternClauses Vector of pattern tuples.
+ * @param &withClauses Vector of with tuples.
+ */
+void QueryTokenizer::tokenizeClauses(string input,
+                                     vector<ClsTuple> &suchThatClauses,
+                                     vector<PatTuple> &patternClauses,
+                                     vector<WithTuple> &withClauses) {
     size_t tokenPos = findNextToken(input, 0);
     enum STATE_CODES state = READ_TYPE_STATE;
     enum CLAUSE_CODES type = NULL_CLAUSE;
@@ -177,7 +212,15 @@ void QueryTokenizer::tokenizeClauses(string input, vector<ClsTuple> &suchThatCla
     return;
 }
 
-size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
+/**
+ * Tokenizes a such that clause into a tuple.
+ * @param input The clauses string.
+ * @param startPos The start of the clause.
+ * @param &clause ClsTuple.
+ * @return Position of end of clause.
+ */
+size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
+                                        ClsTuple &clause) {
     string token1;
     string token2;
     string token3;
@@ -196,7 +239,16 @@ size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos, ClsTuple 
     return nextPos;
 }
 
-size_t QueryTokenizer::tokenizePattern(string input, size_t startPos, PatTuple &clause) {
+/**
+ * Tokenizes a pattern clause into a tuple.
+ * @param input The clauses string.
+ * @param startPos The start of the clause.
+ * @param &clause PatTuple.
+ * @return Position of end of clause.
+ * @todo Handle non-assign patterns
+ */
+size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
+                                       PatTuple &clause) {
     string token1;
     string token2;
     string token3;
@@ -215,7 +267,15 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos, PatTuple &
     return nextPos;
 }
 
-size_t QueryTokenizer::tokenizeWith(string input, size_t startPos, WithTuple &clause) {
+/**
+ * Tokenizes a with clause into a tuple.
+ * @param input The clauses string.
+ * @param startPos The start of the clause.
+ * @param &clause WithTuple.
+ * @return Position of end of clause.
+ */
+size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
+                                    WithTuple &clause) {
     string temp;
     string token1;
     string token2;
@@ -257,6 +317,11 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos, WithTuple &cl
 
 /********************* helper functions *********************/
 
+/**
+ * Removes whitespace from the front and back of a given string.
+ * @param input The input string.
+ * @return The trimmed string, or empty string if there is no string to trim.
+ */
 string QueryTokenizer::trim(string input) {
     size_t firstPos = input.find_first_not_of(WHITESPACE_SET);
     size_t lastPos = input.find_last_not_of(WHITESPACE_SET);
@@ -266,6 +331,11 @@ string QueryTokenizer::trim(string input) {
     return "";
 }
 
+/**
+ * Removes whitespace from the front of a given string.
+ * @param input The input string.
+ * @return The trimmed string, or empty string if there is no string to trim.
+ */
 string QueryTokenizer::trimL(string input) {
     size_t firstPos = input.find_first_not_of(WHITESPACE_SET);
     if (firstPos != string::npos) {
@@ -274,6 +344,11 @@ string QueryTokenizer::trimL(string input) {
     return "";
 }
 
+/**
+ * Removes whitespace from the back of a given string.
+ * @param input The input string.
+ * @return The trimmed string, or empty string if there is no string to trim.
+ */
 string QueryTokenizer::trimR(string input) {
     size_t lastPos = input.find_last_not_of(WHITESPACE_SET);
     if (lastPos != string::npos) {
@@ -290,6 +365,13 @@ size_t QueryTokenizer::findNextToken(string input, size_t pos) {
     return input.find_first_not_of(WHITESPACE_SET, pos);
 }
 
+/**
+ * Parses valid name. A valid name is one that starts with a LETTER and contains 
+ * only LETTERs and DIGITs.
+ * @param input The string to parse.
+ * @return Valid name.
+ * @exception SyntaxError if name is invalid.
+ */
 string QueryTokenizer::parseValidName(string input) {
     if (isalpha(input[0])) {
         auto it = find_if_not(begin(input), end(input), isalnum);
@@ -300,7 +382,16 @@ string QueryTokenizer::parseValidName(string input) {
     throw SyntaxError("QP-ERROR: invalid name");
 }
 
-string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos, size_t &nextPos) {
+/**
+ * Get token starting from a start positon and before a character x.
+ * @param input The clauses string.
+ * @param startPos The start positon.
+ * @param x The character to find.
+ * @param &nextPos Position after X.
+ * @return The token to retrieve.
+ */
+string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos,
+                                       size_t &nextPos) {
     size_t xPos = input.find(x, startPos);
     if (xPos == string::npos) {
         throw SyntaxError("QP-ERROR: missing " + x);
@@ -310,6 +401,13 @@ string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos, si
     return trim(input.substr(startPos, xPos - startPos));
 }
 
+/**
+ * Given a quoted string, removes the whitespace within the quotes. 
+ * E.g. "    someprocedure    " => "someprocedure". 
+ * E.g. "    some procedure    " => "some procedure".
+ * @param input The quoted string.
+ * @return The quoted string with whitespace removed.
+ */
 string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
     if (count(input.begin(), input.end(), QUOTE) > 0) {
         if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
