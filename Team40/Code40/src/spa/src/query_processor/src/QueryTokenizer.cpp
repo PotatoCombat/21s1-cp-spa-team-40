@@ -1,10 +1,3 @@
-// steps to take:
-// split the query into two parts - declaration and the select clause
-// process declaration
-// process the return synonym
-// process clauses
-// how to make a state machine?
-
 #include <string>
 
 #include "query_processor/Abstractions.h"
@@ -135,6 +128,7 @@ vector<string> tokenizeDeclarationSynonym(string input) {
  * @param input The select clause string (assumes non-empty string).
  * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
+ * @todo Implement returning tuples (require vector structure)
  */
 void tokenizeReturnSynonym(string input, string &returnSynonym,
                            string &remaining) {
@@ -304,6 +298,7 @@ size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
  * @param startPos The start of the clause.
  * @param &clause PatTuple.
  * @return Position of end of clause.
+ * @todo Handle non-assign patterns
  */
 size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {
     string token1;
@@ -311,18 +306,17 @@ size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {
     string token3;
     size_t nextPos;
 
-    // this method is complicated (do later :'))
-    //token1 = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
-    //token2 = getTokenBeforeX(input, COMMA, nextPos, nextPos);
-    //token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
+    // ASSUMES '(', ',', ')'
+    token1 = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
+    token2 = getTokenBeforeX(input, COMMA, nextPos, nextPos);
+    token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
 
-    //// remove whitespace within quotes of token2 and token3 if any!
+    // remove whitespace within quotes of token2 and token3 if any!
+    token2 = removeWhitespaceWithinQuotes(token2);
+    token3 = extractPatternString(token3);
 
-    //token2 = removeWhitespaceWithinQuotes(token2);
-    //token3 = removeWhitespaceWithinQuotes(token3);
-
-    //clause = make_tuple(token1, token2, token3);
-    //return nextPos;
+    clause = make_tuple(token1, token2, token3);
+    return nextPos;
 }
 
 /**
@@ -359,8 +353,7 @@ size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {
     if (periodPos == string::npos) {
         token3 = temp;
         token4 = "";
-    }
-    else {
+    } else {
         token3 = temp.substr(0, periodPos);
         token4 = temp.substr(periodPos + 1);
     }
@@ -369,38 +362,8 @@ size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {
     token1 = removeWhitespaceWithinQuotes(token1);
     token3 = removeWhitespaceWithinQuotes(token3);
 
-    clause = vector<WithArg>{ token1, token2, token3, token4 };
+    clause = vector<WithArg>{token1, token2, token3, token4};
     return nextPos;
-}
-
-/**
- * Get token starting from a start positon and before a character x.
- * @param input The clauses string.
- * @param startPos The start positon.
- * @param x The character to find.
- * @param &nextPos Position after X.
- * @return The token to retrieve.
- */
-string getTokenBeforeX(string input, char x, size_t startPos, size_t &nextPos) {
-    size_t xPos = input.find(x, startPos);
-    if (xPos == string::npos) {
-        throw SyntaxError("QP-ERROR: missing " + x);
-    }
-
-    nextPos = xPos + 1;
-    return trim(input.substr(startPos, xPos - startPos));
-}
-
-string removeWhitespaceWithinQuotes(string input) {
-    if (count(input.begin(), input.end(), QUOTE) > 0) {
-        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
-            string trimmed = trim(input.substr(1, input.size() - 2));
-            return "\"" + trimmed + "\"";
-        } else {
-            throw SyntaxError("QP-ERROR: misplaced quotes");
-        }
-    }
-    return input;
 }
 
 /********************* helper functions *********************/
@@ -468,4 +431,55 @@ string parseValidName(string input) {
         }
     }
     throw SyntaxError("QP-ERROR: invalid name");
+}
+
+/**
+ * Get token starting from a start positon and before a character x.
+ * @param input The clauses string.
+ * @param startPos The start positon.
+ * @param x The character to find.
+ * @param &nextPos Position after X.
+ * @return The token to retrieve.
+ */
+string getTokenBeforeX(string input, char x, size_t startPos, size_t &nextPos) {
+    size_t xPos = input.find(x, startPos);
+    if (xPos == string::npos) {
+        throw SyntaxError("QP-ERROR: missing " + x);
+    }
+
+    nextPos = xPos + 1;
+    return trim(input.substr(startPos, xPos - startPos));
+}
+
+/**
+ * Given a quoted string, removes the whitespace within the quotes.
+ * E.g. "    someprocedure    " => "someprocedure".
+ * E.g. "    some procedure    " => "some procedure".
+ * @param input The quoted string.
+ * @return The quoted string with whitespace removed.
+ */
+string removeWhitespaceWithinQuotes(string input) {
+    if (count(input.begin(), input.end(), QUOTE) > 0) {
+        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
+            string trimmed = trim(input.substr(1, input.size() - 2));
+            return "\"" + trimmed + "\"";
+        } else {
+            throw SyntaxError("QP-ERROR: misplaced quotes");
+        }
+    }
+    return input;
+}
+
+string extractPatternString(string input) {
+    if (count(input.begin(), input.end(), QUOTE) == 2) {
+        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
+        if (n_underscore == 2) {
+            string underscored_r = trim(input.substr(1, input.size() - 2));
+            return trim(underscored_r.substr(1, underscored_r.size() - 2));
+        } else if (n_underscore == 1) {
+            throw SyntaxError("QP-ERROR: invalid pattern syntax");
+        }
+        return trim(input.substr(1, input.size() - 2));
+    }
+    return input;
 }
