@@ -44,13 +44,13 @@ TEST_CASE("QueryTokenizer: separateDeclaration") {
 
     SECTION("test standard") {
         pair<string, string> actual =
-            tokenizer.separateDeclaration(TestQueryTokenizer::QUERY1);
+            tokenizer.separateQueryString(TestQueryTokenizer::QUERY1);
         REQUIRE(actual.first == expectedD);
         REQUIRE(actual.second == expectedC);
     }
 
     SECTION("test no whitespace") {
-        pair<string, string> actual = tokenizer.separateDeclaration(
+        pair<string, string> actual = tokenizer.separateQueryString(
             TestQueryTokenizer::QUERY_NO_WHITESPACE);
         REQUIRE(actual.first == expectedD);
         REQUIRE(actual.second == expectedC);
@@ -58,7 +58,7 @@ TEST_CASE("QueryTokenizer: separateDeclaration") {
 
     SECTION("test newline") {
         pair<string, string> actual =
-            tokenizer.separateDeclaration(TestQueryTokenizer::QUERY_NEWLINE);
+            tokenizer.separateQueryString(TestQueryTokenizer::QUERY_NEWLINE);
         REQUIRE(actual.first == expectedD);
         REQUIRE(actual.second == expectedC);
     }
@@ -70,7 +70,7 @@ TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
     vector<DeclPair> expected = TestQueryTokenizer::createDecls();
 
     SECTION("test standard") {
-        tokenizer.tokenizeDeclaration(TestQueryTokenizer::DECL1, vec);
+        tokenizer.tokenizeDeclarations(TestQueryTokenizer::DECL1, vec);
         REQUIRE((get<0>(vec[0]) == get<0>(expected[0]) &&
                  get<1>(vec[0]) == get<1>(expected[0])));
         REQUIRE((get<0>(vec[1]) == get<0>(expected[1]) &&
@@ -81,13 +81,16 @@ TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
 
     SECTION("test invalid name") {
         string invalid = "stmt 0PD;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclaration(invalid, vec), SyntaxError);
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+                          SyntaxError);
 
         invalid = "assign s_fishy;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclaration(invalid, vec), SyntaxError);
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+                          SyntaxError);
 
         invalid = "print 11111;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclaration(invalid, vec), SyntaxError);
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+                          SyntaxError);
     }
 }
 
@@ -95,9 +98,10 @@ TEST_CASE("QueryTokenizer: tokenizeReturn") {
     QueryTokenizer tokenizer;
 
     SECTION("test standard") {
+        string actual;
         string remaining;
-        string actual =
-            tokenizer.tokenizeReturn(TestQueryTokenizer::CLAUSE1, remaining);
+        tokenizer.tokenizeReturnSynonym(TestQueryTokenizer::CLAUSE1, actual,
+                                        remaining);
         string expected1 = "s";
         string expected2 = "such that Follows(s, p1)";
         REQUIRE(actual == expected1);
@@ -105,11 +109,12 @@ TEST_CASE("QueryTokenizer: tokenizeReturn") {
     }
 
     SECTION("test no Select") {
+        string actual;
         string remaining;
-        REQUIRE_THROWS(
-            tokenizer.tokenizeReturn(" s such that Parent(x, y)", remaining));
-        REQUIRE_THROWS(tokenizer.tokenizeReturn(
-            "select s such that Parent(x, y)", remaining));
+        REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
+            " s such that Parent(x, y)", actual, remaining));
+        REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
+            "select s such that Parent(x, y)", actual, remaining));
     }
 }
 
@@ -120,9 +125,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -133,9 +139,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that    Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -146,9 +153,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such      that Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -159,9 +167,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows (s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -172,9 +181,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows( s,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -185,9 +195,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows(s , p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -198,9 +209,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows(s ,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -211,9 +223,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows(s, p1 )";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -224,9 +237,10 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
         string input = "such that Follows(s,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
+        vector<WithTuple> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
-        tokenizer.tokenizeClause(input, rel, pat);
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(get<0>(rel[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(rel[0]) == get<1>(expected[0]));
         REQUIRE(get<2>(rel[0]) == get<2>(expected[0]));
@@ -241,9 +255,9 @@ TEST_CASE("QueryTokenizer: tokenizeClause for pattern") {
         string input = "pattern a(_, _\" x \"_)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<PatTuple> expected =
-            vector<PatTuple>{ make_tuple("a", "_", "x") };
-        tokenizer.tokenizeClause(input, rel, pat);
+        vector<WithTuple> wit;
+        vector<PatTuple> expected = vector<PatTuple>{make_tuple("a", "_", "x")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(rel.size() == 0);
         REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));
         REQUIRE(get<1>(pat[0]) == get<1>(expected[0]));

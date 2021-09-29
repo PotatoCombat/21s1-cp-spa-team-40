@@ -298,7 +298,7 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
     }
 
     temp = getTokenBeforeX(input, EQUAL, nextPos, nextPos);
-    size_t periodPos = temp.find(PERIOD);
+    periodPos = temp.find(PERIOD);
     if (periodPos == string::npos) {
         token3 = temp;
         token4 = "";
