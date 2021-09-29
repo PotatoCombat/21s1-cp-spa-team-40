@@ -1,9 +1,13 @@
 #pragma once
 
 #include <algorithm>
+#include <cctype>
 #include <string>
+#include <tuple>
+#include <vector>
 
 #include "query_processor/Abstractions.h"
+
 #include "query_processor/exception/SyntaxError.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
 
