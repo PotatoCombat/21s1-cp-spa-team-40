@@ -20,6 +20,8 @@ char L_BRACKET = '(';
 char R_BRACKET = ')';
 char QUOTE = '"';
 char UNDERSCORE = '_';
+char EQUAL = '=';
+char PERIOD = '.';
 string WHITESPACE_SET = " \n\t\r";
 string KEYWORD_SELECT = "Select";
 string KEYWORD_SUCH = "such";
@@ -29,7 +31,7 @@ string KEYWORD_AND = "and";
 string KEYWORD_WITH = "with";
 
 DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
-//ClauseTypeHelper clsHelper = ClauseTypeHelper();
+// ClauseTypeHelper clsHelper = ClauseTypeHelper();
 
 enum CLAUSE_CODES {
     SUCH_THAT_CLAUSE,
@@ -45,7 +47,7 @@ enum STATE_CODES {
     INVALID_STATE
 };
 
-//map<enum STATE_CODES, set<enum STATE_CODES>> stateTransitions = {
+// map<enum STATE_CODES, set<enum STATE_CODES>> stateTransitions = {
 //    {READ_TYPE_STATE, {READ_ARGS_STATE, SUCH_INTERMEDIATE_STATE}},
 //    {SUCH_INTERMEDIATE_STATE, {READ_ARGS_STATE}},
 //    {READ_ARGS_STATE, {READ_TYPE_STATE}}
@@ -160,15 +162,15 @@ void tokenizeReturnSynonym(string input, string &returnSynonym,
     // string keyword = input.substr(0, nextWhitespacePos);
     // if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
     //    throw SyntaxError("QP-ERROR: no select clause");
-    //}
+    // }
     //
     // size_t nextTokenPos = findNextToken(input, nextWhitespacePos + 1);
     // nextWhitespacePos = findNextWhitespace(input, nextTokenPos);
     // if (nextWhitespacePos == string::npos) {
     //    remaining = "";
-    //} else {
+    // } else {
     //    remaining = trimL(input.substr(nextWhitespacePos + 1));
-    //}
+    // }
     // returnSynonym = input.substr(nextTokenPos, nextWhitespacePos -
     // nextTokenPos); return;
 }
@@ -275,27 +277,26 @@ size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
     token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
 
     // remove whitespace within quotes of token2 and token3 if any!
-
     token2 = removeWhitespaceWithinQuotes(token2);
     token3 = removeWhitespaceWithinQuotes(token3);
 
     clause = make_tuple(token1, token2, token3);
     return nextPos;
-
-    //if (isClause == 1) {
-    //    token2 = removeWhitespaceWithinQuotes(token2);
-    //    token3 = removeWhitespaceWithinQuotes(token3);
-    //    clss.push_back(make_tuple(token1, token2, token3));
-    //}
-    //else if (isClause == 2) {
-    //    token2 = removeWhitespaceWithinQuotes(token2);
-    //    token3 = extractPatternString(token3);
-    //    pats.push_back(make_tuple(token1, token2, token3));
-    //}
-    //else {
-    //    throw SyntaxError("something is very wrong");
-    //}
 }
+
+// if (isClause == 1) {
+//    token2 = removeWhitespaceWithinQuotes(token2);
+//    token3 = removeWhitespaceWithinQuotes(token3);
+//    clss.push_back(make_tuple(token1, token2, token3));
+//}
+// else if (isClause == 2) {
+//    token2 = removeWhitespaceWithinQuotes(token2);
+//    token3 = extractPatternString(token3);
+//    pats.push_back(make_tuple(token1, token2, token3));
+//}
+// else {
+//    throw SyntaxError("something is very wrong");
+//}
 
 /**
  * Tokenizes a pattern clause into a tuple.
@@ -304,7 +305,25 @@ size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
  * @param &clause PatTuple.
  * @return Position of end of clause.
  */
-size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {}
+size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {
+    string token1;
+    string token2;
+    string token3;
+    size_t nextPos;
+
+    // this method is complicated (do later :'))
+    //token1 = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
+    //token2 = getTokenBeforeX(input, COMMA, nextPos, nextPos);
+    //token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
+
+    //// remove whitespace within quotes of token2 and token3 if any!
+
+    //token2 = removeWhitespaceWithinQuotes(token2);
+    //token3 = removeWhitespaceWithinQuotes(token3);
+
+    //clause = make_tuple(token1, token2, token3);
+    //return nextPos;
+}
 
 /**
  * Tokenizes a with clause into a tuple.
@@ -313,7 +332,46 @@ size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {}
  * @param &clause WithTuple.
  * @return Position of end of clause.
  */
-size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {}
+size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {
+    string temp;
+    string token1;
+    string token2;
+    string token3;
+    string token4;
+    size_t nextPos;
+
+    // tokenize token by '=' and '.'
+    // structure: token1.token2 = token3.token4
+    // structure: "    name   " = token3.token4 // name stored in token1
+    // structure: token1.token2 = 24 // 24 stored in token 3
+    temp = getTokenBeforeX(input, EQUAL, startPos, nextPos);
+    size_t periodPos = temp.find(PERIOD);
+    if (periodPos == string::npos) {
+        token1 = temp;
+        token2 = "";
+    } else {
+        token1 = temp.substr(0, periodPos);
+        token2 = temp.substr(periodPos + 1);
+    }
+
+    temp = getTokenBeforeX(input, EQUAL, nextPos, nextPos);
+    size_t periodPos = temp.find(PERIOD);
+    if (periodPos == string::npos) {
+        token3 = temp;
+        token4 = "";
+    }
+    else {
+        token3 = temp.substr(0, periodPos);
+        token4 = temp.substr(periodPos + 1);
+    }
+
+    // remove whitespace within quotes of token1 and token3 if any!
+    token1 = removeWhitespaceWithinQuotes(token1);
+    token3 = removeWhitespaceWithinQuotes(token3);
+
+    clause = vector<WithArg>{ token1, token2, token3, token4 };
+    return nextPos;
+}
 
 /**
  * Get token starting from a start positon and before a character x.
@@ -323,7 +381,7 @@ size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {}
  * @param &nextPos Position after X.
  * @return The token to retrieve.
  */
-string getTokenBeforeX(string input, char x, size_t startPos, size_t& nextPos) {
+string getTokenBeforeX(string input, char x, size_t startPos, size_t &nextPos) {
     size_t xPos = input.find(x, startPos);
     if (xPos == string::npos) {
         throw SyntaxError("QP-ERROR: missing " + x);
@@ -344,7 +402,6 @@ string removeWhitespaceWithinQuotes(string input) {
     }
     return input;
 }
-
 
 /********************* helper functions *********************/
 
