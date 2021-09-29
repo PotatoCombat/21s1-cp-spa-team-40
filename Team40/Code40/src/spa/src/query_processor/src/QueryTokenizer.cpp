@@ -219,16 +219,22 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                 ClsTuple clause;
                 whitespacePos = tokenizeSuchThat(input, tokenPos, clause);
                 suchThatClauses.push_back(clause);
+                state = READ_TYPE_STATE;
+                break;
             }
             case PATTERN_CLAUSE: {
                 PatTuple clause;
                 whitespacePos = tokenizePattern(input, tokenPos, clause);
                 patternClauses.push_back(clause);
+                state = READ_TYPE_STATE;
+                break;
             }
             case WITH_CLAUSE: {
                 WithTuple clause;
                 whitespacePos = tokenizeWith(input, tokenPos, clause);
                 withClauses.push_back(clause);
+                state = READ_TYPE_STATE;
+                break;
             }
             default:
                 // won't reach here
@@ -277,20 +283,6 @@ size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
     clause = make_tuple(token1, token2, token3);
     return nextPos;
 }
-
-// if (isClause == 1) {
-//    token2 = removeWhitespaceWithinQuotes(token2);
-//    token3 = removeWhitespaceWithinQuotes(token3);
-//    clss.push_back(make_tuple(token1, token2, token3));
-//}
-// else if (isClause == 2) {
-//    token2 = removeWhitespaceWithinQuotes(token2);
-//    token3 = extractPatternString(token3);
-//    pats.push_back(make_tuple(token1, token2, token3));
-//}
-// else {
-//    throw SyntaxError("something is very wrong");
-//}
 
 /**
  * Tokenizes a pattern clause into a tuple.
