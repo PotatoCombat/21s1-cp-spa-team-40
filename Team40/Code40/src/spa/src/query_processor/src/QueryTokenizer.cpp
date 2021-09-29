@@ -19,7 +19,7 @@ pair<string, string> QueryTokenizer::separateQueryString(string input) {
 }
 
 /**
- * Tokenizes the entire declaration string into individual declaration pairs and
+ * Tokenizes the entire declaration string into individual declaration pairs and 
  * adds them to a vector.
  * @param input The declarations string (assumes at least one declaration).
  * @param &decls Vector of declaration pairs.
@@ -78,7 +78,7 @@ vector<string> QueryTokenizer::tokenizeDeclarationSynonym(string input) {
 }
 
 /**
- * Extracts the return synonym from the select clause and passes the remaining
+ * Extracts the return synonym from the select clause and passes the remaining 
  * of the clause to a string.
  * @param input The select clause string (assumes non-empty string).
  * @param &returnSynonym The return synonym.
@@ -106,22 +106,6 @@ void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
     returnSynonym = rest.substr(0, nextWhitespacePos);
     remaining = trimL(rest.substr(nextWhitespacePos + 1));
     return;
-
-    // size_t nextWhitespacePos = findNextWhitespace(input, 0);
-    // string keyword = input.substr(0, nextWhitespacePos);
-    // if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
-    //    throw SyntaxError("QP-ERROR: no select clause");
-    // }
-    //
-    // size_t nextTokenPos = findNextToken(input, nextWhitespacePos + 1);
-    // nextWhitespacePos = findNextWhitespace(input, nextTokenPos);
-    // if (nextWhitespacePos == string::npos) {
-    //    remaining = "";
-    // } else {
-    //    remaining = trimL(input.substr(nextWhitespacePos + 1));
-    // }
-    // returnSynonym = input.substr(nextTokenPos, nextWhitespacePos -
-    // nextTokenPos); return;
 }
 
 /**
@@ -137,14 +121,14 @@ void QueryTokenizer::tokenizeClauses(string input,
                                      vector<PatTuple> &patternClauses,
                                      vector<WithTuple> &withClauses) {
     size_t tokenPos = findNextToken(input, 0);
-    enum STATE_CODES state = READ_TYPE_STATE;
-    enum CLAUSE_CODES type = NULL_CLAUSE;
+    enum STATE_CODES state = STATE_CODES::READ_TYPE_STATE;
+    enum CLAUSE_CODES type = CLAUSE_CODES::NULL_CLAUSE;
     while (tokenPos != string::npos) {
         size_t whitespacePos = findNextWhitespace(input, tokenPos);
         string token = input.substr(tokenPos, whitespacePos - tokenPos);
 
         switch (state) {
-        case READ_TYPE_STATE: {
+        case READ_TYPE_STATE:
             if (token == KEYWORD_SUCH) {
                 state = SUCH_INTERMEDIATE_STATE;
             } else if (token == KEYWORD_PATTERN) {
@@ -159,8 +143,7 @@ void QueryTokenizer::tokenizeClauses(string input,
                 state = INVALID_STATE;
             }
             break;
-        }
-        case SUCH_INTERMEDIATE_STATE: {
+        case SUCH_INTERMEDIATE_STATE:
             if (token == KEYWORD_THAT) {
                 state = READ_ARGS_STATE;
                 type = SUCH_THAT_CLAUSE;
@@ -168,8 +151,7 @@ void QueryTokenizer::tokenizeClauses(string input,
                 state = INVALID_STATE;
             }
             break;
-        }
-        case READ_ARGS_STATE: {
+        case READ_ARGS_STATE:
             state = READ_TYPE_STATE;
             switch (type) {
             case SUCH_THAT_CLAUSE: {
@@ -196,7 +178,6 @@ void QueryTokenizer::tokenizeClauses(string input,
                 break;
             }
             break;
-        }
         default: // INVALID_STATE
             // won't reach here
             throw SyntaxError("QP-ERROR: error in the matrix.");
