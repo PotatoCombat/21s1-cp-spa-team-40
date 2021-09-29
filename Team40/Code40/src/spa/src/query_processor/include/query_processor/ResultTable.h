@@ -1,8 +1,8 @@
 #pragma once
 
-#include <map>
 #include <string>
 #include <set>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <stdexcept>
@@ -11,7 +11,7 @@ using namespace std;
 
 typedef pair<int, string> POINTER;
 typedef set<POINTER> POINTER_SET;
-typedef map<string, POINTER_SET> VALUE_TO_POINTERS_MAP;
+typedef unordered_map<string, POINTER_SET> VALUE_TO_POINTERS_MAP;
 
 class ResultTable {
 private:
