@@ -26,19 +26,19 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
 
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
-        vector<ValueToPointersMap> stmtResults;
+        VALUE_TO_POINTERS_MAP stmtResults;
         set<int> stmts =
             pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
         for (auto stmt : stmts) {
-            stmtResults.push_back(ValueToPointersMap(to_string(stmt), POINTER_SET{}));
+            stmtResults[to_string(stmt)] = POINTER_SET{};
         }
         result.setResultList1(assign, stmtResults);
         return result;
     }
 
     // SYNONYM SYNONYM, SYNONYM WILDCARD
-    vector<ValueToPointersMap> stmtResults;
-    vector<ValueToPointersMap> varResults;
+    VALUE_TO_POINTERS_MAP stmtResults;
+    VALUE_TO_POINTERS_MAP varResults;
     vector<int> assigns = pkb->getAllStmts(StatementType::ASSIGN).asVector();
     vector<string> vars = pkb->getAllVars().asVector();
 
@@ -54,8 +54,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
             }
         }
         if (valid) {
-            stmtResults.push_back(
-                ValueToPointersMap(to_string(assign), related));
+            stmtResults[to_string(assign)] = related;
         }
     }
     
@@ -71,7 +70,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
             }
         }
         if (valid) {
-            varResults.push_back(ValueToPointersMap(var, related));
+            varResults[var] = related;
         }
     }
 

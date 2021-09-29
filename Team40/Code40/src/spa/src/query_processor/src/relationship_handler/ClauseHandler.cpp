@@ -92,12 +92,11 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // SYNONYM CONSTANT
     if (refType1 == ReferenceType::SYNONYM &&
         refType2 == ReferenceType::CONSTANT) {
-        vector<ValueToPointersMap> firstStmtResults;
+        VALUE_TO_POINTERS_MAP firstStmtResults;
         set<string> res1s = getR1ClauseR2(val2);
         for (string res1 : res1s) {
             if (isType(res1, ref1->getDeType())) {
-                ValueToPointersMap map(res1, POINTER_SET{});
-                firstStmtResults.push_back(map);
+                firstStmtResults[res1] = POINTER_SET{};
             }
         }
         result.setResultList1(ref1, firstStmtResults);
@@ -107,12 +106,11 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // CONSTANT SYNONYM
     if (refType1 == ReferenceType::CONSTANT &&
         refType2 == ReferenceType::SYNONYM) {
-        vector<ValueToPointersMap> secondStmtResults;
+        VALUE_TO_POINTERS_MAP secondStmtResults;
         set<string> res2s = getR2ClausedR1(val1);
         for (auto res2 : res2s) {
             if (isType(res2, ref2->getDeType())) {
-                ValueToPointersMap map(res2, POINTER_SET{});
-                secondStmtResults.push_back(map);
+                secondStmtResults[res2] = POINTER_SET{};
             }
         }
         result.setResultList2(ref2, secondStmtResults);
@@ -122,7 +120,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // NEITHER IS CONSTANT
     // if first arg is SYNONYM
     if (refType1 != ReferenceType::WILDCARD) {
-        vector<ValueToPointersMap> firstStmtResults;
+        VALUE_TO_POINTERS_MAP firstStmtResults;
         set<string> res1s = getAll(*ref1);
 
         for (string res1 : res1s) {
@@ -138,8 +136,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
                 }
             }
             if (valid) {
-                ValueToPointersMap map(res1, related);
-                firstStmtResults.push_back(map);
+                firstStmtResults[res1] = related;
             }
         }
 
@@ -148,7 +145,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
 
     // if second arg is SYNONYM
     if (refType2 != ReferenceType::WILDCARD) {
-        vector<ValueToPointersMap> secondStmtResults;
+        VALUE_TO_POINTERS_MAP secondStmtResults;
         set<string> res2s = getAll(*ref2);
 
         for (string res2 : res2s) {
@@ -164,8 +161,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
                 }
             }
             if (valid) {
-                ValueToPointersMap map(res2, related);
-                secondStmtResults.push_back(map);
+                secondStmtResults[res2] = related;
             }
         }
 
