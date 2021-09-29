@@ -6,12 +6,12 @@ Query::Query() {
 
 vector<Reference *> Query::getReferences() { return referenceList; }
 
-void Query::setReturnReference(Reference *reference) {
-    this->returnReference = reference;
+void Query::addReturnReference(Reference *reference) {
+    this->returnRefs.push_back(reference);
     addReference(reference);
 }
 
-Reference *Query::getReturnReference() { return this->returnReference; }
+vector<Reference*> Query::getReturnReferences() { return this->returnRefs; }
 
 void Query::addClause(Clause *clause) {
     clauseList.push_back(clause);

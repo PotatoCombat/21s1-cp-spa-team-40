@@ -2,21 +2,21 @@
 
 void QueryEvaluator::clear() {
     resultTable.clear();
+    returnRefs.clear();
     references.clear();
     clauses.clear();
     patterns.clear();
     referenceAppearInClauses.clear();
     allQueriesReturnTrue = true;
-    returnReference = NULL;
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb), allQueriesReturnTrue(true), returnReference(NULL) {}
+    : pkb(pkb), allQueriesReturnTrue(true) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
         clear();
-        returnReference = query.getReturnReference();
+        returnRefs = query.getReturnReferences();
         references = query.getReferences();
         clauses = query.getClauses();
         patterns = query.getPatterns();

@@ -15,7 +15,7 @@ private:
     vector<Clause *> clauseList;
     vector<PatternClause *> patternList;
 
-    Reference *returnReference;
+    vector<Reference *> returnRefs;
 
     void addReference(Reference *reference);
 
@@ -24,8 +24,8 @@ public:
     vector<Reference *> getReferences();
     // returnReference must have ReferenceType::SYNONYM, should only be called
     // once for each query object
-    void setReturnReference(Reference *reference);
-    Reference *getReturnReference();
+    void addReturnReference(Reference *reference);
+    vector<Reference *> getReturnReferences();
     void addClause(Clause *clause);
     vector<Clause *> getClauses();
     void addPattern(PatternClause *pattern);
