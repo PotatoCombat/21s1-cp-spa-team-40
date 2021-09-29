@@ -8,5 +8,11 @@ enum class ClauseType {
     MODIFIES_S,
     MODIFIES_P,
     USES_S,
-    USES_P
+    USES_P,
+    CALLS,
+    CALLS_T,
+    NEXT,
+    NEXT_T,
+    AFFECTS,
+    AFFECTS_T
 };
