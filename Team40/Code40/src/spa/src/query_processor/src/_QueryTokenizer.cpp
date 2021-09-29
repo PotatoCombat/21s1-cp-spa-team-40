@@ -13,7 +13,7 @@ pair<string, string> QueryTokenizer::separateDeclaration(string input) {
     return make_pair(firstHalf, secondHalf);
 }
 
-string QueryTokenizer::tokenizeReturn(string input, string& remaining) {
+string QueryTokenizer::tokenizeReturn(string input, string &remaining) {
     size_t first_w = findFirstWhitespace(input);
     string sub;
     string rem;
@@ -45,7 +45,7 @@ string QueryTokenizer::tokenizeReturn(string input, string& remaining) {
 }
 
 void QueryTokenizer::tokenizeDeclaration(string input,
-    vector<DeclPair>& decls) {
+                                         vector<DeclPair> &decls) {
     size_t curr_pos;
     size_t space_pos;
     string type;
@@ -77,8 +77,8 @@ void QueryTokenizer::tokenizeDeclaration(string input,
     return;
 }
 
-void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss,
-    vector<PatTuple>& pats) {
+void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple> &clss,
+                                    vector<PatTuple> &pats) {
     // tokenizes by whitespace
     size_t curr_pos = input.find_first_not_of(WHITESPACE_SET);
     int suchThatCounter = 0; // 1 for such, 2 for such that
@@ -106,47 +106,39 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss,
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and '('
                         token1 = token;
-                    }
-                    else if (size <= token.size()) { // something after '('
+                    } else if (size <= token.size()) { // something after '('
                         token1 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
-                }
-                else {
+                } else {
                     throw SyntaxError("invalid syntax");
                 }
                 ++portionOfClause; // 1
-            }
-            else if (portionOfClause == 1) {
+            } else if (portionOfClause == 1) {
                 size_t not_name_char_pos = input.find(COMMA, curr_pos);
                 if (not_name_char_pos != string::npos) {
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ','
                         token2 = trimR(input.substr(curr_pos, size - 1));
-                    }
-                    else if (size <= token.size()) { // something after ','
+                    } else if (size <= token.size()) { // something after ','
                         token2 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
-                }
-                else {
+                } else {
                     throw SyntaxError("invalid syntax");
                 }
                 ++portionOfClause; // 2
-            }
-            else if (portionOfClause == 2) {
+            } else if (portionOfClause == 2) {
                 size_t not_name_char_pos = input.find(R_BRACKET, curr_pos);
                 if (not_name_char_pos != string::npos) {
                     size_t size = not_name_char_pos + 1 - curr_pos;
                     if (size > token.size()) { // space between token and ')'
                         token3 = trimR(input.substr(curr_pos, size - 1));
-                    }
-                    else if (size <= token.size()) { // something after ')'
+                    } else if (size <= token.size()) { // something after ')'
                         token3 = token.substr(0, size - 1);
                     }
                     cut_pos = not_name_char_pos + 1;
-                }
-                else {
+                } else {
                     throw SyntaxError("invalid syntax");
                 }
                 portionOfClause = 0;
@@ -154,45 +146,36 @@ void QueryTokenizer::tokenizeClause(string input, vector<ClsTuple>& clss,
                     token2 = removeWhitespaceWithinQuotes(token2);
                     token3 = removeWhitespaceWithinQuotes(token3);
                     clss.push_back(make_tuple(token1, token2, token3));
-                }
-                else if (isClause == 2) {
+                } else if (isClause == 2) {
                     token2 = removeWhitespaceWithinQuotes(token2);
                     token3 = extractPatternString(token3);
                     pats.push_back(make_tuple(token1, token2, token3));
-                }
-                else {
+                } else {
                     throw SyntaxError("something is very wrong");
                 }
                 isClause = 0;
-            }
-            else {
+            } else {
                 throw "error"; // error in the token counting or something
             }
-        }
-        else { // handle tokenizing of such that / pattern keywords here
+        } else { // handle tokenizing of such that / pattern keywords here
             if (token == KEYWORD_SUCH) {
                 if (suchThatCounter == 0) {
                     ++suchThatCounter;
-                }
-                else {
+                } else {
                     // such is misplaced!
                     throw SyntaxError("invalid syntax");
                 }
-            }
-            else if (token == KEYWORD_THAT) {
+            } else if (token == KEYWORD_THAT) {
                 if (suchThatCounter == 1) {
                     ++suchThatCounter;
                     isClause = 1;
-                }
-                else {
+                } else {
                     // that is misplaced!
                     throw SyntaxError("invalid syntax");
                 }
-            }
-            else if (token == KEYWORD_PATTERN) {
+            } else if (token == KEYWORD_PATTERN) {
                 isClause = 2;
-            }
-            else {
+            } else {
                 // error in the keyword counting or some
                 // irrevelant text
                 throw SyntaxError("invalid syntax");
@@ -232,7 +215,7 @@ string QueryTokenizer::trimR(string input) {
     return "";
 }
 
-void QueryTokenizer::splitComma(string input, vector<string>& vec) {
+void QueryTokenizer::splitComma(string input, vector<string> &vec) {
     string rem = input;
 
     size_t split = rem.find(COMMA);
@@ -264,8 +247,7 @@ string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
         if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
             string trimmed = trim(input.substr(1, input.size() - 2));
             return "\"" + trimmed + "\"";
-        }
-        else {
+        } else {
             throw SyntaxError("misplaced quotes");
         }
     }
@@ -279,8 +261,7 @@ string QueryTokenizer::extractPatternString(string input) {
         if (n_underscore == 2) {
             string underscored_r = trim(input.substr(1, input.size() - 2));
             return trim(underscored_r.substr(1, underscored_r.size() - 2));
-        }
-        else if (n_underscore == 1) {
+        } else if (n_underscore == 1) {
             throw SyntaxError("invalid syntax");
         }
         return trim(input.substr(1, input.size() - 2));

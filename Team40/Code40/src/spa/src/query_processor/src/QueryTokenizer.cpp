@@ -16,6 +16,10 @@ using namespace std;
 
 char SEMICOLON = ';';
 char COMMA = ',';
+char L_BRACKET = '(';
+char R_BRACKET = ')';
+char QUOTE = '"';
+char UNDERSCORE = '_';
 string WHITESPACE_SET = " \n\t\r";
 string KEYWORD_SELECT = "Select";
 string KEYWORD_SUCH = "such";
@@ -25,6 +29,7 @@ string KEYWORD_AND = "and";
 string KEYWORD_WITH = "with";
 
 DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
+//ClauseTypeHelper clsHelper = ClauseTypeHelper();
 
 enum CLAUSE_CODES {
     SUCH_THAT_CLAUSE,
@@ -40,11 +45,11 @@ enum STATE_CODES {
     INVALID_STATE
 };
 
-map<enum STATE_CODES, set<enum STATE_CODES>> stateTransitions = {
-    {READ_TYPE_STATE, {READ_ARGS_STATE, SUCH_INTERMEDIATE_STATE}},
-    {SUCH_INTERMEDIATE_STATE, {READ_ARGS_STATE}},
-    {READ_ARGS_STATE, {READ_TYPE_STATE}}
-};
+//map<enum STATE_CODES, set<enum STATE_CODES>> stateTransitions = {
+//    {READ_TYPE_STATE, {READ_ARGS_STATE, SUCH_INTERMEDIATE_STATE}},
+//    {SUCH_INTERMEDIATE_STATE, {READ_ARGS_STATE}},
+//    {READ_ARGS_STATE, {READ_TYPE_STATE}}
+//};
 
 /**
  * Separates a query string into declaration string and select clause string.
@@ -216,22 +221,22 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
             switch (type) {
             case SUCH_THAT_CLAUSE: {
                 ClsTuple clause;
-                tokenPos = tokenizeSuchThat(input, whitespacePos, clause);
+                whitespacePos = tokenizeSuchThat(input, tokenPos, clause);
                 suchThatClauses.push_back(clause);
             }
             case PATTERN_CLAUSE: {
                 PatTuple clause;
-                tokenPos = tokenizePattern(input, whitespacePos, clause);
+                whitespacePos = tokenizePattern(input, tokenPos, clause);
                 patternClauses.push_back(clause);
             }
             case WITH_CLAUSE: {
                 WithTuple clause;
-                tokenPos = tokenizeWith(input, whitespacePos, clause);
+                whitespacePos = tokenizeWith(input, tokenPos, clause);
                 withClauses.push_back(clause);
             }
             default:
                 // won't reach here
-                throw SyntaxError("QP-ERROR: error in the default matrix.");
+                throw SyntaxError("QP-ERROR: error in the matrix.");
                 break;
             }
             break;
@@ -259,7 +264,37 @@ void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
  * @return Position of end of clause.
  */
 size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause) {
-    
+    string token1;
+    string token2;
+    string token3;
+    size_t nextPos;
+
+    // tokenize token before '(', ',', ')'
+    token1 = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
+    token2 = getTokenBeforeX(input, COMMA, nextPos, nextPos);
+    token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
+
+    // remove whitespace within quotes of token2 and token3 if any!
+
+    token2 = removeWhitespaceWithinQuotes(token2);
+    token3 = removeWhitespaceWithinQuotes(token3);
+
+    clause = make_tuple(token1, token2, token3);
+    return nextPos;
+
+    //if (isClause == 1) {
+    //    token2 = removeWhitespaceWithinQuotes(token2);
+    //    token3 = removeWhitespaceWithinQuotes(token3);
+    //    clss.push_back(make_tuple(token1, token2, token3));
+    //}
+    //else if (isClause == 2) {
+    //    token2 = removeWhitespaceWithinQuotes(token2);
+    //    token3 = extractPatternString(token3);
+    //    pats.push_back(make_tuple(token1, token2, token3));
+    //}
+    //else {
+    //    throw SyntaxError("something is very wrong");
+    //}
 }
 
 /**
@@ -279,6 +314,37 @@ size_t tokenizePattern(string input, size_t startPos, PatTuple &clause) {}
  * @return Position of end of clause.
  */
 size_t tokenizeWith(string input, size_t startPos, WithTuple &clause) {}
+
+/**
+ * Get token starting from a start positon and before a character x.
+ * @param input The clauses string.
+ * @param startPos The start positon.
+ * @param x The character to find.
+ * @param &nextPos Position after X.
+ * @return The token to retrieve.
+ */
+string getTokenBeforeX(string input, char x, size_t startPos, size_t& nextPos) {
+    size_t xPos = input.find(x, startPos);
+    if (xPos == string::npos) {
+        throw SyntaxError("QP-ERROR: missing " + x);
+    }
+
+    nextPos = xPos + 1;
+    return trim(input.substr(startPos, xPos - startPos));
+}
+
+string removeWhitespaceWithinQuotes(string input) {
+    if (count(input.begin(), input.end(), QUOTE) > 0) {
+        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
+            string trimmed = trim(input.substr(1, input.size() - 2));
+            return "\"" + trimmed + "\"";
+        } else {
+            throw SyntaxError("QP-ERROR: misplaced quotes");
+        }
+    }
+    return input;
+}
+
 
 /********************* helper functions *********************/
 
@@ -328,21 +394,6 @@ size_t findNextWhitespace(string input, size_t pos) {
 
 size_t findNextToken(string input, size_t pos) {
     return input.find_first_not_of(WHITESPACE_SET, pos);
-}
-
-/**
- * Validates whether given string is valid name.
- * A valid name is one that starts with a LETTER and contains only LETTERs and
- * DIGITs.
- * @param input The string to validate.
- * @return `true` if valid name and `false` otherwise.
- */
-bool isValidName(string input) {
-    if (isalpha(input[0])) {
-        auto it = find_if_not(begin(input), end(input), isalnum);
-        return it == input.end();
-    }
-    return false;
 }
 
 /**
