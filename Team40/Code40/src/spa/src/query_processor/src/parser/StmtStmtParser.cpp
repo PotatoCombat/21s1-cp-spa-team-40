@@ -23,7 +23,7 @@ Clause *StmtStmtParser::parse() {
                            return ref->getValue() == refString2;
                        });
 
-    ClauseType clsT = clsHelper.getType(type);
+    ClauseType clsT = clsHelper.valueToClsType(type);
     Reference *r1;
     Reference *r2;
 

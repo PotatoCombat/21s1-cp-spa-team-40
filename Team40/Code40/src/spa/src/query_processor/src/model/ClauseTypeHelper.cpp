@@ -1,16 +1,6 @@
 #include "query_processor/model/ClauseTypeHelper.h"
 
 ClauseTypeHelper::ClauseTypeHelper() {
-    typeToStringMap = {
-        {ClauseType::FOLLOWS, "Follows"},
-        {ClauseType::FOLLOWS_T, "Follows*"},
-        {ClauseType::PARENT, "Parent"},
-        {ClauseType::PARENT_T, "Parent*"},
-        {ClauseType::MODIFIES_P, "Modifies"},
-        {ClauseType::MODIFIES_S, "Modifies"},
-        {ClauseType::USES_P, "Uses"},
-        {ClauseType::USES_S, "Uses"}
-    };
     stringToTypeMap = {
         {"Follows", ClauseType::FOLLOWS},
         {"Follows*", ClauseType::FOLLOWS_T},
@@ -43,7 +33,7 @@ ClauseTypeHelper::ClauseTypeHelper() {
     };
 }
 
-ClauseType ClauseTypeHelper::getType(string val) {
+ClauseType ClauseTypeHelper::valueToClsType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
         throw ValidityError("invalid clause type");
@@ -51,19 +41,11 @@ ClauseType ClauseTypeHelper::getType(string val) {
     return type->second;
 }
 
-string ClauseTypeHelper::getValue(ClauseType type) {
-    auto val = typeToStringMap.find(type);
-    if (val == typeToStringMap.end()) { // typically should not reach here
-        throw "invalid clause type";
-    }
-    return val->second;
-}
-
 // only used with wildcard/constant/quoted arguments
 DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
     auto de = deTypeMap1.find(type);
     if (de == deTypeMap1.end()) {
-        throw "invalid clause type";
+        throw ValidityError("invalid clause type");
     }
     return de->second;
 }
@@ -72,7 +54,7 @@ DesignEntityType ClauseTypeHelper::chooseDeType1(ClauseType type) {
 DesignEntityType ClauseTypeHelper::chooseDeType2(ClauseType type) {
     auto de = deTypeMap2.find(type);
     if (de == deTypeMap2.end()) {
-        throw "invalid clause type";
+        throw ValidityError("invalid clause type");
     }
     return de->second;
 }

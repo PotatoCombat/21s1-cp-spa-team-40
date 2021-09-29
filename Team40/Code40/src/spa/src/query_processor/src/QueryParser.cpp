@@ -1,7 +1,7 @@
 #include "query_processor/QueryParser.h"
 
 Reference *QueryParser::parseDeclaration(DeclPair declaration) {
-    DesignEntityType type = deHelper.getType(declaration.first);
+    DesignEntityType type = deHelper.valueToDesType(declaration.first);
     string syn = declaration.second;
     return new Reference(type, ReferenceType::SYNONYM, syn);
 }
@@ -12,7 +12,7 @@ Clause *QueryParser::parseClause(ClsTuple clause,
     string ref1 = get<1>(clause);
     string ref2 = get<2>(clause);
 
-    bool isStmtStmt = clsHelper.chooseDeType2(clsHelper.getType(cls)) ==
+    bool isStmtStmt = clsHelper.chooseDeType2(clsHelper.valueToClsType(cls)) ==
                       DesignEntityType::STMT;
     if (isStmtStmt) {
         // number/synonym/wildcard, number/synonym/wildcard

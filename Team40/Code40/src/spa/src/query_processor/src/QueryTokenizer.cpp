@@ -31,7 +31,7 @@ void QueryTokenizer::tokenizeDeclarations(string input,
         size_t firstWhitespacePos = findNextWhitespace(input, 0);
         string type = input.substr(0, firstWhitespacePos);
 
-        deHelper.getType(type); // throws exception if not a type
+        deHelper.valueToDesType(type); // throws exception if not a type
 
         // synoyms lie between whitespace and semicolon
         string synonyms = trim(input.substr(

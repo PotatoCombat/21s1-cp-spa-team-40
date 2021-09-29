@@ -82,8 +82,8 @@ Clause *XEntParser::parse() {
 
     if (isStmtEnt) {
         // make ModifiesS/UsesS
-        return new Clause(clsHelper.getType(type), *r1, *r2);
+        return new Clause(clsHelper.valueToClsType(type), *r1, *r2);
     }
     // make ModifiesP/UsesP
-    return new Clause(clsHelper.getType(type + "*"), *r1, *r2);
+    return new Clause(clsHelper.valueToClsType(type + "*"), *r1, *r2);
 }
