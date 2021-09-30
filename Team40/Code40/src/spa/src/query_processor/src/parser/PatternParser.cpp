@@ -22,38 +22,38 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 
     Reference *identity = getReferenceIfDeclared(this->ident);
 
+    if (identity == nullptr) {
+        throw ValidityError("undeclared pattern synonym");
+    }
+
+    identity = identity->copy();
+
     if (isAssignPattern(identity)) {
         return parseAssign(identity);
     } else {
-        throw ValidityError("invalid pattern clause");
+        delete identity;
+        throw ValidityError("invalid pattern type");
     }
 }
 
 PatternClause *PatternParser::parseAssign(Reference *identity) {
+    string var = this->args[0];
+    string pattern = this->args[1];
+    Reference *ref = getReferenceIfDeclared(var);
 
-    //if (it != declList.end()) {
-    //    if ((*it)->getDeType() == DesignEntityType::ASSIGN) {
-    //        r = (*it)->copy();
-    //    } else {
-    //        throw ValidityError("invalid symbol");
-    //    }
-    //} else {
-    //    throw ValidityError("undeclared synonym");
-    //}
+    if (ref != nullptr) {
+        ref = ref->copy();
+    } else {
+        // TODO: assert quoted or wildcard
+        DesignEntityType deT = DesignEntityType::VARIABLE;
+        ReferenceType refT = ParserUtil::checkRefType(var);
+        if (ParserUtil::isQuoted(var)) {
+            var = var.substr(1, var.size() - 2);
+        }
+        ref = new Reference(deT, refT, var);
+    }
 
-    //if (it1 != declList.end()) {
-    //    r1 = (*it1)->copy();
-    //} else {
-    //    // TODO: assert quoted
-    //    ReferenceType refT = ParserUtil::checkRefType(LHS);
-    //    DesignEntityType deT = DesignEntityType::VARIABLE;
-    //    if (ParserUtil::isQuoted(LHS)) {
-    //        LHS = LHS.substr(1, LHS.size() - 2);
-    //    }
-    //    r1 = new Reference(deT, refT, LHS);
-    //}
-
-    //return new PatternClause(*r, *r1, RHS);
+    return new PatternClause(*identity, *ref, pattern);
 }
 
 bool PatternParser::isAssignPattern(Reference *identity) {
