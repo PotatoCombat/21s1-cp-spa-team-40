@@ -7,6 +7,7 @@
 
 #include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/exception/ValidityError.h"
 
 class PatternParser {
 public:
@@ -17,6 +18,11 @@ public:
     PatternClause *parse(PatTuple patTuple);
 
 private:
+    PatternClause* parseAssign(Reference* identity);
+
+    bool isAssignPattern(Reference* identity);
+    Reference* getReferenceIfDeclared(string syn);
+
     vector<Reference *> declList;
 
     string ident;
