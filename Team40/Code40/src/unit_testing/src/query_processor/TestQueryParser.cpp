@@ -119,34 +119,3 @@ vector<Reference *> TestQueryParser::createReferenceV(int n) {
 //    }
 //}
 //
-//TEST_CASE("QueryParser: parsePatternClause") {
-//    QueryParser parser;
-//    vector<Reference *> refs = TestQueryParser::createReferenceV(2);
-//
-//    SECTION("test pass: constants/wildcards") {
-//        PatternClause *expected = new PatternClause(
-//            TestQueryParser::ASSIGN, TestQueryParser::WILDCARD_V, "_");
-//        PatternClause *actual =
-//            parser.parsePatternClause(make_pair("a", vector<string>{"_", "_"}));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//    }
-//
-//    SECTION("test pass: synonym declared") {
-//        PatternClause *expected = new PatternClause(
-//            TestQueryParser::ASSIGN, TestQueryParser::WILDCARD_V, "_");
-//        PatternClause *actual =
-//            parser.parsePatternClause(make_pair("a", vector<string>{"_", "_"}));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//    }
-//
-//    SECTION("test fail: synonym undeclared/invalid") {
-//        REQUIRE_THROWS_AS(parser.parsePatternClause(make_pair("a1", vector<string>{"\"x\"", "\"x\""})), ValidityError);
-//        REQUIRE_THROWS_AS(parser.parsePatternClause(make_pair("s", vector<string>{"\"x\"", "\"x\""})), ValidityError);
-//    }
-//}
