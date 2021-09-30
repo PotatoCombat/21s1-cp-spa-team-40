@@ -34,58 +34,43 @@ Clause *SuchThatParser::parse(ClsTuple clsTuple) {
 }
 
 /**
- * Parses a clause that takes in (stmt, stmt) as parameters. 
+ * Parses a clause that takes in (stmt, stmt) as parameters.
  * This includes: Follows(*)/Parent(*)/Next(*)/Affects(*).
  */
 Clause *SuchThatParser::parseStmtStmt() {
     // number/synonym/wildcard, number/synonym/wildcard
-    ClauseType clsType = clsHelper.valueToClsType(this->type);
+
+    // statement is a constant(integer)/wildcard
+    if (ParserUtil::isQuoted(this->ref1) || ParserUtil::isQuoted(this->ref2)) {
+        throw ValidityError("invalid clause argument");
+    }
+
     Reference *r1 = getReferenceIfDeclared(this->ref1);
     Reference *r2 = getReferenceIfDeclared(this->ref2);
 
-    DesignEntityType deType1 = clsHelper.chooseDeType1(clsType);
-    DesignEntityType deType2 = clsHelper.chooseDeType2(clsType);
-
-    // both are declared synonyms
-    if (r1 != nullptr && r2 != nullptr) {
-        // check correct entity types
-        if (r1->getDeType() == deType1 && r2->getDeType() == deType2) {
-            r1 = r1->copy();
-            r2 = r2->copy();
-        } else {
+    ClauseType clsType = clsHelper.valueToClsType(this->type);
+    
+    if (r1 != nullptr) {
+        if (!deHelper.isStatement(r1->getDeType())) {
             throw ValidityError("invalid clause argument");
         }
+        r1 = r1->copy();
     } else {
-        // statement is a constant(integer)/wildcard
-        if (ParserUtil::isQuoted(this->ref1) ||
-            ParserUtil::isQuoted(this->ref2)) {
+        DesignEntityType deType1 = DesignEntityType::STMT; // clsHelper.chooseDeType1(clsType);
+        ReferenceType refT = ParserUtil::checkRefType(this->ref1);
+        r1 = new Reference(deType1, refT, this->ref1);
+    }
+
+    if (r2 != nullptr) {
+        if (!deHelper.isStatement(r2->getDeType())) {
+            delete r1;
             throw ValidityError("invalid clause argument");
         }
-        if (r1 != nullptr) {
-            // r1 is declared synonym
-            if (r1->getDeType() == deType1) {
-                r1 = r1->copy();
-            } else {
-                throw ValidityError("invalid clause argument");
-            }
-            ReferenceType refT = ParserUtil::checkRefType(this->ref1);
-            r1 = new Reference(deType1, refT, this->ref1);
-        } else if (r2 != nullptr) {
-            // r2 is declared synonym
-            if (r2->getDeType() == deType2) {
-                r2 = r2->copy();
-            } else {
-                throw ValidityError("invalid clause argument");
-            }
-            ReferenceType refT = ParserUtil::checkRefType(this->ref2);
-            r2 = new Reference(deType2, refT, this->ref2);
-        } else {
-            // neither are declared
-            ReferenceType refT1 = ParserUtil::checkRefType(this->ref1);
-            ReferenceType refT2 = ParserUtil::checkRefType(this->ref2);
-            r1 = new Reference(deType1, refT1, this->ref1);
-            r2 = new Reference(deType2, refT2, this->ref2);
-        }
+        r2 = r2->copy();
+    } else {
+        DesignEntityType deType2 = DesignEntityType::STMT; // clsHelper.chooseDeType2(clsType);
+        ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        r2 = new Reference(deType2, refT, this->ref2);
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -96,7 +81,7 @@ Clause *SuchThatParser::parseStmtStmt() {
  * This includes: Modifies/Uses (both P and S versions).
  */
 Clause *SuchThatParser::parseXEnt() {
- 
+
 }
 
 /**
