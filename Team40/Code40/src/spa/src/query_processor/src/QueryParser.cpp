@@ -1,3 +1,32 @@
 #include "query_processor/QueryParser.h"
 
+void QueryParser::clear() {
+    this->deleteDeclarations();
+    this->stParser.clear();
+    this->ptParser.clear();
+}
 
+void QueryParser::deleteDeclarations() {
+    for (int i = 0; i < this->declList.size(); ++i) {
+        delete this->declList[i];
+    }
+    this->declList = vector<Reference *>();
+}
+
+void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
+    for (auto x : declPairs) {
+        DesignEntityType type = deHelper.valueToDesType(x.first);
+        string syn = x.second;
+        Reference *ref = new Reference(type, ReferenceType::SYNONYM, syn);
+        declList.push_back(ref);
+    }
+
+    stParser.initReferences(declList);
+    ptParser.initReferences(declList);
+}
+
+Reference *QueryParser::parseReturnSynonym(string syn) {}
+
+Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {}
+
+PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {}

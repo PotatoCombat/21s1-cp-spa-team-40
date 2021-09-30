@@ -3,17 +3,13 @@
 void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     pair<string, string> parts = tokenizer.separateQueryString(input);
 
-    vector<DeclPair> declString;
+    vector<DeclPair> declPairs;
     string retString;
     string clauses;
 
     /*********** Parse declaration ***********/
-    tokenizer.tokenizeDeclarations(parts.first, declString);
-    vector<Reference *> refList;
-    for (auto x : declString) {
-        Reference *r = parser.parseDeclaration(x);
-        refList.push_back(r);
-    }
+    tokenizer.tokenizeDeclarations(parts.first, declPairs);
+    parser.parseDeclarations(declPairs);
 
     /*********** Parse return synonym ***********/
     tokenizer.tokenizeReturnSynonym(parts.second, retString, clauses);
@@ -28,10 +24,12 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     }
 
     if (!found) {
+        parser.clear();
         throw ValidityError("return entity is undeclared");
     }
 
     if (clauses.size() == 0) {
+        parser.clear();
         return;
     }
 
@@ -44,24 +42,22 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
     vector<Clause *> clsList;
     for (auto x : clsStrings) {
-        Clause *cls = parser.parseClause(x, refList);
+        Clause *cls = parser.parseSuchThatClause(x);
         clsList.push_back(cls);
         q.addClause(cls);
     }
 
     vector<PatternClause *> patList;
     for (auto x : patStrings) {
-        PatternClause *pat = parser.parsePattern(x, refList);
+        PatternClause *pat = parser.parsePatternClause(x);
         patList.push_back(pat);
         q.addPattern(pat);
     }
 
     // parse with clauses here
     // ...
-
-    for (int i = 0; i < refList.size(); ++i) {
-        delete refList[i];
-    }
+    
+    parser.clear();
 
     return;
 }
