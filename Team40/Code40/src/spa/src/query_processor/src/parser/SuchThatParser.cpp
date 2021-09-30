@@ -49,14 +49,14 @@ Clause *SuchThatParser::parseStmtStmt() {
     Reference *r2 = getReferenceIfDeclared(this->ref2);
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
-    
+
     if (r1 != nullptr) {
         if (!deHelper.isStatement(r1->getDeType())) {
             throw ValidityError("invalid clause argument");
         }
         r1 = r1->copy();
     } else {
-        DesignEntityType deType1 = DesignEntityType::STMT; // clsHelper.chooseDeType1(clsType);
+        DesignEntityType deType1 = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref1);
         r1 = new Reference(deType1, refT, this->ref1);
     }
@@ -68,7 +68,7 @@ Clause *SuchThatParser::parseStmtStmt() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::STMT; // clsHelper.chooseDeType2(clsType);
+        DesignEntityType deType2 = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
         r2 = new Reference(deType2, refT, this->ref2);
     }
@@ -77,11 +77,70 @@ Clause *SuchThatParser::parseStmtStmt() {
 }
 
 /**
- * Parses a clause that takes in (X, ent) as parameters.
+ * Parses a clause that takes in (X, ent) as parameters. 
  * This includes: Modifies/Uses (both P and S versions).
  */
 Clause *SuchThatParser::parseXEnt() {
+    // MODIFIES_S/USES_S: number/synonym, quoted/synonym/wildcard
+    // MODIFIES_P/USES_P: quoted/synonym, quoted/synonym/wildcard
 
+    if (ParserUtil::isWildcard(this->ref1)) {
+        throw ValidityError("first argument cannot be wildcard");
+    }
+
+    Reference *r1 = getReferenceIfDeclared(this->ref1);
+    Reference *r2 = getReferenceIfDeclared(this->ref2);
+
+    // a StmtEnt is ModifiesS/UsesS
+    // a EntEnt is ModifiesP/UsesP
+    bool isStmtEnt = true; // false for EntEnt
+
+    if (r1 != nullptr) {
+        if (deHelper.isStatement(r1->getDeType())) {
+            isStmtEnt = true;
+        } else if (deHelper.isProcedure(r1->getDeType())) {
+            isStmtEnt = false;
+        } else {
+            throw ValidityError("invalid clause argument");
+        }
+        r1 = r1->copy();
+    } else {
+        // first argument is not declared, must be either integer or quoted
+        DesignEntityType deType1;
+        if (ParserUtil::isInteger(this->ref1)) {
+            isStmtEnt = true;
+            deType1 = DesignEntityType::STMT;
+        } else if (ParserUtil::isQuoted(this->ref1)) {
+            isStmtEnt = false;
+            deType1 = DesignEntityType::PROCEDURE;
+            this->ref1 = ref1.substr(1, ref1.size() - 2); // remove quotes
+        } else {
+            throw ValidityError("invalid clause argument");
+        }
+        ReferenceType refT = ReferenceType::CONSTANT;
+        r1 = new Reference(deType1, refT, this->ref1);
+    }
+
+    // second argument must always be a variable
+    if (r2 != nullptr) {
+        if (!deHelper.isVariable(r2->getDeType())) {
+            delete r1;
+            throw ValidityError("invalid clause argument");
+        }
+        r2 = r2->copy();
+    } else {
+        DesignEntityType deType2 = DesignEntityType::VARIABLE;
+        ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
+            ref2 = ref2.substr(1, ref2.size() - 2);
+        }
+        r2 = new Reference(deType2, refT, this->ref2);
+    }
+
+    if (isStmtEnt) {
+        return new Clause(clsHelper.valueToClsType(this->type), *r1, *r2);
+    }
+    return new Clause(clsHelper.valueToClsType(this->type + "*"), *r1, *r2);
 }
 
 /**
