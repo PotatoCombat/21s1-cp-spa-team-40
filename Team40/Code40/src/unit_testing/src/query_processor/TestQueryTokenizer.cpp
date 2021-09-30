@@ -118,7 +118,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturn") {
     }
 }
 
-TEST_CASE("QueryTokenizer: tokenizeClause") {
+TEST_CASE("QueryTokenizer: tokenizeClauses") {
     QueryTokenizer tokenizer;
 
     SECTION("test only one such that clause") {
@@ -248,7 +248,7 @@ TEST_CASE("QueryTokenizer: tokenizeClause") {
     }
 }
 
-TEST_CASE("QueryTokenizer: tokenizeClause for pattern") {
+TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
     QueryTokenizer tokenizer;
 
     SECTION("test partial match pattern") {
@@ -260,8 +260,7 @@ TEST_CASE("QueryTokenizer: tokenizeClause for pattern") {
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(rel.size() == 0);
         REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));
-        REQUIRE(get<1>(pat[0]) == get<1>(expected[0]));
-        REQUIRE(get<2>(pat[0]) == get<2>(expected[0]));
+        REQUIRE(get<1>(pat[0])[0] == get<1>(expected[0])[0]);
     }
 }
 

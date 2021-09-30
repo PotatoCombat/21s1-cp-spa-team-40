@@ -37,8 +37,8 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 }
 
 PatternClause *PatternParser::parseAssign(Reference *identity) {
-    string var = this->args[0];
-    string pattern = this->args[1];
+    string var = this->args.at(0);
+    string pattern = this->args.at(1);
     Reference *ref = getReferenceIfDeclared(var);
 
     if (ref != nullptr) {

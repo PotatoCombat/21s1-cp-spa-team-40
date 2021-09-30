@@ -48,7 +48,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
 DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw ValidityError("QP-ERROR: invalid design entity type");
+        throw ValidityError("invalid design entity type");
     }
     return type->second;
 }
@@ -56,7 +56,7 @@ DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
 bool DesignEntityTypeHelper::isStatement(DesignEntityType type) {
     auto val = typeToIsStmtMap.find(type);
     if (val == typeToIsStmtMap.end()) {
-        throw ValidityError("QP-ERROR: invalid design entity type");
+        throw ValidityError("invalid design entity type");
     }
     return val->second;
 }
