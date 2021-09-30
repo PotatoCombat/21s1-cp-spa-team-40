@@ -11,13 +11,12 @@ void QueryEvaluator::clear() {
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb), allQueriesReturnTrue(true), returnReference(NULL) {}
+    : pkb(pkb), allQueriesReturnTrue(true) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
         clear();
         returnRefs = query.getReturnReferences();
-        returnReference = returnRefs[0];
         references = query.getReferences();
         clauses = query.getClauses();
         patterns = query.getPatterns();
@@ -136,22 +135,29 @@ vector<string> QueryEvaluator::finaliseResult() {
         }
     }
 
-    int resultIndex = -1;
-    for (int i = 0; i < references.size(); i++) {
-        if (references[i]->equals(*returnReference)) {
-            resultIndex = i;
+    vector<int> returnIndexes;
+    for (auto ref : returnRefs) {
+        int idx = getRefIndex(ref);
+        returnIndexes.push_back(idx);
+        if (!referenceAppearInClauses[idx]) {
+            for (string val : ClauseHandler::getAll(pkb, *ref)) {
+                resultTable.addValue(idx, val);
+            }
         }
     }
 
-    if (!referenceAppearInClauses[resultIndex]) {
-        set<string> all = ClauseHandler::getAll(pkb, *returnReference);
-        vector<string> result(all.size());
-        copy(all.begin(), all.end(), result.begin());
+    vector<string> result;
 
-        return result;
+    for (vector<string> unformatedRes :
+         resultTable.generateResult(returnIndexes)) {
+        ostringstream ss;
+        copy(unformatedRes.begin(), unformatedRes.end() - 1,
+             ostream_iterator<string>(ss, " "));
+        ss << unformatedRes.back();
+        result.push_back(ss.str());
     }
 
-    return resultTable.getValues(resultIndex);
+    return result;
 }
 
 void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {

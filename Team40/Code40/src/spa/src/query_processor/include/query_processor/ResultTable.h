@@ -46,4 +46,6 @@ public:
     void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
     bool hasVal(INDEX idx, VALUE val);
+
+    vector<vector<string>> generateResult(vector<INDEX> indexes);
 };

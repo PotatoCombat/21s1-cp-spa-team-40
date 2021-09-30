@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -37,7 +38,6 @@ private:
     PKB *pkb;
     vector<Reference *> returnRefs;
     vector<Reference *> references;
-    Reference *returnReference;
     vector<Clause *> clauses;
     vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;

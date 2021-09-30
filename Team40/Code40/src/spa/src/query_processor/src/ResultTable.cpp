@@ -157,6 +157,75 @@ bool ResultTable::hasVal(INDEX idx, VALUE val) {
     return table[idx].find(val) != table[idx].end();
 }
 
+vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
+    string EMPTY = "";
+    set<INDEX> visited;
+    // the inner vector has element equal to the number of indexes in this table
+    vector<vector<string>> combinations{vector<string>(table.size(), EMPTY)};
+    
+    // evaluate each groups
+    for (INDEX idx : indexes) {
+        // 1st idx is the idx to be eval, 
+        // 2nd idx is the index that calls this index
+        vector<pair<INDEX, INDEX>> toBeEval;
+        toBeEval.push_back({idx, -1});
+        while (!toBeEval.empty()) {
+            INDEX currIdx = toBeEval.back().first;
+            INDEX callIdx = toBeEval.back().second;
+            toBeEval.pop_back();
+            vector<vector<string>> newRes;
+            if (visited.find(currIdx) != visited.end()) { // if visited already then continue
+                continue;
+            }
+            if (callIdx == -1) { // if it is the first idx in the group to be eval
+                for (vector<string> v : combinations) {
+                    for (auto &valueToPointers : table[currIdx]) {
+                        vector<string> temp = v;
+                        temp[currIdx] = valueToPointers.first;
+                        newRes.push_back(temp);
+
+                        // add related refs to toBeEval
+                        for (auto &idxToValues : valueToPointers.second) {
+                            toBeEval.push_back({idxToValues.first, currIdx});
+                        }
+                    }
+                }
+            } else { // if it is called by another idx
+                for (vector<string> v : combinations) {
+                    for (auto &valueToPointers : table[currIdx]) {
+                        // if has link to the value in the current result
+                        if (valueToPointers.second[callIdx].count(v[callIdx])) {
+                            vector<string> temp = v;
+                            temp[currIdx] = valueToPointers.first;
+                            newRes.push_back(temp);
+                        }
+
+                        // add related refs to toBeEval
+                        for (auto &idxToValues : valueToPointers.second) {
+                            toBeEval.push_back({idxToValues.first, currIdx});
+                        }
+                    }
+                }
+            }
+
+            combinations = newRes;
+            visited.insert(currIdx);
+        }
+    }
+
+    // generate result
+    vector<vector<string>> final;
+    for (vector<string> v : combinations) {
+        vector<string> res;
+        for (INDEX i : indexes) {
+            res.push_back(v[i]);
+        }
+        final.push_back(res);
+    }
+
+    return final;
+}
+
 void ResultTable::assertIndex(INDEX idx) {
     if (idx < 0 || idx >= table.size()) {
         throw runtime_error("Index out of bound");

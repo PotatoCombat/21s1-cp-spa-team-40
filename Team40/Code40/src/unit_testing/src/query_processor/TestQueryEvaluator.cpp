@@ -147,3 +147,43 @@ TEST_CASE("QueryEvaluator: intersection not return element") {
     vector<string> actual = evaluator.evaluateQuery(query);
     REQUIRE(actual == vector<string>{"5"});
 }
+
+TEST_CASE("QueryEvaluator: return multi result 1") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
+    Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
+    Clause follows(ClauseType::FOLLOWS, s1, s);
+    Clause follows2(ClauseType::FOLLOWS, s, s2);
+
+    query.addReturnReference(&s);
+    query.addReturnReference(&s2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"10 11", "2 3", "3 4", "4 12", "6 9", "9 10"});
+}
+
+TEST_CASE("QueryEvaluator: return multi result 2") {
+    Query query;
+    Reference c(DesignEntityType::CALL, ReferenceType::SYNONYM, "c");
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
+    Reference s2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
+    Clause follows(ClauseType::FOLLOWS, s1, s);
+    Clause follows2(ClauseType::FOLLOWS, s, s2);
+
+    query.addReturnReference(&s);
+    query.addReturnReference(&c);
+    query.addReturnReference(&s2);
+    query.addClause(&follows);
+    query.addClause(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"10 10 11", "10 12 11", "2 10 3", "2 12 3",
+                                     "3 10 4", "3 12 4", "4 10 12", "4 12 12",
+                                     "6 10 9", "6 12 9", "9 10 10", "9 12 10"});
+}
