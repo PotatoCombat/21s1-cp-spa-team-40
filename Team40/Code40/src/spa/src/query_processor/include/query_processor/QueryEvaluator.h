@@ -52,7 +52,7 @@ private:
 
     vector<string> finaliseResult();
 
-    void combineResult(Result result);
+    void combineResult(Result result, int ref1Index, int ref2Index);
 
     int getRefIndex(Reference *ref);
 

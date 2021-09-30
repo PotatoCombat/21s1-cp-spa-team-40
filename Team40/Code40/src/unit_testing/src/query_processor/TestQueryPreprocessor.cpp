@@ -65,7 +65,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
             qp.preprocessQuery(TestQPreprocessor::INPUT_2, actual);
 
             REQUIRE(actual.getClauses().size() == 0);
-            REQUIRE((actual.getReturnReferences() == expected.getReturnReferences()));
+            REQUIRE((actual.getReturnReferences()[0])->equals(*expected.getReturnReferences()[0]));
         }
 
         SECTION("test 4") {
@@ -173,7 +173,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
         REQUIRE((actual.getPatterns()[0])->equals(*pat));
-        REQUIRE((actual.getReturnReferences() == vector<Reference *>{&stmt}));
+        REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 3));
     }
 
@@ -188,7 +188,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
         REQUIRE((actual.getPatterns()[0])->equals(*pat));
-        REQUIRE((actual.getReturnReferences() == vector<Reference *>{&stmt}));
+        REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 2));
     }
 }

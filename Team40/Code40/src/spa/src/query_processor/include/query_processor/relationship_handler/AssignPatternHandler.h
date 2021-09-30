@@ -22,5 +22,5 @@ private:
 public:
     AssignPatternHandler(PatternClause *patternClause, PKB *pkb)
         : patternClause(patternClause), pkb(pkb) {}
-    Result eval(int ref1Index, int ref2Index);
+    Result eval();
 };

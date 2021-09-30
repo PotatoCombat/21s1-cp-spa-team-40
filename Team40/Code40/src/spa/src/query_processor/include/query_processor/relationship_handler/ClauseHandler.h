@@ -44,6 +44,6 @@ public:
     // evaluates the clause and writes the answer to the result object
     // Result invalid = false only happens when neither of the references is
     // synonym
-    Result eval(int ref1Index, int ref2Index);
+    Result eval();
     static set<string> getAll(PKB* pkb, Reference ref);
 };

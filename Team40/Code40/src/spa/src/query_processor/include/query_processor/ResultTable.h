@@ -26,13 +26,16 @@ public:
 
     void init(int size);
 
-    //void addValue(int sourceIdx, string sourceVal, int targetIdx, VALUE targetVal);
+    void addValue(INDEX idx, VALUE val);
 
-    void addValues(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals);
+    void addValueWithLink(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals);
 
     VALUE_SET getLinkedValues(INDEX sourceIdx, VALUE value, INDEX targetIdx);
 
     bool hasPointerToIdx(INDEX sourceIdx, VALUE sourceValue, INDEX targetIdx);
+
+    VALUE_SET getPointersToIdx(INDEX sourceIdx, VALUE sourceValue,
+                               INDEX targetIdx);
 
     void removeValue(INDEX refIndex, VALUE value);
 
@@ -41,4 +44,6 @@ public:
     bool hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
     void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
+
+    bool hasVal(INDEX idx, VALUE val);
 };

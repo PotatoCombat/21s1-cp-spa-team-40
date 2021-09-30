@@ -30,7 +30,7 @@ ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb,
                              ClauseType validClauseType)
     : clause(clause), pkb(pkb), validClauseType(validClauseType) {}
 
-Result ClauseHandler::eval(int ref1Index, int ref2Index) {
+Result ClauseHandler::eval() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
     Reference *ref2 = clause->getSecondReference();
@@ -92,11 +92,11 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // SYNONYM CONSTANT
     if (refType1 == ReferenceType::SYNONYM &&
         refType2 == ReferenceType::CONSTANT) {
-        VALUE_TO_POINTERS_MAP firstStmtResults;
+        VALUE_TO_VALUES_MAP firstStmtResults;
         set<string> res1s = getR1ClauseR2(val2);
         for (string res1 : res1s) {
             if (isType(res1, ref1->getDeType())) {
-                firstStmtResults[res1] = POINTER_SET{};
+                firstStmtResults[res1] = VALUE_SET{};
             }
         }
         result.setResultList1(ref1, firstStmtResults);
@@ -106,11 +106,11 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // CONSTANT SYNONYM
     if (refType1 == ReferenceType::CONSTANT &&
         refType2 == ReferenceType::SYNONYM) {
-        VALUE_TO_POINTERS_MAP secondStmtResults;
+        VALUE_TO_VALUES_MAP secondStmtResults;
         set<string> res2s = getR2ClausedR1(val1);
         for (auto res2 : res2s) {
             if (isType(res2, ref2->getDeType())) {
-                secondStmtResults[res2] = POINTER_SET{};
+                secondStmtResults[res2] = VALUE_SET{};
             }
         }
         result.setResultList2(ref2, secondStmtResults);
@@ -120,19 +120,17 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // NEITHER IS CONSTANT
     // if first arg is SYNONYM
     if (refType1 != ReferenceType::WILDCARD) {
-        VALUE_TO_POINTERS_MAP firstStmtResults;
+        VALUE_TO_VALUES_MAP firstStmtResults;
         set<string> res1s = getAll(pkb, *ref1);
 
         for (string res1 : res1s) {
             set<string> res2s = getR2ClausedR1(res1);
-            POINTER_SET related;
+            VALUE_SET related;
             bool valid = false;
             for (auto res2 : res2s) {
                 if (isType(res2, ref2->getDeType())) {
                     valid = true;
-                    if (refType2 == ReferenceType::SYNONYM) {
-                        related.insert({ref2Index, res2});
-                    }
+                    related.insert(res2);
                 }
             }
             if (valid) {
@@ -145,19 +143,17 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
 
     // if second arg is SYNONYM
     if (refType2 != ReferenceType::WILDCARD) {
-        VALUE_TO_POINTERS_MAP secondStmtResults;
+        VALUE_TO_VALUES_MAP secondStmtResults;
         set<string> res2s = getAll(pkb, *ref2);
 
         for (string res2 : res2s) {
             set<string> res1s = getR1ClauseR2(res2);
-            POINTER_SET related;
+            VALUE_SET related;
             bool valid = false;
             for (string res1 : res1s) {
                 if (isType(res1, ref1->getDeType())) {
                     valid = true;
-                    if (refType1 == ReferenceType::SYNONYM) {
-                        related.insert({ref1Index, res1});
-                    }
+                    related.insert(res1);
                 }
             }
             if (valid) {

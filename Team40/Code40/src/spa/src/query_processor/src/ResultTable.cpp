@@ -7,7 +7,15 @@ void ResultTable::init(int size) {
     table = temp;
 }
 
-void ResultTable::addValues(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals) {
+void ResultTable::addValue(INDEX idx, VALUE val) {
+    assertIndex(idx);
+    VALUE_TO_POINTERS_MAP *map = &table[idx];
+    if (map->find(val) == map->end()) {
+        (*map)[val] = IDX_TO_VALUES_MAP{};
+    }
+}
+
+void ResultTable::addValueWithLink(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals) {
     assertIndex(sourceIdx);
     assertIndex(targetIdx);
 
@@ -52,11 +60,26 @@ bool ResultTable::hasPointerToIdx(int sourceIdx, string sourceValue,
     }
 
     IDX_TO_VALUES_MAP *pIndexToValue = &(*map)[sourceValue];
-    if (pIndexToValue->find(targetIdx) != pIndexToValue->end()) {
+    if (pIndexToValue->find(targetIdx) == pIndexToValue->end()) {
         return false;
     }
 
     return pIndexToValue[targetIdx].size() > 0;
+}
+
+VALUE_SET ResultTable::getPointersToIdx(INDEX sourceIdx, VALUE sourceValue,
+                                        INDEX targetIdx) {
+    VALUE_TO_POINTERS_MAP *map = &table[sourceIdx];
+    if (map->find(sourceValue) == map->end()) {
+        return VALUE_SET{};
+    }
+
+    IDX_TO_VALUES_MAP *pIndexToValue = &(*map)[sourceValue];
+    if (pIndexToValue->find(targetIdx) == pIndexToValue->end()) {
+        return VALUE_SET{};
+    }
+
+    return (*pIndexToValue)[targetIdx];
 }
 
 void ResultTable::removeValue(INDEX refIndex, VALUE value) {
@@ -74,8 +97,11 @@ void ResultTable::removeValue(INDEX refIndex, VALUE value) {
 
         for (auto &idxToValuesPair : table[sourceIdx][sourceVal]) {
             INDEX targetIdx = idxToValuesPair.first;
-            for (auto &targetVal : idxToValuesPair.second) {
-                removeLink(sourceIdx, sourceVal, targetIdx, targetVal);
+            for (string targetVal : idxToValuesPair.second) {
+                table[targetIdx][targetVal][sourceIdx].erase(sourceVal);
+                if (table[targetIdx][targetVal][sourceIdx].size() == 0) {
+                    table[targetIdx][targetVal].erase(sourceIdx);
+                }
                 if (!hasPointerToIdx(targetIdx, targetVal, sourceIdx)) {
                     toRemove.push_back({targetIdx, targetVal});
                 }
@@ -124,6 +150,11 @@ void ResultTable::removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VAL
     if (table[refIndex2][value2][refIndex1].size() == 0) {
         table[refIndex2][value2].erase(refIndex1);
     }
+}
+
+bool ResultTable::hasVal(INDEX idx, VALUE val) {
+    assertIndex(idx);
+    return table[idx].find(val) != table[idx].end();
 }
 
 void ResultTable::assertIndex(INDEX idx) {

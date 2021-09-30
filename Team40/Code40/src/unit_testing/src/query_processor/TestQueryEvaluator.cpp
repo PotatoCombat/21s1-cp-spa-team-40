@@ -58,8 +58,8 @@ TEST_CASE("QueryEvaluator: all clauses return true - returns all statements") {
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
-    REQUIRE(actual == vector<string>{"1", "2", "3", "4", "5", "6", "7", "8",
-                                     "9", "10", "11", "12"});
+    REQUIRE(actual == vector<string>{"1", "10", "11", "12", "2", "3", "4", "5",
+                                     "6", "7", "8", "9"});
 }
 
 TEST_CASE("QueryEvaluator: one clause return empty list - returns empty list") {
