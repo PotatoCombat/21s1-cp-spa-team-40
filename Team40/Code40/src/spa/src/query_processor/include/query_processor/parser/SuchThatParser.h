@@ -10,6 +10,7 @@
 #include "query_processor/model/DesignEntityType.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/parser/ParserUtil.h"
 
 class SuchThatParser {
 public:
@@ -24,8 +25,10 @@ private:
     Clause *parseStmtStmt();
     Clause *parseXEnt();
 
-    DesignEntityTypeHelper deHelper;
+    Reference *getReferenceIfDeclared(string syn);
+
     ClauseTypeHelper clsHelper;
+    DesignEntityTypeHelper deHelper;
 
     vector<Reference *> declList;
 
