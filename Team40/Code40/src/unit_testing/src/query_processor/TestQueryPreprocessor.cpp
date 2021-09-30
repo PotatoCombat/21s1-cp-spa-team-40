@@ -114,7 +114,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
         Reference ret(DesignEntityType::STMT, ReferenceType::SYNONYM, "p");
         expected.setReturnReference(&ret);
 
-        REQUIRE_THROWS(qp.preprocessQuery(TestQPreprocessor::INPUT_3, actual));
+        REQUIRE_FALSE(qp.preprocessQuery(TestQPreprocessor::INPUT_3, actual));
     }
 
     SECTION("test pattern query created correctly") {
