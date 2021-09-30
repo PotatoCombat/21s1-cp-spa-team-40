@@ -205,13 +205,13 @@ void QueryEvaluator::combineResult(Result result) {
 
             // remove those with no link
             for (string refValue : resultTable.getValues(refIndex1)) {
-                if (!resultTable.hasPointerToRef(refIndex1, refValue, refIndex2)) {
-                    resultTable.removeMap(refIndex1, refValue);
+                if (!resultTable.hasPointerToIdx(refIndex1, refValue, refIndex2)) {
+                    resultTable.removeValue(refIndex1, refValue);
                 }
             }
             for (string refValue : resultTable.getValues(refIndex2)) {
-                if (!resultTable.hasPointerToRef(refIndex2, refValue, refIndex1)) {
-                    resultTable.removeMap(refIndex2, refValue);
+                if (!resultTable.hasPointerToIdx(refIndex2, refValue, refIndex1)) {
+                    resultTable.removeValue(refIndex2, refValue);
                 }
             }
             return;
@@ -277,7 +277,7 @@ void QueryEvaluator::combineResult(Result result) {
     }
 
     for (auto mapCoord : toRemoveLater) {
-        resultTable.removeMap(mapCoord.first, mapCoord.second);
+        resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
 }
 

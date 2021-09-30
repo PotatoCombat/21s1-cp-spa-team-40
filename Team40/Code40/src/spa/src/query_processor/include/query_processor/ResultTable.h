@@ -9,35 +9,36 @@
 
 using namespace std;
 
-typedef pair<int, string> POINTER;
-typedef set<POINTER> POINTER_SET;
-typedef map<string, POINTER_SET> VALUE_TO_POINTERS_MAP;
+typedef string VALUE;
+typedef int INDEX;
+typedef set<VALUE> VALUE_SET;
+typedef map<INDEX, VALUE_SET> IDX_TO_VALUES_MAP;
+typedef map<string, IDX_TO_VALUES_MAP> VALUE_TO_POINTERS_MAP;
 
 class ResultTable {
 private:
     vector<VALUE_TO_POINTERS_MAP> table;
 
+    void assertIndex(INDEX idx);
+
 public:
     void clear();
 
-    void init(int i);
+    void init(int size);
 
-    void addValue(int refIndex, string value, POINTER_SET pointers);
+    //void addValue(int sourceIdx, string sourceVal, int targetIdx, VALUE targetVal);
 
-    void addValues(int refIndex, VALUE_TO_POINTERS_MAP map);
+    void addValues(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals);
 
-    POINTER_SET getPointers(int refIndex, string value);
+    VALUE_SET getLinkedValues(INDEX sourceIdx, VALUE value, INDEX targetIdx);
 
-    void removePointer(int refIndex, string value, POINTER pointer);
+    bool hasPointerToIdx(INDEX sourceIdx, VALUE sourceValue, INDEX targetIdx);
 
-    bool hasPointerToRef(int sourceRefIndex, string sourceValue,
-                         int targetRefIndex);
+    void removeValue(INDEX refIndex, VALUE value);
 
-    void removeMap(int refIndex, string value);
+    vector<VALUE> getValues(INDEX refIndex);
 
-    vector<string> getValues(int refIndex);
+    bool hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
-    bool hasLink(int refIndex1, string value1, int refIndex2, string value2);
-
-    void removeLink(int refIndex1, string value1, int refIndex2, string value2);
+    void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 };
