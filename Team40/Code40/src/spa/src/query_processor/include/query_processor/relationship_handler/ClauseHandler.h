@@ -38,7 +38,6 @@ protected:
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
 
     void validate();
-    set<string> getAll(Reference ref);
     bool isType(string val, DesignEntityType type);
 
 public:
@@ -46,4 +45,5 @@ public:
     // Result invalid = false only happens when neither of the references is
     // synonym
     Result eval(int ref1Index, int ref2Index);
+    static set<string> getAll(PKB* pkb, Reference ref);
 };

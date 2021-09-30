@@ -43,7 +43,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
 
     // same synonym
     if (refType1 == ReferenceType::SYNONYM && refType2 == ReferenceType::SYNONYM && val1 == val2) {
-        set<string> res1s = getAll(*ref1);
+        set<string> res1s = getAll(pkb, *ref1);
         for (auto res1 : res1s) {
             if (isR1ClauseR2(res1, res1)) {
                 result.setValid(true);
@@ -57,7 +57,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // WILDCARD WILDCARD
     if (refType1 == ReferenceType::WILDCARD &&
         refType2 == ReferenceType::WILDCARD) {
-        set<string> res1s = getAll(*ref1);
+        set<string> res1s = getAll(pkb, *ref1);
         for (auto res1 : res1s) {
             if (getR2ClausedR1(res1).size() > 0) {
                 result.setValid(true);
@@ -121,7 +121,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // if first arg is SYNONYM
     if (refType1 != ReferenceType::WILDCARD) {
         VALUE_TO_POINTERS_MAP firstStmtResults;
-        set<string> res1s = getAll(*ref1);
+        set<string> res1s = getAll(pkb, *ref1);
 
         for (string res1 : res1s) {
             set<string> res2s = getR2ClausedR1(res1);
@@ -146,7 +146,7 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     // if second arg is SYNONYM
     if (refType2 != ReferenceType::WILDCARD) {
         VALUE_TO_POINTERS_MAP secondStmtResults;
-        set<string> res2s = getAll(*ref2);
+        set<string> res2s = getAll(pkb, *ref2);
 
         for (string res2 : res2s) {
             set<string> res1s = getR1ClauseR2(res2);
@@ -191,7 +191,7 @@ void ClauseHandler::validate() {
     }
 }
 
-set<string> ClauseHandler::getAll(Reference ref) {
+set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
     set<string> res;
     DesignEntityType desType = ref.getDeType();
     switch (desType) { 
