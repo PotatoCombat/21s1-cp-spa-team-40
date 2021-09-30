@@ -21,7 +21,7 @@ PKBStub2 TestQueryEvaluator::pkbStubNoFollows = PKBStub2();
 TEST_CASE("QueryEvaluator: no clause - returns all") {
     Query query;
     Reference c(DesignEntityType::CONSTANT, ReferenceType::SYNONYM, "c");
-    query.setReturnReference(&c);
+    query.addReturnReference(&c);
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
     REQUIRE(actual == vector<string>{"1", "2", "3", "5"});
@@ -34,7 +34,7 @@ TEST_CASE("QueryEvaluator: one clause returns false - returns empty result") {
     Reference s2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause follows(ClauseType::FOLLOWS, s1, s2);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
@@ -52,7 +52,7 @@ TEST_CASE("QueryEvaluator: all clauses return true - returns all statements") {
     Reference s_const3(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause follows2(ClauseType::FOLLOWS, stmt_sym1, s_const3);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
     query.addClause(&follows2);
 
@@ -69,7 +69,7 @@ TEST_CASE("QueryEvaluator: one clause return empty list - returns empty list") {
     Reference s_const3(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause follows(ClauseType::FOLLOWS, stmt_sym1, s_const3);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStubNoFollows);
@@ -86,7 +86,7 @@ TEST_CASE(
     Clause follows(ClauseType::FOLLOWS, s1, s);
     Clause follows2(ClauseType::FOLLOWS, s, s2);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
     query.addClause(&follows2);
 
@@ -104,7 +104,7 @@ TEST_CASE("QueryEvaluator: 1 matching element between results - returns the "
     Clause follows(ClauseType::FOLLOWS, s1, s);
     Clause follows2(ClauseType::FOLLOWS, s, s2);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
     query.addClause(&follows2);
 
@@ -122,7 +122,7 @@ TEST_CASE("QueryEvaluator: multiple matching elements between results - "
     Clause follows(ClauseType::FOLLOWS, s1, s);
     Clause follows2(ClauseType::FOLLOWS, s, s2);
 
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
     query.addClause(&follows2);
 
@@ -139,7 +139,7 @@ TEST_CASE("QueryEvaluator: intersection not return element") {
     Clause follows(ClauseType::FOLLOWS, s, s1);
     Clause follows2(ClauseType::FOLLOWS, s1, c);
     
-    query.setReturnReference(&s);
+    query.addReturnReference(&s);
     query.addClause(&follows);
     query.addClause(&follows2);
 

@@ -11,12 +11,13 @@ void QueryEvaluator::clear() {
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb), allQueriesReturnTrue(true) {}
+    : pkb(pkb), allQueriesReturnTrue(true), returnReference(NULL) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
         clear();
         returnRefs = query.getReturnReferences();
+        returnReference = returnRefs[0];
         references = query.getReferences();
         clauses = query.getClauses();
         patterns = query.getPatterns();

@@ -22,8 +22,6 @@ private:
 public:
     Query();
     vector<Reference *> getReferences();
-    // returnReference must have ReferenceType::SYNONYM, should only be called
-    // once for each query object
     void addReturnReference(Reference *reference);
     vector<Reference *> getReturnReferences();
     void addClause(Clause *clause);
