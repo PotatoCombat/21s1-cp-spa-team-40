@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Clause.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/PatternClause.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/parser/PatternParser.h"
@@ -17,7 +17,7 @@ public:
     QueryParser() = default;
 
     void parseDeclarations(vector<DeclPair> declPairs);
-    Reference *parseReturnSynonym(string syn);
+    Reference *parseReturnSynonym(string syn, bool &found);
     Clause *parseSuchThatClause(ClsTuple clsTuple);
     PatternClause *parsePatternClause(PatTuple patTuple);
 

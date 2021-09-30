@@ -14,18 +14,14 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     /*********** Parse return synonym ***********/
     tokenizer.tokenizeReturnSynonym(parts.second, retString, clauses);
 
-    int found = 0;
-    for (auto x : refList) {
-        if (retString == x->getValue()) {
-            q.setReturnReference(x->copy());
-            found = 1;
-            break;
-        }
-    }
+    bool found = false;
+    Reference* returnRef = parser.parseReturnSynonym(retString, found);
 
-    if (!found) {
+    if (found) {
+        q.setReturnReference(returnRef);
+    } else {
         parser.clear();
-        throw ValidityError("return entity is undeclared");
+        throw ValidityError("QP-ERROR: return synonym is undeclared");
     }
 
     if (clauses.size() == 0) {
@@ -56,7 +52,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
     // parse with clauses here
     // ...
-    
+
     parser.clear();
 
     return;

@@ -1,9 +1,9 @@
 #include "query_processor/QueryParser.h"
 
 void QueryParser::clear() {
-    this->deleteDeclarations();
     this->stParser.clear();
     this->ptParser.clear();
+    this->deleteDeclarations();
 }
 
 void QueryParser::deleteDeclarations() {
@@ -25,7 +25,15 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
     ptParser.initReferences(declList);
 }
 
-Reference *QueryParser::parseReturnSynonym(string syn) {}
+Reference *QueryParser::parseReturnSynonym(string syn, bool &found) {
+    for (auto x : declList) {
+        if (syn == x->getValue()) {
+            found = true;
+            return x->copy();
+        }
+    }
+    return nullptr;
+}
 
 Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {}
 
