@@ -20,7 +20,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {"while", DesignEntityType::WHILE},
         {"if", DesignEntityType::IF},
         {"call", DesignEntityType::CALL},
-        {"prog_line", DesignEntityType::PROG_LINE} // replace all prog_lines with STMT in the future?
+        {"prog_line", DesignEntityType::PROG_LINE} // TODO: replace all prog_lines with STMT in the future?
     };
     typeToIsStmtMap = {
         {DesignEntityType::STMT, true},
@@ -48,7 +48,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
 DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw ValidityError("invalid design entity type");
+        throw ValidityError("QP-ERROR: invalid design entity type");
     }
     return type->second;
 }
@@ -56,7 +56,7 @@ DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
 bool DesignEntityTypeHelper::isStatement(DesignEntityType type) {
     auto val = typeToIsStmtMap.find(type);
     if (val == typeToIsStmtMap.end()) {
-        throw ValidityError("invalid design entity type"); // TODO: throw runtime error instead
+        throw ValidityError("QP-ERROR: invalid design entity type");
     }
     return val->second;
 }

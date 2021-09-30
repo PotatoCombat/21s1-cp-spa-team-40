@@ -35,6 +35,10 @@ Reference *QueryParser::parseReturnSynonym(string syn, bool &found) {
     return nullptr;
 }
 
-Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {}
+Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
+    return stParser.parse(clsTuple);
+}
 
-PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {}
+PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
+    return ptParser.parse(patTuple);
+}

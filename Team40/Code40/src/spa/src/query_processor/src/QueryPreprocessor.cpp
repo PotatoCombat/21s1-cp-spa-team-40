@@ -24,7 +24,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         throw ValidityError("QP-ERROR: return synonym is undeclared");
     }
 
-    if (clauses.size() == 0) {
+    if (clauses.empty()) {
         parser.clear();
         return;
     }

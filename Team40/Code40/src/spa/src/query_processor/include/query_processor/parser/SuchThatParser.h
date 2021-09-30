@@ -24,6 +24,9 @@ private:
     Clause *parseStmtStmt();
     Clause *parseXEnt();
 
+    DesignEntityTypeHelper deHelper;
+    ClauseTypeHelper clsHelper;
+
     vector<Reference *> declList;
 
     string type;
