@@ -144,59 +144,9 @@ vector<string> QueryEvaluator::finaliseResult() {
     }
 
     if (!referenceAppearInClauses[resultIndex]) {
-        vector<string> result;
-
-        if (returnReference->getDeType() == DesignEntityType::PROCEDURE) {
-            result = pkb->getAllProcs().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::VARIABLE) {
-            result = pkb->getAllVars().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
-            result = pkb->getAllConsts().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::ASSIGN).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::CALL) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::CALL).asVector();
-            toString(stmts, result);
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::IF) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::IF).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::WHILE) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::WHILE).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::PRINT) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::PRINT).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::READ) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::READ).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        vector<StmtIndex> stmts = pkb->getAllStmts().asVector();
-        toString(stmts, result);
+        set<string> all = ClauseHandler::getAll(pkb, *returnReference);
+        vector<string> result(all.size());
+        copy(all.begin(), all.end(), result.begin());
 
         return result;
     }
@@ -329,12 +279,6 @@ void QueryEvaluator::combineResult(Result result) {
     for (auto mapCoord : toRemoveLater) {
         resultTable.removeMap(mapCoord.first, mapCoord.second);
     }
-}
-
-void QueryEvaluator::toString(vector<int> &vectorIn,
-                              vector<string> &vectorOut) {
-    transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
-              [](int i) { return std::to_string(i); });
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {

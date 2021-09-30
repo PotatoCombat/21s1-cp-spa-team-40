@@ -54,8 +54,6 @@ private:
 
     void combineResult(Result result);
 
-    void toString(vector<int> &vectorIn, vector<string> &vectorOut);
-
     int getRefIndex(Reference *ref);
 
 public:
