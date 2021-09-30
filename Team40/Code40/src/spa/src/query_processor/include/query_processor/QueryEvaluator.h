@@ -35,7 +35,7 @@ using namespace std;
 class QueryEvaluator {
 private:
     PKB *pkb;
-    Reference *returnReference;
+    vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
     vector<PatternClause *> patterns;
