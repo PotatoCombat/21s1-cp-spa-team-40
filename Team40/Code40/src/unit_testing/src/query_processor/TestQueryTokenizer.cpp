@@ -256,7 +256,7 @@ TEST_CASE("QueryTokenizer: tokenizeClause for pattern") {
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
         vector<WithTuple> wit;
-        vector<PatTuple> expected = vector<PatTuple>{make_tuple("a", "_", "x")};
+        vector<PatTuple> expected = vector<PatTuple>{ make_pair("a", vector<string>{"_", "x"}) };
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(rel.size() == 0);
         REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));

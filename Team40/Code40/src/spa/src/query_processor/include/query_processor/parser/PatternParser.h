@@ -19,7 +19,6 @@ public:
 private:
     vector<Reference *> declList;
 
-    string stmt;
-    string var;
-    string pattern;
+    string ident;
+    vector<string> args;
 };

@@ -1,9 +1,8 @@
 #include "query_processor/parser/PatternParser.h"
 
 PatternParser::PatternParser() {
-	this->stmt = "";
-	this->var = "";
-	this->pattern = "";
+	this->ident = "";
+	this->args.clear();
 }
 
 void PatternParser::initReferences(vector<Reference*>& declList) {
@@ -11,15 +10,13 @@ void PatternParser::initReferences(vector<Reference*>& declList) {
 }
 
 void PatternParser::clear() {
-	this->declList = vector<Reference*>();
-	this->stmt = "";
-	this->var = "";
-	this->pattern = "";
+	this->declList.clear();
+	this->ident = "";
+	this->args.clear();
 }
 
-PatternClause* parse(PatTuple patTuple) {
-	stmt = get<0>(clsTuple);
-	var = get<1>(clsTuple);
-	pattern = get<2>(clsTuple);
+PatternClause* PatternParser::parse(PatTuple patTuple) {
+	this->ident = patTuple.first;
+	this->args = patTuple.second;
 
 }

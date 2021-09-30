@@ -244,7 +244,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
     token2 = removeWhitespaceWithinQuotes(token2);
     token3 = extractPatternString(token3);
 
-    clause = make_tuple(token1, token2, token3);
+    clause = make_pair(token1, vector<PatArg>{token2, token3});
     return nextPos;
 }
 
