@@ -11,7 +11,7 @@ void SuchThatParser::initReferences(vector<Reference *> &declList) {
 }
 
 void SuchThatParser::clear() {
-    this->declList = vector<Reference *>();
+    this->declList.clear();
     this->type = "";
     this->ref1 = "";
     this->ref2 = "";

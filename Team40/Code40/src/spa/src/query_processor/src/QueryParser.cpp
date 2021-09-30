@@ -10,7 +10,7 @@ void QueryParser::deleteDeclarations() {
     for (int i = 0; i < this->declList.size(); ++i) {
         delete this->declList[i];
     }
-    this->declList = vector<Reference *>();
+    this->declList.clear();
 }
 
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
