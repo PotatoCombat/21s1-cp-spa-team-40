@@ -179,75 +179,35 @@ TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
         }
     }
 
-    /*SECTION("TEST FAIL: wrong type (non-statement)") {
-        SECTION("integer/quoted") {
-            ClsTuple tup = make_tuple("Parent", "1", "\"C4\"");
+    SECTION("TEST FAIL: wrong type synonym (non-statement)") {
+        SECTION("first synonym non-statement") {
+            ClsTuple tup = make_tuple("Parent", "food", "a");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
-            tup = make_tuple("Parent", "\"C4\"", "1");
-            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-        }
-
-        SECTION("wildcard/quoted") {
-            ClsTuple tup = make_tuple("Parent", "_", "\"C4\"");
-            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-
-            ClsTuple tup = make_tuple("Parent", "\"C4\"", "_");
+            tup = make_tuple("Parent", "PROCEDURE", "a");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
         }
 
-        SECTION("synonym/quoted") {
-            ClsTuple tup = make_tuple("Parent", "statement", "\"C4\"");
+        SECTION("second synonym non-statement") {
+            ClsTuple tup = make_tuple("Parent", "a", "food");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
-            ClsTuple tup = make_tuple("Parent", "\"C4\"", "statement");
+            tup = make_tuple("Parent", "a", "PROCEDURE");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
         }
     }
 
-    SECTION("test constant/synonym") {
-        Clause* expected = TestSuchThatParser::createParent(
-            TestSuchThatParser::CONSTANT_STMT_1,
-            TestSuchThatParser::DECLARED_STMT);
-        ClsTuple tup = make_tuple("Parent", "1", "statement");
-        Clause* actual = p.parse(tup);
+    SECTION("TEST FAIL: undeclared synonym") {
+        SECTION("first synonym undeclared") {
+            ClsTuple tup = make_tuple("Parent", "statement", "aaaaaa");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
 
-        REQUIRE(actual->equals(*expected));
-        delete expected;
-        delete actual;
-
-        expected = TestSuchThatParser::createParent(
-            TestSuchThatParser::DECLARED_STMT,
-            TestSuchThatParser::CONSTANT_STMT_1);
-        tup = make_tuple("Parent", "statement", "1");
-        actual = p.parse(tup);
-
-        REQUIRE(actual->equals(*expected));
-        delete expected;
-        delete actual;
+        SECTION("second synonym undeclared") {
+            ClsTuple tup = make_tuple("Parent", "aaaaaa", "statement");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
     }
-
-    SECTION("test synonym/synonym") {
-        Clause* expected = TestSuchThatParser::createParent(
-            TestSuchThatParser::DECLARED_STMT,
-            TestSuchThatParser::DECLARED_ASSIGN);
-        ClsTuple tup = make_tuple("Parent", "statement", "a");
-        Clause* actual = p.parse(tup);
-
-        REQUIRE(expected->equals(*actual));
-        delete expected;
-        delete actual;
-    }
-
-    SECTION("test undeclared synonym - FAIL") {
-        Clause* expected = TestSuchThatParser::createParent(
-            TestSuchThatParser::DECLARED_STMT,
-            TestSuchThatParser::DECLARED_ASSIGN);
-        ClsTuple tup = make_tuple("Parent", "s", "a");
-        SuchThatParser p(tup, declList, deHelper, clsHelper);
-
-        REQUIRE_THROWS_AS(p.parse(), ValidityError);
-    }*/
 };
 
 // TEST_CASE("SuchThatParser: parse modifies statement clause") {
