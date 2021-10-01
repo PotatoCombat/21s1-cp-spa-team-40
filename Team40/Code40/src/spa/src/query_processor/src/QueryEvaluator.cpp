@@ -207,9 +207,9 @@ void QueryEvaluator::combineResult(Result result) {
     allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
 
     Reference *ref1 = NULL, *ref2 = NULL;
-    vector<ValueToPointersMap> res1;
-    vector<ValueToPointersMap> res2;
-    vector<pair<int, string>> toRemoveLater;
+    VALUE_TO_POINTERS_MAP res1;
+    VALUE_TO_POINTERS_MAP res2;
+    vector<POINTER> toRemoveLater;
 
     if (result.hasResultList1() && result.hasResultList2()) {
         ref1 = result.getReference1();
@@ -220,38 +220,38 @@ void QueryEvaluator::combineResult(Result result) {
             res1 = result.getResultList1();
             res2 = result.getResultList2();
             // remove links
-            for (ValueToPointersMap &map : res1) {
-                for (auto pointer : map.getPointers()) {
-                    if (!resultTable.hasLink(refIndex1, map.getValue(), 
+            for (auto valueToPointers : res1) {
+                POINTER_SET pointers = valueToPointers.second;
+                for (auto pointer : pointers) {
+                    if (!resultTable.hasLink(refIndex1, valueToPointers.first, 
                                              pointer.first, pointer.second)) {
-                        map.erasePointer(pointer);
+                        res1[valueToPointers.first].erase(pointer);
                     }
                 } 
             }
-            for (ValueToPointersMap &map : res2) {
-                for (auto pointer : map.getPointers()) {
-                    if (!resultTable.hasLink(refIndex2, map.getValue(),
+            for (auto valueToPointers : res2) {
+                POINTER_SET pointers = valueToPointers.second;
+                for (auto pointer : pointers) {
+                    if (!resultTable.hasLink(refIndex2, valueToPointers.first,
                                              pointer.first, pointer.second)) {
-                        map.erasePointer(pointer);
+                        res2[valueToPointers.first].erase(pointer);
                     }
                 }
-            }
-            map<string, set<pair<int, string>>> m;
-            for (ValueToPointersMap map : res1) {
-                m[map.getValue()] = map.getPointers();
             }
 
             vector<string> existingValues = resultTable.getValues(refIndex1);
             for (auto value : existingValues) {
                 for (auto pointer : resultTable.getPointers(refIndex1, value)) {
-                    if (m[value].find(pointer) == m[value].end()) {
+                    if (res1[value].find(pointer) == res1[value].end()) {
                         resultTable.removeLink(refIndex1, value, pointer.first, pointer.second);
                     }
                 }
             }
+
             // add all
-            resultTable.addValue(refIndex1, res1);
-            resultTable.addValue(refIndex2, res2);
+            resultTable.addValues(refIndex1, res1);
+            resultTable.addValues(refIndex2, res2);
+
             // remove those with no link
             for (string refValue : resultTable.getValues(refIndex1)) {
                 if (!resultTable.hasPointerToRef(refIndex1, refValue, refIndex2)) {
@@ -277,8 +277,8 @@ void QueryEvaluator::combineResult(Result result) {
         for (string refInTable : resultTable.getValues(refIndex1)) {
             refsInTable.insert(refInTable);
         }
-        for (ValueToPointersMap map : res1) {
-            refsInResult.insert(map.getValue());
+        for (auto valueToPointers : res1) {
+            refsInResult.insert(valueToPointers.first);
         }
         if (referenceAppearInClauses[refIndex1]) {
             for (auto ref : refsInTable) {
@@ -293,7 +293,7 @@ void QueryEvaluator::combineResult(Result result) {
             }
         }
         referenceAppearInClauses[refIndex1] = true;
-        resultTable.addValue(refIndex1, res1);
+        resultTable.addValues(refIndex1, res1);
     }
 
     if (result.hasResultList2()) {
@@ -306,8 +306,8 @@ void QueryEvaluator::combineResult(Result result) {
         for (string refInTable : resultTable.getValues(refIndex2)) {
             refsInTable.insert(refInTable);
         }
-        for (ValueToPointersMap map : res2) {
-            refsInResult.insert(map.getValue());
+        for (auto valueToPointers : res2) {
+            refsInResult.insert(valueToPointers.first);
         }
         if (referenceAppearInClauses[refIndex2]) {
             for (auto ref : refsInTable) {
@@ -322,7 +322,7 @@ void QueryEvaluator::combineResult(Result result) {
             }
         }
         referenceAppearInClauses[refIndex2] = true;
-        resultTable.addValue(refIndex2, res2);
+        resultTable.addValues(refIndex2, res2);
     }
 
     for (auto mapCoord : toRemoveLater) {

@@ -1,124 +1,21 @@
 #include "query_processor/relationship_handler/ModifiesProcHandler.h"
 
-Result ModifiesProcHandler::eval(int ref1Index, int ref2Index) {
-    Result result;
-    Reference *firstReference = clause->getFirstReference();
-    Reference *secondReference = clause->getSecondReference();
-    string firstValue = firstReference->getValue();
-    string secondValue = secondReference->getValue();
-
-    // assertions
-    validate();
-
-    /// CONSTANT CONSTANT
-    if (firstReference->getRefType() == ReferenceType::CONSTANT &&
-        secondReference->getRefType() == ReferenceType::CONSTANT) {
-        result.setValid(pkb->procModifies(firstValue, secondValue));
-        return result;
-    }
-
-    // CONSTANT WILDCARD
-    if (firstReference->getRefType() == ReferenceType::CONSTANT &&
-        secondReference->getRefType() == ReferenceType::WILDCARD) {
-        result.setValid(pkb->getVarsModifiedByProc(firstValue).size() > 0);
-        return result;
-    }
-
-    // SYNONYM CONSTANT
-    if (firstReference->getRefType() == ReferenceType::SYNONYM &&
-        secondReference->getRefType() == ReferenceType::CONSTANT) {
-        vector<ValueToPointersMap> procResults;
-        set<string> procs = pkb->getProcsModifyingVar(secondValue);
-        for (auto proc : procs) {
-            ValueToPointersMap map(proc, POINTER_SET{});
-            procResults.push_back(map);
-        }
-        result.setResultList1(firstReference, procResults);
-        return result;
-    }
-
-    // CONSTANT SYNONYM
-    if (firstReference->getRefType() == ReferenceType::CONSTANT &&
-        secondReference->getRefType() == ReferenceType::SYNONYM) {
-        vector<ValueToPointersMap> varResults;
-        set<string> vars = pkb->getVarsModifiedByProc(firstValue);
-        for (auto var : vars) {
-            ValueToPointersMap map(var, POINTER_SET{});
-            varResults.push_back(map);
-        }
-        result.setResultList2(secondReference, varResults);
-        return result;
-    }
-
-    // NEITHER IS CONSTANT, FIRST ARGUMENT NOT WILDCARD
-    // first arg must be SYNONYM
-    vector<ValueToPointersMap> procResults;
-    vector<string> procs = pkb->getAllProcs().asVector();
-
-    for (string proc : procs) {
-        set<string> vars = pkb->getVarsModifiedByProc(proc);
-        POINTER_SET related;
-        bool valid = false;
-        for (auto var : vars) {
-            valid = true;
-            if (secondReference->getRefType() == ReferenceType::SYNONYM) {
-                related.insert(make_pair(ref2Index, var));
-            }
-        }
-        if (valid) {
-            ValueToPointersMap map(proc, related);
-            procResults.push_back(map);
-        }
-    }
-
-    result.setResultList1(firstReference, procResults);
-
-    // if second arg is SYNONYM
-    if (secondReference->getRefType() != ReferenceType::WILDCARD) {
-        vector<ValueToPointersMap> varResults;
-        vector<string> vars = pkb->getAllVars().asVector();
-        for (string var : vars) {
-            set<string> procs = pkb->getProcsModifyingVar(var);
-            POINTER_SET related;
-            bool valid = false;
-            for (auto proc : procs) {
-                valid = true;
-                if (firstReference->getRefType() == ReferenceType::SYNONYM) {
-                    related.insert(make_pair(ref1Index, proc));
-                }
-            }
-            if (valid) {
-                ValueToPointersMap map(var, related);
-                varResults.push_back(map);
-            }
-        }
-
-        result.setResultList2(secondReference, varResults);
-    }
-
-    return result;
+ModifiesProcHandler::ModifiesProcHandler(Clause *clause, PKB *pkb)
+    : ClauseHandler(clause, pkb, ClauseType::MODIFIES_P) {
+    validDesType1 = &ClauseHandler::PROCEDURE_DES_SET;
+    validDesType2 = &ClauseHandler::VARIABLE_DES_SET;
+    validRefType1 = &ClauseHandler::NO_WILDCARD_REF;
+    validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
-void ModifiesProcHandler::validate() {
-    Reference *firstReference = clause->getFirstReference();
-    Reference *secondReference = clause->getSecondReference();
-    if (firstReference->getDeType() != DesignEntityType::PROCEDURE) {
-        throw ClauseHandlerError(
-            "ModifiesProcHandler: first argument must be procedure type");
-    }
+set<string> ModifiesProcHandler::getR1ClauseR2(string r2) {
+    return pkb->getProcsModifyingVar(r2);
+}
 
-    if (secondReference->getDeType() != DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError(
-            "ModifiesProcHandler: second argument must be variable type");
-    }
+set<string> ModifiesProcHandler::getR2ClausedR1(string r1) {
+    return pkb->getVarsModifiedByProc(r1);
+}
 
-    if (clause->getType() != ClauseType::MODIFIES_P) {
-        throw ClauseHandlerError(
-            "ModifiesProcHandler: relation type must be MODIFIES_P");
-    }
-
-    if (firstReference->getRefType() == ReferenceType::WILDCARD) {
-        throw ClauseHandlerError(
-            "ModifiesProcHandler: first argument cannot be wildcard");
-    }
+bool ModifiesProcHandler::isR1ClauseR2(string r1, string r2) {
+    return pkb->procModifies(r1, r2);
 }

@@ -1,110 +1,122 @@
 #include "query_processor/ResultTable.h"
 
-void ResultTable::clear() { mapTable.clear(); }
+void ResultTable::clear() { table.clear(); }
 
 void ResultTable::init(int i) {
-    vector<vector<ValueToPointersMap>> temp(i, vector<ValueToPointersMap>{});
-    mapTable = temp;
+    vector<VALUE_TO_POINTERS_MAP> temp(i, VALUE_TO_POINTERS_MAP{});
+    table = temp;
 }
 
-int ResultTable::findMapIndex(int refIndex, string value) {
-    vector<ValueToPointersMap> mapList = mapTable[refIndex];
-    for (int i = 0; i < mapList.size(); i++) {
-        if (mapList[i].isMapOfValue(value)) {
-            return i;
-        }
+void ResultTable::addValue(int refIndex, string value, POINTER_SET pointers) {
+    if (refIndex < 0 || refIndex >= table.size()) {
+        throw runtime_error("Index out of bound");
     }
-    return -1;
-}
-
-void ResultTable::addValue(int refIndex, string value, set<pair<int, string>> pointers) {
-    int mapIndex = findMapIndex(refIndex, value);
-    if (mapIndex == -1) {
-        ValueToPointersMap map(value, pointers);
-        mapTable[refIndex].push_back(map);
+    VALUE_TO_POINTERS_MAP *map = &table[refIndex];
+    if (map->find(value) == map->end()) {
+        (*map)[value] = pointers;
     } else {
-        mapTable[refIndex][mapIndex].insert(pointers);
+        (*map)[value].insert(pointers.begin(), pointers.end());
     }
 }
 
-void ResultTable::addValue(int refIndex, vector<ValueToPointersMap> maps) {
-    for (auto map : maps) {
-        addValue(refIndex, map.getValue(), map.getPointers());
+void ResultTable::addValues(int refIndex, VALUE_TO_POINTERS_MAP map) {
+    for (auto valueToPointers : map) {
+        addValue(refIndex, valueToPointers.first, valueToPointers.second);
     }
 }
 
-set<pair<int, string>> ResultTable::getPointers(int refIndex, string value) {
-    int mapIndex = findMapIndex(refIndex, value);
-    if (mapIndex == -1) {
-        return set<pair<int, string>>{};
+POINTER_SET ResultTable::getPointers(int refIndex, string value) {
+    if (refIndex < 0 || refIndex >= table.size()) {
+        throw runtime_error("Index out of bound");
+    }
+    VALUE_TO_POINTERS_MAP *map = &table[refIndex];
+    if (map->find(value) == map->end()) {
+        return POINTER_SET{};
     } else {
-        return mapTable[refIndex][mapIndex].getPointers();
+        return (*map)[value];
     }
 }
-void ResultTable::removePointer(int refIndex, string value, pair<int, string> pointer) {
-    int mapIndex = findMapIndex(refIndex, value);
-    if (mapIndex != -1) {
-        mapTable[refIndex][mapIndex].erasePointer(pointer);
+void ResultTable::removePointer(int refIndex, string value, POINTER pointer) {
+    if (refIndex < 0 || refIndex >= table.size()) {
+        throw runtime_error("Index out of bound");
+    }
+    VALUE_TO_POINTERS_MAP *map = &table[refIndex];
+    if (map->find(value) != map->end()) {
+        (*map)[value].erase(pointer);
     }
 }
 bool ResultTable::hasPointerToRef(int sourceRefIndex, string sourceValue,
                      int targetRefIndex) {
-    int mapIndex = findMapIndex(sourceRefIndex, sourceValue);
-    if (mapIndex != -1) {
-        return mapTable[sourceRefIndex][mapIndex]
-            .hasPointerToRef(targetRefIndex);
+    if (sourceRefIndex < 0 || sourceRefIndex >= table.size()) {
+        throw runtime_error("Index out of bound");
     }
+    if (targetRefIndex < 0 || targetRefIndex >= table.size()) {
+        throw runtime_error("Index out of bound");
+    }
+
+    VALUE_TO_POINTERS_MAP *map = &table[sourceRefIndex];
+    if (map->find(sourceValue) == map->end()) {
+        return false;
+    }
+
+    for (POINTER pointer : (*map)[sourceValue]) {
+        if (pointer.first == targetRefIndex) {
+            return true;
+        }
+    }
+
     return false;
 }
 
 void ResultTable::removeMap(int refIndex, string value) {
-    set<pair<int, string>> visited;
-    vector<pair<int, string>> toRemove{make_pair(refIndex, value)};
+    set<POINTER> visited;
+    vector<POINTER> toRemove{make_pair(refIndex, value)};
     while (!toRemove.empty()) {
-        pair<int, string> ref = toRemove.back();
+        POINTER ref = toRemove.back();
         toRemove.pop_back();
         if (visited.find(ref) != visited.end()) {
             continue;
         }
         visited.insert(ref);
-        set<pair<int, string>> refPointers = getPointers(ref.first, ref.second);
-        // remove pointers to ref
+        int sourceIndex = ref.first;
+        string sourceValue = ref.second;
+        POINTER_SET refPointers = getPointers(sourceIndex, sourceValue);
+        // remove pointers from other values to ref
         for (auto refPointer : refPointers) {
-            removePointer(refPointer.first, refPointer.second, ref);
+            int targetIndex = refPointer.first;
+            string targetValue = refPointer.second;
+
+            removePointer(targetIndex, targetValue, ref);
             if (!hasPointerToRef(refPointer.first, refPointer.second,
-                                 ref.first)) {
+                                 sourceIndex)) {
                 toRemove.push_back(refPointer);
             }
         }
-        int mapIndex = findMapIndex(ref.first, ref.second);
-        if (mapIndex != -1) {
-            mapTable[ref.first].erase(mapTable[ref.first].begin() + mapIndex);
-        }
+        // erase ref
+        table[sourceIndex].erase(sourceValue);
     }
 }
 
 vector<string> ResultTable::getValues(int refIndex) {
     vector<string> res;
-    for (auto valueToPointerMap : mapTable[refIndex]) {
-        res.push_back(valueToPointerMap.getValue());
+    for (auto valueToPointers : table[refIndex]) {
+        res.push_back(valueToPointers.first);
     }
     return res;
 }
 
 bool ResultTable::hasLink(int refIndex1, string value1, int refIndex2, string value2) {
-    int i = findMapIndex(refIndex1, value1);
-    if (i == -1) {
+    VALUE_TO_POINTERS_MAP *map = &table[refIndex1];
+    if (map->find(value1) == map->end()) {
         return false;
     }
-    return mapTable[refIndex1][i].hasLink(refIndex2, value2);
+    return (*map)[value1].find({refIndex2, value2}) != (*map)[value1].end();
 }
 
 void ResultTable::removeLink(int refIndex1, string value1, int refIndex2, string value2) {
     if (!hasLink(refIndex1, value1, refIndex2, value2)) {
         return;
     }
-    int i = findMapIndex(refIndex1, value1);
-    mapTable[refIndex1][i].erasePointer(make_pair(refIndex2, value2));
-    int i2 = findMapIndex(refIndex2, value2);
-    mapTable[refIndex2][i2].erasePointer(make_pair(refIndex1, value1));
+    table[refIndex1][value1].erase({refIndex2, value2});
+    table[refIndex2][value2].erase({refIndex1, value1});
 }
