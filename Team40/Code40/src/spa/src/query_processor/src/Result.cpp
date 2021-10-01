@@ -4,12 +4,12 @@ void Result::setValid(bool isValid) {
 	this->isValid = isValid;
 }
 
-void Result::setResultList1(Reference* reference, VALUE_TO_POINTERS_MAP resultList) {
+void Result::setResultList1(Reference* reference, VALUE_TO_VALUES_MAP resultList) {
 	reference1 = reference;
 	resultList1 = resultList;
 }
 
-void Result::setResultList2(Reference* reference, VALUE_TO_POINTERS_MAP resultList) {
+void Result::setResultList2(Reference* reference, VALUE_TO_VALUES_MAP resultList) {
 	reference2 = reference;
 	resultList2 = resultList;
 }
@@ -30,11 +30,11 @@ bool Result::hasResultList1() { return getReference1() != NULL; }
 
 bool Result::hasResultList2() { return getReference2() != NULL; }
 
-VALUE_TO_POINTERS_MAP Result::getResultList1() {
+VALUE_TO_VALUES_MAP Result::getResultList1() {
 	return resultList1;
 }
 
-VALUE_TO_POINTERS_MAP Result::getResultList2() {
+VALUE_TO_VALUES_MAP Result::getResultList2() {
 	return resultList2;
 }
 
@@ -56,8 +56,8 @@ bool Result::equals(Result &other) {
             return false;
         }
 
-        VALUE_TO_POINTERS_MAP v1 = this->getResultList1();
-        VALUE_TO_POINTERS_MAP v2 = other.getResultList1();
+        VALUE_TO_VALUES_MAP v1 = this->getResultList1();
+        VALUE_TO_VALUES_MAP v2 = other.getResultList1();
         bool correctVec = v1.size() == v2.size();
 
         if (!correctVec) {
@@ -70,8 +70,8 @@ bool Result::equals(Result &other) {
                 return false;
             }
 
-            POINTER_SET p1 = valueToPointer.second;
-            POINTER_SET p2 = v2[value];
+            VALUE_SET p1 = valueToPointer.second;
+            VALUE_SET p2 = v2[value];
             if (p1 != p2) {
                 return false;
             }
@@ -83,8 +83,8 @@ bool Result::equals(Result &other) {
             return false;
         }
 
-        VALUE_TO_POINTERS_MAP v1 = this->getResultList2();
-        VALUE_TO_POINTERS_MAP v2 = other.getResultList2();
+        VALUE_TO_VALUES_MAP v1 = this->getResultList2();
+        VALUE_TO_VALUES_MAP v2 = other.getResultList2();
         bool correctVec = v1.size() == v2.size();
 
         if (!correctVec) {
@@ -97,8 +97,8 @@ bool Result::equals(Result &other) {
                 return false;
             }
 
-            POINTER_SET p1 = valueToPointer.second;
-            POINTER_SET p2 = v2[value];
+            VALUE_SET p1 = valueToPointer.second;
+            VALUE_SET p2 = v2[value];
             if (p1 != p2) {
                 return false;
             }

@@ -18,7 +18,7 @@ void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     int found = 0;
     for (auto x : refList) {
         if (retString == x->getValue()) {
-            q.setReturnReference(x->copy());
+            q.addReturnReference(x->copy());
             found = 1;
             break;
         }

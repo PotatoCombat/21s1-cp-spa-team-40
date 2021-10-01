@@ -55,8 +55,8 @@ void QueryEvaluator::evalPattern() {
         if (pattern->getVar()->getRefType() == ReferenceType::SYNONYM) {
             ref2Index = getRefIndex(pattern->getVar());
         }
-        tempResult = patternHandler->eval(ref1Index, ref2Index);
-        combineResult(tempResult);
+        tempResult = patternHandler->eval();
+        combineResult(tempResult, ref1Index, ref2Index);
     }
 }
 
@@ -117,8 +117,8 @@ void QueryEvaluator::evalSuchThat() {
         }
 
         // eval and combine result
-        tempResult = clauseHandler->eval(ref1Index, ref2Index);
-        combineResult(tempResult);
+        tempResult = clauseHandler->eval();
+        combineResult(tempResult, ref1Index, ref2Index);
     }
 }
 
@@ -135,205 +135,176 @@ vector<string> QueryEvaluator::finaliseResult() {
         }
     }
 
-    int resultIndex = -1;
-    for (int i = 0; i < references.size(); i++) {
-        if (references[i]->equals(*returnReference)) {
-            resultIndex = i;
+    vector<int> returnIndexes;
+    for (auto ref : returnRefs) {
+        int idx = getRefIndex(ref);
+        returnIndexes.push_back(idx);
+        if (!referenceAppearInClauses[idx]) {
+            for (string val : ClauseHandler::getAll(pkb, *ref)) {
+                resultTable.addValue(idx, val);
+            }
         }
     }
 
-    if (!referenceAppearInClauses[resultIndex]) {
-        vector<string> result;
-
-        if (returnReference->getDeType() == DesignEntityType::PROCEDURE) {
-            result = pkb->getAllProcs().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::VARIABLE) {
-            result = pkb->getAllVars().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::CONSTANT) {
-            result = pkb->getAllConsts().asVector();
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::ASSIGN) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::ASSIGN).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::CALL) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::CALL).asVector();
-            toString(stmts, result);
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::IF) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::IF).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::WHILE) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::WHILE).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::PRINT) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::PRINT).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        if (returnReference->getDeType() == DesignEntityType::READ) {
-            vector<StmtIndex> stmts =
-                pkb->getAllStmts(StatementType::READ).asVector();
-            toString(stmts, result);
-            return result;
-        }
-        vector<StmtIndex> stmts = pkb->getAllStmts().asVector();
-        toString(stmts, result);
-
-        return result;
-    }
-
-    return resultTable.getValues(resultIndex);
+    vector<vector<string>> unformattedRes =
+        resultTable.generateResult(returnIndexes);
+    return ResultFormatter::formatResult(unformattedRes);
 }
 
-void QueryEvaluator::combineResult(Result result) {
+void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
     allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
 
-    Reference *ref1 = NULL, *ref2 = NULL;
-    VALUE_TO_POINTERS_MAP res1;
-    VALUE_TO_POINTERS_MAP res2;
-    vector<POINTER> toRemoveLater;
+    VALUE_TO_VALUES_MAP res1;
+    VALUE_TO_VALUES_MAP res2;
+    vector<pair<int, string>> toRemove;
 
     if (result.hasResultList1() && result.hasResultList2()) {
-        ref1 = result.getReference1();
-        int refIndex1 = getRefIndex(ref1);
-        ref2 = result.getReference2();
-        int refIndex2 = getRefIndex(ref2);
-        if (referenceAppearInClauses[refIndex1] && referenceAppearInClauses[refIndex2]) {
+        if (referenceAppearInClauses[ref1Idx] && referenceAppearInClauses[ref2Idx]) {
+            // ref1Idx, ref2Idx should be >= 0
             res1 = result.getResultList1();
             res2 = result.getResultList2();
             // remove links
-            for (auto valueToPointers : res1) {
-                POINTER_SET pointers = valueToPointers.second;
-                for (auto pointer : pointers) {
-                    if (!resultTable.hasLink(refIndex1, valueToPointers.first, 
-                                             pointer.first, pointer.second)) {
-                        res1[valueToPointers.first].erase(pointer);
+            for (auto it = res1.begin(); it != res1.end();) {
+                string sourceVal = it->first;
+                VALUE_SET vals = it->second;
+                bool erased = false;
+                for (string targetVal : vals) {
+                    if (!resultTable.hasLink(ref1Idx, sourceVal, 
+                                             ref2Idx, targetVal)) {
+                        res1[sourceVal].erase(targetVal);
+                        if (res1[sourceVal].size() == 0) {
+                            it = res1.erase(it);
+                            erased = true;
+                        } 
                     }
-                } 
+                }
+                if (!erased) {
+                    ++it;
+                }
             }
-            for (auto valueToPointers : res2) {
-                POINTER_SET pointers = valueToPointers.second;
-                for (auto pointer : pointers) {
-                    if (!resultTable.hasLink(refIndex2, valueToPointers.first,
-                                             pointer.first, pointer.second)) {
-                        res2[valueToPointers.first].erase(pointer);
+            for (auto it = res2.begin(); it != res2.end();) {
+                string sourceVal = it->first;
+                VALUE_SET vals = it->second;
+                bool erased = false;
+                for (string targetVal : vals) {
+                    if (!resultTable.hasLink(ref2Idx, sourceVal,
+                                             ref1Idx, targetVal)) {
+                        res2[sourceVal].erase(targetVal);
+                        if (res2[sourceVal].size() == 0) {
+                            it = res2.erase(it);
+                            erased = true;
+                        } 
                     }
+                }
+                if (!erased) {
+                    ++it;
                 }
             }
 
-            vector<string> existingValues = resultTable.getValues(refIndex1);
-            for (auto value : existingValues) {
-                for (auto pointer : resultTable.getPointers(refIndex1, value)) {
-                    if (res1[value].find(pointer) == res1[value].end()) {
-                        resultTable.removeLink(refIndex1, value, pointer.first, pointer.second);
+            vector<string> existingValues = resultTable.getValues(ref1Idx);
+            for (string sourceVal : resultTable.getValues(ref1Idx)) {
+                VALUE_SET vals =
+                    resultTable.getPointersToIdx(ref1Idx, sourceVal, ref2Idx);
+                for (string targetVal : vals) {
+                    bool hasLink = true;
+                    if (res1.find(sourceVal) == res1.end()) {
+                        hasLink = false;   
+                    } else if (res1[sourceVal].find(targetVal) ==
+                               res1[sourceVal].end()) {
+                        hasLink = false;
+                    }
+                    if (!hasLink) {
+                        resultTable.removeLink(ref1Idx, sourceVal, ref2Idx,
+                                               targetVal);
                     }
                 }
             }
 
             // add all
-            resultTable.addValues(refIndex1, res1);
-            resultTable.addValues(refIndex2, res2);
+            for (auto &valueToVals : res1) {
+                resultTable.addValueWithLink(ref1Idx, valueToVals.first,
+                                             ref2Idx, valueToVals.second);
+            }
+            for (auto &valueToVals : res2) {
+                resultTable.addValueWithLink(ref2Idx, valueToVals.first,
+                                             ref1Idx, valueToVals.second);
+            }
 
             // remove those with no link
-            for (string refValue : resultTable.getValues(refIndex1)) {
-                if (!resultTable.hasPointerToRef(refIndex1, refValue, refIndex2)) {
-                    resultTable.removeMap(refIndex1, refValue);
+            for (string refValue : resultTable.getValues(ref1Idx)) {
+                if (!resultTable.hasPointerToIdx(ref1Idx, refValue, ref2Idx)) {
+                    resultTable.removeValue(ref1Idx, refValue);
                 }
             }
-            for (string refValue : resultTable.getValues(refIndex2)) {
-                if (!resultTable.hasPointerToRef(refIndex2, refValue, refIndex1)) {
-                    resultTable.removeMap(refIndex2, refValue);
+            for (string refValue : resultTable.getValues(ref2Idx)) {
+                if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
+                    resultTable.removeValue(ref2Idx, refValue);
                 }
             }
             return;
         }
     }
 
+    // second ref is wildcard
     if (result.hasResultList1()) {
+        // ref1Idx should be >= 0
         res1 = result.getResultList1();
-        ref1 = result.getReference1();
-        int refIndex1 = getRefIndex(ref1);
-        // create sets
-        set<string> refsInTable;
-        set<string> refsInResult;
-        for (string refInTable : resultTable.getValues(refIndex1)) {
-            refsInTable.insert(refInTable);
-        }
-        for (auto valueToPointers : res1) {
-            refsInResult.insert(valueToPointers.first);
-        }
-        if (referenceAppearInClauses[refIndex1]) {
-            for (auto ref : refsInTable) {
-                if (refsInResult.find(ref) == refsInResult.end()) {
-                    toRemoveLater.push_back(make_pair(refIndex1, ref));
+        if (referenceAppearInClauses[ref1Idx]) {
+            for (auto &valueToValuesPair : res1) {
+                string val = valueToValuesPair.first;
+                if (!resultTable.hasVal(ref1Idx, val)) {
+                    toRemove.push_back({ref1Idx, val});
                 }
             }
-            for (auto ref : refsInResult) {
-                if (refsInTable.find(ref) == refsInTable.end()) {
-                    toRemoveLater.push_back(make_pair(refIndex1, ref));
+            for (string val : resultTable.getValues(ref1Idx)) {
+                if (res1.find(val) == res1.end()) {
+                    toRemove.push_back({ref1Idx, val});
                 }
             }
         }
-        referenceAppearInClauses[refIndex1] = true;
-        resultTable.addValues(refIndex1, res1);
+        referenceAppearInClauses[ref1Idx] = true;
+        for (auto &valueToValuesPair : res1) {
+            if (ref2Idx < 0) {
+                resultTable.addValue(ref1Idx, valueToValuesPair.first);
+            } else {
+                resultTable.addValueWithLink(ref1Idx, valueToValuesPair.first,
+                                             ref2Idx, valueToValuesPair.second);
+            }
+            
+        }
     }
 
+    // first ref is wildcard
     if (result.hasResultList2()) {
+        // ref2Idx should be >= 0
         res2 = result.getResultList2();
-        ref2 = result.getReference2();
-        int refIndex2 = getRefIndex(ref2);
-        // create sets
-        set<string> refsInTable;
-        set<string> refsInResult;
-        for (string refInTable : resultTable.getValues(refIndex2)) {
-            refsInTable.insert(refInTable);
-        }
-        for (auto valueToPointers : res2) {
-            refsInResult.insert(valueToPointers.first);
-        }
-        if (referenceAppearInClauses[refIndex2]) {
-            for (auto ref : refsInTable) {
-                if (refsInResult.find(ref) == refsInResult.end()) {
-                    toRemoveLater.push_back(make_pair(refIndex2, ref));
+        if (referenceAppearInClauses[ref2Idx]) {
+            for (auto &valueToValuesPair : res2) {
+                string val = valueToValuesPair.first;
+                if (!resultTable.hasVal(ref2Idx, val)) {
+                    toRemove.push_back({ref2Idx, val});
                 }
             }
-            for (auto ref : refsInResult) {
-                if (refsInTable.find(ref) == refsInTable.end()) {
-                    toRemoveLater.push_back(make_pair(refIndex2, ref));
+            for (string val : resultTable.getValues(ref2Idx)) {
+                if (res2.find(val) == res2.end()) {
+                    toRemove.push_back({ref2Idx, val});
                 }
             }
         }
-        referenceAppearInClauses[refIndex2] = true;
-        resultTable.addValues(refIndex2, res2);
+        referenceAppearInClauses[ref2Idx] = true;
+        for (auto &valueToValuesPair : res2) {
+            if (ref1Idx < 0) {
+                resultTable.addValue(ref2Idx, valueToValuesPair.first);
+            } else {
+                resultTable.addValueWithLink(ref2Idx, valueToValuesPair.first,
+                                             ref1Idx, valueToValuesPair.second);
+            }
+        }
     }
 
-    for (auto mapCoord : toRemoveLater) {
-        resultTable.removeMap(mapCoord.first, mapCoord.second);
+    for (auto& mapCoord : toRemove) {
+        resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
-}
-
-void QueryEvaluator::toString(vector<int> &vectorIn,
-                              vector<string> &vectorOut) {
-    transform(vectorIn.begin(), vectorIn.end(), back_inserter(vectorOut),
-              [](int i) { return std::to_string(i); });
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {
