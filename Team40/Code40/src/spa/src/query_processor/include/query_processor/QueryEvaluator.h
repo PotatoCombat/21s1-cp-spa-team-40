@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <iterator>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -12,6 +11,7 @@
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ResultFormatter.h"
 #include "query_processor/ResultTable.h"
 
 #include "query_processor/model/Clause.h"

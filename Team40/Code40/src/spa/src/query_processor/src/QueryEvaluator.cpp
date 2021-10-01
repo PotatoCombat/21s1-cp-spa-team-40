@@ -146,18 +146,9 @@ vector<string> QueryEvaluator::finaliseResult() {
         }
     }
 
-    vector<string> result;
-
-    for (vector<string> unformatedRes :
-         resultTable.generateResult(returnIndexes)) {
-        ostringstream ss;
-        copy(unformatedRes.begin(), unformatedRes.end() - 1,
-             ostream_iterator<string>(ss, " "));
-        ss << unformatedRes.back();
-        result.push_back(ss.str());
-    }
-
-    return result;
+    vector<vector<string>> unformattedRes =
+        resultTable.generateResult(returnIndexes);
+    return ResultFormatter::formatResult(unformattedRes);
 }
 
 void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
