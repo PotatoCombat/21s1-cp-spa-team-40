@@ -214,16 +214,16 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     }
 
     // generate result
-    vector<vector<string>> final;
+    vector<vector<string>> finalRes;
     for (vector<string> v : combinations) {
         vector<string> res;
         for (INDEX i : indexes) {
             res.push_back(v[i]);
         }
-        final.push_back(res);
+        finalRes.push_back(res);
     }
 
-    return final;
+    return finalRes;
 }
 
 void ResultTable::assertIndex(INDEX idx) {
