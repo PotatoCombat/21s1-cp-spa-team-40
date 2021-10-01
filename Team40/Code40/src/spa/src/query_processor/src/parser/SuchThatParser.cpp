@@ -88,6 +88,10 @@ Clause *SuchThatParser::parseXEnt() {
         throw ValidityError("first argument cannot be wildcard");
     }
 
+    if (ParserUtil::isInteger(this->ref2)) {
+        throw ValidityError("second argument cannot be integer");
+    }
+
     Reference *r1 = getReferenceIfDeclared(this->ref1);
     Reference *r2 = getReferenceIfDeclared(this->ref2);
 

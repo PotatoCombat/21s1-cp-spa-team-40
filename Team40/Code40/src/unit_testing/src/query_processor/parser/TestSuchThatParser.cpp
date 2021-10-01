@@ -314,68 +314,47 @@ TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
     }
 };
 
-// TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
-//    SuchThatParser p;
-//    p.initReferences(TestSuchThatParser::DECLARATIONS);
-//
-//    SECTION("TEST FAIL: first argument cannot be wildcard") {
-//        ClsTuple tup = make_tuple("Modifies", "_", "v");
-//        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//    }
-//
-//    SECTION("TEST FAIL: quoted argument") {
-//        SECTION("integer/quoted") {
-//            ClsTuple tup = make_tuple("Parent", "1", "\"C4\"");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//
-//            tup = make_tuple("Parent", "\"C4\"", "1");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//
-//        SECTION("wildcard/quoted") {
-//            ClsTuple tup = make_tuple("Parent", "_", "\"C4\"");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//
-//            tup = make_tuple("Parent", "\"C4\"", "_");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//
-//        SECTION("synonym/quoted") {
-//            ClsTuple tup = make_tuple("Parent", "statement", "\"C4\"");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//
-//            tup = make_tuple("Parent", "\"C4\"", "statement");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//    }
-//
-//    SECTION("TEST FAIL: wrong type synonym (non-statement)") {
-//        SECTION("first synonym non-statement") {
-//            ClsTuple tup = make_tuple("Parent", "foodVariable", "a");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//
-//            tup = make_tuple("Parent", "PROCEDURE", "a");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//
-//        SECTION("second synonym non-statement") {
-//            ClsTuple tup = make_tuple("Parent", "a", "foodVariable");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//
-//            tup = make_tuple("Parent", "a", "PROCEDURE");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//    }
-//
-//    SECTION("TEST FAIL: undeclared synonym") {
-//        SECTION("first synonym undeclared") {
-//            ClsTuple tup = make_tuple("Parent", "statement", "aaaaaa");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//
-//        SECTION("second synonym undeclared") {
-//            ClsTuple tup = make_tuple("Parent", "aaaaaa", "statement");
-//            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-//        }
-//    }
-//};
+ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
+    SuchThatParser p;
+    p.initReferences(TestSuchThatParser::DECLARATIONS);
+
+    SECTION("TEST FAIL: first argument cannot be wildcard") {
+        ClsTuple tup = make_tuple("Modifies", "_", "_");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Modifies", "_", "foodVariable");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Modifies", "_", "\"value\"");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: first argument cannot be variable type") {
+        ClsTuple tup = make_tuple("Modifies", "foodVariable", "\"value\"");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: second argument cannot be integer") {
+        ClsTuple tup = make_tuple("Modifies", "\"procedur3\"", "1");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Modifies", "1", "1");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: second argument cannot be non-variable type") {
+        ClsTuple tup = make_tuple("Modifies", "statement", "PROCEDURE");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        
+        tup = make_tuple("Modifies", "statement", "a");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: undeclared synonym") {
+        ClsTuple tup = make_tuple("Modifies", "statement", "undeclared");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Modifies", "procedure", "foodVariable");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+};
