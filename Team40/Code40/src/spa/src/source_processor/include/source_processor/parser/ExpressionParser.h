@@ -15,6 +15,7 @@ public:
     stack<string> brackets;
 
     void parseExpression(vector<string> exprLst, Statement *stmt);
+    void handleOperator(string curr, Statement *stmt);
     void checkValidBracket(string curr);
 
     bool isInteger(string input);
