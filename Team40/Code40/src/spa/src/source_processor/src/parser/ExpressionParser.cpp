@@ -97,7 +97,7 @@ void ExpressionParser::checkValidBracket(string curr) {
     } else if (curr == ")") {
         if (brackets.empty()) {
             throw invalid_argument("invalid expression, brackets do not match");
-        } else if (brackets.top() == ")") {
+        } else if (brackets.top() == "(") {
             brackets.pop();
         } else {
             throw invalid_argument("invalid expression, brackets do not match");
