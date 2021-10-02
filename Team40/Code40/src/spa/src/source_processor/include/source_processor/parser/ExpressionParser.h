@@ -13,8 +13,8 @@ class ExpressionParser {
 public:
     // for bracket matching
     stack<string> brackets;
+    // for operator precedence checking
     stack<string> operators;
-
     // cond_expr: rel_expr | '!' '(' cond_expr ')' | '(' cond_expr ')' '&&' '(' cond_expr ')' |
     // '('cond_expr ')' '||' '(' cond_expr ')'
     // rel_expr: rel_factor '>' rel_factor | rel_factor '>=' rel_factor | rel_factor '<' rel_factor
