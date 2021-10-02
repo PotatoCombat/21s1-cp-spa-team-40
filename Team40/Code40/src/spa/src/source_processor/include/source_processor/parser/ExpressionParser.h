@@ -19,6 +19,9 @@ public:
         {"!=", 2}, {"+", 3},  {"-", 3}, {"%", 4},  {"*", 4}, {"/", 4}};
 
     void parseExpression(vector<string> exprLst, Statement *stmt);
+    void handleBracket(string curr);
+    void handleOperator(string curr);
+    void checkValidBracket(string curr);
 
     bool isInteger(string input);
     bool isName(string input);
@@ -29,8 +32,4 @@ public:
     bool isArtihmeticOperator(string input);
     bool isComparisonOperator(string input);
     bool isLogicalOperator(string input);
-
-    void handleBracket(string curr);
-    void handleOperator(string curr);
-    void checkValidBracket(string curr);
 };
