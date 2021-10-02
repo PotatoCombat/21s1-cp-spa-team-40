@@ -23,7 +23,7 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
             checkValidBracket(curr);
             handleBracket(curr);
         } else if (isOperator(curr) && oprtrFlag) {
-            handleOperator(curr);
+            handleOperator(curr, stmt);
             oprtrFlag = false;
         } else {
             throw invalid_argument(
@@ -47,7 +47,22 @@ void ExpressionParser::handleBracket(string curr) {
     }
 }
 
-void ExpressionParser::handleOperator(string curr) {
+void ExpressionParser::handleOperator(string curr, Statement *stmt) {
+    if (stmt->getStatementType() == StatementType::ASSIGN) {
+        if (!isValidAssignOperator(stmt, curr)) {
+            throw invalid_argument("invalid operator in assign statement");
+        }
+    } else if (stmt->getStatementType() == StatementType::WHILE) {
+        if (!isValidWhileIfOperator(stmt, curr)) {
+            throw invalid_argument("invalid operator in while statement");
+        }
+    } else if (stmt->getStatementType() == StatementType::IF) {
+        if (!isValidWhileIfOperator(stmt, curr)) {
+            throw invalid_argument("invalid operator in if statement");
+        }
+    } else {
+        throw invalid_argument("invalid operator");
+    }
     while (!operators.empty() && operators.top() != "(" &&
            (operators.top() == "!" || precedenceMap[operators.top()] >= precedenceMap[curr])) {
         operators.pop();
@@ -92,8 +107,6 @@ bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
 bool ExpressionParser::isValidWhileIfOperator(Statement *stmt, string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input));
 }
-
-bool ExpressionParser::isRoundBracket(string input) { return input == "(" || input == ")"; }
 
 bool ExpressionParser::isOperator(string input) {
     return isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input);

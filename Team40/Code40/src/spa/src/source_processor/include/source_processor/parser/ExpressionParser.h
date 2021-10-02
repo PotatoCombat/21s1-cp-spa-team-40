@@ -20,14 +20,13 @@ public:
 
     void parseExpression(vector<string> exprLst, Statement *stmt);
     void handleBracket(string curr);
-    void handleOperator(string curr);
+    void handleOperator(string curr, Statement *stmt);
     void checkValidBracket(string curr);
 
     bool isInteger(string input);
     bool isName(string input);
     bool isValidAssignOperator(Statement *stmt, string input);
     bool isValidWhileIfOperator(Statement *stmt, string input);
-    bool isRoundBracket(string input);
     bool isOperator(string input);
     bool isArtihmeticOperator(string input);
     bool isComparisonOperator(string input);
