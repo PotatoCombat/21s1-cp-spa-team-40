@@ -40,6 +40,14 @@ protected:
     void validate();
     bool isType(string val, DesignEntityType type);
 
+    Result evalWcWc();
+    Result evalConstConst();
+    Result evalConstWc();
+    Result evalWcConst();
+    Result evalSynConst();
+    Result evalConstSyn();
+    Result evalNotConstNotConst();
+
 public:
     // evaluates the clause and writes the answer to the result object
     // Result invalid = false only happens when neither of the references is
