@@ -14,8 +14,8 @@ private:
     vector<Line> programLines;
 
 public:
-    WhileStatementParser(vector<string> content, int index,
-                         vector<Line> programLines);
+    WhileStatementParser(vector<string> content, int index, vector<Line> programLines);
     Statement *parseWhileStatement(int &programIndex);
+    void checkValidCondition(vector<string> condLst);
     void parseChildStatements(int &programIndex);
 };

@@ -1,5 +1,13 @@
 #include "query_processor/model/DesignEntityTypeHelper.h"
 
+map<DesignEntityType, StatementType> DesignEntityTypeHelper::desTypeToStmtTypeMap{
+    {DesignEntityType::ASSIGN, StatementType::ASSIGN},
+    {DesignEntityType::CALL, StatementType::CALL},
+    {DesignEntityType::IF, StatementType::IF},
+    {DesignEntityType::PRINT, StatementType::PRINT},
+    {DesignEntityType::READ, StatementType::READ},
+    {DesignEntityType::WHILE, StatementType::WHILE}};
+
 DesignEntityTypeHelper::DesignEntityTypeHelper() {
     typeToStringMap = {
         {DesignEntityType::STMT, "stmt"},
@@ -40,6 +48,14 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::CALL, true},
         {DesignEntityType::PROG_LINE, false}
     };
+    desTypeToStmtTypeMap = {
+        {DesignEntityType::ASSIGN, StatementType::ASSIGN},
+        {DesignEntityType::CALL, StatementType::CALL},
+        {DesignEntityType::IF, StatementType::IF},
+        {DesignEntityType::PRINT, StatementType::PRINT},
+        {DesignEntityType::READ, StatementType::READ},
+        {DesignEntityType::WHILE, StatementType::WHILE}
+    };
 }
 
 DesignEntityType DesignEntityTypeHelper::getType(string val) {
@@ -72,4 +88,16 @@ bool DesignEntityTypeHelper::isVariable(DesignEntityType type) {
 
 bool DesignEntityTypeHelper::isProcedure(DesignEntityType type) {
     return type == DesignEntityType::PROCEDURE;
+}
+
+StatementType DesignEntityTypeHelper::desTypeToStmtType(DesignEntityType type) {
+    auto val = desTypeToStmtTypeMap.find(type);
+    if (val == desTypeToStmtTypeMap.end()) {
+        throw ValidityError("invalid design entity type is not a statement type");
+    }
+    return val->second;
+}
+
+bool DesignEntityTypeHelper::isDesTypeStmtType(DesignEntityType desType, StatementType stmtType) {
+    return desTypeToStmtType(desType) == stmtType;
 }

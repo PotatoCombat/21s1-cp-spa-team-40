@@ -146,11 +146,10 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList1{
-        ValueToPointersMap("1", POINTER_SET{}),
-        ValueToPointersMap("2", POINTER_SET{}),
-        ValueToPointersMap("3", POINTER_SET{}),
-        ValueToPointersMap("4", POINTER_SET{})};
+    VALUE_TO_POINTERS_MAP expectedList1{{"1", POINTER_SET{}},
+                                        {"2", POINTER_SET{}},
+                                        {"3", POINTER_SET{}},
+                                        {"4", POINTER_SET{}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -167,7 +166,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -184,10 +183,8 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList2{
-        ValueToPointersMap("9", POINTER_SET{}),
-        ValueToPointersMap("10", POINTER_SET{}),
-        ValueToPointersMap("11", POINTER_SET{})};
+    VALUE_TO_POINTERS_MAP expectedList2{
+        {"10", POINTER_SET{}}, {"11", POINTER_SET{}}, {"9", POINTER_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -204,7 +201,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList2{};
+    VALUE_TO_POINTERS_MAP expectedList2{};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -221,15 +218,10 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM WILDCARD - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList1{
-        ValueToPointersMap("1", POINTER_SET{}),
-        ValueToPointersMap("2", POINTER_SET{}),
-        ValueToPointersMap("3", POINTER_SET{}),
-        ValueToPointersMap("4", POINTER_SET{}),
-        ValueToPointersMap("5", POINTER_SET{}),
-        ValueToPointersMap("6", POINTER_SET{}),
-        ValueToPointersMap("9", POINTER_SET{}),
-        ValueToPointersMap("10", POINTER_SET{})};
+    VALUE_TO_POINTERS_MAP expectedList1{
+        {"1", POINTER_SET{}}, {"10", POINTER_SET{}}, {"2", POINTER_SET{}},
+        {"3", POINTER_SET{}}, {"4", POINTER_SET{}},  {"5", POINTER_SET{}},
+        {"6", POINTER_SET{}}, {"9", POINTER_SET{}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -246,7 +238,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -263,15 +255,10 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD SYNONYM - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList2{
-        ValueToPointersMap("2", POINTER_SET{}),
-        ValueToPointersMap("3", POINTER_SET{}),
-        ValueToPointersMap("4", POINTER_SET{}),
-        ValueToPointersMap("6", POINTER_SET{}),
-        ValueToPointersMap("9", POINTER_SET{}),
-        ValueToPointersMap("10", POINTER_SET{}),
-        ValueToPointersMap("11", POINTER_SET{}),
-        ValueToPointersMap("12", POINTER_SET{})};
+    VALUE_TO_POINTERS_MAP expectedList2{
+        {"10", POINTER_SET{}}, {"11", POINTER_SET{}}, {"12", POINTER_SET{}},
+        {"2", POINTER_SET{}},  {"3", POINTER_SET{}},  {"4", POINTER_SET{}},
+        {"6", POINTER_SET{}},  {"9", POINTER_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -288,7 +275,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList2{};
+    VALUE_TO_POINTERS_MAP expectedList2{};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -305,43 +292,25 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<ValueToPointersMap> expectedList1{
-        ValueToPointersMap("1",
-                           POINTER_SET{make_pair(1, "2"), make_pair(1, "3"),
-                                       make_pair(1, "4"), make_pair(1, "12")}), 
-        ValueToPointersMap("2",
-                           POINTER_SET{make_pair(1, "3"),
-                                       make_pair(1, "4"), make_pair(1, "12")}),
-        ValueToPointersMap("3",
-                           POINTER_SET{make_pair(1, "4"), make_pair(1, "12")}),
-        ValueToPointersMap("4", POINTER_SET{make_pair(1, "12")}),
-        ValueToPointersMap("5", POINTER_SET{make_pair(1, "6"), make_pair(1, "9"), make_pair(1, "10"), make_pair(1, "11")}),
-        ValueToPointersMap("6",
-                           POINTER_SET{make_pair(1, "9"), make_pair(1, "10"),
-                                       make_pair(1, "11")}),
-        ValueToPointersMap("9",
-                           POINTER_SET{make_pair(1, "10"), make_pair(1, "11")}),
-        ValueToPointersMap("10", POINTER_SET{make_pair(1, "11")})};
+    VALUE_TO_POINTERS_MAP expectedList1{
+        {"1", POINTER_SET{{1, "2"}, {1, "3"}, {1, "4"}, {1, "12"}}},
+        {"10", POINTER_SET{{1, "11"}}},
+        {"2", POINTER_SET{{1, "3"}, {1, "4"}, {1, "12"}}},
+        {"3", POINTER_SET{{1, "4"}, {1, "12"}}},
+        {"4", POINTER_SET{{1, "12"}}},
+        {"5", POINTER_SET{{1, "6"}, {1, "9"}, {1, "10"}, {1, "11"}}},
+        {"6", POINTER_SET{{1, "9"}, {1, "10"}, {1, "11"}}},
+        {"9", POINTER_SET{{1, "10"}, {1, "11"}}}};
     
-    vector<ValueToPointersMap> expectedList2{
-        ValueToPointersMap("2",
-                           POINTER_SET{make_pair(0, "1")}),
-        ValueToPointersMap("3",
-                           POINTER_SET{make_pair(0, "1"), make_pair(0, "2")}),
-        ValueToPointersMap("4",
-                           POINTER_SET{make_pair(0, "1"), make_pair(0, "2"),
-                                       make_pair(0, "3")}),
-        ValueToPointersMap("6", POINTER_SET{make_pair(0, "5")}),
-        ValueToPointersMap("9",
-                           POINTER_SET{make_pair(0, "5"), make_pair(0, "6")}),
-        ValueToPointersMap("10",
-                           POINTER_SET{make_pair(0, "5"), make_pair(0, "6"),
-                                       make_pair(0, "9")}),
-        ValueToPointersMap("11",
-                           POINTER_SET{make_pair(0, "5"), make_pair(0, "6"),
-                                       make_pair(0, "9"), make_pair(0, "10")}),
-        ValueToPointersMap("12",
-                           POINTER_SET{make_pair(0, "1"), make_pair(0, "2"), make_pair(0, "3"), make_pair(0, "4")})};
+    VALUE_TO_POINTERS_MAP expectedList2{
+        {"10", POINTER_SET{{0, "5"}, {0, "6"}, {0, "9"}}},
+        {"11", POINTER_SET{{0, "5"}, {0, "6"}, {0, "9"}, {0, "10"}}},
+        {"12", POINTER_SET{{0, "1"}, {0, "2"}, {0, "3"}, {0, "4"}}},
+        {"2", POINTER_SET{{0, "1"}}},
+        {"3", POINTER_SET{{0, "1"}, {0, "2"}}},
+        {"4", POINTER_SET{{0, "1"}, {0, "2"}, {0, "3"}}},
+        {"6", POINTER_SET{{0, "5"}}},
+        {"9", POINTER_SET{{0, "5"}, {0, "6"}}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
     expectedResult.setResultList2(&stmt2, expectedList2);
 

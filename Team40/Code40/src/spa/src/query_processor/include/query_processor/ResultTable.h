@@ -1,32 +1,34 @@
 #pragma once
 
 #include <string>
-#include <utility>
 #include <set>
+#include <unordered_map>
+#include <utility>
 #include <vector>
-
-#include "query_processor/ValueToPointersMap.h"
+#include <stdexcept>
 
 using namespace std;
 
+typedef pair<int, string> POINTER;
+typedef set<POINTER> POINTER_SET;
+typedef unordered_map<string, POINTER_SET> VALUE_TO_POINTERS_MAP;
+
 class ResultTable {
 private:
-    vector<vector<ValueToPointersMap>> mapTable;
+    vector<VALUE_TO_POINTERS_MAP> table;
 
 public:
     void clear();
 
     void init(int i);
 
-    int findMapIndex(int refIndex, string value);
+    void addValue(int refIndex, string value, POINTER_SET pointers);
 
-    void addValue(int refIndex, string value, set<pair<int, string>> pointers);
+    void addValues(int refIndex, VALUE_TO_POINTERS_MAP map);
 
-    void addValue(int refIndex, vector<ValueToPointersMap> maps);
+    POINTER_SET getPointers(int refIndex, string value);
 
-    set<pair<int, string>> getPointers(int refIndex, string value);
-
-    void removePointer(int refIndex, string value, pair<int, string> pointer);
+    void removePointer(int refIndex, string value, POINTER pointer);
 
     bool hasPointerToRef(int sourceRefIndex, string sourceValue,
                          int targetRefIndex);

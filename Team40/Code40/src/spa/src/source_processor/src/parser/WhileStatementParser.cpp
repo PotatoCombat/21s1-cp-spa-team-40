@@ -11,8 +11,7 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 };
 
 Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
-    vector<string>::iterator whileItr =
-        find(content.begin(), content.end(), "while");
+    vector<string>::iterator whileItr = find(content.begin(), content.end(), "while");
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
         throw invalid_argument("invalid while statement");
@@ -22,12 +21,33 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     }
 
     vector<string> condLst(next(next(whileItr)), prev(endItr));
+    checkValidCondition(condLst);
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;
     exprParser.parseExpression(condLst, stmt);
 
     parseChildStatements(programIndex);
     return stmt;
+}
+
+void WhileStatementParser::checkValidCondition(vector<string> condLst) {
+    for (int i = 0; i < condLst.size(); i++) {
+        string curr = condLst[i];
+        if (curr == "!" || curr == "&&" || curr == "||") {
+            if (i == condLst.size() - 1) {
+                throw invalid_argument("logical operator must be followed by (");
+            } else if (condLst[i + 1] != "(") {
+                throw invalid_argument("logical operator must be followed by (");
+            }
+            if (curr == "&&" || curr == "||") {
+                if (i == 0) {
+                    throw invalid_argument("logical operator must be preceded by )");
+                } else if (condLst[i - 1] != ")") {
+                    throw invalid_argument("logical operator must be preceded by )");
+                }
+            }
+        }
+    }
 }
 
 void WhileStatementParser::parseChildStatements(int &programIndex) {

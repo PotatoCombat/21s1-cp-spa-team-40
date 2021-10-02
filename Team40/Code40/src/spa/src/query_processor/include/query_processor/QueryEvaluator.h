@@ -4,7 +4,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <utility>
 
 #include "Result.h"
@@ -12,7 +12,6 @@
 #include "pkb/PKB.h"
 
 #include "query_processor/ResultTable.h"
-#include "query_processor/ValueToPointersMap.h"
 
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/PatternClause.h"

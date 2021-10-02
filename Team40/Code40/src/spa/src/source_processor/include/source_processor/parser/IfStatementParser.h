@@ -14,8 +14,8 @@ private:
     vector<Line> programLines;
 
 public:
-    IfStatementParser(vector<string> content, int index,
-                      vector<Line> programLines);
+    IfStatementParser(vector<string> content, int index, vector<Line> programLines);
     Statement *parseIfStatement(int &programIndex);
+    void checkValidCondition(vector<string> condLst);
     void parseChildStatements(int &programIndex);
 };
