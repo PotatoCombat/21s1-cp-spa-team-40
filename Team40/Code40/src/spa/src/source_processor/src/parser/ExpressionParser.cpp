@@ -13,37 +13,18 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
             auto variable = new Variable(curr);
             stmt->addExpressionVar(variable);
             oprtrFlag = true;
-        } else if (curr == "!" || curr == "(") {
-            if (curr == "!") {
-                oprtrFlag = false;
-            }
+        } else if (isRoundBracket(curr)) {
             checkValidBracket(curr);
-            operators.push(curr);
-        } else if (curr == ")") {
-            checkValidBracket(curr);
-            handleBracket(curr);
-        } else if (isOperator(curr) && oprtrFlag) {
+        } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
             handleOperator(curr, stmt);
             oprtrFlag = false;
         } else {
             throw invalid_argument(
-                "invalid expression, invalid variable, constant or operator encountered");
+                "invalid expression: invalid variable, constant or operator encountered");
         }
     }
     if (!brackets.empty()) {
         throw invalid_argument("invalid expression, brackets do not match");
-    }
-}
-
-void ExpressionParser::handleBracket(string curr) {
-    while (!operators.empty() && operators.top() != "(") {
-        operators.pop();
-    }
-    if (operators.empty()) {
-        throw invalid_argument("invalid expression, brackets do not match");
-    }
-    if (operators.top() == "(") {
-        operators.pop();
     }
 }
 
@@ -63,11 +44,6 @@ void ExpressionParser::handleOperator(string curr, Statement *stmt) {
     } else {
         throw invalid_argument("invalid operator");
     }
-    while (!operators.empty() && operators.top() != "(" &&
-           (operators.top() == "!" || precedenceMap[operators.top()] >= precedenceMap[curr])) {
-        operators.pop();
-    }
-    operators.push(curr);
 }
 
 void ExpressionParser::checkValidBracket(string curr) {
@@ -99,6 +75,8 @@ bool ExpressionParser::isName(string input) {
     }
     return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }
+
+bool ExpressionParser::isRoundBracket(string input) { return input == "(" || input == ")"; }
 
 bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
     return (isArtihmeticOperator(input));
