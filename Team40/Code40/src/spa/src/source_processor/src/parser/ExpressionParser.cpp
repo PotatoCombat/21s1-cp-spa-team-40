@@ -16,7 +16,7 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
         } else if (isRoundBracket(curr)) {
             checkValidBracket(curr);
         } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
-            handleOperator(curr, stmt);
+            checkValidOperator(curr, stmt);
             oprtrFlag = false;
         } else {
             throw invalid_argument(
@@ -28,7 +28,7 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
     }
 }
 
-void ExpressionParser::handleOperator(string curr, Statement *stmt) {
+void ExpressionParser::checkValidOperator(string curr, Statement *stmt) {
     if (stmt->getStatementType() == StatementType::ASSIGN) {
         if (!isValidAssignOperator(stmt, curr)) {
             throw invalid_argument("invalid operator in assign statement");
