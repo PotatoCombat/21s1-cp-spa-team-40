@@ -95,6 +95,8 @@ void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
 
     string rest = trimL(input.substr(nextWhitespacePos + 1));
 
+    // TODO: need to check if the following is a BOOLEAN, a synonym, or a <
+
     nextWhitespacePos = findNextWhitespace(rest, 0);
 
     if (nextWhitespacePos == string::npos) {
