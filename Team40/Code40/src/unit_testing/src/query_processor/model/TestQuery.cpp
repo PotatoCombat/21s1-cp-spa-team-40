@@ -10,14 +10,14 @@ using namespace std;
 
 struct TestQueryHelper {
 public:
-    void checkQuery(Query *actualQuery, Reference *expectedReturnRef,
+    void checkQuery(Query *actualQuery, vector<Reference *>expectedReturnRefs,
                     vector<Reference *> expectedRefList,
                     vector<Clause *> expectedClauseList) {
-        Reference *actualReturnRef = actualQuery->getReturnReference();
+        vector<Reference *> actualReturnRefs = actualQuery->getReturnReferences();
         vector<Reference *> actualRefList = actualQuery->getReferences();
         vector<Clause *> actualClauseList = actualQuery->getClauses();
 
-        REQUIRE(actualQuery->getReturnReference()->equals(*expectedReturnRef));
+        REQUIRE(actualReturnRefs == expectedReturnRefs);
         REQUIRE(expectedRefList.size() == actualRefList.size());
         REQUIRE(expectedClauseList.size() == actualClauseList.size());
 
@@ -39,10 +39,10 @@ TEST_CASE("Query: query creation - all SYNONYM - adds all to referenceList") {
                               ReferenceType::SYNONYM, "x");
     Reference a_syn(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
     Clause clause(ClauseType::USES_S, a_syn, returnReference);
-    query.setReturnReference(&returnReference);
+    query.addReturnReference(&returnReference);
     query.addClause(&clause);
 
-    testQueryHelper.checkQuery(&query, &returnReference,
+    testQueryHelper.checkQuery(&query, vector<Reference*>{&returnReference},
                                vector<Reference *>{&returnReference, &a_syn},
                                vector<Clause *>{&clause});
 }
@@ -57,10 +57,10 @@ TEST_CASE("Query: query creation - various RefernceType - only adds SYNONYM") {
     Clause clause1(ClauseType::USES_S, a_const, returnReference);
     Clause clause2(ClauseType::FOLLOWS, s_const, s_wc);
     query.addClause(&clause1);
-    query.setReturnReference(&returnReference);
+    query.addReturnReference(&returnReference);
     query.addClause(&clause2);
 
-    testQueryHelper.checkQuery(&query, &returnReference,
+    testQueryHelper.checkQuery(&query, vector<Reference *>{&returnReference},
                                vector<Reference *>{&returnReference},
                                vector<Clause *>{&clause1, &clause2});
 }

@@ -25,7 +25,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         Reference *returnRef = parser.parseReturnSynonym(retString, found);
 
         if (found) {
-            q.setReturnReference(returnRef);
+            q.addReturnReference(returnRef);
         } else {
             throw ValidityError("QP-ERROR: return synonym is undeclared");
         }

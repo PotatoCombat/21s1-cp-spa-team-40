@@ -1,41 +1,51 @@
 #pragma once
 
+#include <map>
 #include <string>
-#include <utility>
 #include <set>
+#include <utility>
 #include <vector>
-
-#include "query_processor/ValueToPointersMap.h"
+#include <stdexcept>
 
 using namespace std;
 
+typedef string VALUE;
+typedef int INDEX;
+typedef set<VALUE> VALUE_SET;
+typedef map<INDEX, VALUE_SET> IDX_TO_VALUES_MAP;
+typedef map<string, IDX_TO_VALUES_MAP> VALUE_TO_POINTERS_MAP;
+
 class ResultTable {
 private:
-    vector<vector<ValueToPointersMap>> mapTable;
+    vector<VALUE_TO_POINTERS_MAP> table;
+
+    void assertIndex(INDEX idx);
 
 public:
     void clear();
 
-    void init(int i);
+    void init(int size);
 
-    int findMapIndex(int refIndex, string value);
+    void addValue(INDEX idx, VALUE val);
 
-    void addValue(int refIndex, string value, set<pair<int, string>> pointers);
+    void addValueWithLink(INDEX sourceIdx, VALUE sourceVal, INDEX targetIdx, VALUE_SET targetVals);
 
-    void addValue(int refIndex, vector<ValueToPointersMap> maps);
+    VALUE_SET getLinkedValues(INDEX sourceIdx, VALUE value, INDEX targetIdx);
 
-    set<pair<int, string>> getPointers(int refIndex, string value);
+    bool hasPointerToIdx(INDEX sourceIdx, VALUE sourceValue, INDEX targetIdx);
 
-    void removePointer(int refIndex, string value, pair<int, string> pointer);
+    VALUE_SET getPointersToIdx(INDEX sourceIdx, VALUE sourceValue,
+                               INDEX targetIdx);
 
-    bool hasPointerToRef(int sourceRefIndex, string sourceValue,
-                         int targetRefIndex);
+    void removeValue(INDEX refIndex, VALUE value);
 
-    void removeMap(int refIndex, string value);
+    vector<VALUE> getValues(INDEX refIndex);
 
-    vector<string> getValues(int refIndex);
+    bool hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
-    bool hasLink(int refIndex1, string value1, int refIndex2, string value2);
+    void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
-    void removeLink(int refIndex1, string value1, int refIndex2, string value2);
+    bool hasVal(INDEX idx, VALUE val);
+
+    vector<vector<string>> generateResult(vector<INDEX> indexes);
 };

@@ -50,7 +50,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
 
         SECTION("test 1") {
             Clause *cls = new Clause(ClauseType::FOLLOWS, ret, ref);
-            expected.setReturnReference(&ret);
+            expected.addReturnReference(&ret);
             expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::INPUT_1, actual);
@@ -61,17 +61,16 @@ TEST_CASE("QueryPreprocessor: single clause") {
         }
 
         SECTION("test 2") {
-            expected.setReturnReference(&ret);
+            expected.addReturnReference(&ret);
             qp.preprocessQuery(TestQPreprocessor::INPUT_2, actual);
 
             REQUIRE(actual.getClauses().size() == 0);
-            REQUIRE((actual.getReturnReference()->equals(
-                *expected.getReturnReference())));
+            REQUIRE((actual.getReturnReferences()[0])->equals(*expected.getReturnReferences()[0]));
         }
 
         SECTION("test 4") {
             Clause *cls = new Clause(ClauseType::FOLLOWS, ref, ret);
-            expected.setReturnReference(&ret);
+            expected.addReturnReference(&ret);
             expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::INPUT_4, actual);
@@ -83,7 +82,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
         SECTION("test 5") {
             Reference ifs(DesignEntityType::IF, ReferenceType::SYNONYM, "ifs");
             Clause *cls = new Clause(ClauseType::FOLLOWS, ref, ifs);
-            expected.setReturnReference(&ifs);
+            expected.addReturnReference(&ifs);
             expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::INPUT_5, actual);
@@ -98,7 +97,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
             Reference height(DesignEntityType::VARIABLE,
                              ReferenceType::CONSTANT, "height");
             Clause *cls = new Clause(ClauseType::USES_S, a, height);
-            expected.setReturnReference(&v);
+            expected.addReturnReference(&v);
             expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::INPUT_6, actual);
@@ -112,7 +111,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
         Query actual;
         Reference decl(DesignEntityType::STMT, ReferenceType::CONSTANT, "s");
         Reference ret(DesignEntityType::STMT, ReferenceType::SYNONYM, "p");
-        expected.setReturnReference(&ret);
+        expected.addReturnReference(&ret);
 
         REQUIRE_FALSE(qp.preprocessQuery(TestQPreprocessor::INPUT_3, actual));
     }
@@ -127,7 +126,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
 
         SECTION("test 1") {
             PatternClause *cls = new PatternClause(assign, wildcard, "_");
-            expected.setReturnReference(&assign);
+            expected.addReturnReference(&assign);
             expected.addPattern(cls);
 
             qp.preprocessQuery(TestQPreprocessor::PATTERN_1, actual);
@@ -138,7 +137,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
 
         SECTION("test 2") {
             PatternClause *cls = new PatternClause(assign, var, "y");
-            expected.setReturnReference(&assign);
+            expected.addReturnReference(&assign);
             expected.addPattern(cls);
 
             qp.preprocessQuery(TestQPreprocessor::PATTERN_2, actual);
@@ -166,7 +165,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
     SECTION("test 1") {
         Clause *cls = new Clause(ClauseType::USES_P, procedure, variableY);
         PatternClause *pat = new PatternClause(assign, variableX, "y");
-        expected.setReturnReference(&stmt);
+        expected.addReturnReference(&stmt);
         expected.addClause(cls);
         expected.addPattern(pat);
 
@@ -174,14 +173,14 @@ TEST_CASE("QueryPreprocessor: two clauses") {
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
         REQUIRE((actual.getPatterns()[0])->equals(*pat));
-        REQUIRE((actual.getReturnReference()->equals(stmt)));
+        REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 3));
     }
 
     SECTION("test 2") {
         Clause* cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
         PatternClause* pat = new PatternClause(assign, variableD, "a");
-        expected.setReturnReference(&stmt);
+        expected.addReturnReference(&stmt);
         expected.addClause(cls);
         expected.addPattern(pat);
 
@@ -189,7 +188,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
         REQUIRE((actual.getPatterns()[0])->equals(*pat));
-        REQUIRE((actual.getReturnReference()->equals(stmt)));
+        REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 2));
     }
 }

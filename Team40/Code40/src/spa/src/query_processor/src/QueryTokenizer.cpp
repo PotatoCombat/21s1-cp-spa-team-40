@@ -120,9 +120,20 @@ void QueryTokenizer::tokenizeClauses(string input,
                                      vector<ClsTuple> &suchThatClauses,
                                      vector<PatTuple> &patternClauses,
                                      vector<WithTuple> &withClauses) {
+    // State enums will be declared within class 
+    // unless a more elegant method is found
+    enum { SUCH_THAT_CLAUSE, PATTERN_CLAUSE, WITH_CLAUSE, NULL_CLAUSE };
+
+    enum {
+        READ_TYPE_STATE,
+        SUCH_INTERMEDIATE_STATE,
+        READ_ARGS_STATE,
+        INVALID_STATE
+    };
+
     size_t tokenPos = findNextToken(input, 0);
-    enum STATE_CODES state = STATE_CODES::READ_TYPE_STATE;
-    enum CLAUSE_CODES type = CLAUSE_CODES::NULL_CLAUSE;
+    size_t state = READ_TYPE_STATE;
+    size_t type = NULL_CLAUSE;
     while (tokenPos != string::npos) {
         size_t whitespacePos = findNextWhitespace(input, tokenPos);
         string token = input.substr(tokenPos, whitespacePos - tokenPos);

@@ -45,20 +45,6 @@ private:
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
     // ClauseTypeHelper clsHelper = ClauseTypeHelper();
 
-    enum CLAUSE_CODES {
-        SUCH_THAT_CLAUSE,
-        PATTERN_CLAUSE,
-        WITH_CLAUSE,
-        NULL_CLAUSE
-    };
-
-    enum STATE_CODES {
-        READ_TYPE_STATE,
-        SUCH_INTERMEDIATE_STATE,
-        READ_ARGS_STATE,
-        INVALID_STATE
-    };
-
     inline static const string KEYWORD_SELECT = "Select";
     inline static const string KEYWORD_SUCH = "such";
     inline static const string KEYWORD_THAT = "that";
