@@ -83,10 +83,10 @@ vector<string> QueryTokenizer::tokenizeDeclarationSynonym(string input) {
  * @param input The select clause string (assumes non-empty string).
  * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
+ * @return Vector of return synonyms (empty if BOOLEAN)
  * @todo Implement returning tuples (require vector structure)
  */
-void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
-                                           string &remaining) {
+vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remaining) {
     size_t nextWhitespacePos = findNextWhitespace(input, 0);
     string keyword = input.substr(0, nextWhitespacePos);
     if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
@@ -95,20 +95,44 @@ void QueryTokenizer::tokenizeReturnSynonym(string input, string &returnSynonym,
 
     string rest = trimL(input.substr(nextWhitespacePos + 1));
 
-    // TODO: need to check if the following is a BOOLEAN, a synonym, or a <
+    // TODO: Check if < first, if yes, send to tokenizeReturnTuple, else, process internally
+    // either BOOLEAN, synonym or synonym.attrName (note can have whitespace between synonym and attrName)
+
+    size_t lCarrotPos = rest.find(L_CARROT);
+
+    if (lCarrotPos != string::npos) {
+        vector<string> tuple;
+        size_t remainingPos = tokenizeReturnTuple(rest, tuple);
+        remaining = trimL(input.substr(remainingPos));
+        return tuple;
+    }
 
     nextWhitespacePos = findNextWhitespace(rest, 0);
 
     if (nextWhitespacePos == string::npos) {
-        returnSynonym = rest;
+        string retString = rest;
         remaining = "";
-        return;
+        if (retString == KEYWORD_BOOLEAN) {
+            return vector<string>();
+        }
+        return vector<string>{retString};
     }
 
-    returnSynonym = rest.substr(0, nextWhitespacePos);
+    string retString = rest.substr(0, nextWhitespacePos);
     remaining = trimL(rest.substr(nextWhitespacePos + 1));
-    return;
+    if (retString == KEYWORD_BOOLEAN) {
+        return vector<string>();
+    }
+    return vector<string>{retString};
 }
+
+size_t QueryTokenizer::tokenizeReturnTuple(string input, vector<string> &tuple) {
+    return 0;
+}
+
+//string QueryTokenizer::tokenizeReturnBoolean(string input) {
+//
+//}
 
 /**
  * Tokenizes each clause into individual clause tuples and adds them to a vector 
@@ -267,6 +291,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
  * @param startPos The start of the clause.
  * @param &clause WithTuple.
  * @return Position of end of clause.
+ * @todos Fix algorithm for 2nd part of with clause and account for whitespace
  */
 size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
                                     WithTuple &clause) {
@@ -276,6 +301,7 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
     string token3;
     string token4;
     size_t nextPos;
+    size_t tempPos;
 
     // tokenize token by '=' and '.'
     // structure: token1.token2 = token3.token4
@@ -287,11 +313,38 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
         token1 = temp;
         token2 = "";
     } else {
-        token1 = temp.substr(0, periodPos);
-        token2 = temp.substr(periodPos + 1);
+        token1 = trim(temp.substr(0, periodPos));
+        token2 = trim(temp.substr(periodPos + 1));
     }
 
-    temp = getTokenBeforeX(input, EQUAL, nextPos, nextPos);
+    periodPos = input.find(PERIOD, nextPos);
+
+    if (periodPos == string::npos) { // no .
+        // TODO: Handle "     name      "
+        tempPos = findNextWhitespace(input, nextPos);
+        temp = input.substr(nextPos, tempPos - nextPos);
+        token3 = trim(temp);
+        token4 = "";
+        nextPos = tempPos;
+    } else {
+        size_t startTokenPos = findNextToken(input, nextPos);
+        size_t endTokenPos = findNextWhitespace(input, startTokenPos);
+        string tempToken = input.substr(startTokenPos, endTokenPos - startTokenPos);
+        temp = trim(input.substr(nextPos, nextPos - periodPos));
+        if (temp == tempToken) {
+            token3 = temp;
+            startTokenPos = findNextToken(input, periodPos + 1);
+            endTokenPos = findNextWhitespace(input, startTokenPos);
+            token4 = input.substr(startTokenPos, endTokenPos - startTokenPos);
+        } else { // no .
+            // TODO: Handle "     name      "
+            token3 = tempToken;
+            token4 = "";
+        }
+        nextPos = endTokenPos;
+    }
+
+    /*temp = getTokenBeforeX(input, EQUAL, nextPos, nextPos);
     periodPos = temp.find(PERIOD);
     if (periodPos == string::npos) {
         token3 = temp;
@@ -299,7 +352,7 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
     } else {
         token3 = temp.substr(0, periodPos);
         token4 = temp.substr(periodPos + 1);
-    }
+    }*/
 
     // remove whitespace within quotes of token1 and token3 if any!
     token1 = removeWhitespaceWithinQuotes(token1);

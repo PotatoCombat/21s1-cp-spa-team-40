@@ -19,14 +19,14 @@ public:
 
     pair<string, string> separateQueryString(string input);
     void tokenizeDeclarations(string input, vector<DeclPair> &decls);
-    void tokenizeReturnSynonym(string input, string &returnSynonym,
-                               string &remaining);
+    vector<string> tokenizeReturnSynonym(string input, string &remaining);
     void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                          vector<PatTuple> &patternClauses,
                          vector<WithTuple> &withClauses);
 
 private:
     vector<string> tokenizeDeclarationSynonym(string input);
+    size_t tokenizeReturnTuple(string input, vector<string> &tuple);
     size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause);
     size_t tokenizePattern(string input, size_t startPos, PatTuple &clause);
     size_t tokenizeWith(string input, size_t startPos, WithTuple &clause);
@@ -51,6 +51,7 @@ private:
     inline static const string KEYWORD_PATTERN = "pattern";
     inline static const string KEYWORD_AND = "and";
     inline static const string KEYWORD_WITH = "with";
+    inline static const string KEYWORD_BOOLEAN = "BOOLEAN";
     inline static const string WHITESPACE_SET = " \n\t\r";
 
     inline static const char SEMICOLON = ';';
@@ -61,4 +62,6 @@ private:
     inline static const char UNDERSCORE = '_';
     inline static const char EQUAL = '=';
     inline static const char PERIOD = '.';
+    inline static const char L_CARROT = '<';
+    inline static const char R_CARROT = '>';
 };
