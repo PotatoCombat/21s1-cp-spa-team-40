@@ -97,14 +97,17 @@ vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remai
 
     // TODO: Check if < first, if yes, send to tokenizeReturnTuple, else, process internally
     // either BOOLEAN, synonym or synonym.attrName (note can have whitespace between synonym and attrName)
-
+    
     size_t lCarrotPos = rest.find(L_CARROT);
 
     if (lCarrotPos != string::npos) {
-        vector<string> tuple;
-        size_t remainingPos = tokenizeReturnTuple(rest, tuple);
-        remaining = trimL(input.substr(remainingPos));
-        return tuple;
+        size_t rCarrotPos = rest.rfind(R_CARROT);
+        string tuple = rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1));
+        // can just use the one for declarations since its just ,
+        // TODO: rename the method
+        vector<string> retStrings = tokenizeDeclarationSynonym(tuple);
+        remaining = trimL(input.substr(rCarrotPos + 1));
+        return retStrings;
     }
 
     nextWhitespacePos = findNextWhitespace(rest, 0);
@@ -125,14 +128,6 @@ vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remai
     }
     return vector<string>{retString};
 }
-
-size_t QueryTokenizer::tokenizeReturnTuple(string input, vector<string> &tuple) {
-    return 0;
-}
-
-//string QueryTokenizer::tokenizeReturnBoolean(string input) {
-//
-//}
 
 /**
  * Tokenizes each clause into individual clause tuples and adds them to a vector 

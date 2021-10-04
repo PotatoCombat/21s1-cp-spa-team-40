@@ -98,23 +98,22 @@ TEST_CASE("QueryTokenizer: tokenizeReturn") {
     QueryTokenizer tokenizer;
 
     SECTION("test standard") {
-        string actual;
         string remaining;
-        tokenizer.tokenizeReturnSynonym(TestQueryTokenizer::CLAUSE1, actual,
-                                        remaining);
+        vector<string> actual = tokenizer.tokenizeReturnSynonym(
+            TestQueryTokenizer::CLAUSE1, remaining);
+
         string expected1 = "s";
         string expected2 = "such that Follows(s, p1)";
-        REQUIRE(actual == expected1);
+        REQUIRE(actual[0] == expected1);
         REQUIRE(remaining == expected2);
     }
 
     SECTION("test no Select") {
-        string actual;
         string remaining;
         REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
-            " s such that Parent(x, y)", actual, remaining));
+            " s such that Parent(x, y)", remaining));
         REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
-            "select s such that Parent(x, y)", actual, remaining));
+            "select s such that Parent(x, y)", remaining));
     }
 }
 

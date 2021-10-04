@@ -32,6 +32,7 @@ Reference *QueryParser::parseReturnSynonym(string syn, bool &found) {
             return x->copy();
         }
     }
+    found = false;
     return nullptr;
 }
 

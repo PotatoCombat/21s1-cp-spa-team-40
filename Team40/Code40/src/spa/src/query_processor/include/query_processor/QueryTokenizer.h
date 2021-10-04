@@ -26,7 +26,6 @@ public:
 
 private:
     vector<string> tokenizeDeclarationSynonym(string input);
-    size_t tokenizeReturnTuple(string input, vector<string> &tuple);
     size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause);
     size_t tokenizePattern(string input, size_t startPos, PatTuple &clause);
     size_t tokenizeWith(string input, size_t startPos, WithTuple &clause);
