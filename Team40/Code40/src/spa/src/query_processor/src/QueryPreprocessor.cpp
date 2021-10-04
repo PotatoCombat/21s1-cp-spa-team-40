@@ -1,59 +1,70 @@
 #include "query_processor/QueryPreprocessor.h"
 
-void QueryPreprocessor::preprocessQuery(const string input, Query &q) {
-    pair<string, string> parts;
-    vector<DeclPair> declString;
-    string clauses;
-    string retString;
-    parts = tokenizer.separateDeclaration(input);
-    tokenizer.tokenizeDeclaration(parts.first, declString);
-    retString = tokenizer.tokenizeReturn(parts.second, clauses);
+/**
+ * Preprocesses a query string and stores the query in an object.
+ * @param input The query string.
+ * @param q The query object.
+ * @return true if preprocessed successfully, false otherwise.
+ */
+bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
+    try {
+        pair<string, string> parts = tokenizer.separateQueryString(input);
 
-    vector<Reference *> refList; // need to handle deleting of these objects
-    for (auto x : declString) {
-        Reference *r = parser.parseDeclaration(x);
-        refList.push_back(r);
-    }
+        vector<DeclPair> declPairs;
+        string retString;
+        string clauses;
 
-    int found = 0;
-    for (auto x : refList) {
-        if (retString == x->getValue()) {
-            q.addReturnReference(x->copy());
-            found = 1;
-            break;
+        /*********** Parse declaration ***********/
+        tokenizer.tokenizeDeclarations(parts.first, declPairs);
+        parser.parseDeclarations(declPairs);
+
+        /*********** Parse return synonym ***********/
+        tokenizer.tokenizeReturnSynonym(parts.second, retString, clauses);
+
+        bool found = false;
+        Reference *returnRef = parser.parseReturnSynonym(retString, found);
+
+        if (found) {
+            q.addReturnReference(returnRef);
+        } else {
+            throw ValidityError("QP-ERROR: return synonym is undeclared");
         }
+
+        if (clauses.empty()) {
+            parser.clear();
+            return true;
+        }
+
+        /*********** Parse clauses ***********/
+        vector<ClsTuple> clsStrings;
+        vector<PatTuple> patStrings;
+        vector<WithTuple> withStrings;
+
+        tokenizer.tokenizeClauses(clauses, clsStrings, patStrings, withStrings);
+
+        vector<Clause *> clsList;
+        for (auto x : clsStrings) {
+            Clause *cls = parser.parseSuchThatClause(x);
+            clsList.push_back(cls);
+            q.addClause(cls);
+        }
+
+        vector<PatternClause *> patList;
+        for (auto x : patStrings) {
+            PatternClause *pat = parser.parsePatternClause(x);
+            patList.push_back(pat);
+            q.addPattern(pat);
+        }
+
+        // parse with clauses here
+        // ...
+
+        parser.clear();
+        return true;
+
+    } catch (invalid_argument e) {
+        // cout << e.what();
+        parser.clear();
+        return false;
     }
-    if (!found) {
-        throw ValidityError("return entity is undeclared");
-    }
-
-    if (clauses.size() == 0) {
-        return;
-    }
-
-    // has clauses
-    vector<ClsTuple> clsString;
-    vector<PatTuple> patString;
-
-    tokenizer.tokenizeClause(clauses, clsString, patString);
-
-    vector<Clause *> clsList;
-    for (auto x : clsString) {
-        Clause *cls = parser.parseClause(x, refList);
-        clsList.push_back(cls);
-        q.addClause(cls);
-    }
-
-    vector<PatternClause *> patList;
-    for (auto x : patString) {
-        PatternClause *pat = parser.parsePattern(x, refList);
-        patList.push_back(pat);
-        q.addPattern(pat);
-    }
-
-    for (int i = 0; i < refList.size(); ++i) {
-        delete refList[i];
-    }
-
-    return;
 }
