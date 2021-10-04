@@ -46,7 +46,7 @@ bool Parser::isStmt(vector<string> content) {
 void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
     if (currProc != nullptr) {
         // stmtLst: stmt+
-        if (currProc->getStmtLst().size() == 0) {
+        if (currProc->getStmtLst().empty()) {
             throw invalid_argument("procedure should have at least one "
                                    "statement.");
         }
@@ -56,7 +56,7 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
 
 void Parser::checkValidProgram(Program program) {
     // program: procedure+
-    if (program.getProcLst().size() == 0) {
+    if (program.getProcLst().empty()) {
         throw invalid_argument("program should have at least one procedure.");
     }
 }

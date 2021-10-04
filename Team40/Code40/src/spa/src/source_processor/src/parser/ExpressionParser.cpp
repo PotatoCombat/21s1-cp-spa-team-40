@@ -8,16 +8,16 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
         if (isInteger(curr) && !oprtrFlag) {
             auto constant = new ConstantValue(curr);
             stmt->addExpressionConst(constant);
-            oprtrFlag = true;
+            oprtrFlag = true; // next token must be an operator
         } else if (isName(curr) && !oprtrFlag) {
             auto variable = new Variable(curr);
             stmt->addExpressionVar(variable);
-            oprtrFlag = true;
+            oprtrFlag = true; // next token must be an operator
         } else if (isRoundBracket(curr)) {
             checkValidBracket(curr);
         } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
             checkValidOperator(curr, stmt);
-            oprtrFlag = false;
+            oprtrFlag = false; // next token must be a variable/constant
         } else {
             throw invalid_argument(
                 "invalid expression: invalid variable, constant or operator encountered");
