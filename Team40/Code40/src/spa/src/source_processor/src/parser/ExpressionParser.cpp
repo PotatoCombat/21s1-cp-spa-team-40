@@ -35,11 +35,11 @@ void ExpressionParser::checkValidOperator(string curr, Statement *stmt) {
             throw invalid_argument("invalid operator in assign statement");
         }
     } else if (stmt->getStatementType() == StatementType::WHILE) {
-        if (!isValidWhileIfOperator(stmt, curr)) {
+        if (!isValidConditionalOperator(stmt, curr)) {
             throw invalid_argument("invalid operator in while statement");
         }
     } else if (stmt->getStatementType() == StatementType::IF) {
-        if (!isValidWhileIfOperator(stmt, curr)) {
+        if (!isValidConditionalOperator(stmt, curr)) {
             throw invalid_argument("invalid operator in if statement");
         }
     } else {
@@ -100,7 +100,7 @@ bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
     return (isArtihmeticOperator(input));
 }
 
-bool ExpressionParser::isValidWhileIfOperator(Statement *stmt, string input) {
+bool ExpressionParser::isValidConditionalOperator(Statement *stmt, string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input));
 }
 
