@@ -167,8 +167,9 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     for (INDEX idx : indexes) {
         // 1st idx is the idx to be eval, 
         // 2nd idx is the index that calls this index
+        int NO_CALLER = 1;
         vector<pair<INDEX, INDEX>> toBeEval;
-        toBeEval.push_back({idx, -1});
+        toBeEval.push_back({idx, NO_CALLER});
         while (!toBeEval.empty()) {
             INDEX currIdx = toBeEval.back().first;
             INDEX callIdx = toBeEval.back().second;
@@ -177,7 +178,7 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
             if (visited.find(currIdx) != visited.end()) { // if visited already then continue
                 continue;
             }
-            if (callIdx == -1) { // if it is the first idx in the group to be eval
+            if (callIdx == NO_CALLER) { // if it is the first idx in the group to be eval
                 for (vector<string> v : combinations) {
                     for (auto &valueToPointers : table[currIdx]) {
                         vector<string> temp = v;
