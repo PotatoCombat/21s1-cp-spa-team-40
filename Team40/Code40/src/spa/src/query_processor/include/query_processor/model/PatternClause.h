@@ -15,9 +15,11 @@ private:
     Reference stmt;
     Reference var;
     string pattern;
+    bool isExactMatch;
 
 public:
-    PatternClause(Reference stmt, Reference var, string pattern);
+    PatternClause(Reference stmt, Reference var, string pattern, bool isExactMatch);
+    PatternClause(Reference stmt, Reference var);
     Reference *getStmt();
     Reference *getVar();
     string getPattern();
