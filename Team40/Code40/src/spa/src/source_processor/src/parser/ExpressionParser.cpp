@@ -26,9 +26,7 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
     if (!brackets.empty()) {
         throw invalid_argument("invalid expression: brackets do not match");
     }
-    if ((exprLst.size() < 3) || ((exprLst.size() < 2) && (exprLst[0] != "!"))) {
-        throw invalid_argument("invalid expression");
-    }
+    checkValidExpression(exprLst, stmt);
 }
 
 void ExpressionParser::checkValidOperator(string curr, Statement *stmt) {
@@ -60,6 +58,20 @@ void ExpressionParser::checkValidBracket(string curr) {
         } else {
             throw invalid_argument("invalid expression: brackets do not match");
         }
+    }
+}
+
+void ExpressionParser::checkValidExpression(vector<string> exprLst, Statement *stmt) {
+    StatementType type = stmt->getStatementType();
+    // condition should have at least one operator
+    if (type == StatementType::IF || type == StatementType::WHILE) {
+        if ((exprLst.size() < 3) || ((exprLst.size() < 2) && (exprLst[0] != "!"))) {
+            throw invalid_argument("invalid expression");
+        }
+    }
+    // conditions and expressions should not end with an operator
+    if (isOperator(exprLst.back())) {
+        throw invalid_argument("invalid expression");
     }
 }
 

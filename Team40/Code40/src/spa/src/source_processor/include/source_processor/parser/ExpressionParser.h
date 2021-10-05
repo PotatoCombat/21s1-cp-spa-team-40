@@ -17,6 +17,7 @@ public:
     void parseExpression(vector<string> exprLst, Statement *stmt);
     void checkValidOperator(string curr, Statement *stmt);
     void checkValidBracket(string curr);
+    void checkValidExpression(vector<string> exprLst, Statement *stmt);
 
     bool isInteger(string input);
     bool isName(string input);
