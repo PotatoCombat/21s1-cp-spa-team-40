@@ -24,7 +24,10 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
         }
     }
     if (!brackets.empty()) {
-        throw invalid_argument("invalid expression, brackets do not match");
+        throw invalid_argument("invalid expression: brackets do not match");
+    }
+    if ((exprLst.size() < 3) || ((exprLst.size() < 2) && (exprLst[0] != "!"))) {
+        throw invalid_argument("invalid expression");
     }
 }
 
@@ -51,11 +54,11 @@ void ExpressionParser::checkValidBracket(string curr) {
         brackets.push(curr);
     } else if (curr == ")") {
         if (brackets.empty()) {
-            throw invalid_argument("invalid expression, brackets do not match");
+            throw invalid_argument("invalid expression: brackets do not match");
         } else if (brackets.top() == "(") {
             brackets.pop();
         } else {
-            throw invalid_argument("invalid expression, brackets do not match");
+            throw invalid_argument("invalid expression: brackets do not match");
         }
     }
 }
