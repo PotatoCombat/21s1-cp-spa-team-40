@@ -31,8 +31,8 @@ TEST_CASE("Result: equals - all the same - returns true") {
     result1.setValid(true);
     result2.setValid(true);
 
-    VALUE_TO_VALUES_MAP m{{"1", VALUE_SET{}}};
-    VALUE_TO_VALUES_MAP m1{{"1", VALUE_SET{}}};
+    map<VALUE, VALUE_SET> m{{"1", VALUE_SET{}}};
+    map<VALUE, VALUE_SET> m1{{"1", VALUE_SET{}}};
 
     result1.setResultList1(&testResultHelper.ref1, m1);
     result2.setResultList1(&testResultHelper.ref2, m);
@@ -56,7 +56,7 @@ TEST_CASE("Result: equals - different reference - returns false") {
     result1.setValid(true);
     result2.setValid(true);
 
-    VALUE_TO_VALUES_MAP m1{{"1", VALUE_SET{}}};
+    map<VALUE, VALUE_SET> m1{{"1", VALUE_SET{}}};
 
     result1.setResultList1(&testResultHelper.ref1, m1);
     result2.setResultList1(&testResultHelper.ref1, m1);
@@ -74,8 +74,8 @@ TEST_CASE("Result: equals - different resultList - returns false") {
     result1.setValid(true);
     result2.setValid(true);
 
-    VALUE_TO_VALUES_MAP v1{{"1", VALUE_SET{}}, {"3", VALUE_SET{"2"}}};
-    VALUE_TO_VALUES_MAP v2{{"1", VALUE_SET{}}, {"2", VALUE_SET{}}};
+    map<VALUE, VALUE_SET> v1{{"1", VALUE_SET{}}, {"3", VALUE_SET{"2"}}};
+    map<VALUE, VALUE_SET> v2{{"1", VALUE_SET{}}, {"2", VALUE_SET{}}};
 
     result1.setResultList2(&testResultHelper.ref1, v1);
     result2.setResultList2(&testResultHelper.ref1, v2);
