@@ -1,6 +1,7 @@
 #include "source_processor/parser/Parser.h"
 
-Program Parser::parseProgram(vector<Line> programLines, Program &program) {
+Program Parser::parseProgram(vector<Line> programLines) {
+    Program program;
     Procedure *currProc = nullptr;
     for (int i = 0; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
@@ -18,8 +19,8 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
             currProc = procParser.parseProcedure();
 
         } else if (isStmt(currContent)) {
-            Statement *stmt =
-                parseStatement(currContent, currIndex, programLines, i);
+            StatementParser stmtParser(currContent, currIndex, programLines, i);
+            Statement *stmt = stmtParser.parseStatement();
             currProc->addToStmtLst(stmt);
         }
     }
@@ -42,37 +43,10 @@ bool Parser::isStmt(vector<string> content) {
             isAssignStmt(content));
 }
 
-Statement *Parser::parseStatement(vector<string> content, int index,
-                                  vector<Line> programLines,
-                                  int &programIndex) {
-    StatementParser stmtParser(content);
-    if (stmtParser.isAssignStmt()) {
-        AssignStatementParser assignParser(content, index);
-        return assignParser.parseAssignStatement();
-    } else if (stmtParser.isReadStmt()) {
-        ReadStatementParser readParser(content, index);
-        return readParser.parseReadStatement();
-    } else if (stmtParser.isPrintStmt()) {
-        PrintStatementParser printParser(content, index);
-        return printParser.parsePrintStatement();
-    } else if (stmtParser.isCallStmt()) {
-        CallStatementParser callParser(content, index);
-        return callParser.parseCallStatement();
-    } else if (stmtParser.isWhileStmt()) {
-        WhileStatementParser whileParser(content, index, programLines);
-        return whileParser.parseWhileStatement(programIndex);
-    } else if (stmtParser.isIfStmt()) {
-        IfStatementParser ifParser(content, index, programLines);
-        return ifParser.parseIfStatement(programIndex);
-    } else {
-        throw invalid_argument("invalid statement type");
-    }
-}
-
 void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
     if (currProc != nullptr) {
         // stmtLst: stmt+
-        if (currProc->getStmtLst().size() == 0) {
+        if (currProc->getStmtLst().empty()) {
             throw invalid_argument("procedure should have at least one "
                                    "statement.");
         }
@@ -82,7 +56,7 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
 
 void Parser::checkValidProgram(Program program) {
     // program: procedure+
-    if (program.getProcLst().size() == 0) {
+    if (program.getProcLst().empty()) {
         throw invalid_argument("program should have at least one procedure.");
     }
 }
