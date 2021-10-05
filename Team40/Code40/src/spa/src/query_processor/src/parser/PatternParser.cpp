@@ -53,7 +53,7 @@ PatternClause *PatternParser::parseAssign(Reference *identity) {
         ref = new Reference(deT, refT, var);
     }
 
-    return new PatternClause(*identity, *ref, pattern);
+    return new PatternClause(*identity, *ref, pattern, true); // temp change to make build success
 }
 
 bool PatternParser::isAssignPattern(Reference *identity) {

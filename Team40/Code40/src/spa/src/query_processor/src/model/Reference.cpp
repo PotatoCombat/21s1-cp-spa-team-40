@@ -2,8 +2,12 @@
 
 const string Reference::WILDCARD = "_";
 
-Reference::Reference(DesignEntityType deType, ReferenceType refType, string value)
-    : value(value), deType(deType), refType(refType) {}
+Reference::Reference(DesignEntityType deType, ReferenceType refType, string value, ReferenceAttribute attr)
+    : value(value), deType(deType), refType(refType), attr(attr) {}
+
+Reference::Reference(DesignEntityType deType, ReferenceType refType,
+                     string value)
+    : Reference(deType, refType, value, ReferenceAttribute::NONE) {}
 
 string Reference::getValue() { return this->value; }
 
