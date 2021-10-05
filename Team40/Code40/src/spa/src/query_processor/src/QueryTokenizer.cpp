@@ -38,9 +38,10 @@ void QueryTokenizer::tokenizeDeclarations(string input,
             firstWhitespacePos, nextSemicolonPos - firstWhitespacePos));
 
         // add tuples to the vector
-        vector<string> syns = tokenizeDeclarationSynonym(synonyms);
+        vector<string> syns = tokenizeCommaSeparatedValues(synonyms);
         for (auto s : syns) {
-            decls.push_back(make_pair(type, s));
+            string validName = parseValidName(s);
+            decls.push_back(make_pair(type, validName));
         }
 
         // prepare for next iteration of while loop
@@ -48,33 +49,6 @@ void QueryTokenizer::tokenizeDeclarations(string input,
         nextSemicolonPos = input.find(SEMICOLON);
     }
     return;
-}
-
-/**
- * Tokenizes the synonyms part of a single declaration.
- * @param input The synonyms string (assumes at least one synonym).
- * @return Vector of synonym strings.
- */
-vector<string> QueryTokenizer::tokenizeDeclarationSynonym(string input) {
-    vector<string> syns;
-    string remaining = input;
-
-    size_t nextCommaPos = remaining.find(COMMA);
-    while (nextCommaPos != string::npos) {
-        string s = trimR(remaining.substr(0, nextCommaPos));
-        s = parseValidName(s);
-        syns.push_back(s);
-
-        remaining = trimL(remaining.substr(nextCommaPos + 1));
-        nextCommaPos = remaining.find(COMMA);
-    }
-
-    // last synonym with no comma behind
-    if (!remaining.empty()) {
-        string s = parseValidName(remaining);
-        syns.push_back(s);
-    }
-    return syns;
 }
 
 /**
@@ -95,17 +69,15 @@ vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remai
 
     string rest = trimL(input.substr(nextWhitespacePos + 1));
 
-    // TODO: Check if < first, if yes, send to tokenizeReturnTuple, else, process internally
-    // either BOOLEAN, synonym or synonym.attrName (note can have whitespace between synonym and attrName)
+    // Check if < first, if yes, send to tokenizeReturnTuple, else, process internally either
+    // BOOLEAN, synonym or synonym.attrName (note can have whitespace between synonym and attrName)
     
     size_t lCarrotPos = rest.find(L_CARROT);
 
     if (lCarrotPos != string::npos) {
         size_t rCarrotPos = rest.rfind(R_CARROT);
         string tuple = rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1));
-        // can just use the one for declarations since its just ,
-        // TODO: rename the method
-        vector<string> retStrings = tokenizeDeclarationSynonym(tuple);
+        vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
         remaining = trimL(input.substr(rCarrotPos + 1));
         return retStrings;
     }
@@ -314,7 +286,7 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
 
     periodPos = input.find(PERIOD, nextPos);
 
-    if (periodPos == string::npos) { // no .
+    if (periodPos == string::npos) { // no '.'
         // TODO: Handle "     name      "
         tempPos = findNextWhitespace(input, nextPos);
         temp = input.substr(nextPos, tempPos - nextPos);
@@ -331,23 +303,13 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
             startTokenPos = findNextToken(input, periodPos + 1);
             endTokenPos = findNextWhitespace(input, startTokenPos);
             token4 = input.substr(startTokenPos, endTokenPos - startTokenPos);
-        } else { // no .
+        } else { // no '.'
             // TODO: Handle "     name      "
             token3 = tempToken;
             token4 = "";
         }
         nextPos = endTokenPos;
     }
-
-    /*temp = getTokenBeforeX(input, EQUAL, nextPos, nextPos);
-    periodPos = temp.find(PERIOD);
-    if (periodPos == string::npos) {
-        token3 = temp;
-        token4 = "";
-    } else {
-        token3 = temp.substr(0, periodPos);
-        token4 = temp.substr(periodPos + 1);
-    }*/
 
     // remove whitespace within quotes of token1 and token3 if any!
     token1 = removeWhitespaceWithinQuotes(token1);
@@ -474,4 +436,31 @@ string QueryTokenizer::extractPatternString(string input) {
         return trim(input.substr(1, input.size() - 2));
     }
     return input;
+}
+
+
+/**
+ * Tokenizes the comma separated values.
+ * Used by both tuple tokenization and synonym declaration.
+ * @param input Comma separated values.
+ * @return Vector of synonym strings.
+ */
+vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
+    vector<string> syns;
+    string remaining = input;
+
+    size_t nextCommaPos = remaining.find(COMMA);
+    while (nextCommaPos != string::npos) {
+        string s = trimR(remaining.substr(0, nextCommaPos));
+        syns.push_back(s);
+
+        remaining = trimL(remaining.substr(nextCommaPos + 1));
+        nextCommaPos = remaining.find(COMMA);
+    }
+
+    // last synonym with no comma behind
+    if (!remaining.empty()) {
+        syns.push_back(remaining);
+    }
+    return syns;
 }

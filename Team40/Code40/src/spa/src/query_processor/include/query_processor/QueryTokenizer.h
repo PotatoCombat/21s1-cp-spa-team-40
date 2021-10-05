@@ -25,7 +25,6 @@ public:
                          vector<WithTuple> &withClauses);
 
 private:
-    vector<string> tokenizeDeclarationSynonym(string input);
     size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause);
     size_t tokenizePattern(string input, size_t startPos, PatTuple &clause);
     size_t tokenizeWith(string input, size_t startPos, WithTuple &clause);
@@ -40,6 +39,7 @@ private:
                            size_t &nextPos);
     string removeWhitespaceWithinQuotes(string input);
     string extractPatternString(string input);
+    vector<string> tokenizeCommaSeparatedValues(string input);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
     // ClauseTypeHelper clsHelper = ClauseTypeHelper();
