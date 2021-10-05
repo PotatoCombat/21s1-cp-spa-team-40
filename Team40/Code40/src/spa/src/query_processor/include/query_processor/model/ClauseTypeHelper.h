@@ -11,7 +11,6 @@ using namespace std;
 
 class ClauseTypeHelper {
 private:
-    map<ClauseType, string> typeToStringMap;
     map<string, ClauseType> stringToTypeMap;
 
     // only used to represent a wildcard/constant used in Clause 
@@ -23,10 +22,7 @@ public:
     ClauseTypeHelper();
 
     // get type from string
-    ClauseType getType(string val);
-
-    // get value from type
-    string getValue(ClauseType type);
+    ClauseType valueToClsType(string val);
 
     // get supposed deType from type for ref1 and ref2
     DesignEntityType chooseDeType1(ClauseType type);

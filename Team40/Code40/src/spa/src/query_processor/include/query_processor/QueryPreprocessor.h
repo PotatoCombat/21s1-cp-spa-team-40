@@ -19,5 +19,5 @@ private:
 
 public:
     QueryPreprocessor() = default;
-    void preprocessQuery(string input, Query &q);
+    bool preprocessQuery(string input, Query &q);
 };

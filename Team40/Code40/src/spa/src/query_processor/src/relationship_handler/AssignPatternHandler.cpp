@@ -1,6 +1,6 @@
 #include "query_processor/relationship_handler/AssignPatternHandler.h"
 
-Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
+Result AssignPatternHandler::eval() {
     Result result;
     Reference *assign = patternClause->getStmt();
     Reference *variable = patternClause->getVar();
@@ -12,7 +12,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
     if (pattern == "_") {
         Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
         ModifiesStmtHandler handler(&clause, pkb);
-        Result temp = handler.eval(ref1Index, ref2Index);
+        Result temp = handler.eval();
         // have to copy back because the Reference passed into clause is deleted
         // when this function finishes
         result.setValid(temp.isResultValid());
@@ -26,31 +26,29 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
 
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
-        VALUE_TO_POINTERS_MAP stmtResults;
+        map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
             pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
         for (auto stmt : stmts) {
-            stmtResults[to_string(stmt)] = POINTER_SET{};
+            stmtResults[to_string(stmt)] = VALUE_SET{};
         }
         result.setResultList1(assign, stmtResults);
         return result;
     }
 
     // SYNONYM SYNONYM, SYNONYM WILDCARD
-    VALUE_TO_POINTERS_MAP stmtResults;
-    VALUE_TO_POINTERS_MAP varResults;
+    map<VALUE, VALUE_SET> stmtResults;
+    map<VALUE, VALUE_SET> varResults;
     vector<int> assigns = pkb->getAllStmts(StatementType::ASSIGN).asVector();
     vector<string> vars = pkb->getAllVars().asVector();
 
     for (int assign : assigns) {
-        POINTER_SET related;
+        VALUE_SET related;
         bool valid = false;
         for (string var : vars) {
             if (pkb->assignMatchesPattern(assign, var, pattern)) {
                 valid = true;
-                if (variable->getRefType() == ReferenceType::SYNONYM) {
-                    related.insert(make_pair(ref2Index, var));
-                }
+                related.insert(var);
             }
         }
         if (valid) {
@@ -59,13 +57,13 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
     }
     
     for (string var : vars) {
-        POINTER_SET related;
+        VALUE_SET related;
         bool valid = false;
         for (int assignStmt : assigns) {
             if (pkb->assignMatchesPattern(assignStmt, var, pattern)) {
                 valid = true;
                 if (assign->getRefType() == ReferenceType::SYNONYM) {
-                    related.insert(make_pair(ref1Index, to_string(assignStmt)));
+                    related.insert(to_string(assignStmt));
                 }
             }
         }
