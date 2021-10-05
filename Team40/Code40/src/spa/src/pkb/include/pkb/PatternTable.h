@@ -14,8 +14,7 @@ class PatternTable {
 public:
     PatternTable();
 
-    void insertPatternAssign(
-        Statement *stmt); // Note: This will most likely be in Design Extractor
+    void insertPatternAssign(Statement *stmt);
     set<StmtIndex> getAssignsMatchingPattern(VarName varName, Pattern pattern);
     set<StmtIndex> getAssignsMatchingExactPattern(VarName varName,
                                                   Pattern pattern);
@@ -41,7 +40,7 @@ private:
         {"/", 2},
         {"%", 2},
 
-        // # symbol is an empty stack marker.is used in postfix method.
+        // # symbol is an empty stack marker that is used in postfix method.
         // It is placed in here so that the postfix method skips this symbol.
         {"#", 0},
     };
