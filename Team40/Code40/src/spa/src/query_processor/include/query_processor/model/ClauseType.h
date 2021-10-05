@@ -14,5 +14,6 @@ enum class ClauseType {
     NEXT,
     NEXT_T,
     AFFECTS,
-    AFFECTS_T
+    AFFECTS_T,
+    WITH,
 };
