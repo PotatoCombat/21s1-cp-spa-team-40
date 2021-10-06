@@ -12,6 +12,7 @@ typedef int StmtIndex;
 constexpr int InvalidIndex = -1;
 
 typedef string Pattern;
+typedef vector<string> ExpressionList;
 
 template<class T> struct Comparator {
     bool operator()(const T* lhs, const T* rhs) const {
