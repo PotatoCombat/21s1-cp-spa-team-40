@@ -9,6 +9,7 @@
 #include "query_processor/model/PatternClause.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/ModifiesStmtHandler.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 
 using namespace std;
 
@@ -21,5 +22,5 @@ private:
 public:
     AssignPatternHandler(PatternClause *patternClause, PKB *pkb)
         : patternClause(patternClause), pkb(pkb) {}
-    Result eval();
+    Result eval(int ref1Index, int ref2Index);
 };

@@ -128,5 +128,22 @@ TEST_CASE("QueryEvaluator: multiple matching elements between results - "
 
     QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
     vector<string> actual = evaluator.evaluateQuery(query);
-    REQUIRE(actual == vector<string>{"2", "3", "4", "6", "9", "10"});
+    REQUIRE(actual == vector<string>{"10", "2", "3", "4", "6", "9"});
+}
+
+TEST_CASE("QueryEvaluator: intersection not return element") {
+    Query query;
+    Reference s(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference s1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
+    Reference c(DesignEntityType::STMT, ReferenceType::CONSTANT, "9");
+    Clause follows(ClauseType::FOLLOWS, s, s1);
+    Clause follows2(ClauseType::FOLLOWS, s1, c);
+    
+    query.setReturnReference(&s);
+    query.addClause(&follows);
+    query.addClause(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"5"});
 }

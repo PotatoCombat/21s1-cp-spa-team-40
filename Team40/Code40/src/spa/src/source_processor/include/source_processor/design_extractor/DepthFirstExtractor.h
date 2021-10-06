@@ -5,6 +5,7 @@
 #include "common/model/Statement.h"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/ExtractionContext.h"
+#include <set>
 
 class DepthFirstExtractor {
 private:

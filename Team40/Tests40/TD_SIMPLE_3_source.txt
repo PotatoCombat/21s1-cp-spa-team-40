@@ -1,0 +1,28 @@
+procedure main {
+  read procedure;
+  while ((if != print) && ((while == read) && (!(procedure <= while) ))) {
+       call = else / assign * main + print % 10000;
+  }
+  if (while != if) then {
+    main = call + stmt;
+  } else {
+    main = read % print + var * stmt;
+    while (isValid == true) {
+        if (isNotValid == isNotValid) then {
+          read main;
+          print main;
+          main = main + 10;
+        } else {
+          main = main + 1;  
+        }
+      }
+  }
+  ans = 0;
+  read assign;
+  while (assign > 0) {
+    ans = ans + assign % 10;
+    assign = assign / 10;
+  }
+  print procedure;
+  print ans;
+}

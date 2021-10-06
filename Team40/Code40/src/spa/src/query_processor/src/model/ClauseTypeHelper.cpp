@@ -19,7 +19,13 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {"Modifies", ClauseType::MODIFIES_S},
         {"Modifies*", ClauseType::MODIFIES_P}, // workaround differentiating S and P
         {"Uses", ClauseType::USES_S},
-        {"Uses*", ClauseType::USES_P} // workaround differentiating S and P
+        {"Uses*", ClauseType::USES_P}, // workaround differentiating S and P
+        {"Calls", ClauseType::CALLS},
+        {"Calls*", ClauseType::CALLS_T},
+        {"Next", ClauseType::NEXT},
+        {"Next*", ClauseType::NEXT_T},
+        {"Affects", ClauseType::AFFECTS},
+        {"Affects*", ClauseType::AFFECTS_T}
     };
     deTypeMap1 = {
         {ClauseType::FOLLOWS, DesignEntityType::STMT},
@@ -29,7 +35,13 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {ClauseType::MODIFIES_P, DesignEntityType::PROCEDURE},
         {ClauseType::MODIFIES_S, DesignEntityType::STMT},
         {ClauseType::USES_P, DesignEntityType::PROCEDURE},
-        {ClauseType::USES_S, DesignEntityType::STMT}
+        {ClauseType::USES_S, DesignEntityType::STMT},
+        {ClauseType::CALLS, DesignEntityType::PROCEDURE},
+        {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
+        {ClauseType::NEXT, DesignEntityType::STMT},
+        {ClauseType::NEXT_T, DesignEntityType::STMT},
+        {ClauseType::AFFECTS, DesignEntityType::STMT},
+        {ClauseType::AFFECTS_T, DesignEntityType::STMT}
     };
     deTypeMap2 = {
         {ClauseType::FOLLOWS, DesignEntityType::STMT},
@@ -39,7 +51,13 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {ClauseType::MODIFIES_P, DesignEntityType::VARIABLE},
         {ClauseType::MODIFIES_S, DesignEntityType::VARIABLE},
         {ClauseType::USES_P, DesignEntityType::VARIABLE},
-        {ClauseType::USES_S, DesignEntityType::VARIABLE}
+        {ClauseType::USES_S, DesignEntityType::VARIABLE},
+        {ClauseType::CALLS, DesignEntityType::PROCEDURE},
+        {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
+        {ClauseType::NEXT, DesignEntityType::STMT},
+        {ClauseType::NEXT_T, DesignEntityType::STMT},
+        {ClauseType::AFFECTS, DesignEntityType::STMT},
+        {ClauseType::AFFECTS_T, DesignEntityType::STMT}
     };
 }
 

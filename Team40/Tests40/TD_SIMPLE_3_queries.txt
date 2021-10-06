@@ -1,0 +1,825 @@
+1 - variable no clause
+variable     v;
+Select v
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+2 - constant no clause
+constant  c;
+Select c
+10000, 10, 1, 0
+5000
+3 - assign no clause
+assign     a;
+Select a
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+4 - while no clause
+while w;
+Select w
+2, 7, 15
+5000
+5 - if no clause
+if if;
+Select if
+4, 8
+5000
+6 - 1 suchthat - 1 unknown - include main var - F - True
+if ifs;
+Select ifs such that Follows     (2, ifs)
+4
+5000
+7 - 1 suchthat - 1 unknown - include main var - F - False
+if ifs;
+Select ifs such that Follows     (8, ifs)
+
+5000
+8 - 1 suchthat - 1 unknown - include main var - F* - True
+if    if;
+Select if    such that     Follows*     (2, if)
+4
+5000
+9 - 1 suchthat - 1 unknown - include main var - F* - False
+while   if;
+Select    if  such that     Follows*     (15, if)
+
+5000
+10 - 1 suchthat - 1 unknown - include main var - P - True
+read    read;
+Select read   such that Parent     (8, read)
+9
+5000
+11 - 1 suchthat - 1 unknown - include main var - P - False
+assign  a;
+Select a such that Parent     (9, a)
+
+5000
+12 - 1 suchthat - 1 unknown - include main var - P* - True
+if    if     ;
+Select if    such that     Parent*     (4, if)
+8
+5000
+13 - 1 suchthat - 1 unknown - include main var - P* - False
+print  pn;
+Select    pn  such that     Parent*     (pn, 17)
+
+5000
+14 - 1 suchthat - 1 unknown - exclude main var - F - True
+read   r;  print p;
+   Select r such that Follows(p,         11)
+1, 9, 14
+5000
+15 - 1 suchthat - 1 unknown - exclude main var - F - False
+assign     a; 
+if ifs; Select ifs   such that  Follows(11, a)
+
+5000
+16 - 1 suchthat - 1 unknown - exclude main var - F* - True
+variable   v;
+    while select;  Select v such that Follows*(6, select)
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+17 - 1 suchthat - 1 unknown - exclude main var - F* - False
+constant    c123;  stmt s;
+Select c123  such that Follows*(19,    s)
+
+5000
+18 - 1 suchthat - 1 unknown - exclude main var - P - True
+procedure   p1;  while  wh;
+   			Select p1    such that Parent( wh  ,   3)
+main
+5000
+19 - 1 suchthat - 1 unknown - exclude main var - P - False
+assign     a; 
+if   ifs; Select   a   such that  Parent(ifs, 15)
+
+5000
+20 - 1 suchthat - 1 unknown - exclude main var - P* - True
+constant  cc;
+    if select;  Select cc such that Parent*(select, 9)
+10000, 10, 1, 0
+5000
+21 - 1 suchthat - 1 unknown - exclude main var - P* - False
+stmt      		 s;  read  r;
+Select r  such that Parent*(s,    18)
+
+5000
+22 - 1 suchthat - 2 unknowns - include main var - F - True
+assign  p1, p2;
+Select p1  such that Follows   (p1, p2)
+16
+5000
+23 - 1 suchthat - 2 unknowns - include main var - F - False
+while   w1;
+while w2; Select w2 such that Follows   (w1, w2)
+
+5000
+24 - 1 suchthat - 2 unknowns - include main var - F* - True
+if if; while wh;
+Select if such that Follows*     (if,   wh)
+4
+5000
+25 - 1 suchthat - 2 unknowns - include main var - F* - False
+if    stmt,  stmt2;
+Select stmt such that Follows*    (stmt2, stmt)
+
+5000
+26 - 1 suchthat - 2 unknowns - include main var - P - True
+if while; while if;
+Select while such that Parent   (while, if )
+4
+5000
+27 - 1 suchthat - 2 unknowns - include main var - P - False
+read     iff; 		while w;
+Select iff such that Parent   (   w   ,  iff )
+
+5000
+28 - 1 suchthat - 2 unknowns - include main var - P* - True
+print  pn; 
+		if ifs; Select pn such that    Parent*   (ifs,   pn )
+10
+5000
+29 - 1 suchthat - 2 unknowns - include main var - P* - False
+read  r123;  assign   a123;
+	Select r123 such that   Parent*(a123,  r123)
+
+5000
+30 - 1 suchthat - 2 unknowns - exclude main var - F - True
+variable v1;  read  s1;  	while s2;
+Select v1 such that Follows		(s1, s2)
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+31 - 1 suchthat - 2 unknowns - exclude main var - F - False
+print print; 		stmt s;
+assign select; Select s such that Follows   (select,  print  )
+
+5000
+32 - 1 suchthat - 2 unknowns - exclude main var - F* - True
+print print; 		stmt s;
+assign select; Select s such that Follows*   (print,  select  )
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+33 - 1 suchthat - 2 unknowns - exclude main var - F* - False
+read r; while wh; print pn;
+Select r such that Follows* (pn, wh)
+
+5000
+34 - 1 suchthat - 2 unknowns - exclude main var - P - True
+variable select; if while; while if;
+Select select such that Parent   (while, if )
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+35 - 1 suchthat - 2 unknowns - exclude main var - P - False
+if if; while while; print pn;
+Select if such that Parent(wh,pn)
+
+5000
+36 - 1 suchthat - 2 unknowns - exclude main var - P* - True
+read    r; 		stmt s;
+if ifs; Select s such that Parent*   (ifs,   r  )
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+37 - 1 suchthat - 2 unknowns - exclude main var - P* - False
+if     iff; 		while w, w2;
+ Select iff such that Parent*   (w,  w2  )
+
+5000
+38 - 1 pattern - 1 unknown - include main var - True
+assign a;
+Select a pattern a(_,   _"0"  _	)
+13
+5000
+39 - 1 pattern - 1 unknown - include main var - False
+assign assign;
+	Select assign pattern assign    ( "procedure", _   )
+
+5000
+40 - 1 pattern - 1 unknown - exclude main var - True
+variable var; assign a1;
+Select var pattern   a1  ( _, _"call"_ )
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+41 - 1 pattern - 1 unknown - exclude main var - False
+variable var; assign a1;
+Select var pattern   a1  ( _, _"i"  _)
+
+5000
+42 - 1 pattern - 2 unknowns - include main var - True
+assign select;
+Select select pattern 	select 	(_,    _ )
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+43 - 1 pattern - 2 unknowns - exclude main var - True
+constant c; 
+assign a; Select c pattern a(_,_)
+10000, 10, 1, 0
+5000
+44 - 1 pattern - subexpression - include main var - True
+variable var;
+assign as;  	Select var 		pattern as(var, _ "main"  _)
+call, main
+5000
+45 - 1 pattern - subexpression - include main var - False
+assign a;
+Select a pattern   a ("if",  _  " print   " _)
+
+5000
+46 - 1 pattern - subexpression - exclude main var - True
+assign a1, a2;
+Select a1 pattern a2(_ ,_"10000"_)
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+47 - 1 pattern - subexpression - exclude main var - False
+assign a1; read r;
+Select r pattern a1(_ ,_"isInvalid"_)
+
+5000
+48 - 1 suchthat - 1 unknown - include main var [M] [True]
+variable v;
+Select v such that Modifies(16, v)
+ans
+5000
+49 - 1 suchthat - 1 unknown - include main var [M] [False]
+variable v;
+Select v such that Modifies(18, v)
+
+5000
+50 - 1 suchthat - 1 unknown - include main var [U] [True]
+variable v;
+Select v such that Uses(16, v)
+assign, ans
+5000
+51 - 1 suchthat - 1 unknown - include main var [U] [False]
+variable v;
+Select v such that Uses(1, v)
+
+5000
+52 - 1 suchthat - 1 unknown - exclude main var [M] [True]
+assign a; variable v;
+Select a such that Modifies(3, v)
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+53 - 1 suchthat - 1 unknown - exclude main var [M] [False]
+assign a; variable v;
+Select a such that Modifies    (18, v)
+
+5000
+54 - 1 suchthat - 1 unknown - exclude main var [U] [True]
+assign a; variable v;
+Select v such that      Uses(a, "else")
+procedure, if, print, while, read, call, else, assign, main, stmt, var, isValid, true, isNotValid, ans
+5000
+55 - 1 suchthat - 1 unknown - exclude main var [U] [False]
+assign a; variable v;
+Select a such that Uses(15, "hypotenuseSquare")
+
+5000
+56 - 1 suchthat - 2 unknowns - include main var [M] [True]
+assign a; variable v;
+Select a such that Modifies(a, v)
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+57 - 1 suchthat - 2 unknowns - include main var [M] [False]
+print p; variable v;
+Select p such that Modifies(p, v)
+
+5000
+58 - 1 suchthat - 2 unknowns - include main var [U] [True]
+assign a; variable v;
+Select a such that Uses(a, v)
+3, 5, 6, 11, 12, 16, 17
+5000
+59 - 1 suchthat - 2 unknowns - include main var [U] [False]
+read r; variable v;
+Select r such that Uses(r, v)
+
+5000
+60 - 1 suchthat - 2 unknowns - exclude main var [M] [True]
+assign a; variable v; stmt s;
+Select a such that Modifies(s, v)
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+61 - 1 suchthat - 2 unknowns - exclude main var [M] [False]
+assign a; variable v; print p;
+Select v such that Modifies(p, v)
+
+5000
+62 - 1 suchthat - 2 unknowns - exclude main var [U] [True]
+assign a; variable v; stmt s;
+Select s such that Uses(a, v)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+63 - 1 suchthat - 2 unknowns - exclude main var [U] [False]
+assign a; variable v; read r;
+Select a such that Uses(r, v)
+
+5000
+64 - 2 1-unknown clauses - 0 common synonym - include main [True]
+stmt s; assign a;
+Select s such that Follows(s, 17) pattern a(_, _)
+16
+5000
+65 - 2 1-unknown clauses - 0 common synonym - include main [False]
+stmt s; assign a;
+Select s such that Follows(5, s) pattern a(_, _"then"  _)
+
+5000
+66 - 2 1-unknown clauses - 0 common synonym - exclude main [True]
+stmt s1; stmt s2; assign a;
+Select s1 such that Follows*(4, s2) pattern a(_,   _"  10"_)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+67 - 2 1-unknown clauses - 0 common synonym - exclude main [False]
+stmt s1; stmt s2; assign a;
+Select s1 such that Follows*(4, s2) pattern a("0", _"0"_)
+
+5000
+68 - 2 1-unknown clauses - 1 common synonym - include main [True]
+assign a;
+Select a such that Modifies(a, "main") pattern a(_, _)
+5, 6, 11, 12
+5000
+69 - 2 1-unknown clauses - 1 common synonym - include main [False]
+assign a;
+Select a such that Modifies(a, "print") pattern a(_, _)
+
+5000
+70 - 2 1-unknown clauses - 1 common synonym - exclude main [True]
+assign a; stmt s;
+Select s such that Modifies(a, "main") pattern a(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+71 - 2 1-unknown clauses - 1 common synonym - exclude main [False]
+assign a; print p;
+Select p such that Modifies(a, "print") pattern a(_, _)
+
+5000
+72 - 1-unknown clause + 2-unknowns clause - 0 common synonym - include main [True]
+stmt s; assign a; variable v;
+Select a such that Modifies(s, v) pattern a(_, _"10"  _)
+11, 16, 17
+5000
+73 - 1-unknown clause + 2-unknowns clause - 0 common synonym - include main [False]
+stmt s; assign a; variable v;
+Select a such that Modifies(s, v) pattern a(_, _"then"_)
+
+5000
+74 - 1-unknown clause + 2-unkowns clause - 0 common synonym - exclude main [True]
+stmt s; assign a; variable v; print p;
+Select p such that Modifies(s, v) pattern a(_, _  " 10 "_ ) 
+10, 18, 19
+5000
+75 - 1-unknown clause + 2-unkowns clause - 0 common synonym - exclude main [False]
+stmt s; assign a; variable v; print p
+Select s such that Modifies(p, v) pattern a(_, _"0"  _)
+
+5000
+76 - 1-unknown clause + 2-unknowns clause - 1 common synonym - include main [True]
+stmt s; assign a; variable v; print p;
+Select a such that Uses(a, v) pattern a(_, _"10"  _)
+11, 16, 17
+5000
+77 - 1-unknown clause + 2-unknowns clause - 1 common synonym - include main [False]
+stmt s; assign a; variable v; print p;
+Select a such that Uses(a, v) pattern a(_, _"0" _)
+
+5000
+78 - 1-unknown clause + 2-unkowns clause - 1 common synonym - exclude main [True]
+stmt s; assign a; variable v; print p;
+Select p such that Uses(a, v) pattern a(_, _ "10" _)
+10, 18, 19
+5000
+79 - 1-unknown clause + 2-unkowns clause - 1 common synonym - exclude main [False]
+stmt s; assign a; variable v; print p;
+Select p such that Uses(a, v) pattern a(_, _   "0" _)
+
+5000
+80 - 2 2-unknown clauses - 0 common synonym - include main [True]
+stmt s; assign a; variable v1; variable v2; print p;
+Select s such that Uses(s, v2) pattern a(v1, _)
+2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 15, 16, 17, 18, 19
+5000
+81 - 2 2-unknown clauses - 0 common synonym - include main [False]
+stmt s; assign a; variable v1; variable v2; print p;
+Select s such that Uses(s, v2) pattern a(v1, _  "then"_)
+
+5000
+82 - 2 2-unknown clauses - 0 common synonym - exclude main [True]
+stmt s; assign a1; assign a2; variable v1; variable v2; print p;
+Select s such that Uses(a1, v2) pattern a2(v1, _"10" _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+83 - 2 2-unknown clauses - 0 common synonym - exclude main [False]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select s such that Uses(r, v2) pattern a(v1, _"10"_)
+
+5000
+84 - 2 2-unknown clauses - 1 common synonym - include main [True]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select a such that Uses(a, v2) pattern a(v1, _"10"_)
+11, 16, 17
+5000
+85 - 2 2-unknown clauses - 1 common synonym - include main [False]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select r such that Uses(r, v2) pattern a(v2, _"10"_)
+
+5000
+86 - 2 2-unknown clauses - 1 common synonym - exclude main [True]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select r such that Uses(a, v2) pattern a(v1, _"10"_)
+1, 9, 14
+5000
+87 - 2 2-unknown clauses - 1 common synonym - exclude main [False]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select r such that Uses(a, v2) pattern a(v1, _"0"_)
+
+5000
+88 - 2 2-unknown clauses - 2 common synonyms - include main [True]
+stmt s; assign a; read r; variable v; print p;
+Select a such that Uses(a, v) pattern a(v, _"10"_)
+11, 16, 17
+5000
+89 - 2 2-unknown clauses - 2 common synonyms - include main [False]
+stmt s; assign a; read r; variable v; print p;
+Select v such that Uses(a, v) pattern a(v, _"0"  _)
+
+5000
+90 - 2 2-unknown clauses - 2 common synonyms - exclude main [True]
+stmt s; assign a; read r; variable v; print p;
+Select r such that Uses(a, v) pattern a(v, _"10" _)
+1, 9, 14
+5000
+91 - 2 2-unknown clauses - 2 common synonyms - exclude main [False]
+stmt s; assign a; read r; variable v1; variable v2; print p;
+Select r such that Uses(a, v) pattern a(v, _"0"_)
+
+5000
+92 - Modifies on stmt that is not print
+variable v; 
+Select v such that Modifies(15, v)
+assign, ans
+5000
+93 - Modifies on stmt that is not print, unknown synonym for stmt
+while w; variable v;
+Select w such that Modifes(w, "else")
+
+5000
+94 - Modifies that has first argument as unknown
+stmt s;
+Select s such that Modifies(s, "assign")
+14, 15, 17
+5000
+95 - Uses on stmt that is not read
+variable v;
+Select v such that Uses(5, v)
+call, stmt
+5000
+96 - Uses on stmt that is not read, unknown synonym for stmt
+if if; 
+Select if such that Uses(if, "ans")
+
+5000
+97 - Uses that has first argument as unknown
+assign a;
+Select a such that Uses(a, 1)
+
+5000
+98 - Pattern should not work on stmt that is not of type assign - general
+stmt s;
+Select s pattern s (_, _)
+
+5000
+99 - Pattern should not work on stmt that is not of type assign - specific
+read r;
+Select r pattern r (_, _"0"_)
+
+5000
+100 - Pattern clause rhs argument should not allow synonym
+assign a; variable v;
+Select a pattern a(_, v)
+
+5000
+101 - Finding variables that are both used and modified - 1
+variable v; assign a;
+Select v pattern a(v, _) such that Uses(a, v)
+assign, main, ans
+5000
+102 - Finding variables that are both used and modified - 2
+variable var; assign a;
+Select a pattern a(var, _) such that Uses(a, var)
+11, 12, 16, 17
+5000
+103 - Pattern clause rhs argument is empty, should not be allowed
+assign a; variable var;
+Select a pattern a(var, _""_)
+
+5000
+104 - Pattern clause rhs argument is whitespace string, should not be allowed
+assign a; variable var;
+Select a pattern a(var, _" "_)
+
+5000
+105 - Pattern clause rhs argument is empty brackets, should not be allowed
+assign a; variable var;
+Select a pattern a(var, _"( )"_)
+
+5000
+106 - Pattern clause rhs argument is mismatched brackets, should not be allowed
+assign a; variable var;
+Select a pattern a(var, _"( var"_)
+
+5000
+107 - Incorrect such that and pattern clause
+assign pattern; 
+Select pattern such that pattern pattern(_, _"assign"_)
+
+5000
+108 - Minor typos should be detected - such that Modifies
+read p; variable v;
+Select p such that Modifes(p, v)
+
+5000
+109 - Minor typos should be detected - such that Uses
+print r; variable v;
+Select r such that Use(r, v)
+
+5000
+110 - Minor typos should be detected - such that Parent - 1
+print p; variable v;
+Select p such that Paret(p, v)
+
+5000
+111 - Minor typos should be detected - such that Parent - 2
+while w; variable v;
+Select v such that Paret(w, v)
+
+5000
+112 - Minor typos should be detected - such that Follows
+stmt s; variable v;
+Select s such that Follws(p, v)
+
+5000
+113 - Ensure postfix containment gives false for 'a' in 'var', etc.
+assign a;
+Select a pattern a (_, _"a"_)
+
+5000
+114 - 2 clause query with two overlapping synonyms - 1
+while s1; assign s2; variable v;
+Select v such that Parent(s1, s2) pattern s2(v, _"main"_)
+call
+5000
+115 - 2 clause query with two overlapping synonyms - 2
+while s1; assign s2; variable v;
+Select v such that Parent*(s1, s2) pattern s2(v, _"main"_)
+call, main
+5000
+116 - 2 clause query with one overlapping synonym
+while s1; assign s2; variable v;
+Select s2 such that Parent*(s1, s2) pattern s2(v, _"main"_)
+3, 11, 12
+5000
+117 - Pattern clause rhs argument is incomplete partial match, should not be allowed
+assign a;
+Select a pattern a(_, _"10")
+
+5000
+118 - Pattern clause allows lhs argument to be a synonym - 1
+assign a; variable v;
+Select a pattern a(v, _)
+3, 5, 6, 11, 12, 13, 16, 17
+5000
+119 - Pattern clause does not allow lhs argument to be a synonym that is not a variable - 1
+assign a; stmt s;
+Select s pattern a(s, _)
+
+5000
+120 - Pattern clause does not allow lhs argument to be a synonym that is not a variable - 2
+assign a; constant c;
+Select s pattern a(c, _)
+
+5000
+121 - Pattern clause allows lhs argument to be a synonym - 2
+assign a; variable v;
+Select a pattern a(v, _"main"_)
+3, 11, 12
+5000
+122 - Pattern clause allows lhs argument to be a synonym - 3
+assign a; variable v;
+Select v pattern a(v, _"main"_)
+call, main
+5000
+123 - 2 clause query with two overlapping synonyms - 1 - Follows*
+read s1; assign s2; variable v;
+Select v such that Follows*(s1, s2) pattern s2(v, _"main"_)
+main
+5000
+124 - 2 clause query with two overlapping synonyms - 2 - Follows
+print s1; assign s2; variable v;
+Select v such that Follows(s1, s2) pattern s2(v, _"main"_)
+main
+5000
+125 - 2 clause query with one overlapping synonym - 1 - Follows*
+read s1; assign s2; variable v;
+Select s2 such that Follows*(s1, s2) pattern s2(v, _"main"_)
+11
+5000
+126 - 2 clause query with one overlapping synonym - 1 - Follows*
+read s1; assign s2; variable v;
+Select s1 such that Follows*(s1, s2) pattern s2(v, _"main"_)
+9
+5000
+127 - 2 clause query with one overlapping synonym - 1 - Follows
+print s1; assign s2; variable v;
+Select s2 such that Follows(s1, s2) pattern s2(v, _"main"_)
+11
+5000
+128 - 2 clause query with one overlapping synonym - 1 - Follows
+print s1; assign s2; variable v;
+Select s1 such that Follows(s1, s2) pattern s2(v, _"main"_)
+10
+5000
+129 - 2 clause query with two overlapping synonyms order switched around - Follows*
+read s1; assign s2; variable v;
+Select v pattern s2(v, _"main"_) such that Follows*(s1, s2)
+main
+5000
+130 - 2 clause query with one overlapping synonym - 1 - Uses
+while s1; assign s2; variable v;
+Select v such that Uses(s1, v) pattern s2(v, _"main"_)
+main
+5000
+131 - 2 clause query with one overlapping synonym - 2 - Uses
+if s1; assign s2; variable v;
+Select v such that Uses(s1, v) pattern s2(v, _"main"_)
+call, main
+5000
+132 - 2 clause query with two overlapping synonyms - Uses
+assign s2; variable v;
+Select v such that Uses(s2, v) pattern s2(v, _"main"_)
+main
+5000
+133 - 2 clause query with one overlapping synonym - 1 - Modifies
+while s1; assign s2; variable v;
+Select v such that Modifies(s1, v) pattern s2(v, _"main"_)
+call, main
+5000
+134 - 2 clause query with one overlapping synonym - 2 - Modifies
+if s1; assign s2; variable v;
+Select v such that Modifies(s1, v) pattern s2(v, _"main"_)
+main
+5000
+135 - Modifies lhs should be a variable only
+stmt s1, s2;
+Select s1 such that Modifies(s1, s2)
+
+5000
+136 - Uses lhs should be a variable only
+stmt s1, s2;
+Select s1 such that Uses(s1, s2)
+
+5000
+137 - Parent lhs should be statements only
+variable v1, v2; stmt s;
+Select v1 such that Parent(s, v1)
+
+5000
+138 - Parent* lhs should be statements only
+variable v1, v2; stmt s;
+Select v1 such that Parent*(s, v1)
+
+5000
+139 - Follows lhs should be statements only
+variable v1, v2; stmt s;
+Select v1 such that Follows(s, v1)
+
+5000
+140 - Follows* lhs should be statements only
+variable v1, v2; stmt s;
+Select v1 such that Follows*(s, v1)
+
+5000
+141 - Modifies rhs should be statements only
+variable v1, v2;
+Select v1 such that Modifies(v1, v2)
+
+5000
+142 - Uses rhs should be stataments only
+variable v1, v2;
+Select v1 such that Uses(v1, v2)
+
+5000
+143 - Parent rhs should be statements only
+stmt s1, s2; variable v;
+Select s1 such that Parent(v, s1)
+
+5000
+144 - Parent* rhs should be statements only
+stmt s1, s2; variable v;
+Select s1 such that Parent*(v, s1)
+
+5000
+145 - Follows rhs should be statements only
+stmt s1, s2; variable v;
+Select s1 such that Follows(v, s1)
+
+5000
+146 - Follows* rhs should be statements only
+stmt s1, s2; variable v;
+Select s1 such that Follows*(v, s1)
+
+5000
+147 - Pattern clause rhs should be a string type only
+assign a; variable v;
+Select a such that a(_,v)
+
+5000
+148 - procedure no clause
+procedure    procedure;
+Select procedure
+main
+5000
+149 - read no clause
+read 	r 		 ;
+Select 		r
+1, 9, 14
+5000
+150 - print no clause
+print p;
+Select p
+10, 18, 19
+5000
+151 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections
+variable v; print p; assign a; 
+Select p such that Follows(p, a) pattern a(v,_)
+10
+5000
+152 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections
+variable v; print p; assign a; 
+Select v such that Follows(p, a) pattern a(v,_)
+main
+5000
+153 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections
+variable v; print p; assign a; 
+Select a such that Follows(p, a) pattern a(v,_)
+11
+5000
+154 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections
+variable v; print p; assign a; stmt s;
+Select s such that Follows(p, a) pattern a(v,_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+5000
+155 - Follows (p, a) pattern a(v,_) - return empty as pattern false
+variable v; print p; assign a; stmt s;
+Select s such that Follows(p, a) pattern a(v,_"nonexistent"_)
+none
+5000
+156 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections, pattern first
+variable v; print p; assign a; 
+Select p pattern a(v,_) such that Follows(p, a) 
+10
+5000
+157 - Follows (r, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections, pattern first
+variable v; read r; assign a; 
+Select r pattern a(v,_) such that Follows*(r, a) 
+1, 9
+5000
+158 - Follows (r, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections, pattern first
+variable v; stmt s; assign a; 
+Select s pattern a(v,_) such that  Follows*(s, a) 
+1,2, 4, 16, 9, 10
+5000
+159 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections, pattern first
+variable v; print p; assign a; 
+Select v pattern a(v,_) such that Follows(p, a) 
+main
+5000
+161 - Follows (p, a) pattern a(v,_) - common assignment on rhs of s.t. clause , vary selections, pattern first
+variable v; print p; assign a; 
+Select a pattern a(v,_) such that  Follows(p, a) 
+11
+5000
+162 - Follows (a, s) pattern a(v,_) - common assignment on lhs of s.t. clause , vary selections
+variable v; stmt s; assign a; 
+Select s such that Follows(a, s)  pattern a(v,_)
+7, 14, 17
+5000
+163 - Follows (a, s) pattern a(v,_) - common assignment on lhs of s.t. clause , vary selections
+variable v; stmt s; assign a; 
+Select v such that Follows(a, s) pattern a(v,_)
+ans, main
+5000
+164 - Follows (a, s) pattern a(v,_) - common assignment on lhs of s.t. clause , vary selections
+variable v; stmt s; assign a; constant c;
+Select c such that Follows(a, s) pattern a(v,_)
+0, 1, 10, 10000
+5000
+165 - Follows (a, s) pattern a(v,_) - common assignment on lhs of s.t. clause , vary selections
+variable v; stmt s; assign a; constant c;
+Select c such that Follows(a, s) pattern a(v,_"nonexistent"_)
+none
+5000
+166 - Follows (a, s) pattern a(v,_) - common assignment on lhs of s.t. clause , vary selections
+variable v; stmt s; assign a; constant c;
+Select c such that Follows(a, s) pattern a(v,_"assign"_)
+0, 1, 10, 10000
+5000

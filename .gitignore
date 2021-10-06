@@ -348,6 +348,7 @@ bld/
 #wwwroot/
 
 # Visual Studio 2017 auto generated files
+**/**/build_win/
 Generated\ Files/
 
 # MSTest test Results

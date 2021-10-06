@@ -25,7 +25,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source has follows") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -40,7 +40,7 @@ TEST_CASE(
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
                            &TestFollowsHandler::pkbStubNoFollows);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -53,7 +53,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB does not return -1") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -66,7 +66,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB returns -1") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "3");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -80,7 +80,7 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -94,7 +94,7 @@ TEST_CASE("FollowsHandler: eval - CONSTANT WILDCARD - no stmt following "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -108,7 +108,7 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -122,7 +122,7 @@ TEST_CASE("FollowsHandler: eval - WILDCARD CONSTANT - no stmt preceding "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, -1);
 
     REQUIRE(expectedResult.equals(actualResult));
 }
@@ -133,11 +133,11 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{"1"};
+    VALUE_TO_POINTERS_MAP expectedList1{{"1", POINTER_SET{}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -149,11 +149,11 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -165,11 +165,11 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList2{"9"};
+    VALUE_TO_POINTERS_MAP expectedList2{{"9", POINTER_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -181,11 +181,11 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, 1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList2{};
+    VALUE_TO_POINTERS_MAP expectedList2{};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -197,11 +197,14 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{"1", "2", "3", "4", "5", "6", "9", "10"};
+    VALUE_TO_POINTERS_MAP expectedList1{
+        {"1", POINTER_SET{}}, {"10", POINTER_SET{}}, {"2", POINTER_SET{}},
+        {"3", POINTER_SET{}}, {"4", POINTER_SET{}},  {"5", POINTER_SET{}},
+        {"6", POINTER_SET{}}, {"9", POINTER_SET{}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -214,11 +217,11 @@ TEST_CASE(
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
                            &TestFollowsHandler::pkbStubNoFollows);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(1, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -230,11 +233,14 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, 0);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList2{"2", "3", "4", "12", "6", "9", "10", "11"};
+    VALUE_TO_POINTERS_MAP expectedList2{
+        {"10", POINTER_SET{}}, {"11", POINTER_SET{}}, {"12", POINTER_SET{}},
+        {"2", POINTER_SET{}},  {"3", POINTER_SET{}},  {"4", POINTER_SET{}},
+        {"6", POINTER_SET{}},  {"9", POINTER_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -247,11 +253,11 @@ TEST_CASE(
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
                            &TestFollowsHandler::pkbStubNoFollows);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, 0);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList2{};
+    VALUE_TO_POINTERS_MAP expectedList2{};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -263,12 +269,20 @@ TEST_CASE("FollowsHandler: eval - SYNONYM SYNONYM - returns non-empty "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, 1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{"1", "2", "3", "4", "5", "6", "9", "10"};
-    vector<string> expectedList2{"2", "3", "4", "12", "6", "9", "10", "11"};
+    VALUE_TO_POINTERS_MAP expectedList1{
+        {"1", POINTER_SET{{1, "2"}}},  {"10", POINTER_SET{{1, "11"}}},
+        {"2", POINTER_SET{{1, "3"}}},  {"3", POINTER_SET{{1, "4"}}},
+        {"4", POINTER_SET{{1, "12"}}}, {"5", POINTER_SET{{1, "6"}}},
+        {"6", POINTER_SET{{1, "9"}}},  {"9", POINTER_SET{{1, "10"}}}};
+    VALUE_TO_POINTERS_MAP expectedList2{
+        {"10", POINTER_SET{{0, "9"}}}, {"11", POINTER_SET{{0, "10"}}},
+        {"12", POINTER_SET{{0, "4"}}}, {"2", POINTER_SET{{0, "1"}}},
+        {"3", POINTER_SET{{0, "2"}}},  {"4", POINTER_SET{{0, "3"}}},
+        {"6", POINTER_SET{{0, "5"}}},  {"9", POINTER_SET{{0, "6"}}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
     expectedResult.setResultList2(&stmt2, expectedList2);
 
@@ -282,12 +296,12 @@ TEST_CASE("FollowsHandler: eval - WILDCARD SYNONYM - returns empty "
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
                            &TestFollowsHandler::pkbStubNoFollows);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, 1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{};
-    vector<string> expectedList2{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList2{};
     expectedResult.setResultList1(&stmt1, expectedList1);
     expectedResult.setResultList2(&stmt2, expectedList2);
 
@@ -300,12 +314,14 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "s2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, 1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{"1", "2"};
-    vector<string> expectedList2{"2", "3"};
+    VALUE_TO_POINTERS_MAP expectedList1{{"1", POINTER_SET{{1, "2"}}},
+                                        {"2", POINTER_SET{{1, "3"}}}};
+    VALUE_TO_POINTERS_MAP expectedList2{{"2", POINTER_SET{{0, "1"}}},
+                                        {"3", POINTER_SET{{0, "2"}}}};
     expectedResult.setResultList1(&stmt1, expectedList1);
     expectedResult.setResultList2(&stmt2, expectedList2);
 
@@ -317,11 +333,11 @@ TEST_CASE("FollowsHandler: eval - SYNONYM CONST - filter result by stmt type") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(0, -1);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList1{};
+    VALUE_TO_POINTERS_MAP expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -332,11 +348,11 @@ TEST_CASE("FollowsHandler: eval - CONST SYNONYM - filter result by stmt type") {
     Reference stmt2(DesignEntityType::CALL, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
-    Result actualResult = handler.eval();
+    Result actualResult = handler.eval(-1, 0);
 
     Result expectedResult;
     expectedResult.setValid(true);
-    vector<string> expectedList2{"10"};
+    VALUE_TO_POINTERS_MAP expectedList2{{"10", POINTER_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));

@@ -19,6 +19,10 @@ using namespace std;
 class Parser {
 public:
     Program parseProgram(vector<Line> programLines, Program &program);
+    bool isAssignStmt(vector<string> content);
+    bool isProc(vector<string> content);
+    bool isStmt(vector<string> content);
+
     Statement *parseStatement(vector<string> content, int index,
                               vector<Line> programLines, int &programIndex);
     void checkAndAddValidProcedure(Procedure *currProc, Program &program);

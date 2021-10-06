@@ -32,7 +32,13 @@ vector<string> Statement::getExpressionLst() {
     return expressionLst.value();
 };
 
-set<Variable *, Comparator<Variable>> Statement::getExpressionVars() { return expressionVars; };
+<<<<<<<<< Temporary merge branch 1
+set<Variable *> Statement::getExpressionVars() { return expressionVars; };
+=========
+set<Variable *, Comparator<Variable>> Statement::getExpressionVars() {
+    return expressionVars;
+};
+>>>>>>>>> Temporary merge branch 2
 
 set<ConstantValue *, Comparator<ConstantValue>> Statement::getExpressionConsts() {
     return expressionConsts;
