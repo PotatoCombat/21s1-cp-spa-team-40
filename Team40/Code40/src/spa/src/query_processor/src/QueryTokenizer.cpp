@@ -60,7 +60,7 @@ void QueryTokenizer::tokenizeDeclarations(string input,
  * @return Vector of return synonyms (empty if BOOLEAN)
  * @todo Implement returning tuples (require vector structure)
  */
-vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remaining) {
+vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &remaining) {
     size_t nextWhitespacePos = findNextWhitespace(input, 0);
     string keyword = input.substr(0, nextWhitespacePos);
     if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
@@ -78,23 +78,18 @@ vector<string> QueryTokenizer::tokenizeReturnSynonym(string input, string &remai
         size_t rCarrotPos = rest.rfind(R_CARROT);
         string tuple = rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1));
         vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
-        remaining = trimL(input.substr(rCarrotPos + 1));
+        remaining = trimL(rest.substr(rCarrotPos + 1));
         return retStrings;
     }
 
     nextWhitespacePos = findNextWhitespace(rest, 0);
 
-    if (nextWhitespacePos == string::npos) {
-        string retString = rest;
-        remaining = "";
-        if (retString == KEYWORD_BOOLEAN) {
-            return vector<string>();
-        }
-        return vector<string>{retString};
-    }
-
     string retString = rest.substr(0, nextWhitespacePos);
-    remaining = trimL(rest.substr(nextWhitespacePos + 1));
+    if (nextWhitespacePos == string::npos) {
+        remaining = "";
+    } else {
+        remaining = trimL(rest.substr(nextWhitespacePos + 1));
+    }
     if (retString == KEYWORD_BOOLEAN) {
         return vector<string>();
     }
@@ -258,7 +253,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
  * @param startPos The start of the clause.
  * @param &clause WithTuple.
  * @return Position of end of clause.
- * @todos Fix algorithm for 2nd part of with clause and account for whitespace
+ * @todo Fix algo and clean up
  */
 size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
                                     WithTuple &clause) {

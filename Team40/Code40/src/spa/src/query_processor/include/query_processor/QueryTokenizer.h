@@ -19,7 +19,7 @@ public:
 
     pair<string, string> separateQueryString(string input);
     void tokenizeDeclarations(string input, vector<DeclPair> &decls);
-    vector<string> tokenizeReturnSynonym(string input, string &remaining);
+    vector<string> tokenizeReturnSynonyms(string input, string &remaining);
     void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                          vector<PatTuple> &patternClauses,
                          vector<WithTuple> &withClauses);

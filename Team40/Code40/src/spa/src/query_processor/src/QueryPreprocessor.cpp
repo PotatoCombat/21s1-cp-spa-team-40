@@ -19,18 +19,9 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         parser.parseDeclarations(declPairs);
 
         /*********** Parse return synonym ***********/
-        retStrings = tokenizer.tokenizeReturnSynonym(parts.second, clauses);
+        retStrings = tokenizer.tokenizeReturnSynonyms(parts.second, clauses);
 
-        
-        for (auto retString : retStrings) {
-            bool found = false;
-            Reference* returnRef = parser.parseReturnSynonym(retString, found);
-            if (found) {
-                q.addReturnReference(returnRef);
-            } else {
-                throw ValidityError("QP-ERROR: return synonym is undeclared");
-            }
-        }
+        addReturnReferenceToQuery(retStrings, q);
 
         if (clauses.empty()) {
             parser.clear();
@@ -68,5 +59,16 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         // cout << e.what();
         parser.clear();
         return false;
+    }
+}
+
+void QueryPreprocessor::addReturnReferenceToQuery(vector<string> retStrings,
+                                                  Query &q) {
+    for (auto retString : retStrings) {
+        Reference *returnRef = parser.parseReturnSynonym(retString);
+        if (returnRef == nullptr) {
+            throw ValidityError("QP-ERROR: return synonym is undeclared");
+        }
+        q.addReturnReference(returnRef);
     }
 }

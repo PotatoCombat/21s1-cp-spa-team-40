@@ -3,80 +3,74 @@
 #include "query_processor/QueryTokenizer.h"
 
 struct TestQueryTokenizer {
-    static const string QUERY1;
-    static const string DECL1;
-    static const string CLAUSE1;
-    static const string QUERY_NO_WHITESPACE;
-    static const string QUERY_NEWLINE;
-    static bool compareTuples(ClsTuple r1, ClsTuple r2);
-    static vector<DeclPair> createDecls();
+    static bool comparePairs(DeclPair x1, DeclPair x2);
+    static bool compareTuples(ClsTuple x1, ClsTuple x2);
+    static bool compareVectors(vector<string> x1, vector<string> x2);
 };
 
-const string TestQueryTokenizer::QUERY1 =
-    "stmt s; assign a; print p1; Select s such that Follows(s, p1)";
-
-const string TestQueryTokenizer::DECL1 = "stmt s; assign a; print p1;";
-
-const string TestQueryTokenizer::CLAUSE1 = "Select s such that Follows(s, p1)";
-
-const string TestQueryTokenizer::QUERY_NO_WHITESPACE =
-    "stmt s; assign a; print p1;Select s such that Follows(s, p1)";
-
-const string TestQueryTokenizer::QUERY_NEWLINE =
-    "stmt s; assign a; print p1;\n\nSelect s such that Follows(s, p1)";
-
-bool TestQueryTokenizer::compareTuples(ClsTuple r1, ClsTuple r2) {
-    return get<0>(r1) == get<0>(r2) && get<1>(r1) == get<1>(r2) &&
-           get<2>(r1) == get<2>(r2);
+bool TestQueryTokenizer::comparePairs(DeclPair x1, DeclPair x2) {
+    return x1.first == x2.first && x1.second == x2.second;
 }
 
-vector<DeclPair> TestQueryTokenizer::createDecls() {
-    DeclPair p1 = make_pair("stmt", "s");
-    DeclPair p2 = make_pair("assign", "a");
-    DeclPair p3 = make_pair("print", "p1");
-    return vector<DeclPair>{p1, p2, p3};
+bool TestQueryTokenizer::compareTuples(ClsTuple x1, ClsTuple x2) {
+    return get<0>(x1) == get<0>(x2) && get<1>(x1) == get<1>(x2) &&
+           get<2>(x1) == get<2>(x2);
 }
 
-TEST_CASE("QueryTokenizer: separateDeclaration") {
+bool TestQueryTokenizer::compareVectors(vector<string> x1, vector<string> x2) {
+    for (int i = 0; i < x1.size(); ++i) {
+        if (x1[i] != x2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+TEST_CASE("QueryTokenizer: separateQueryString") {
     QueryTokenizer tokenizer;
-    string expectedD = TestQueryTokenizer::DECL1;
-    string expectedC = TestQueryTokenizer::CLAUSE1;
+    string DECL = "stmt s; assign a; print p1;";
+    string SELECT = "Select s such that Follows(s, p1)";
 
     SECTION("test standard") {
-        pair<string, string> actual =
-            tokenizer.separateQueryString(TestQueryTokenizer::QUERY1);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
+        string QUERY =
+            "stmt s; assign a; print p1; Select s such that Follows(s, p1)";
+        pair<string, string> actual = tokenizer.separateQueryString(QUERY);
+        REQUIRE(actual.first == DECL);
+        REQUIRE(actual.second == SELECT);
     }
 
     SECTION("test no whitespace") {
-        pair<string, string> actual = tokenizer.separateQueryString(
-            TestQueryTokenizer::QUERY_NO_WHITESPACE);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
+        string QUERY =
+            "stmt s; assign a; print p1;Select s such that Follows(s, p1)";
+        pair<string, string> actual = tokenizer.separateQueryString(QUERY);
+        REQUIRE(actual.first == DECL);
+        REQUIRE(actual.second == SELECT);
     }
 
     SECTION("test newline") {
-        pair<string, string> actual =
-            tokenizer.separateQueryString(TestQueryTokenizer::QUERY_NEWLINE);
-        REQUIRE(actual.first == expectedD);
-        REQUIRE(actual.second == expectedC);
+        string QUERY =
+            "stmt s; assign a; print p1;\n\nSelect s such that Follows(s, p1)";
+        pair<string, string> actual = tokenizer.separateQueryString(QUERY);
+        REQUIRE(actual.first == DECL);
+        REQUIRE(actual.second == SELECT);
     }
 }
 
-TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
+TEST_CASE("QueryTokenizer: tokenizeDeclarations") {
     QueryTokenizer tokenizer;
     vector<DeclPair> vec;
-    vector<DeclPair> expected = TestQueryTokenizer::createDecls();
 
     SECTION("test standard") {
-        tokenizer.tokenizeDeclarations(TestQueryTokenizer::DECL1, vec);
-        REQUIRE((get<0>(vec[0]) == get<0>(expected[0]) &&
-                 get<1>(vec[0]) == get<1>(expected[0])));
-        REQUIRE((get<0>(vec[1]) == get<0>(expected[1]) &&
-                 get<1>(vec[1]) == get<1>(expected[1])));
-        REQUIRE((get<0>(vec[2]) == get<0>(expected[2]) &&
-                 get<1>(vec[2]) == get<1>(expected[2])));
+        string DECL = "stmt s; assign a; print p1;";
+        DeclPair p1 = make_pair("stmt", "s");
+        DeclPair p2 = make_pair("assign", "a");
+        DeclPair p3 = make_pair("print", "p1");
+        vector<DeclPair> expected{p1, p2, p3};
+
+        tokenizer.tokenizeDeclarations(DECL, vec);
+        REQUIRE(TestQueryTokenizer::comparePairs(vec[0], expected[0]));
+        REQUIRE(TestQueryTokenizer::comparePairs(vec[1], expected[1]));
+        REQUIRE(TestQueryTokenizer::comparePairs(vec[2], expected[2]));
     }
 
     SECTION("test invalid name") {
@@ -94,26 +88,75 @@ TEST_CASE("QueryTokenizer: tokenizeDeclaration") {
     }
 }
 
-TEST_CASE("QueryTokenizer: tokenizeReturn") {
+TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     QueryTokenizer tokenizer;
+    string CLAUSE = "with \" a \" = \" a \"";
 
-    SECTION("test standard") {
+    SECTION("FAIL: test no Select") {
         string remaining;
-        vector<string> actual = tokenizer.tokenizeReturnSynonym(
-            TestQueryTokenizer::CLAUSE1, remaining);
-
-        string expected1 = "s";
-        string expected2 = "such that Follows(s, p1)";
-        REQUIRE(actual[0] == expected1);
-        REQUIRE(remaining == expected2);
+        REQUIRE_THROWS_AS(tokenizer.tokenizeReturnSynonyms(
+                              " s such that Parent(x, y)", remaining),
+                          SyntaxError);
+        REQUIRE_THROWS_AS(tokenizer.tokenizeReturnSynonyms(
+                              "select s such that Parent(x, y)", remaining),
+                          SyntaxError);
     }
 
-    SECTION("test no Select") {
+    SECTION("SUCCESS: test one synonym") {
+        string SELECT = "Select s with \" a \" = \" a \"";
         string remaining;
-        REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
-            " s such that Parent(x, y)", remaining));
-        REQUIRE_THROWS(tokenizer.tokenizeReturnSynonym(
-            "select s such that Parent(x, y)", remaining));
+        vector<string> actual =
+            tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        vector<string> expected1 = {"s"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+    }
+
+    SECTION("SUCCESS: test BOOLEAN") {
+        string SELECT = "Select BOOLEAN with \" a \" = \" a \"";
+        string remaining;
+        vector<string> actual =
+            tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        vector<string> expected1;
+        string expected2 = "with \" a \" = \" a \"";
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+    }
+
+    SECTION("SUCCESS: test tuple") {
+        string SELECT = "Select <P, A, L> with \" a \" = \" a \"";
+        string remaining;
+        vector<string> actual =
+            tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        vector<string> expected1 = {"P", "A", "L"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+    }
+
+    SECTION("SUCCESS: test attrRef") {
+        string SELECT = "Select P.stmt# with \" a \" = \" a \"";
+        string remaining;
+        vector<string> actual =
+            tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        vector<string> expected1 = {"P.stmt#"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+
+        SELECT = "Select P.procName with \" a \" = \" a \"";
+        actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+        expected1 = {"P.procName"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+
+        SELECT = "Select <P, A.procName, L.stmt#> with \" a \" = \" a \"";
+        actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+        expected1 = {"P", "A.procName", "L.stmt#"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
     }
 }
 
@@ -255,7 +298,8 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
         vector<WithTuple> wit;
-        vector<PatTuple> expected = vector<PatTuple>{ make_pair("a", vector<string>{"_", "x"}) };
+        vector<PatTuple> expected =
+            vector<PatTuple>{make_pair("a", vector<string>{"_", "x"})};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(rel.size() == 0);
         REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));
@@ -339,24 +383,4 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
 //    string in10 = "Follows(,nextline)";
 //    string in11 = "Follows(name,)";
 //    string in12 = "(name, nextline)";
-//
-//    SECTION("test passes") {
-//        tokenizer.splitBCBRel(in1, tup);
-//        REQUIRE(TestQueryTokenizer::compareTuples(tup, correct));
-//        tokenizer.splitBCBRel(in2, tup);
-//        REQUIRE(TestQueryTokenizer::compareTuples(tup, correct));
-//    }
-//
-//    SECTION("test fail throws error") {
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in3, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in4, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in5, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in6, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in7, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in8, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in9, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in10, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in11, tup), "error");
-//        REQUIRE_THROWS_WITH(tokenizer.splitBCBRel(in12, tup), "error");
-//    }
 //}
