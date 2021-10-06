@@ -24,11 +24,13 @@ public:
     void clear();
 
 private:
+    bool isValidAttribute(DesignEntityType type, string attribute);
+    // ReferenceAttribute getAttrRef(string ref);
+    void deleteDeclarations();
+
     DesignEntityTypeHelper deHelper;
     SuchThatParser stParser;
     PatternParser ptParser;
 
     vector<Reference *> declList;
-
-    void deleteDeclarations();
 };

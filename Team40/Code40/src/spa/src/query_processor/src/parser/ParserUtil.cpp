@@ -32,3 +32,18 @@ bool ParserUtil::isQuoted(std::string val) {
 }
 
 bool ParserUtil::isWildcard(std::string val) { return val == "_"; }
+
+/**
+ * Check if a string is in syn.attr syntax.
+ * @param val String to check.
+ * @return True if string has attribute, otherwise false.
+ */
+std::string ParserUtil::getAttribute(std::string val) {
+    int c = count(val.begin(), val.end(), '.');
+    if (c != 1) {
+        return "";
+    }
+
+    size_t pos = val.find('.');
+    return val.substr(pos + 1);
+}

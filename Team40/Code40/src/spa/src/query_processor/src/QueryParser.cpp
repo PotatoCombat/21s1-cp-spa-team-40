@@ -38,6 +38,8 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
  * @todo Check for attr validity based on synonym type
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
+    // ReferenceAttribute attr = getAttrRef(ref);
+
     for (auto x : declList) {
         if (ref == x->getValue()) {
             return x->copy();
@@ -63,3 +65,17 @@ Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
 PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
     return ptParser.parse(patTuple);
 }
+
+//ReferenceAttribute QueryParser::getAttrRef(string ref) {
+//    string attr = ParserUtil::getAttribute(ref);
+//    if (attr.empty()) {
+//        return ReferenceAttribute::NONE;
+//    }
+//    if (attr == "procName" || attr == "varName") {
+//        return ReferenceAttribute::NAME;
+//    } else if (attr == "stmt#" || attr == "value") {
+//        return ReferenceAttribute::INTEGER;
+//    } else {
+//        throw ValidityError("Invalid attribute");
+//    }
+//}
