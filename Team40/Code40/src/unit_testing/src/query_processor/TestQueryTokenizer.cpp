@@ -134,9 +134,15 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         vector<string> expected1 = {"P", "A", "L"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
+
+        SELECT = "Select < P ,     A,    L > with \" a \" = \" a \"";
+        actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
     }
 
-    SECTION("SUCCESS: test attrRef") {
+    SECTION("SUCCESS: test attrRef without whitespace") {
         string SELECT = "Select P.stmt# with \" a \" = \" a \"";
         string remaining;
         vector<string> actual =
@@ -153,6 +159,30 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(remaining == CLAUSE);
 
         SELECT = "Select <P, A.procName, L.stmt#> with \" a \" = \" a \"";
+        actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+        expected1 = {"P", "A.procName", "L.stmt#"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+    }
+
+    SECTION("SUCCESS: test attrRef with whitespace") {
+        string SELECT = "Select P . stmt# with \" a \" = \" a \"";
+        string remaining;
+        vector<string> actual =
+            tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+
+        vector<string> expected1 = {"P.stmt#"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+
+        SELECT = "Select P.    procName with \" a \" = \" a \"";
+        actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
+        expected1 = {"P.procName"};
+        REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
+        REQUIRE(remaining == CLAUSE);
+
+        SELECT =
+            "Select <P, A     .procName, L . stmt#> with \" a \" = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
         expected1 = {"P", "A.procName", "L.stmt#"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));

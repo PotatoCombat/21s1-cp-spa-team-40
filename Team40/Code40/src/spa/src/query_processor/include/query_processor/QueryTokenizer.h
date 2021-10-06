@@ -38,6 +38,7 @@ private:
     string getTokenBeforeX(string input, char x, size_t startPos,
                            size_t &nextPos);
     string removeWhitespaceWithinQuotes(string input);
+    string removeWhitespaceAroundPeriod(string input);
     string extractPatternString(string input);
     vector<string> tokenizeCommaSeparatedValues(string input);
 

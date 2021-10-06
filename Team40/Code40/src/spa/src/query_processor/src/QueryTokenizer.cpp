@@ -76,8 +76,11 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
 
     if (lCarrotPos != string::npos) {
         size_t rCarrotPos = rest.rfind(R_CARROT);
-        string tuple = rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1));
+        string tuple = trim(rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1)));
         vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
+        for (int i = 0; i < retStrings.size(); ++i) {
+            retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
+        }
         remaining = trimL(rest.substr(rCarrotPos + 1));
         return retStrings;
     }
@@ -88,6 +91,20 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
     if (nextWhitespacePos == string::npos) {
         remaining = "";
     } else {
+        size_t periodPos = rest.find(PERIOD, 0);
+        size_t nextTokenPos = findNextToken(rest, nextWhitespacePos);
+        if (periodPos != string::npos) {
+            if (periodPos == nextTokenPos) {
+                rest = trimL(rest.substr(nextTokenPos + 1));
+                nextWhitespacePos = findNextWhitespace(rest, 0);
+                retString = retString + "." + rest.substr(0, nextWhitespacePos);
+            } else if (periodPos < nextTokenPos && periodPos == nextWhitespacePos - 1) {
+                nextWhitespacePos = findNextWhitespace(rest, nextTokenPos);
+                retString =
+                    retString +
+                    rest.substr(nextTokenPos, nextWhitespacePos - nextTokenPos);
+            }
+        }
         remaining = trimL(rest.substr(nextWhitespacePos + 1));
     }
     if (retString == KEYWORD_BOOLEAN) {
@@ -402,13 +419,14 @@ string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos,
 
 /**
  * Given a quoted string, removes the whitespace within the quotes. 
- * E.g. "    someprocedure    " => "someprocedure". 
+ * E.g. "    someprocedure     " => "someprocedure". 
  * E.g. "    some procedure    " => "some procedure".
+ * E.g. someprocedure            => someprocedure.
  * @param input The quoted string.
  * @return The quoted string with whitespace removed.
  */
 string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
-    if (count(input.begin(), input.end(), QUOTE) > 0) {
+    if (count(input.begin(), input.end(), QUOTE) == 2) {
         if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
             string trimmed = trim(input.substr(1, input.size() - 2));
             return "\"" + trimmed + "\"";
@@ -418,6 +436,25 @@ string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
     }
     return input;
 }
+
+/**
+ * Given a string with period, removes whitespace around the period.
+ * E.g. x.y   => x.y.
+ * E.g. x . y => x.y.
+ * E.g. x     => x.
+ * @param input The quoted string.
+ * @return The quoted string with whitespace removed.
+ */
+string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
+    size_t periodPos = input.find(PERIOD);
+    if (periodPos != string::npos) {
+        string token1 = trim(input.substr(0, periodPos));
+        string token2 = trim(input.substr(periodPos + 1));
+        return token1 + "." + token2;
+    }
+    return input;
+}
+
 
 string QueryTokenizer::extractPatternString(string input) {
     if (count(input.begin(), input.end(), QUOTE) == 2) {
