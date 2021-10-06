@@ -17,7 +17,7 @@ public:
     QueryParser() = default;
 
     void parseDeclarations(vector<DeclPair> declPairs);
-    Reference *parseReturnSynonym(string syn, bool &found);
+    Reference *parseReturnSynonym(string ref);
     Clause *parseSuchThatClause(ClsTuple clsTuple);
     PatternClause *parsePatternClause(PatTuple patTuple);
 
