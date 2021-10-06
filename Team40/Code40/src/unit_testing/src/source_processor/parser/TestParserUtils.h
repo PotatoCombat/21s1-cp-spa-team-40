@@ -1,4 +1,9 @@
 #include "catch.hpp"
+#include "common/model/Abstractions.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/Procedure.h"
+#include "common/model/Statement.h"
+#include "common/model/Variable.h"
 #include <cctype>
 #include <iostream>
 #include <iterator>
@@ -7,11 +12,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "common/model/Abstractions.h"
-#include "common/model/ConstantValue.h"
-#include "common/model/Procedure.h"
-#include "common/model/Statement.h"
-#include "common/model/Variable.h"
+
 using namespace std;
 
 struct TestParserUtils {
@@ -72,12 +73,12 @@ public:
         return stmt;
     }
 
-    inline static vector<string> createExpressionLst(const string& expression) {
+    inline static vector<string> createExpressionLst(const string &expression) {
         auto iss = istringstream{expression};
         return vector<string>{
             istream_iterator<string>{iss},
             istream_iterator<string>{},
-            };
+        };
     }
 
     inline static vector<Variable *> createExpressionVars(vector<string> expressionLst) {
@@ -95,7 +96,7 @@ public:
     inline static vector<ConstantValue *> createExpressionConsts(vector<string> expressionLst) {
         vector<ConstantValue *> expressionConsts;
         for (auto constName : expressionLst) {
-            if (!isnumber(constName.at(0))) {
+            if (!isdigit(constName.at(0))) {
                 continue;
             }
             auto *constant = new ConstantValue(constName);

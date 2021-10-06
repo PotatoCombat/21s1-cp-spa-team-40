@@ -18,8 +18,7 @@ Program Parser::parseProgram(vector<Line> programLines, Program &program) {
             currProc = procParser.parseProcedure();
 
         } else if (isStmt(currContent)) {
-            Statement *stmt =
-                parseStatement(currContent, currIndex, programLines, i);
+            Statement *stmt = parseStatement(currContent, currIndex, programLines, i);
             currProc->addToStmtLst(stmt);
         }
     }
@@ -42,8 +41,7 @@ bool Parser::isStmt(vector<string> content) {
             isAssignStmt(content));
 }
 
-Statement *Parser::parseStatement(vector<string> content, int index,
-                                  vector<Line> programLines,
+Statement *Parser::parseStatement(vector<string> content, int index, vector<Line> programLines,
                                   int &programIndex) {
     StatementParser stmtParser(content);
     if (stmtParser.isAssignStmt()) {

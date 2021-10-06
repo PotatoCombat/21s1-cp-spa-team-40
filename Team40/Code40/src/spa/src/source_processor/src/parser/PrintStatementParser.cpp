@@ -7,13 +7,18 @@ PrintStatementParser::PrintStatementParser(vector<string> content, int index)
 };
 
 Statement *PrintStatementParser::parsePrintStatement() {
-    vector<string>::iterator printItr =
-        find(content.begin(), content.end(), "print");
+    vector<string>::iterator printItr = find(content.begin(), content.end(), "print");
+    if (next(printItr) == content.end()) {
+        throw invalid_argument("invalid print statement");
+    }
     string var_name = *next(printItr);
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
     // print: 'print' var_name';'
+    if (next(next(printItr)) == content.end()) {
+        throw invalid_argument("invalid print statement");
+    }
     if (*next(next(printItr)) != ";") {
         throw invalid_argument("invalid print statement");
     }
@@ -29,6 +34,5 @@ bool PrintStatementParser::isValidName(string input) {
     if (!isalpha(input.at(0))) {
         return false;
     }
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
+    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

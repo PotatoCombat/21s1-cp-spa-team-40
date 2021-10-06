@@ -7,13 +7,18 @@ ReadStatementParser::ReadStatementParser(vector<string> content, int index)
 };
 
 Statement *ReadStatementParser::parseReadStatement() {
-    vector<string>::iterator readItr =
-        find(content.begin(), content.end(), "read");
+    vector<string>::iterator readItr = find(content.begin(), content.end(), "read");
+    if (next(readItr) == content.end()) {
+        throw invalid_argument("invalid read statement");
+    }
     string var_name = *next(readItr);
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
     // read: 'read' var_name';'
+    if (next(next(readItr)) == content.end()) {
+        throw invalid_argument("invalid read statement");
+    }
     if (*next(next(readItr)) != ";") {
         throw invalid_argument("invalid read statement");
     }
@@ -29,6 +34,5 @@ bool ReadStatementParser::isValidName(string input) {
     if (!isalpha(input.at(0))) {
         return false;
     }
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
+    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }
