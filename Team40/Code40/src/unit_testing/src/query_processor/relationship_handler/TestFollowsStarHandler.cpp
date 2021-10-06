@@ -146,7 +146,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    VALUE_TO_VALUES_MAP expectedList1{{"1", VALUE_SET{}},
+    map<VALUE, VALUE_SET> expectedList1{{"1", VALUE_SET{}},
                                       {"2", VALUE_SET{}},
                                       {"3", VALUE_SET{}},
                                       {"4", VALUE_SET{}}};
@@ -166,7 +166,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    VALUE_TO_VALUES_MAP expectedList1{};
+    map<VALUE, VALUE_SET> expectedList1{};
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -183,7 +183,7 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    VALUE_TO_VALUES_MAP expectedList2{
+    map<VALUE, VALUE_SET> expectedList2{
         {"10", VALUE_SET{}}, {"11", VALUE_SET{}}, {"9", VALUE_SET{}}};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
@@ -201,7 +201,7 @@ TEST_CASE(
 
     Result expectedResult;
     expectedResult.setValid(true);
-    VALUE_TO_VALUES_MAP expectedList2{};
+    map<VALUE, VALUE_SET> expectedList2{};
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
@@ -218,7 +218,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
 
     Result expectedResult;
     expectedResult.setValid(true);
-    VALUE_TO_VALUES_MAP expectedList1{{"1", VALUE_SET{"2", "3", "4", "12"}},
+    map<VALUE, VALUE_SET> expectedList1{{"1", VALUE_SET{"2", "3", "4", "12"}},
                                       {"10", VALUE_SET{"11"}},
                                       {"2", VALUE_SET{"3", "4", "12"}},
                                       {"3", VALUE_SET{"4", "12"}},
@@ -227,7 +227,7 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
                                       {"6", VALUE_SET{"9", "10", "11"}},
                                       {"9", VALUE_SET{"10", "11"}}};
     
-    VALUE_TO_VALUES_MAP expectedList2{{"10", VALUE_SET{"5", "6", "9"}},
+    map<VALUE, VALUE_SET> expectedList2{{"10", VALUE_SET{"5", "6", "9"}},
                                       {"11", VALUE_SET{"5", "6", "9", "10"}},
                                       {"12", VALUE_SET{"1", "2", "3", "4"}},
                                       {"2", VALUE_SET{"1"}},

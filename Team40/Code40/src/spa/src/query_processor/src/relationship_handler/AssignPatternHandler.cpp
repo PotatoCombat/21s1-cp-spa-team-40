@@ -26,7 +26,7 @@ Result AssignPatternHandler::eval() {
 
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
-        VALUE_TO_VALUES_MAP stmtResults;
+        map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
             pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
         for (auto stmt : stmts) {
@@ -37,8 +37,8 @@ Result AssignPatternHandler::eval() {
     }
 
     // SYNONYM SYNONYM, SYNONYM WILDCARD
-    VALUE_TO_VALUES_MAP stmtResults;
-    VALUE_TO_VALUES_MAP varResults;
+    map<VALUE, VALUE_SET> stmtResults;
+    map<VALUE, VALUE_SET> varResults;
     vector<int> assigns = pkb->getAllStmts(StatementType::ASSIGN).asVector();
     vector<string> vars = pkb->getAllVars().asVector();
 

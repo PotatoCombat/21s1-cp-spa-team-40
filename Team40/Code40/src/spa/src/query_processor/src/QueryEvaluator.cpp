@@ -154,8 +154,8 @@ vector<string> QueryEvaluator::finaliseResult() {
 void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
     allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
 
-    VALUE_TO_VALUES_MAP res1;
-    VALUE_TO_VALUES_MAP res2;
+    map<VALUE, VALUE_SET> res1;
+    map<VALUE, VALUE_SET> res2;
     vector<pair<int, string>> toRemove;
 
     if (result.hasResultList1() && result.hasResultList2()) {

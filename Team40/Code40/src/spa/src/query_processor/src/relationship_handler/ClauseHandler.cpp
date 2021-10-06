@@ -116,7 +116,7 @@ Result ClauseHandler::evalSynConst() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
     string val2 = clause->getSecondReference()->getValue();
-    VALUE_TO_VALUES_MAP firstStmtResults;
+    map<VALUE, VALUE_SET> firstStmtResults;
     set<string> res1s = getR1ClauseR2(val2);
     for (string res1 : res1s) {
         if (isType(res1, ref1->getDeType())) {
@@ -131,7 +131,7 @@ Result ClauseHandler::evalConstSyn() {
     Result result;
     Reference *ref2 = clause->getSecondReference();
     string val1 = clause->getFirstReference()->getValue();
-    VALUE_TO_VALUES_MAP secondStmtResults;
+    map<VALUE, VALUE_SET> secondStmtResults;
     set<string> res2s = getR2ClausedR1(val1);
     for (auto res2 : res2s) {
         if (isType(res2, ref2->getDeType())) {
@@ -167,7 +167,7 @@ Result ClauseHandler::evalNotConstNotConst() {
 
     // if first arg is SYNONYM
     if (refType1 != ReferenceType::WILDCARD) {
-        VALUE_TO_VALUES_MAP firstStmtResults;
+        map<VALUE, VALUE_SET> firstStmtResults;
         set<string> res1s = getAll(pkb, *ref1);
 
         for (string res1 : res1s) {
@@ -190,7 +190,7 @@ Result ClauseHandler::evalNotConstNotConst() {
 
     // if second arg is SYNONYM
     if (refType2 != ReferenceType::WILDCARD) {
-        VALUE_TO_VALUES_MAP secondStmtResults;
+        map<VALUE, VALUE_SET> secondStmtResults;
         set<string> res2s = getAll(pkb, *ref2);
 
         for (string res2 : res2s) {
