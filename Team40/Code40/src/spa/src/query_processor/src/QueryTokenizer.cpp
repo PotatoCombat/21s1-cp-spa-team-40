@@ -426,7 +426,7 @@ string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos,
  * @return The quoted string with whitespace removed.
  */
 string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
-    if (count(input.begin(), input.end(), QUOTE) == 2) {
+    if (count(input.begin(), input.end(), QUOTE) > 0) {
         if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
             string trimmed = trim(input.substr(1, input.size() - 2));
             return "\"" + trimmed + "\"";
