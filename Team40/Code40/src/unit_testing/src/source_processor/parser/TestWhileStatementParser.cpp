@@ -18,30 +18,27 @@ TEST_CASE("WhileStatementParser: parseWhileStatement") {
 
 TEST_CASE("WhileStatementParser: parseWhileStatement - throws invalid while statement") {
     int index = 1;
-    vector<Line> whileProgramLines = {};
     auto parser = WhileStatementParser({"while", "number", ">", "0", ")", "{"}, index, 
-                                        whileProgramLines);
+                                       whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 
     parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
-                                            whileProgramLines);
+                                  whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 
-    parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, index, 
-                                            whileProgramLines);
+    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
+                                  whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, index, 
-                                            whileProgramLines);
+    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
+                                  whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", "0", "{"}, index, 
-                                            whileProgramLines);
+    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
+                                  whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", "0", ")"}, index, 
-                                            whileProgramLines);
+    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
+                                  whileProgramLines);
     REQUIRE_THROWS(*parser.parseWhileStatement(index));
 }
-
-
