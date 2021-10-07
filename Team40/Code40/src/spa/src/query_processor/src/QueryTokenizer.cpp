@@ -19,7 +19,7 @@ pair<string, string> QueryTokenizer::separateQueryString(string input) {
 }
 
 /**
- * Tokenizes the entire declaration string into individual declaration pairs and 
+ * Tokenizes the entire declaration string into individual declaration pairs and
  * adds them to a vector.
  * @param input The declarations string (assumes at least one declaration).
  * @param &decls Vector of declaration pairs.
@@ -51,15 +51,15 @@ void QueryTokenizer::tokenizeDeclarations(string input,
 }
 
 /**
- * Extracts the return synonym from the select clause and passes the remaining 
+ * Extracts the return synonym from the select clause and passes the remaining
  * of the clause to a string.
  * @param input The select clause string (assumes non-empty string).
  * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
- * @return Vector of return synonyms (empty if BOOLEAN)
- * @todo Implement returning tuples (require vector structure)
+ * @return Vector of return synonyms (empty if BOOLEAN).
  */
-vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &remaining) {
+vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input,
+                                                      string &remaining) {
     size_t nextWhitespacePos = findNextWhitespace(input, 0);
     string keyword = input.substr(0, nextWhitespacePos);
     if (nextWhitespacePos == string::npos || keyword != KEYWORD_SELECT) {
@@ -68,23 +68,26 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
 
     string rest = trimL(input.substr(nextWhitespacePos + 1));
 
-    // Check if < first, if yes, send to tokenizeReturnTuple, else, process internally either
-    // BOOLEAN, synonym or synonym.attrName (note can have whitespace between synonym and attrName)
-    
-    size_t lCarrotPos = rest.find(L_CARROT);
+    vector<string> retStrings;
 
+    // check if <
+    size_t lCarrotPos = rest.find(L_CARROT);
     if (lCarrotPos != string::npos) {
-        size_t rCarrotPos = rest.rfind(R_CARROT);
-        string tuple = trim(rest.substr(lCarrotPos + 1, rCarrotPos - (lCarrotPos + 1)));
-        vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
-        for (int i = 0; i < retStrings.size(); ++i) {
-            retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
+        rest = trimL(rest.substr(lCarrotPos + 1));
+        retStrings = tokenizeReturnTuple(rest, remaining);
+    } else {
+        string retString = tokenizeReturnRef(rest, remaining);
+        if (retString != KEYWORD_BOOLEAN) {
+            retStrings.push_back(retString);
         }
-        remaining = trimL(rest.substr(rCarrotPos + 1));
-        return retStrings;
     }
 
-    nextWhitespacePos = findNextWhitespace(rest, 0);
+    for (int i = 0; i < retStrings.size(); ++i) {
+        retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
+    }
+    return retStrings;
+
+    /*size_t nextWhitespacePos = findNextWhitespace(rest, 0);
 
     string retString = rest.substr(0, nextWhitespacePos);
     if (nextWhitespacePos == string::npos) {
@@ -97,7 +100,8 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
                 rest = trimL(rest.substr(nextTokenPos + 1));
                 nextWhitespacePos = findNextWhitespace(rest, 0);
                 retString = retString + "." + rest.substr(0, nextWhitespacePos);
-            } else if (periodPos < nextTokenPos && periodPos == nextWhitespacePos - 1) {
+            } else if (periodPos < nextTokenPos &&
+                       periodPos == nextWhitespacePos - 1) {
                 nextWhitespacePos = findNextWhitespace(rest, nextTokenPos);
                 retString =
                     retString +
@@ -110,11 +114,56 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
     if (retString == KEYWORD_BOOLEAN) {
         return vector<string>();
     }
-    return vector<string>{retString};
+    return vector<string>{retString};*/
+}
+
+vector<string> QueryTokenizer::tokenizeReturnTuple(string input,
+                                                   string &remaining) {
+    size_t rCarrotPos = input.find(R_CARROT);
+    if (rCarrotPos == string::npos) {
+        throw SyntaxError("QP-ERROR: invalid return tuple");
+    }
+
+    string tuple = trimR(input.substr(0, rCarrotPos));
+
+    vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
+    for (int i = 0; i < retStrings.size(); ++i) {
+        retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
+    }
+    remaining = trimL(input.substr(rCarrotPos + 1));
+    return retStrings;
+}
+
+string QueryTokenizer::tokenizeReturnRef(string input, string &remaining) {
+    size_t nextWhitespacePos = findNextWhitespace(input, 0);
+
+    string synonym = input.substr(0, nextWhitespacePos);
+
+    if (nextWhitespacePos == string::npos) {
+        remaining = "";
+        return synonym;
+    }
+
+    size_t periodPos = input.find(PERIOD);
+
+    if (periodPos != string::npos) {
+        size_t tokenPos = findNextToken(input, nextWhitespacePos);
+        if (periodPos == tokenPos) {
+            // x .( )y
+            tokenPos = findNextToken(input, tokenPos + 1);
+            nextWhitespacePos = findNextWhitespace(input, tokenPos);
+        } else if (periodPos < tokenPos && periodPos == nextWhitespacePos - 1) {
+            // x. y
+            nextWhitespacePos = findNextWhitespace(input, tokenPos);
+        }
+    }
+
+    remaining = trimL(input.substr(nextWhitespacePos));
+    return input.substr(0, nextWhitespacePos);
 }
 
 /**
- * Tokenizes each clause into individual clause tuples and adds them to a vector 
+ * Tokenizes each clause into individual clause tuples and adds them to a vector
  * based on what kind of clause, i.e. such that, pattern or with.
  * @param input The clauses string (assumed non-empty).
  * @param &suchThatClauses Vector of such that tuples.
@@ -125,7 +174,7 @@ void QueryTokenizer::tokenizeClauses(string input,
                                      vector<ClsTuple> &suchThatClauses,
                                      vector<PatTuple> &patternClauses,
                                      vector<WithTuple> &withClauses) {
-    // State enums will be declared within class 
+    // State enums will be declared within class
     // unless a more elegant method is found
     enum { SUCH_THAT_CLAUSE, PATTERN_CLAUSE, WITH_CLAUSE, NULL_CLAUSE };
 
@@ -191,13 +240,11 @@ void QueryTokenizer::tokenizeClauses(string input,
             default:
                 // won't reach here
                 throw SyntaxError("QP-ERROR: error in the matrix.");
-                break;
             }
             break;
         default: // INVALID_STATE
             // won't reach here
             throw SyntaxError("QP-ERROR: error in the matrix.");
-            break;
         }
         if (state == INVALID_STATE) {
             throw SyntaxError("QP-ERROR: error in the matrix.");
@@ -308,7 +355,8 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
     } else {
         size_t startTokenPos = findNextToken(input, nextPos);
         size_t endTokenPos = findNextWhitespace(input, startTokenPos);
-        string tempToken = input.substr(startTokenPos, endTokenPos - startTokenPos);
+        string tempToken =
+            input.substr(startTokenPos, endTokenPos - startTokenPos);
         temp = trim(input.substr(nextPos, nextPos - periodPos));
         if (temp == tempToken) {
             token3 = temp;
@@ -401,8 +449,8 @@ string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos,
 }
 
 /**
- * Given a quoted string, removes the whitespace within the quotes. 
- * E.g. "    someprocedure     " => "someprocedure". 
+ * Given a quoted string, removes the whitespace within the quotes.
+ * E.g. "    someprocedure     " => "someprocedure".
  * E.g. "    some procedure    " => "some procedure".
  * E.g. someprocedure            => someprocedure.
  * @param input The quoted string.
@@ -430,14 +478,13 @@ string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
  */
 string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
     size_t periodPos = input.find(PERIOD);
-    if (periodPos != string::npos) {
-        string token1 = trim(input.substr(0, periodPos));
-        string token2 = trim(input.substr(periodPos + 1));
-        return token1 + "." + token2;
+    if (periodPos == string::npos) {
+        return input;
     }
-    return input;
+    string token1 = trim(input.substr(0, periodPos));
+    string token2 = trim(input.substr(periodPos + 1));
+    return token1 + "." + token2;
 }
-
 
 string QueryTokenizer::extractPatternString(string input) {
     if (count(input.begin(), input.end(), QUOTE) == 2) {
@@ -452,7 +499,6 @@ string QueryTokenizer::extractPatternString(string input) {
     }
     return input;
 }
-
 
 /**
  * Tokenizes the comma separated values.
