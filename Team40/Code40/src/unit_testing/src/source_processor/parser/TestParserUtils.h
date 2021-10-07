@@ -33,6 +33,11 @@ public:
     inline static string EXPRLST_2 = "2 * B";
     inline static string EXPRLST_3 = "( C % 3 )";
 
+    inline static Procedure createProcedure(ProcName procName) {
+        Procedure proc(procName);
+        return proc;
+    };
+
     inline static Statement createPrintStmt(int index, VarName varName) {
         Statement stmt(index, StatementType::PRINT);
         auto *variable = new Variable(varName);
