@@ -47,7 +47,7 @@ private:
     };
 
     inline static string WILDCARD = "_";
-    inline static string SEPARATOR = ",";
+    inline static string SEPARATOR = " ";
 
     map<Record, set<StmtIndex>> stmtsWithPatternMap;
     map<Record, set<StmtIndex>> stmtsWithExactPatternMap;
