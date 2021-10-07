@@ -12,6 +12,7 @@
 #include "UsesTable.h"
 #include "NextTable.h"
 #include "CallsTable.h"
+#include "CallsStarTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -210,13 +211,26 @@ public:
     /// are none.
     virtual set<ProcName> getCalledProcs(ProcName caller);
 
+    /// Selects p such that Calls*(caller, p).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCalledStarProcs(ProcName caller);
+
     /// Selects p such that Calls(p, called).
     /// \return p#procName that fits the relationship, or an empty set if there
     /// are none.
     virtual set<ProcName> getCallerProcs(ProcName called);
 
+    /// Selects p such that Calls*(p, called).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCallerStarProcs(ProcName called);
+
     /// Selects BOOLEAN such that Calls(proc1, proc2).
     virtual bool calls(ProcName caller, ProcName called);
+
+    /// Selects BOOLEAN such that Calls*(proc1, proc2).
+    virtual bool callsStar(ProcName caller, ProcName called);
 
     // Next ==================================================================
 
@@ -270,6 +284,7 @@ private:
     ModifiesTable modifiesTable;
     UsesTable usesTable;
     CallsTable callsTable;
+    CallsStarTable callsStarTable;
     NextTable nextTable;
     PatternTable patternTable;
 };

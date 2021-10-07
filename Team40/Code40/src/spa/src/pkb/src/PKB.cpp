@@ -66,6 +66,7 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
 
 void PKB::insertCalls(Procedure *proc, ProcName called) {
     callsTable.insertCalls(proc, called);
+    callsStarTable.insertCallsStar(proc, called);
 }
 
 void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
@@ -206,12 +207,24 @@ set<ProcName> PKB::getCalledProcs(ProcName caller) {
     return callsTable.getCalledProcs(caller);
 }
 
+set<ProcName> PKB::getCalledStarProcs(ProcName caller) {
+    return callsStarTable.getCalledStarProcs(caller);
+}
+
 set<ProcName> PKB::getCallerProcs(ProcName called) {
     return callsTable.getCallerProcs(called);
 }
 
+set<ProcName> PKB::getCallerStarProcs(ProcName called) {
+    return callsStarTable.getCallerStarProcs(called);
+}
+
 bool PKB::calls(ProcName caller, ProcName called) {
     return callsTable.calls(caller, called);
+}
+
+bool PKB::callsStar(ProcName caller, ProcName called) {
+    return callsStarTable.callsStar(caller, called);
 }
 
 // Next ========================================================================
