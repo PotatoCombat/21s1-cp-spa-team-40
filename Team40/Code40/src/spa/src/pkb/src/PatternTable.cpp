@@ -27,7 +27,7 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
         Record record = make_pair(varName, p);
 
         // Record with wildcard varName, eg. (_, _"y * 5"_)
-        Record recordWithoutVarName = make_pair(WILDCARD, p);
+        Record recordWithoutVarName = make_pair(WILDCARD_VARNAME, p);
 
         // Map ("x", _"y * 5"_) : { stmt#1 }
         insertStmtWithPattern(record, stmtIndex);
@@ -40,7 +40,7 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     }
 
     // Record with wildcard pattern, eg. ("x", _)
-    Record recordWithoutPattern = make_pair(varName, WILDCARD);
+    Record recordWithoutPattern = make_pair(varName, WILDCARD_PATTERN);
 
     // Map ("x", _) : { stmt#1 }
     insertStmtWithPattern(recordWithoutPattern, stmtIndex);
@@ -57,10 +57,10 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     Record exactRecord = make_pair(varName, exactPattern);
 
     // Exact record with wildcard varName, eg. (_, "y * 5")
-    Record exactRecordWithoutVarName = make_pair(WILDCARD, exactPattern);
+    Record exactRecordWithoutVarName = make_pair(WILDCARD_VARNAME, exactPattern);
 
     // Exact record with wildcard pattern, eg. ("x", _)
-    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD);
+    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD_PATTERN);
 
     // Map ("x", "y * 5") : { stmt#1 }
     insertStmtWithExactPattern(exactRecord, stmtIndex);
@@ -246,14 +246,17 @@ string PatternTable::createPattern(vector<string> &postfix) {
             // If not, the following can happen:
             // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
             // xyz+ could mean x + yz or xy + z (soln. x.yz+)
-            string largerTerm = string(leftTerm).append(SEPARATOR).append(rightTerm).append(s);
+            string largerTerm = string(leftTerm)
+                    .append(SEPARATOR)
+                    .append(rightTerm)
+                    .append(s);
 
             stack.push(largerTerm);
         }
     }
     if (stack.empty())
     {
-        return WILDCARD;
+        return WILDCARD_PATTERN;
     }
     return stack.top();
 }
@@ -279,7 +282,10 @@ vector<string> PatternTable::createPatterns(vector<string> &postfix) {
             // If not, the following can happen:
             // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
             // xyz+ could mean x + yz or xy + z (soln. x.yz+)
-            string largerTerm = string(leftTerm).append(SEPARATOR).append(rightTerm).append(s);
+            string largerTerm = string(leftTerm)
+                    .append(SEPARATOR)
+                    .append(rightTerm)
+                    .append(s);
 
             patterns.push_back(largerTerm);
             stack.push(largerTerm);

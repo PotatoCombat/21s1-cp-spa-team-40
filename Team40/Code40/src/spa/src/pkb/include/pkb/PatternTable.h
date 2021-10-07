@@ -14,6 +14,10 @@ class PatternTable {
 public:
     PatternTable();
 
+    inline static VarName WILDCARD_VARNAME = "_";
+    inline static VarName WILDCARD_PATTERN = "_";
+    inline static ExpressionList WILDCARD_EXPRLIST = vector<string>();
+
     void insertPatternAssign(Statement *stmt);
     set<StmtIndex> getAssignPatternStmts(VarName varName, ExpressionList exprList);
     set<StmtIndex> getFullAssignPatternStmts(VarName varName, ExpressionList exprList);
@@ -46,7 +50,6 @@ private:
         {"#", 0},
     };
 
-    inline static string WILDCARD = "_";
     inline static string SEPARATOR = " ";
 
     map<Record, set<StmtIndex>> stmtsWithPatternMap;
