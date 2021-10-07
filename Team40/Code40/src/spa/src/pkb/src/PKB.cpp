@@ -196,6 +196,20 @@ bool PKB::stmtUses(StmtIndex stmt, VarName var) {
     return usesTable.stmtUses(stmt, var);
 }
 
+// Calls =======================================================================
+
+set<ProcName> PKB::getCalledProcs(ProcName caller) {
+    return callsTable.getCalledProcs(caller);
+}
+
+set<ProcName> PKB::getCallerProcs(ProcName called) {
+    return callsTable.getCallerProcs(called);
+}
+
+bool PKB::calls(ProcName caller, ProcName called) {
+    return callsTable.calls(caller, called);
+}
+
 // Next ========================================================================
 
 set<StmtIndex> PKB::getNextLines(ProgLineIndex line) {

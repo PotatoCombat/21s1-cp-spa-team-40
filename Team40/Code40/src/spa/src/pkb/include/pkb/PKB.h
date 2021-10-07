@@ -11,6 +11,7 @@
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "NextTable.h"
+#include "CallsTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -198,6 +199,21 @@ public:
     /// Selects BOOLEAN such that Uses(stmt, var).
     virtual bool stmtUses(StmtIndex stmt, VarName var);
 
+    // Calls ==================================================================
+
+    /// Selects p such that Calls(caller, p).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCalledProcs(ProcName caller);
+
+    /// Selects p such that Calls(p, called).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCallerProcs(ProcName called);
+
+    /// Selects BOOLEAN such that Calls(proc1, proc2).
+    virtual bool calls(ProcName caller, ProcName called);
+
     // Next ==================================================================
 
     /// Selects s such that Next(line, s).
@@ -249,6 +265,7 @@ private:
     ParentStarTable parentStarTable;
     ModifiesTable modifiesTable;
     UsesTable usesTable;
+    CallsTable callsTable;
     NextTable nextTable;
     PatternTable patternTable;
 };
