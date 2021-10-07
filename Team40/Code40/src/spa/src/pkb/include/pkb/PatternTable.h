@@ -15,19 +15,20 @@ public:
     PatternTable();
 
     void insertPatternAssign(Statement *stmt);
-    set<StmtIndex> getAssignsMatchingPattern(VarName varName, Pattern pattern);
-    set<StmtIndex> getAssignsMatchingExactPattern(VarName varName,
-                                                  Pattern pattern);
-    bool assignMatchesPattern(StmtIndex stmtIndex, VarName varName,
-                              Pattern pattern);
-    bool assignMatchesExactPattern(StmtIndex stmtIndex, VarName varName,
-                                   Pattern pattern);
+    set<StmtIndex> getAssignPatternStmts(VarName varName, ExpressionList exprList);
+    set<StmtIndex> getFullAssignPatternStmts(VarName varName, ExpressionList exprList);
+
+    bool assignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList);
+    bool fullAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList pattern);
 
     typedef tuple<VarName, Pattern> Record;
 
     // THESE STATIC METHODS WILL BE PRIVATE
     // USE THEM ONLY FOR TESTING PURPOSES
-    static vector<string> createPostfix(vector<string> &infix);
+    static vector<string> tokenizePattern(Pattern &pattern);
+    static vector<string> createPostfix(ExpressionList &exprList);
+
+    static string createPattern(vector<string> &postfix);
     static vector<string> createPatterns(vector<string> &postfix); // Contains duplicates
 
 private:
@@ -46,6 +47,7 @@ private:
     };
 
     inline static string WILDCARD = "_";
+    inline static string SEPARATOR = ",";
 
     map<Record, set<StmtIndex>> stmtsWithPatternMap;
     map<Record, set<StmtIndex>> stmtsWithExactPatternMap;

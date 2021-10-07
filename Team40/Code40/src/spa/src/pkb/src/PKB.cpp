@@ -194,21 +194,23 @@ bool PKB::stmtUses(StmtIndex stmt, VarName var) {
 
 // Pattern =====================================================================
 
+// TODO: Replace Pattern with ExpressionList
 set<StmtIndex> PKB::getAssignsMatchingPattern(VarName var, Pattern pattern) {
-    return patternTable.getAssignsMatchingPattern(var, pattern);
+    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
+    return patternTable.getAssignPatternStmts(var, exprList);
 }
 
-set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var,
-                                                   Pattern pattern) {
-    return patternTable.getAssignsMatchingExactPattern(var, pattern);
+set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var, Pattern pattern) {
+    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
+    return patternTable.getFullAssignPatternStmts(var, exprList);
 }
 
-bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var,
-                               Pattern pattern) {
-    return patternTable.assignMatchesPattern(stmtIndex, var, pattern);
+bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
+    return patternTable.assignPattern(stmtIndex, var, exprList);
 }
 
-bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var,
-                                    Pattern pattern) {
-    return patternTable.assignMatchesExactPattern(stmtIndex, var, pattern);
+bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
+    return patternTable.fullAssignPattern(stmtIndex, var, exprList);
 }

@@ -79,9 +79,11 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
                                          });
 }
 
-set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName,
-                                                       Pattern pattern) {
+set<StmtIndex> PatternTable::getAssignPatternStmts(VarName varName, ExpressionList exprList) {
+    vector<string> postfix = createPostfix(exprList);
+    string pattern = createPattern(postfix);
     Record record = make_pair(varName, pattern);
+
     auto kvp = stmtsWithPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
     if (kvp == stmtsWithPatternMap.end()) { // Could not find a map entry with record as the key.
         return {};
@@ -89,9 +91,11 @@ set<StmtIndex> PatternTable::getAssignsMatchingPattern(VarName varName,
     return kvp->second;
 }
 
-set<StmtIndex> PatternTable::getAssignsMatchingExactPattern(VarName varName,
-                                                            Pattern pattern) {
+set<StmtIndex> PatternTable::getFullAssignPatternStmts(VarName varName, ExpressionList exprList) {
+    vector<string> postfix = createPostfix(exprList);
+    string pattern = createPattern(postfix);
     Record record = make_pair(varName, pattern);
+
     auto kvp = stmtsWithExactPatternMap.find(record);
     if (kvp == stmtsWithExactPatternMap.end()) {
         return {};
@@ -99,9 +103,11 @@ set<StmtIndex> PatternTable::getAssignsMatchingExactPattern(VarName varName,
     return kvp->second;
 }
 
-bool PatternTable::assignMatchesPattern(StmtIndex stmtIndex, VarName varName,
-                                        Pattern pattern) {
+bool PatternTable::assignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
+    vector<string> postfix = createPostfix(exprList);
+    string pattern = createPattern(postfix);
     Record record = make_pair(varName, pattern);
+
     auto kvp = patternsOfStmtMap.find(stmtIndex);
     if (kvp == patternsOfStmtMap.end()) {
         return false;
@@ -109,9 +115,11 @@ bool PatternTable::assignMatchesPattern(StmtIndex stmtIndex, VarName varName,
     return kvp->second.find(record) != kvp->second.end();
 }
 
-bool PatternTable::assignMatchesExactPattern(StmtIndex stmtIndex,
-                                             VarName varName, Pattern pattern) {
+bool PatternTable::fullAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
+    vector<string> postfix = createPostfix(exprList);
+    string pattern = createPattern(postfix);
     Record record = make_pair(varName, pattern);
+
     auto kvp = exactPatternsOfStmtMap.find(stmtIndex);
     if (kvp == exactPatternsOfStmtMap.end()) {
         return false;
@@ -162,12 +170,32 @@ void PatternTable::insertExactPatternsOfStmt(StmtIndex stmtIndex,
     }
 }
 
-vector<string> PatternTable::createPostfix(vector<string> &infix) {
+vector<string> PatternTable::tokenizePattern(Pattern &pattern) {
+    vector<string> infix;
+
+    size_t start = 0;
+    size_t end = pattern.find(' ', start);
+
+    while (end != string::npos) {
+        infix.push_back(pattern.substr(start, end - start));
+
+        start = end + 1;
+        end = pattern.find(' ', start);
+    }
+
+    if (end - start > 0) {
+        infix.push_back(pattern.substr(start, end - start));
+    }
+
+    return infix;
+}
+
+vector<string> PatternTable::createPostfix(ExpressionList &exprList) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 
     vector<string> postfix;
-    for (const string &s : infix) {
+    for (const string &s : exprList) {
         bool isTerm = PRECEDENCE.count(s) == 0;
         if (isTerm) {
             postfix.push_back(s);
@@ -200,6 +228,36 @@ vector<string> PatternTable::createPostfix(vector<string> &infix) {
     return postfix;
 }
 
+string PatternTable::createPattern(vector<string> &postfix) {
+    stack<string> stack;
+
+    for (const string &s : postfix) {
+        bool isTerm = PRECEDENCE.count(s) == 0;
+        if (isTerm) {
+            stack.push(s);
+        } else {
+            string rightTerm = stack.top();
+            stack.pop();
+
+            string leftTerm = stack.top();
+            stack.pop();
+
+            // We need a symbol (comma ,) to separate the operands.
+            // If not, the following can happen:
+            // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
+            // xyz+ could mean x + yz or xy + z (soln. x.yz+)
+            string largerTerm = string(leftTerm).append(SEPARATOR).append(rightTerm).append(s);
+
+            stack.push(largerTerm);
+        }
+    }
+    if (stack.empty())
+    {
+        return WILDCARD;
+    }
+    return stack.top();
+}
+
 vector<string> PatternTable::createPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
@@ -221,7 +279,7 @@ vector<string> PatternTable::createPatterns(vector<string> &postfix) {
             // If not, the following can happen:
             // 1010+ could mean 101 + 0 or 10 + 10 (soln. 10.10+)
             // xyz+ could mean x + yz or xy + z (soln. x.yz+)
-            string largerTerm = string(leftTerm).append(",").append(rightTerm).append(s);
+            string largerTerm = string(leftTerm).append(SEPARATOR).append(rightTerm).append(s);
 
             patterns.push_back(largerTerm);
             stack.push(largerTerm);
