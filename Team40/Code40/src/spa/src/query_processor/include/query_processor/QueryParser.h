@@ -25,8 +25,9 @@ public:
 
 private:
     bool isValidAttribute(DesignEntityType type, string attribute);
-    ReferenceAttribute getAttrRef(string ref);
-    void deleteDeclarations();
+    ReferenceAttribute parseValidAttr(string ref);
+    string parseValidName(string input);
+    void clearDeclarations();
 
     DesignEntityTypeHelper deHelper;
     SuchThatParser stParser;

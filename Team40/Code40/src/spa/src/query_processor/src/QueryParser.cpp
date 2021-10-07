@@ -3,10 +3,10 @@
 void QueryParser::clear() {
     this->stParser.clear();
     this->ptParser.clear();
-    this->deleteDeclarations();
+    this->clearDeclarations();
 }
 
-void QueryParser::deleteDeclarations() {
+void QueryParser::clearDeclarations() {
     for (int i = 0; i < this->declList.size(); ++i) {
         delete this->declList[i];
     }
@@ -20,7 +20,7 @@ void QueryParser::deleteDeclarations() {
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
     for (auto x : declPairs) {
         DesignEntityType type = deHelper.valueToDesType(x.first);
-        string syn = x.second;
+        string syn = parseValidName(x.second);
         Reference *ref = new Reference(type, ReferenceType::SYNONYM, syn);
         declList.push_back(ref);
     }
@@ -38,11 +38,12 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
  * @todo Check for attr validity based on synonym type
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
-    ReferenceAttribute attr = getAttrRef(ref);
+    ReferenceAttribute attr = parseValidAttr(ref);
 
     for (auto x : declList) {
         if (ref == x->getValue()) {
-            return new Reference(x->getDeType(), x->getRefType(), x->getValue(), attr);
+            return new Reference(x->getDeType(), x->getRefType(), x->getValue(),
+                                 attr);
         }
     }
     return nullptr;
@@ -66,7 +67,13 @@ PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
     return ptParser.parse(patTuple);
 }
 
-ReferenceAttribute QueryParser::getAttrRef(string ref) {
+/**
+ * Parse valid attribute.
+ * @param ref The string to parse.
+ * @return Valid attribute.
+ * @exception ValidityError if ref is invalid.
+ */
+ReferenceAttribute QueryParser::parseValidAttr(string ref) {
     string attr = ParserUtil::getAttribute(ref);
     if (attr.empty()) {
         return ReferenceAttribute::NONE;
@@ -76,6 +83,23 @@ ReferenceAttribute QueryParser::getAttrRef(string ref) {
     } else if (attr == "stmt#" || attr == "value") {
         return ReferenceAttribute::INTEGER;
     } else {
-        throw ValidityError("Invalid attribute");
+        throw ValidityError("QP-ERROR: invalid attribute");
     }
+}
+
+/**
+ * Parses valid name. A valid name is one that starts with a LETTER and contains
+ * only LETTERs and DIGITs.
+ * @param name The string to parse.
+ * @return Valid name.
+ * @exception ValidityError if name is invalid.
+ */
+string QueryParser::parseValidName(string name) {
+    if (isalpha(name[0])) {
+        auto it = find_if_not(begin(name), end(name), isalnum);
+        if (it == name.end()) {
+            return name;
+        }
+    }
+    throw ValidityError("QP-ERROR: invalid name");
 }

@@ -40,8 +40,7 @@ void QueryTokenizer::tokenizeDeclarations(string input,
         // add tuples to the vector
         vector<string> syns = tokenizeCommaSeparatedValues(synonyms);
         for (auto s : syns) {
-            string validName = parseValidName(s);
-            decls.push_back(make_pair(type, validName));
+            decls.push_back(make_pair(type, s));
         }
 
         // prepare for next iteration of while loop
@@ -107,6 +106,7 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input, string &rema
         }
         remaining = trimL(rest.substr(nextWhitespacePos + 1));
     }
+
     if (retString == KEYWORD_BOOLEAN) {
         return vector<string>();
     }
@@ -379,23 +379,6 @@ size_t QueryTokenizer::findNextWhitespace(string input, size_t pos) {
 
 size_t QueryTokenizer::findNextToken(string input, size_t pos) {
     return input.find_first_not_of(WHITESPACE_SET, pos);
-}
-
-/**
- * Parses valid name. A valid name is one that starts with a LETTER and contains 
- * only LETTERs and DIGITs.
- * @param input The string to parse.
- * @return Valid name.
- * @exception SyntaxError if name is invalid.
- */
-string QueryTokenizer::parseValidName(string input) {
-    if (isalpha(input[0])) {
-        auto it = find_if_not(begin(input), end(input), isalnum);
-        if (it == input.end()) {
-            return input;
-        }
-    }
-    throw SyntaxError("QP-ERROR: invalid name");
 }
 
 /**

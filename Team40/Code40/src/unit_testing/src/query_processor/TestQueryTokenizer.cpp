@@ -72,25 +72,11 @@ TEST_CASE("QueryTokenizer: tokenizeDeclarations") {
         REQUIRE(TestQueryTokenizer::comparePairs(vec[1], expected[1]));
         REQUIRE(TestQueryTokenizer::comparePairs(vec[2], expected[2]));
     }
-
-    SECTION("test invalid name") {
-        string invalid = "stmt 0PD;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
-                          SyntaxError);
-
-        invalid = "assign s_fishy;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
-                          SyntaxError);
-
-        invalid = "print 11111;";
-        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
-                          SyntaxError);
-    }
 }
 
 TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     QueryTokenizer tokenizer;
-    string CLAUSE = "with \" a \" = \" a \"";
+    string CLAUSE = "with P.procName = \" a \"";
 
     SECTION("FAIL: test no Select") {
         string remaining;
@@ -103,7 +89,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     }
 
     SECTION("SUCCESS: test one synonym") {
-        string SELECT = "Select s with \" a \" = \" a \"";
+        string SELECT = "Select s with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
             tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
@@ -114,19 +100,18 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     }
 
     SECTION("SUCCESS: test BOOLEAN") {
-        string SELECT = "Select BOOLEAN with \" a \" = \" a \"";
+        string SELECT = "Select BOOLEAN with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
             tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
 
         vector<string> expected1;
-        string expected2 = "with \" a \" = \" a \"";
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
     }
 
     SECTION("SUCCESS: test tuple") {
-        string SELECT = "Select <P, A, L> with \" a \" = \" a \"";
+        string SELECT = "Select <P, A, L> with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
             tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
@@ -135,7 +120,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
 
-        SELECT = "Select < P ,     A,    L > with \" a \" = \" a \"";
+        SELECT = "Select < P ,     A,    L > with P.procName = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
 
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
@@ -143,7 +128,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     }
 
     SECTION("SUCCESS: test attrRef without whitespace") {
-        string SELECT = "Select P.stmt# with \" a \" = \" a \"";
+        string SELECT = "Select P.stmt# with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
             tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
@@ -152,13 +137,13 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
 
-        SELECT = "Select P.procName with \" a \" = \" a \"";
+        SELECT = "Select P.procName with P.procName = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
         expected1 = {"P.procName"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
 
-        SELECT = "Select <P, A.procName, L.stmt#> with \" a \" = \" a \"";
+        SELECT = "Select <P, A.procName, L.stmt#> with P.procName = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
         expected1 = {"P", "A.procName", "L.stmt#"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
@@ -166,7 +151,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     }
 
     SECTION("SUCCESS: test attrRef with whitespace") {
-        string SELECT = "Select P . stmt# with \" a \" = \" a \"";
+        string SELECT = "Select P . stmt# with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
             tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
@@ -175,14 +160,14 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
 
-        SELECT = "Select P.    procName with \" a \" = \" a \"";
+        SELECT = "Select P.    procName with P.procName = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
         expected1 = {"P.procName"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));
         REQUIRE(remaining == CLAUSE);
 
         SELECT =
-            "Select <P, A     .procName, L . stmt#> with \" a \" = \" a \"";
+            "Select <P, A     .procName, L . stmt#> with P.procName = \" a \"";
         actual = tokenizer.tokenizeReturnSynonyms(SELECT, remaining);
         expected1 = {"P", "A.procName", "L.stmt#"};
         REQUIRE(TestQueryTokenizer::compareVectors(actual, expected1));

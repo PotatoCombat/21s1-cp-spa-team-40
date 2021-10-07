@@ -34,7 +34,6 @@ private:
     string trimR(string input);
     size_t findNextWhitespace(string input, size_t pos);
     size_t findNextToken(string input, size_t pos);
-    string parseValidName(string input);
     string getTokenBeforeX(string input, char x, size_t startPos,
                            size_t &nextPos);
     string removeWhitespaceWithinQuotes(string input);
