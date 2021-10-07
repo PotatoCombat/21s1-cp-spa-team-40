@@ -13,24 +13,19 @@ class ExpressionParser {
 public:
     // for bracket matching
     stack<string> brackets;
-    stack<string> operators;
-    unordered_map<string, int> precedenceMap = {
-        {"||", 1}, {"&&", 1}, {">", 2}, {">=", 2}, {"<", 2}, {"<=", 2}, {"==", 2},
-        {"!=", 2}, {"+", 3},  {"-", 3}, {"%", 4},  {"*", 4}, {"/", 4}};
 
     void parseExpression(vector<string> exprLst, Statement *stmt);
+    void checkValidOperator(string curr, Statement *stmt);
+    void checkValidBracket(string curr);
+    void checkValidExpression(vector<string> exprLst, Statement *stmt);
 
     bool isInteger(string input);
     bool isName(string input);
-    bool isValidAssignOperator(Statement *stmt, string input);
-    bool isValidWhileIfOperator(Statement *stmt, string input);
     bool isRoundBracket(string input);
+    bool isValidAssignOperator(Statement *stmt, string input);
+    bool isValidConditionalOperator(Statement *stmt, string input);
     bool isOperator(string input);
     bool isArtihmeticOperator(string input);
     bool isComparisonOperator(string input);
     bool isLogicalOperator(string input);
-
-    void handleBracket(string curr);
-    void handleOperator(string curr);
-    void checkValidBracket(string curr);
 };

@@ -30,7 +30,119 @@ ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb,
                              ClauseType validClauseType)
     : clause(clause), pkb(pkb), validClauseType(validClauseType) {}
 
-Result ClauseHandler::eval(int ref1Index, int ref2Index) {
+Result ClauseHandler::eval() {
+    ReferenceType refType1 = clause->getFirstReference()->getRefType();
+    ReferenceType refType2 = clause->getSecondReference()->getRefType();
+
+    validate();
+  
+    // WILDCARD WILDCARD
+    if (refType1 == ReferenceType::WILDCARD &&
+        refType2 == ReferenceType::WILDCARD) {
+        return evalWcWc();
+    }
+
+    // CONSTANT CONSTANT
+    if (refType1 == ReferenceType::CONSTANT &&
+        refType2 == ReferenceType::CONSTANT) {
+        return evalConstConst();
+    }
+
+    // CONSTANT WILDCARD
+    if (refType1 == ReferenceType::CONSTANT &&
+        refType2 == ReferenceType::WILDCARD) {
+        return evalConstWc();
+    }
+
+    // WILDCARD CONSTANT
+    if (refType1 == ReferenceType::WILDCARD &&
+        refType2 == ReferenceType::CONSTANT) {
+        return evalWcConst();
+    }
+
+    // SYNONYM CONSTANT
+    if (refType1 == ReferenceType::SYNONYM &&
+        refType2 == ReferenceType::CONSTANT) {
+        return evalSynConst();
+    }
+
+    // CONSTANT SYNONYM
+    if (refType1 == ReferenceType::CONSTANT &&
+        refType2 == ReferenceType::SYNONYM) {
+        return evalConstSyn();
+    }
+
+    // NEITHER IS CONSTANT
+    return evalNotConstNotConst();  
+}
+
+Result ClauseHandler::evalWcWc() {
+    Result result;
+    Reference *ref1 = clause->getFirstReference();
+    set<string> res1s = getAll(pkb, *ref1);
+    for (auto res1 : res1s) {
+        if (getR2ClausedR1(res1).size() > 0) {
+            result.setValid(true);
+            return result;
+        }
+    }
+    result.setValid(false);
+    return result;
+}
+
+Result ClauseHandler::evalConstConst() {
+    Result result;
+    string val1 = clause->getFirstReference()->getValue();
+    string val2 = clause->getSecondReference()->getValue();
+    result.setValid(isR1ClauseR2(val1, val2));
+    return result;
+}
+
+Result ClauseHandler::evalConstWc() {
+    Result result;
+    string val1 = clause->getFirstReference()->getValue();
+    result.setValid(!getR2ClausedR1(val1).empty());
+    return result;
+}
+
+Result ClauseHandler::evalWcConst() {
+    Result result;
+    string val2 = clause->getSecondReference()->getValue();
+    result.setValid(!getR1ClauseR2(val2).empty());
+    return result;
+}
+
+Result ClauseHandler::evalSynConst() {
+    Result result;
+    Reference *ref1 = clause->getFirstReference();
+    string val2 = clause->getSecondReference()->getValue();
+    map<VALUE, VALUE_SET> firstStmtResults;
+    set<string> res1s = getR1ClauseR2(val2);
+    for (string res1 : res1s) {
+        if (isType(res1, ref1->getDeType())) {
+            firstStmtResults[res1] = VALUE_SET{};
+        }
+    }
+    result.setResultList1(ref1, firstStmtResults);
+    return result;
+}
+
+Result ClauseHandler::evalConstSyn() {
+    Result result;
+    Reference *ref2 = clause->getSecondReference();
+    string val1 = clause->getFirstReference()->getValue();
+    map<VALUE, VALUE_SET> secondStmtResults;
+    set<string> res2s = getR2ClausedR1(val1);
+    for (auto res2 : res2s) {
+        if (isType(res2, ref2->getDeType())) {
+            secondStmtResults[res2] = VALUE_SET{};
+        }
+    }
+    result.setResultList2(ref2, secondStmtResults);
+    return result;
+}
+
+Result ClauseHandler::evalNotConstNotConst() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
     Reference *ref2 = clause->getSecondReference();
@@ -39,11 +151,10 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
     string val1 = ref1->getValue();
     string val2 = ref2->getValue();
 
-    validate();
-
     // same synonym
-    if (refType1 == ReferenceType::SYNONYM && refType2 == ReferenceType::SYNONYM && val1 == val2) {
-        set<string> res1s = getAll(*ref1);
+    if (refType1 == ReferenceType::SYNONYM &&
+        refType2 == ReferenceType::SYNONYM && val1 == val2) {
+        set<string> res1s = getAll(pkb, *ref1);
         for (auto res1 : res1s) {
             if (isR1ClauseR2(res1, res1)) {
                 result.setValid(true);
@@ -54,85 +165,19 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
         return result;
     }
 
-    // WILDCARD WILDCARD
-    if (refType1 == ReferenceType::WILDCARD &&
-        refType2 == ReferenceType::WILDCARD) {
-        set<string> res1s = getAll(*ref1);
-        for (auto res1 : res1s) {
-            if (getR2ClausedR1(res1).size() > 0) {
-                result.setValid(true);
-                return result;
-            }
-        }
-        result.setValid(false);
-        return result;
-    }
-
-    // CONSTANT CONSTANT
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::CONSTANT) {
-        result.setValid(isR1ClauseR2(val1, val2));
-        return result;
-    }
-
-    // CONSTANT WILDCARD
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::WILDCARD) {
-        result.setValid(getR2ClausedR1(val1).size() > 0);
-        return result;
-    }
-
-    // WILDCARD CONSTANT
-    if (refType1 == ReferenceType::WILDCARD &&
-        refType2 == ReferenceType::CONSTANT) {
-        result.setValid(getR1ClauseR2(val2).size() > 0);
-        return result;
-    }
-
-    // SYNONYM CONSTANT
-    if (refType1 == ReferenceType::SYNONYM &&
-        refType2 == ReferenceType::CONSTANT) {
-        VALUE_TO_POINTERS_MAP firstStmtResults;
-        set<string> res1s = getR1ClauseR2(val2);
-        for (string res1 : res1s) {
-            if (isType(res1, ref1->getDeType())) {
-                firstStmtResults[res1] = POINTER_SET{};
-            }
-        }
-        result.setResultList1(ref1, firstStmtResults);
-        return result;
-    }
-
-    // CONSTANT SYNONYM
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::SYNONYM) {
-        VALUE_TO_POINTERS_MAP secondStmtResults;
-        set<string> res2s = getR2ClausedR1(val1);
-        for (auto res2 : res2s) {
-            if (isType(res2, ref2->getDeType())) {
-                secondStmtResults[res2] = POINTER_SET{};
-            }
-        }
-        result.setResultList2(ref2, secondStmtResults);
-        return result;
-    }
-
-    // NEITHER IS CONSTANT
     // if first arg is SYNONYM
     if (refType1 != ReferenceType::WILDCARD) {
-        VALUE_TO_POINTERS_MAP firstStmtResults;
-        set<string> res1s = getAll(*ref1);
+        map<VALUE, VALUE_SET> firstStmtResults;
+        set<string> res1s = getAll(pkb, *ref1);
 
         for (string res1 : res1s) {
             set<string> res2s = getR2ClausedR1(res1);
-            POINTER_SET related;
+            VALUE_SET related;
             bool valid = false;
             for (auto res2 : res2s) {
                 if (isType(res2, ref2->getDeType())) {
                     valid = true;
-                    if (refType2 == ReferenceType::SYNONYM) {
-                        related.insert({ref2Index, res2});
-                    }
+                    related.insert(res2);
                 }
             }
             if (valid) {
@@ -145,19 +190,17 @@ Result ClauseHandler::eval(int ref1Index, int ref2Index) {
 
     // if second arg is SYNONYM
     if (refType2 != ReferenceType::WILDCARD) {
-        VALUE_TO_POINTERS_MAP secondStmtResults;
-        set<string> res2s = getAll(*ref2);
+        map<VALUE, VALUE_SET> secondStmtResults;
+        set<string> res2s = getAll(pkb, *ref2);
 
         for (string res2 : res2s) {
             set<string> res1s = getR1ClauseR2(res2);
-            POINTER_SET related;
+            VALUE_SET related;
             bool valid = false;
             for (string res1 : res1s) {
                 if (isType(res1, ref1->getDeType())) {
                     valid = true;
-                    if (refType1 == ReferenceType::SYNONYM) {
-                        related.insert({ref1Index, res1});
-                    }
+                    related.insert(res1);
                 }
             }
             if (valid) {
@@ -191,7 +234,7 @@ void ClauseHandler::validate() {
     }
 }
 
-set<string> ClauseHandler::getAll(Reference ref) {
+set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
     set<string> res;
     DesignEntityType desType = ref.getDeType();
     switch (desType) { 

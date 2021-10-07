@@ -9,19 +9,6 @@ map<DesignEntityType, StatementType> DesignEntityTypeHelper::desTypeToStmtTypeMa
     {DesignEntityType::WHILE, StatementType::WHILE}};
 
 DesignEntityTypeHelper::DesignEntityTypeHelper() {
-    typeToStringMap = {
-        {DesignEntityType::STMT, "stmt"},
-        {DesignEntityType::ASSIGN, "assign"},
-        {DesignEntityType::VARIABLE, "variable"},
-        {DesignEntityType::CONSTANT, "constant"},
-        {DesignEntityType::PROCEDURE, "procedure"},
-        {DesignEntityType::READ, "read"},
-        {DesignEntityType::PRINT, "print"},
-        {DesignEntityType::WHILE, "while"},
-        {DesignEntityType::IF, "if"},
-        {DesignEntityType::CALL, "call"},
-        {DesignEntityType::PROG_LINE, "prog_line"}
-    };
     stringToTypeMap = {
         {"stmt", DesignEntityType::STMT},
         {"assign", DesignEntityType::ASSIGN},
@@ -33,7 +20,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {"while", DesignEntityType::WHILE},
         {"if", DesignEntityType::IF},
         {"call", DesignEntityType::CALL},
-        {"prog_line", DesignEntityType::PROG_LINE}
+        {"prog_line", DesignEntityType::PROG_LINE} // TODO: replace all prog_lines with STMT in the future?
     };
     typeToIsStmtMap = {
         {DesignEntityType::STMT, true},
@@ -46,7 +33,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::WHILE, true},
         {DesignEntityType::IF, true},
         {DesignEntityType::CALL, true},
-        {DesignEntityType::PROG_LINE, false}
+        {DesignEntityType::PROG_LINE, true}
     };
     desTypeToStmtTypeMap = {
         {DesignEntityType::ASSIGN, StatementType::ASSIGN},
@@ -58,7 +45,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
     };
 }
 
-DesignEntityType DesignEntityTypeHelper::getType(string val) {
+DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
         throw ValidityError("invalid design entity type");
@@ -66,18 +53,10 @@ DesignEntityType DesignEntityTypeHelper::getType(string val) {
     return type->second;
 }
 
-string DesignEntityTypeHelper::getValue(DesignEntityType type) {
-    auto val = typeToStringMap.find(type);
-    if (val == typeToStringMap.end()) { // typically should not reach here
-        throw ValidityError("invalid design entity type"); // TODO: throw runtime error instead
-    }
-    return val->second;
-}
-
 bool DesignEntityTypeHelper::isStatement(DesignEntityType type) {
     auto val = typeToIsStmtMap.find(type);
     if (val == typeToIsStmtMap.end()) {
-        throw ValidityError("invalid design entity type"); // TODO: throw runtime error instead
+        throw ValidityError("invalid design entity type");
     }
     return val->second;
 }

@@ -12,7 +12,6 @@ using namespace std;
 
 class DesignEntityTypeHelper {
 private:
-    map<DesignEntityType, string> typeToStringMap;
     map<string, DesignEntityType> stringToTypeMap;
     map<DesignEntityType, bool> typeToIsStmtMap;
     static map<DesignEntityType, StatementType> desTypeToStmtTypeMap;
@@ -21,10 +20,7 @@ public:
     DesignEntityTypeHelper();
 
     // get type from string
-    DesignEntityType getType(string val);
-
-    // get value from type
-    string getValue(DesignEntityType type);
+    DesignEntityType valueToDesType(string val);
 
     bool isStatement(DesignEntityType type);
     bool isVariable(DesignEntityType type);

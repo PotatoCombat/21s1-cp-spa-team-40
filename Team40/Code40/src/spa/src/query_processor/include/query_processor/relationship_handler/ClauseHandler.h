@@ -38,12 +38,20 @@ protected:
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
 
     void validate();
-    set<string> getAll(Reference ref);
     bool isType(string val, DesignEntityType type);
+
+    Result evalWcWc();
+    Result evalConstConst();
+    Result evalConstWc();
+    Result evalWcConst();
+    Result evalSynConst();
+    Result evalConstSyn();
+    Result evalNotConstNotConst();
 
 public:
     // evaluates the clause and writes the answer to the result object
     // Result invalid = false only happens when neither of the references is
     // synonym
-    Result eval(int ref1Index, int ref2Index);
+    Result eval();
+    static set<string> getAll(PKB* pkb, Reference ref);
 };

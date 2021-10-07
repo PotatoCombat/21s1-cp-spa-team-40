@@ -4,13 +4,14 @@
 #include <iterator>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <utility>
 
 #include "Result.h"
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ResultFormatter.h"
 #include "query_processor/ResultTable.h"
 
 #include "query_processor/model/Clause.h"
@@ -35,7 +36,7 @@ using namespace std;
 class QueryEvaluator {
 private:
     PKB *pkb;
-    Reference *returnReference;
+    vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
     vector<PatternClause *> patterns;
@@ -51,9 +52,7 @@ private:
 
     vector<string> finaliseResult();
 
-    void combineResult(Result result);
-
-    void toString(vector<int> &vectorIn, vector<string> &vectorOut);
+    void combineResult(Result result, int ref1Index, int ref2Index);
 
     int getRefIndex(Reference *ref);
 

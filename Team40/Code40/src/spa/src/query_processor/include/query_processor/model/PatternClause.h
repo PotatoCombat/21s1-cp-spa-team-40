@@ -6,6 +6,10 @@
 
 using namespace std;
 
+//enum class PATTERN_MATCH {
+//    EXACT_MATCH, SUB_MATCH
+//};
+
 class PatternClause {
 private:
     Reference stmt;
