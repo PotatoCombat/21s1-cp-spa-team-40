@@ -64,6 +64,10 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
+void PKB::insertCalls(Procedure *proc, ProcName called) {
+    callsTable.insertCalls(proc, called);
+}
+
 void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
     nextTable.insertNext(previousStmt, nextStmt);
 }

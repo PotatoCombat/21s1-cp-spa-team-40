@@ -68,6 +68,10 @@ public:
     /// Stores the relationship Uses(stmt, var).
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
+    /// Stores the relationship Calls(stmt1, stmt2), and updates *
+    /// relationships.
+    virtual void insertCalls(Procedure *proc, ProcName called);
+
     /// Stores the relationship Next(stmt1, stmt2).
     virtual void insertNext(Statement *previousStmt, Statement *nextStmt);
 
