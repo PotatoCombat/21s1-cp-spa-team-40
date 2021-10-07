@@ -19,8 +19,8 @@ Program Parser::parseProgram(vector<Line> programLines) {
             currProc = procParser.parseProcedure();
 
         } else if (isStmt(currContent)) {
-            Statement *stmt =
-                parseStatement(currContent, currIndex, programLines, i);
+            StatementParser stmtParser(currContent, currIndex, programLines, i);
+            Statement *stmt = stmtParser.parseStatement();
             currProc->addToStmtLst(stmt);
         }
     }
