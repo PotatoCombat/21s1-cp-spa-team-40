@@ -64,6 +64,10 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
+void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
+    nextTable.insertNext(previousStmt, nextStmt);
+}
+
 void PKB::insertPatternAssign(Statement *stmt) {
     patternTable.insertPatternAssign(stmt);
 }
@@ -190,6 +194,20 @@ bool PKB::procUses(ProcName proc, VarName var) {
 
 bool PKB::stmtUses(StmtIndex stmt, VarName var) {
     return usesTable.stmtUses(stmt, var);
+}
+
+// Next ========================================================================
+
+set<StmtIndex> PKB::getNextLines(ProgLineIndex line) {
+    return nextTable.getNextLines(line);
+}
+
+set<StmtIndex> PKB::getPreviousLines(ProgLineIndex line) {
+    return nextTable.getPreviousLines(line);
+}
+
+bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
+    return nextTable.next(previousLine, nextLine);
 }
 
 // Pattern =====================================================================

@@ -10,6 +10,7 @@
 #include "PatternTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
+#include "NextTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -65,6 +66,9 @@ public:
 
     /// Stores the relationship Uses(stmt, var).
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
+
+    /// Stores the relationship Next(stmt1, stmt2).
+    virtual void insertNext(Statement *previousStmt, Statement *nextStmt);
 
     /// Stores the relationship pattern a(var, exprList), where a is an assign.
     virtual void insertPatternAssign(Statement *stmt);
@@ -194,6 +198,21 @@ public:
     /// Selects BOOLEAN such that Uses(stmt, var).
     virtual bool stmtUses(StmtIndex stmt, VarName var);
 
+    // Next ==================================================================
+
+    /// Selects s such that Next(line, s).
+    /// \return all programLine#no that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<StmtIndex> getNextLines(ProgLineIndex line);
+
+    /// Selects s such that Next(s, line).
+    /// \return all programLine#no that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<StmtIndex> getPreviousLines(ProgLineIndex line);
+
+    /// Selects BOOLEAN such that Next(line1, line2).
+    virtual bool next(ProgLineIndex previousLine, ProgLineIndex nextLine);
+
     // Pattern =================================================================
 
     /// Selects a such that a(var, pattern), where a is an AssignStatement.
@@ -230,5 +249,6 @@ private:
     ParentStarTable parentStarTable;
     ModifiesTable modifiesTable;
     UsesTable usesTable;
+    NextTable nextTable;
     PatternTable patternTable;
 };
