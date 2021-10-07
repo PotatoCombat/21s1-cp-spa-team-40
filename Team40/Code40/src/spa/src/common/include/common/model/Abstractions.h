@@ -9,6 +9,7 @@ typedef string VarName;
 typedef string ConstName;
 
 typedef int StmtIndex;
+typedef int ProgLineIndex;
 constexpr int InvalidIndex = -1;
 
 typedef string Pattern;
