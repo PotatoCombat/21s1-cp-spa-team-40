@@ -25,7 +25,7 @@ public:
 
 private:
     bool isValidAttribute(DesignEntityType type, string attribute);
-    // ReferenceAttribute getAttrRef(string ref);
+    ReferenceAttribute getAttrRef(string ref);
     void deleteDeclarations();
 
     DesignEntityTypeHelper deHelper;
