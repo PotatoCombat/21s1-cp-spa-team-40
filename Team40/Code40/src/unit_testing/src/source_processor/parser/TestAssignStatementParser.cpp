@@ -3,7 +3,7 @@
 
 TEST_CASE("AssignStatementParser: parseAssignStatement") {
     int index = 1;
-    auto *actualStmt = AssignStatementParser({"x", "=", "0", }, index).parseAssignStatement();
+    auto *actualStmt = AssignStatementParser({"x", "=", "0", ";"}, index).parseAssignStatement();
     auto testStmt = TestParserUtils::createAssignStmt(index, "x", "0");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
@@ -26,9 +26,9 @@ TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid assign s
     auto parser = AssignStatementParser({"x", "=", "0"}, index);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    auto parser = AssignStatementParser({"x", "=", ";"}, index);
+    parser = AssignStatementParser({"x", "=", ";"}, index);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    auto parser = AssignStatementParser({"=", "0", ";"}, index);
+    parser = AssignStatementParser({"=", "0", ";"}, index);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 }

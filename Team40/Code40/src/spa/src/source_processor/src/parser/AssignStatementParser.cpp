@@ -9,7 +9,7 @@ AssignStatementParser::AssignStatementParser(vector<string> content, int index)
 
 Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator assignItr = find(content.begin(), content.end(), "=");
-    if (prev(assignItr) == content.end()) {
+    if (assignItr == content.begin()) {
         throw invalid_argument("invalid assign statement");
     }
     string var_name = *prev(assignItr);
@@ -26,6 +26,9 @@ Statement *AssignStatementParser::parseAssignStatement() {
         throw invalid_argument("invalid assign statement");
     }
     vector<string> exprLst(next(assignItr), endItr);
+    if (exprLst.empty()) {
+        throw invalid_argument("invalid expression");
+    }
     stmt->setExpressionLst(exprLst);
     ExpressionParser exprParser;
     exprParser.parseExpression(exprLst, stmt);

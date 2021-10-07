@@ -16,16 +16,19 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
         throw invalid_argument("invalid while statement");
     // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
     if (next(whileItr) == content.end() || prev(endItr) == content.end()) {
-        throw invalid_argument("invalid read statement");
+        throw invalid_argument("invalid while statement");
     }
     if (*next(whileItr) != "(" || *prev(endItr) != ")") {
         throw invalid_argument("invalid while statement");
     }
 
     if (next(next(whileItr)) == content.end()) {
-        throw invalid_argument("invalid read statement");
+        throw invalid_argument("invalid while statement");
     }
     vector<string> condLst(next(next(whileItr)), prev(endItr));
+    if (condLst.empty()) {
+        throw invalid_argument("invalid condition");
+    }
     checkValidCondition(condLst);
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;

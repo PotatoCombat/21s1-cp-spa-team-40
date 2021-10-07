@@ -26,6 +26,9 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
         throw invalid_argument("invalid if statement");
     }
     vector<string> condLst(next(next(ifItr)), prev(prev(endItr)));
+    if (condLst.empty()) {
+        throw invalid_argument("invalid condition");
+    }
     checkValidCondition(condLst);
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;
