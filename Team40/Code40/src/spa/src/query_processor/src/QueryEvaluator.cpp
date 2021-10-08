@@ -7,11 +7,10 @@ void QueryEvaluator::clear() {
     clauses.clear();
     patterns.clear();
     referenceAppearInClauses.clear();
-    allQueriesReturnTrue = true;
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb), allQueriesReturnTrue(true) {}
+    : pkb(pkb) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
@@ -23,13 +22,14 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         resultTable.init(references.size());
         vector<bool> referenceAppearInClauses(references.size(), false);
         this->referenceAppearInClauses = referenceAppearInClauses;
-        bool allQueriesReturnTrue = true;
 
-        evalPattern();
+        bool exitEarly = false;
+        
+        evalPattern(exitEarly);
 
-        evalSuchThat();
+        if (!exitEarly) evalSuchThat(exitEarly);
 
-        return finaliseResult();
+        return finaliseResult(exitEarly);
 
     } catch (ClauseHandlerError &e) {
         // to be implemented later
@@ -37,7 +37,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-void QueryEvaluator::evalPattern() {
+void QueryEvaluator::evalPattern(bool &exitEarly) {
     for (PatternClause *pattern : patterns) {
         Result tempResult;
         AssignPatternHandler *patternHandler;
@@ -56,11 +56,14 @@ void QueryEvaluator::evalPattern() {
             ref2Index = getRefIndex(pattern->getVar());
         }
         tempResult = patternHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index);
+        combineResult(tempResult, ref1Index, ref2Index, exitEarly);
+        if (exitEarly) {
+            return;
+        }
     }
 }
 
-void QueryEvaluator::evalSuchThat() {
+void QueryEvaluator::evalSuchThat(bool &exitEarly) {
     // handle clauses
     for (Clause *clause : clauses) {
         Result tempResult;
@@ -118,23 +121,35 @@ void QueryEvaluator::evalSuchThat() {
 
         // eval and combine result
         tempResult = clauseHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index);
+        combineResult(tempResult, ref1Index, ref2Index, exitEarly);
+
+        if (exitEarly) {
+            return;
+        }
     }
 }
 
-vector<string> QueryEvaluator::finaliseResult() {
-    // returns empty result if one of the boolean clauses returns false
-    if (!allQueriesReturnTrue) {
-        return vector<string>();
-    }
+vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
+    vector<string> trueRes{"TRUE"};
+    vector<string> falseRes{"FALSE"};
+    vector<string> emptyRes = vector<string>{};
 
-    // returns empty result if one of the references has no matching result
-    for (int i = 0; i < references.size(); i++) {
-        if (referenceAppearInClauses[i] && resultTable.getValues(i).empty()) {
-            return vector<string>();
+    // handle exit early cases
+    if (exitEarly) {
+        if (returnRefs.empty()) {
+            return falseRes;
+        } else {
+            return emptyRes;
         }
     }
 
+    // if no return ref but not exit early then return TRUE
+    if (returnRefs.empty()) {
+        return trueRes;
+    }
+
+    // for values that is returned but not appear in any clauses, 
+    // fill in the table with all possible values
     vector<int> returnIndexes;
     for (auto ref : returnRefs) {
         int idx = getRefIndex(ref);
@@ -146,13 +161,17 @@ vector<string> QueryEvaluator::finaliseResult() {
         }
     }
 
+    // generate and format result
     vector<vector<string>> unformattedRes =
         resultTable.generateResult(returnIndexes);
     return ResultFormatter::formatResult(unformattedRes);
 }
 
-void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
-    allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
+void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool &exitEarly) {
+    if (!result.isResultValid()) {
+        exitEarly = true;
+        return;
+    }
 
     map<VALUE, VALUE_SET> res1;
     map<VALUE, VALUE_SET> res2;
@@ -304,6 +323,16 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
 
     for (auto& mapCoord : toRemove) {
         resultTable.removeValue(mapCoord.first, mapCoord.second);
+    }
+    
+    if (ref1Idx >= 0 && resultTable.empty(ref1Idx)) {
+        exitEarly = true;
+        return;
+    }
+
+    if (ref2Idx >= 0 && resultTable.empty(ref2Idx)) {
+        exitEarly = true;
+        return;
     }
 }
 

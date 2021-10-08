@@ -42,17 +42,16 @@ private:
     vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
-    bool allQueriesReturnTrue;
 
     void clear();
 
-    void evalPattern();
+    void evalPattern(bool &exitEarly);
 
-    void evalSuchThat();
+    void evalSuchThat(bool &exitEarly);
 
-    vector<string> finaliseResult();
+    vector<string> finaliseResult(bool exitEarly = false);
 
-    void combineResult(Result result, int ref1Index, int ref2Index);
+    void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
 
     int getRefIndex(Reference *ref);
 
