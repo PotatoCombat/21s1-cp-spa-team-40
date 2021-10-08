@@ -21,7 +21,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         /*********** Parse return synonym ***********/
         retStrings = tokenizer.tokenizeReturnSynonyms(parts.second, clauses);
 
-        addReturnReferenceToQuery(retStrings, q);
+        addReturnReferencesToQuery(retStrings, q);
 
         if (clauses.empty()) {
             parser.clear();
@@ -62,7 +62,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     }
 }
 
-void QueryPreprocessor::addReturnReferenceToQuery(vector<string> retStrings,
+void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
                                                   Query &q) {
     for (auto retString : retStrings) {
         Reference *returnRef = parser.parseReturnSynonym(retString);

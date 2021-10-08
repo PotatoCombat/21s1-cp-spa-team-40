@@ -18,7 +18,7 @@ public:
     bool preprocessQuery(string input, Query &q);
 
 private:
-    void addReturnReferenceToQuery(vector<string> retStrings, Query &q);
+    void addReturnReferencesToQuery(vector<string> retStrings, Query &q);
 
     QueryTokenizer tokenizer;
     QueryParser parser;

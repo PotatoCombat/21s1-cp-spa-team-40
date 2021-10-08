@@ -31,6 +31,9 @@ private:
     size_t tokenizePattern(string input, size_t startPos, PatTuple &clause);
     size_t tokenizeWith(string input, size_t startPos, WithTuple &clause);
 
+    bool isQuotedString(string input);
+    bool isWildcard(string input);
+    bool hasNoWhitespace(string input);
     string trim(string input);
     string trimL(string input);
     string trimR(string input);
@@ -40,8 +43,9 @@ private:
                            size_t &nextPos);
     string removeWhitespaceWithinQuotes(string input);
     string removeWhitespaceAroundPeriod(string input);
-    string extractPatternString(string input);
     vector<string> tokenizeCommaSeparatedValues(string input);
+    string extractPatternString(string input);
+    string getNextToken(string input, size_t pos);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
     // ClauseTypeHelper clsHelper = ClauseTypeHelper();

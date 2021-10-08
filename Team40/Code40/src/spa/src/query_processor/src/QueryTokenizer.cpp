@@ -289,25 +289,76 @@ size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
  * @param startPos The start of the clause.
  * @param &clause PatTuple.
  * @return Position of end of clause.
- * @todo Handle non-assign patterns
  */
 size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
                                        PatTuple &clause) {
-    string token1;
-    string token2;
-    string token3;
+    string ident;
+    vector<PatArg> arguments;
     size_t nextPos;
+    size_t commaPos;
+    string token;
 
-    // ASSUMES '(', ',', ')'
-    token1 = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
-    token2 = getTokenBeforeX(input, COMMA, nextPos, nextPos);
-    token3 = getTokenBeforeX(input, R_BRACKET, nextPos, nextPos);
+    ident = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
 
-    // remove whitespace within quotes of token2 and token3 if any!
-    token2 = removeWhitespaceWithinQuotes(token2);
-    token3 = extractPatternString(token3);
+    commaPos = input.find(COMMA, nextPos);
+    if (commaPos == string::npos) {
+        throw SyntaxError("QP-ERROR: no comma after left bracket");
+    }
 
-    clause = make_pair(token1, vector<PatArg>{token2, token3});
+    // go through the commas
+    while (commaPos != string::npos) {
+        string token = trim(input.substr(nextPos, commaPos - nextPos));
+        if (isQuotedString(token) || hasNoWhitespace(token) || isWildcard(token)) {
+            arguments.push_back(token);
+            nextPos = commaPos + 1;
+        } else {
+            // walked into another clause's comma
+            break;
+        }
+        commaPos = input.find(COMMA, nextPos);
+    }
+
+    size_t tokenPos = findNextToken(input, nextPos);
+    if (input[tokenPos] == QUOTE) {
+        tokenPos = tokenPos + 1;
+        string token = getTokenBeforeX(input, QUOTE, tokenPos, nextPos);
+        token = "\"" + token + "\"";
+        // check for R_BRACKET
+        tokenPos = findNextToken(input, nextPos);
+        if (input[tokenPos] == R_BRACKET) {
+            nextPos = tokenPos + 1;
+            arguments.push_back(token);
+        } else {
+            throw SyntaxError("QP-ERROR: patterrn clause does not end with "
+                                "right bracket");
+        }
+    } else if (input[tokenPos] == UNDERSCORE) {
+        tokenPos = tokenPos + 1;
+        tokenPos = findNextToken(input, tokenPos);
+        if (input[tokenPos] == R_BRACKET) {
+            nextPos = tokenPos + 1;
+            arguments.push_back("_");
+        } else {
+            string token =
+                getTokenBeforeX(input, UNDERSCORE, tokenPos, nextPos);
+            token = "_" + removeWhitespaceWithinQuotes(token) + "_";
+            // check for R_BRACKET
+            tokenPos = findNextToken(input, nextPos);
+            if (input[tokenPos] == R_BRACKET) {
+                nextPos = tokenPos + 1;
+                arguments.push_back(token);
+            } else {
+                throw SyntaxError(
+                    "QP-ERROR: patterrn clause does not end with "
+                    "right bracket");
+            }
+        }
+    } else {
+        string token = getTokenBeforeX(input, R_BRACKET, tokenPos, nextPos);
+        arguments.push_back(token);
+    }
+
+    clause = make_pair(ident, arguments);
     return nextPos;
 }
 
@@ -486,20 +537,6 @@ string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
     return token1 + "." + token2;
 }
 
-string QueryTokenizer::extractPatternString(string input) {
-    if (count(input.begin(), input.end(), QUOTE) == 2) {
-        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
-        if (n_underscore == 2) {
-            string underscored_r = trim(input.substr(1, input.size() - 2));
-            return trim(underscored_r.substr(1, underscored_r.size() - 2));
-        } else if (n_underscore == 1) {
-            throw SyntaxError("QP-ERROR: invalid pattern syntax");
-        }
-        return trim(input.substr(1, input.size() - 2));
-    }
-    return input;
-}
-
 /**
  * Tokenizes the comma separated values.
  * Used by both tuple tokenization and synonym declaration.
@@ -524,4 +561,40 @@ vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
         syns.push_back(remaining);
     }
     return syns;
+}
+
+string QueryTokenizer::extractPatternString(string input) {
+    if (count(input.begin(), input.end(), QUOTE) == 2) {
+        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
+        if (n_underscore == 2) {
+            string underscored_r = trim(input.substr(1, input.size() - 2));
+            return trim(underscored_r.substr(1, underscored_r.size() - 2));
+        } else if (n_underscore == 1) {
+            throw SyntaxError("QP-ERROR: invalid pattern syntax");
+        }
+        return trim(input.substr(1, input.size() - 2));
+    }
+    return input;
+}
+
+bool QueryTokenizer::isQuotedString(string input) {
+    if (count(input.begin(), input.end(), QUOTE) == 2 && input[0] == QUOTE &&
+        input[input.size() - 1] == QUOTE) {
+        return true;
+    }
+    return false;
+}
+
+bool QueryTokenizer::isWildcard(string input) { return input == "_"; }
+
+string QueryTokenizer::getNextToken(string input, size_t pos) {
+    size_t tokenPos = findNextToken(input, pos);
+    size_t whitespacePos = findNextWhitespace(input, tokenPos);
+
+    return trim(input.substr(tokenPos, whitespacePos - tokenPos));
+}
+
+bool QueryTokenizer::hasNoWhitespace(string input) {
+    size_t pos = findNextWhitespace(input, 0);
+    return pos == string::npos;
 }
