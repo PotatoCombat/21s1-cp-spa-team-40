@@ -309,6 +309,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
     while (commaPos != string::npos) {
         string token = trim(input.substr(nextPos, commaPos - nextPos));
         if (isQuotedString(token) || hasNoWhitespace(token) || isWildcard(token)) {
+            token = removeWhitespaceWithinQuotes(token);
             arguments.push_back(token);
             nextPos = commaPos + 1;
         } else {

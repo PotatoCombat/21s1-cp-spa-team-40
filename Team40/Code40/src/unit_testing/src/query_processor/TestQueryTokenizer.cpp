@@ -175,7 +175,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
     }
 }
 
-TEST_CASE("QueryTokenizer: tokenizeClauses") {
+TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
     QueryTokenizer tokenizer;
 
     SECTION("test only one such that clause") {
@@ -307,18 +307,160 @@ TEST_CASE("QueryTokenizer: tokenizeClauses") {
 
 TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
     QueryTokenizer tokenizer;
+    vector<ClsTuple> rel;
+    vector<PatTuple> pat;
+    vector<WithTuple> wit;
 
-    SECTION("test partial match pattern") {
-        string input = "pattern a(_, _\" x \"_)";
-        vector<ClsTuple> rel;
-        vector<PatTuple> pat;
-        vector<WithTuple> wit;
-        vector<PatTuple> expected =
-            vector<PatTuple>{make_pair("a", vector<string>{"_", "x"})};
+    SECTION("SUCCESS: test assign wildcard, wildcard") {
+        string input = "pattern a(_, _)";
+        PatTuple expected = make_pair("a", vector<string>{"_", "_"});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
-        CHECK(rel.size() == 0);
-        REQUIRE(get<0>(pat[0]) == get<0>(expected[0]));
-        REQUIRE(get<1>(pat[0])[0] == get<1>(expected[0])[0]);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(  _, _)";
+        expected = make_pair("a", vector<string>{"_", "_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_  , _)";
+        expected = make_pair("a", vector<string>{"_", "_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_,_)";
+        expected = make_pair("a", vector<string>{"_", "_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_, _   )";
+        expected = make_pair("a", vector<string>{"_", "_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+    }
+
+    SECTION("SUCCESS: test assign wildcard, ?") {
+        string input = "pattern a(_, _\"x\"_)"; // (_, _"x"_)
+        PatTuple expected = make_pair("a", vector<string>{"_", "_\"x\"_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_, _\" x + 5 \"_)"; // (_, _" x + 5 "_)
+        expected = make_pair("a", vector<string>{"_", "_\"x + 5\"_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_, \"x + 5\")"; // (_, "x + 5")
+        expected = make_pair("a", vector<string>{"_", "\"x + 5\""});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(_, \" x + 5 \"  )"; // (_, " x + 5 ")
+        expected = make_pair("a", vector<string>{"_", "\"x + 5\""});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+    }
+
+    SECTION("SUCCESS: test assign syn, ?") {
+        string input = "pattern a(synonym, _\" x \"_)"; // (synonym, _" x "_)
+        PatTuple expected =
+            make_pair("a", vector<string>{"synonym", "_\"x\"_"});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(    synonym, _\" x \"_)"; // (synonym, _" x "_)
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(synonym    , _\" x \"_)"; // (synonym, _" x "_)
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+    }
+
+    SECTION("SUCCESS: test assign quoted, ?") {
+        string input = "pattern a(\"quoted\", \" x * y \")"; // ("quoted", "x * y")
+        PatTuple expected =
+            make_pair("a", vector<string>{"\"quoted\"", "\"x * y\""});
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(  \"quoted\"  , \" x * y \")"; // ("quoted", "x * y")
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
+
+        pat.clear();
+        input = "pattern a(\"    quoted \",\" x * y \")"; // ("quoted", "x * y")
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        CHECK(rel.empty());
+        CHECK(wit.empty());
+        REQUIRE(pat[0].first == expected.first);
+        REQUIRE(
+            TestQueryTokenizer::compareVectors(pat[0].second, expected.second));
     }
 }
 
