@@ -20,9 +20,16 @@ public:
 
 private:
     PatternClause *parseAssign(Reference *identity);
+    PatternClause *parseWhile(Reference *identity);
+    PatternClause *parseIf(Reference *identity);
+    Reference *parseValidVariable(string var);
 
-    bool isAssignPattern(Reference *identity);
     Reference *getReferenceIfDeclared(string syn);
+    bool isAssignPattern(Reference *identity);
+    bool isWhilePattern(Reference *identity);
+    bool isIfPattern(Reference *identity);
+    bool isExactPattern(string pattern);
+    
 
     vector<Reference *> declList;
 

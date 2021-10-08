@@ -42,8 +42,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
 
     for (auto x : declList) {
         if (ref == x->getValue()) {
-            return new Reference(x->getDeType(), x->getRefType(), x->getValue(),
-                                 attr);
+            return new Reference(x->getDeType(), x->getRefType(), ref, attr);
         }
     }
     return nullptr;
@@ -71,7 +70,7 @@ PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
  * Parse valid attribute.
  * @param ref The string to parse.
  * @return Valid attribute.
- * @exception ValidityError if ref is invalid.
+ * @exception ValidityError if ref/attr is invalid.
  */
 ReferenceAttribute QueryParser::parseValidAttr(string ref) {
     string attr = ParserUtil::getAttribute(ref);
