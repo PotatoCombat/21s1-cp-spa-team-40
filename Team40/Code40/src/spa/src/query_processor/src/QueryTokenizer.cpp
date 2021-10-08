@@ -341,7 +341,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
             nextPos = getPosAfterRBracket(input, nextPos);
         }
     } else {
-        string token = getTokenBeforeX(input, R_BRACKET, tokenPos, nextPos);
+        token = getTokenBeforeX(input, R_BRACKET, tokenPos, nextPos);
     }
 
     arguments.push_back(token);
