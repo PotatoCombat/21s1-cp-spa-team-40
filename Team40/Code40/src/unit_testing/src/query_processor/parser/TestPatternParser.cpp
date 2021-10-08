@@ -3,167 +3,120 @@
 #include "query_processor/Abstractions.h"
 #include "query_processor/parser/PatternParser.h"
 
-struct TestPatternParser {
-    static Reference DECLARED_ASSIGN;
-    static Reference DECLARED_WHILE;
-    static Reference DECLARED_IF;
-    static Reference DECLARED_VARIABLE;
-    static Reference CONSTANT_VARIABLE;
-    static Reference WILDCARD;
-    static Reference DECLARED_CALL;
-    static string PATTERN_WILDCARD;
-    static string PATTERN_QUOTED;
-    static string PATTERN_UNDERSCORE_QUOTED;
-    static vector<Reference *> createReferences();
-};
-
-Reference TestPatternParser::DECLARED_ASSIGN =
-    Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
-Reference TestPatternParser::DECLARED_WHILE =
-    Reference(DesignEntityType::WHILE, ReferenceType::SYNONYM, "w");
-Reference TestPatternParser::DECLARED_IF =
-    Reference(DesignEntityType::IF, ReferenceType::SYNONYM, "ifs");
-Reference TestPatternParser::DECLARED_VARIABLE =
-    Reference(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "v");
-Reference TestPatternParser::CONSTANT_VARIABLE =
-    Reference(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "constant");
-Reference TestPatternParser::WILDCARD =
-    Reference(DesignEntityType::VARIABLE, ReferenceType::WILDCARD, "_");
-Reference TestPatternParser::DECLARED_CALL =
-    Reference(DesignEntityType::CALL, ReferenceType::SYNONYM, "c");
-string TestPatternParser::PATTERN_WILDCARD = "_";
-string TestPatternParser::PATTERN_QUOTED = "\"x + y\"";
-string TestPatternParser::PATTERN_UNDERSCORE_QUOTED = "_\"x + y\"_";
-
-vector<Reference *> TestPatternParser::createReferences() {
-    return vector<Reference *>{&DECLARED_ASSIGN, &DECLARED_WHILE, &DECLARED_IF,
-                               &DECLARED_VARIABLE, &DECLARED_CALL};
-}
-
 TEST_CASE("PatternParser: parse pattern clauses") {
     PatternParser p;
-    p.initReferences(TestPatternParser::createReferences());
+    ReferenceType refT = ReferenceType::SYNONYM;
+    DesignEntityType var = DesignEntityType::VARIABLE;
+    Reference D_ASSIGN = Reference(DesignEntityType::ASSIGN, refT, "a");
+    Reference D_WHILE = Reference(DesignEntityType::WHILE, refT, "w");
+    Reference D_IF = Reference(DesignEntityType::IF, refT, "ifs");
+    Reference D_VARIABLE = Reference(var, refT, "v");
+    Reference C_VARIABLE = Reference(var, ReferenceType::CONSTANT, "const");
+    Reference WILDCARD = Reference(var, ReferenceType::WILDCARD, "_");
+    Reference DECLARED_CALL = Reference(DesignEntityType::CALL, refT, "c");
+    string PATTERN_WILDCARD = "_";
+    string PATTERN_QUOTED = "\"x + y\"";
+    string PATTERN_UNDERSCORE_QUOTED = "_\"x + y\"_";
+    vector<Reference *> declarations{&D_ASSIGN, &D_WHILE, &D_IF, &D_VARIABLE,
+                                     &DECLARED_CALL};
+    p.initReferences(declarations);
 
     SECTION("wildcard") {
-        PatternClause *expected = new PatternClause(
-            TestPatternParser::DECLARED_ASSIGN, TestPatternParser::WILDCARD,
-            TestPatternParser::PATTERN_WILDCARD, true);
+        PatternClause *expected =
+            new PatternClause(D_ASSIGN, WILDCARD, PATTERN_WILDCARD, true);
         PatternClause *actual =
             p.parse(make_pair("a", vector<string>{"_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_WHILE,
-                                     TestPatternParser::WILDCARD);
+        expected = new PatternClause(D_WHILE, WILDCARD);
         actual = p.parse(make_pair("w", vector<string>{"_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_IF,
-                                     TestPatternParser::WILDCARD);
+        expected = new PatternClause(D_IF, WILDCARD);
         actual = p.parse(make_pair("ifs", vector<string>{"_", "_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
 
     SECTION("wildcard, ?") {
-        PatternClause *expected = new PatternClause(
-            TestPatternParser::DECLARED_ASSIGN, TestPatternParser::WILDCARD,
-            TestPatternParser::PATTERN_QUOTED, true);
-        PatternClause *actual = p.parse(make_pair(
-            "a", vector<string>{"_", TestPatternParser::PATTERN_QUOTED}));
+        PatternClause *expected =
+            new PatternClause(D_ASSIGN, WILDCARD, PATTERN_QUOTED, true);
+        PatternClause *actual =
+            p.parse(make_pair("a", vector<string>{"_", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(
-            TestPatternParser::DECLARED_ASSIGN, TestPatternParser::WILDCARD,
-            TestPatternParser::PATTERN_UNDERSCORE_QUOTED, true);
-        actual = p.parse(make_pair(
-            "a",
-            vector<string>{"_", TestPatternParser::PATTERN_UNDERSCORE_QUOTED}));
+        expected = new PatternClause(D_ASSIGN, WILDCARD,
+                                     PATTERN_UNDERSCORE_QUOTED, true);
+        actual = p.parse(
+            make_pair("a", vector<string>{"_", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
 
     SECTION("constant, ?") {
         PatternClause *expected =
-            new PatternClause(TestPatternParser::DECLARED_ASSIGN,
-                              TestPatternParser::CONSTANT_VARIABLE,
-                              TestPatternParser::PATTERN_WILDCARD, true);
+            new PatternClause(D_ASSIGN, C_VARIABLE, PATTERN_WILDCARD, true);
         PatternClause *actual =
-            p.parse(make_pair("a", vector<string>{"\"constant\"", "_"}));
+            p.parse(make_pair("a", vector<string>{"\"const\"", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_ASSIGN,
-                                     TestPatternParser::CONSTANT_VARIABLE,
-                                     TestPatternParser::PATTERN_QUOTED, true);
+        expected =
+            new PatternClause(D_ASSIGN, C_VARIABLE, PATTERN_QUOTED, true);
         actual = p.parse(
-            make_pair("a", vector<string>{"\"constant\"",
-                                          TestPatternParser::PATTERN_QUOTED}));
+            make_pair("a", vector<string>{"\"const\"", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(
-            TestPatternParser::DECLARED_ASSIGN,
-            TestPatternParser::CONSTANT_VARIABLE,
-            TestPatternParser::PATTERN_UNDERSCORE_QUOTED, true);
+        expected = new PatternClause(D_ASSIGN, C_VARIABLE,
+                                     PATTERN_UNDERSCORE_QUOTED, true);
         actual = p.parse(make_pair(
-            "a", vector<string>{"\"constant\"",
-                                TestPatternParser::PATTERN_UNDERSCORE_QUOTED}));
+            "a", vector<string>{"\"const\"", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_WHILE,
-                                     TestPatternParser::CONSTANT_VARIABLE);
-        actual = p.parse(make_pair("w", vector<string>{"\"constant\"", "_"}));
+        expected = new PatternClause(D_WHILE, C_VARIABLE);
+        actual = p.parse(make_pair("w", vector<string>{"\"const\"", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_IF,
-                                     TestPatternParser::CONSTANT_VARIABLE);
+        expected = new PatternClause(D_IF, C_VARIABLE);
         actual =
-            p.parse(make_pair("ifs", vector<string>{"\"constant\"", "_", "_"}));
+            p.parse(make_pair("ifs", vector<string>{"\"const\"", "_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
 
     SECTION("synonym, ?") {
         PatternClause *expected =
-            new PatternClause(TestPatternParser::DECLARED_ASSIGN,
-                              TestPatternParser::DECLARED_VARIABLE,
-                              TestPatternParser::PATTERN_WILDCARD, true);
+            new PatternClause(D_ASSIGN, D_VARIABLE, PATTERN_WILDCARD, true);
         PatternClause *actual =
             p.parse(make_pair("a", vector<string>{"v", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_ASSIGN,
-                                     TestPatternParser::DECLARED_VARIABLE,
-                                     TestPatternParser::PATTERN_QUOTED, true);
-        actual = p.parse(make_pair(
-            "a", vector<string>{"v", TestPatternParser::PATTERN_QUOTED}));
+        expected =
+            new PatternClause(D_ASSIGN, D_VARIABLE, PATTERN_QUOTED, true);
+        actual = p.parse(make_pair("a", vector<string>{"v", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(
-            TestPatternParser::DECLARED_ASSIGN,
-            TestPatternParser::DECLARED_VARIABLE,
-            TestPatternParser::PATTERN_UNDERSCORE_QUOTED, true);
-        actual = p.parse(make_pair(
-            "a",
-            vector<string>{"v", TestPatternParser::PATTERN_UNDERSCORE_QUOTED}));
+        expected = new PatternClause(D_ASSIGN, D_VARIABLE,
+                                     PATTERN_UNDERSCORE_QUOTED, true);
+        actual = p.parse(
+            make_pair("a", vector<string>{"v", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_WHILE,
-                                     TestPatternParser::DECLARED_VARIABLE);
+        expected = new PatternClause(D_WHILE, D_VARIABLE);
         actual = p.parse(make_pair("w", vector<string>{"v", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(TestPatternParser::DECLARED_IF,
-                                     TestPatternParser::DECLARED_VARIABLE);
+        expected = new PatternClause(D_IF, D_VARIABLE);
         actual = p.parse(make_pair("ifs", vector<string>{"v", "_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
