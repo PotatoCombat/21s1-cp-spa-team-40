@@ -1,0 +1,59 @@
+1 - [Affects] TRUE if affects relationship is present
+Select BOOLEAN such that Affects(_, _) 
+TRUE
+5000
+
+2 - [Affects] TRUE if any assignment affects given assignment
+Select BOOLEAN such that Affects(_, 4)
+FALSE
+5000
+
+3 - [Affects] TRUE if given assignment affects any assignment
+Select BOOLEAN such that Affects(33, _)
+FALSE
+5000
+
+4 - [Affects] TRUE if given synonym is an assignment
+Select BOOLEAN such that Affects(18, _)
+FALSE
+5000
+
+5 - [Affects] FALSE if given synonyms are not from the same procedure
+Select BOOLEAN such that Affects(34, 38)
+FALSE
+5000
+
+6 - [Affects] TRUE if given assignment affects another given assignment
+Select BOOLEAN such that Affects(38, 40)
+TRUE
+5000
+
+7 - [Affects] All assignment affected by the given assignment
+assign a;
+Select a such that Affects(4,a) 
+17
+5000
+
+8 - [Affects] All assignment affecting the given assignment
+prog_line n;
+Select n such that Affects(n, 40)
+38, 39
+5000
+
+9 - [Affects] All assignment affected by the given assignment
+assign a;
+Select a such that Affects(17,a) 
+none
+5000
+
+10 - [Affects] All assignment affecting some statement
+assign a1, a2;
+Select <a1, a2> such that Affects(a1, a2)
+4, 9, 26, 29, 38, 39
+5000
+
+11 - [Affects] All assignment affected by some statement
+assign a1,  a2;
+Select <a1, a2> such that Affects(a1 ,a2) and Affects(a2, a1) 
+None
+5000
