@@ -2,46 +2,58 @@ procedure proc1 {
     read x;
     read y;
     read z;
+    x = b - c;
     if ((x + y < z) && (a > b + c)) then {
         call proc2;
+        y = a - c;
     } else {
         call proc3;
+        z = a - b;
         while((x <= y + z) || (a + b >= c)){
             call proc4;
+            a = y - z;
         }
     }
     print a;
     print b;
     print c;
     call proc5;
+    b = x - z;
 }
 
 procedure proc2 {
     read a;
     read b;
     read c;
-    if ((x + y < z) && (a > b + c)) then {
-        call proc5;
-    } else {
+    c = x - y;
+    while((x <= y + z) || (a + b >= c)){
         call proc4;
-        while((x <= y + z) || (a + b >= c)){
+        a = y - z;
+        if ((x + y < z) && (a > b + c)) then {
+            call proc2;
+            y = a - c;
+        } else {
             call proc3;
+            z = a - b;
         }
     }
     print x;
     print y;
     print z;
+    a = y / z;
 }
 
 procedure proc3 {
     a = x;
     b = y;
     c = z;
+    b = x / z;
 }
 
 procedure proc4 {
     x = a;
     y = b;
+    c = x / y;
 }
 
 procedure proc5 {

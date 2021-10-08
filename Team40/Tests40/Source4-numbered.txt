@@ -1,0 +1,62 @@
+procedure proc1 {
+1    read x;
+2    read y;
+3    read z;
+4    x = b - c;
+5    if ((x + y < z) && (a > b + c)) then {
+6        call proc2;
+7        y = a - c;
+    } else {
+8        call proc3;
+9        z = a - b;
+10        while((x <= y + z) || (a + b >= c)){
+11            call proc4;
+12            a = y - z;
+        }
+    }
+13    print a;
+14    print b;
+15    print c;
+16    call proc5;
+17    b = x - z;
+}
+
+procedure proc2 {
+18    read a;
+19    read b;
+20    read c;
+21    c = x - y;
+22    while((x <= y + z) || (a + b >= c)){
+23        call proc4;
+24        a = y - z;
+25        if ((x + y < z) && (a > b + c)) then {
+26            call proc2;
+27            y = a - c;
+          } else {
+28            call proc3;
+29            z = a - b;
+          }
+      }
+30    print x;
+31    print y;
+32    print z;
+33    a = y / z;
+}
+
+procedure proc3 {
+34    a = x;
+35    b = y;
+36    c = z;
+37    b = x / z;
+}
+
+procedure proc4 {
+
+38    x = a;
+39    y = b;
+40    c = x / y;
+}
+
+procedure proc5 {
+41    z = c;
+}
