@@ -44,7 +44,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     PatternParser p;
     p.initReferences(TestPatternParser::createReferences());
 
-    SECTION("test pass: wildcard") {
+    SECTION("wildcard") {
         PatternClause *expected = new PatternClause(
             TestPatternParser::DECLARED_ASSIGN, TestPatternParser::WILDCARD,
             TestPatternParser::PATTERN_WILDCARD, true);
@@ -66,7 +66,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
     }
 
-    SECTION("test pass: wildcard, ?") {
+    SECTION("wildcard, ?") {
         PatternClause *expected = new PatternClause(
             TestPatternParser::DECLARED_ASSIGN, TestPatternParser::WILDCARD,
             TestPatternParser::PATTERN_QUOTED, true);
@@ -85,7 +85,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
     }
 
-    SECTION("test pass: constant, ?") {
+    SECTION("constant, ?") {
         PatternClause *expected =
             new PatternClause(TestPatternParser::DECLARED_ASSIGN,
                               TestPatternParser::CONSTANT_VARIABLE,
@@ -128,7 +128,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
     }
 
-    SECTION("test pass: synonym, ?") {
+    SECTION("synonym, ?") {
         PatternClause *expected =
             new PatternClause(TestPatternParser::DECLARED_ASSIGN,
                               TestPatternParser::DECLARED_VARIABLE,
@@ -169,7 +169,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
     }
 
-    SECTION("test fail: synonym undeclared/invalid") {
+    SECTION("TEST FAIL: synonym undeclared/invalid") {
         REQUIRE_THROWS_AS(
             p.parse(make_pair("a1", vector<string>{"\"x\"", "\"x\""})),
             ValidityError);
@@ -183,7 +183,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
                           ValidityError);
     }
 
-    SECTION("test fail: invalid first argument") {
+    SECTION("TEST FAIL: invalid first argument") {
         REQUIRE_THROWS_AS(
             p.parse(make_pair("a", vector<string>{"_\"x\"_", "\"x\""})),
             ValidityError);
@@ -194,7 +194,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
                           ValidityError);
     }
 
-    SECTION("test fail: invalid second (and third) arguments to while/if") {
+    SECTION("TEST FAIL: invalid second (and third) arguments to while/if") {
         REQUIRE_THROWS_AS(
             p.parse(make_pair("w", vector<string>{"\"x\"", "\"x\""})),
             ValidityError);
