@@ -28,7 +28,7 @@ Result AssignPatternHandler::eval() {
     if (variable->getRefType() == ReferenceType::CONSTANT) {
         map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
+                pkb->getPartialAssignPatternStmts(variable->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults[to_string(stmt)] = VALUE_SET{};
         }
@@ -46,7 +46,7 @@ Result AssignPatternHandler::eval() {
         VALUE_SET related;
         bool valid = false;
         for (string var : vars) {
-            if (pkb->assignMatchesPattern(assign, var, pattern)) {
+            if (pkb->partialAssignPattern(assign, var, pattern)) {
                 valid = true;
                 related.insert(var);
             }
@@ -60,7 +60,7 @@ Result AssignPatternHandler::eval() {
         VALUE_SET related;
         bool valid = false;
         for (int assignStmt : assigns) {
-            if (pkb->assignMatchesPattern(assignStmt, var, pattern)) {
+            if (pkb->partialAssignPattern(assignStmt, var, pattern)) {
                 valid = true;
                 if (assign->getRefType() == ReferenceType::SYNONYM) {
                     related.insert(to_string(assignStmt));
