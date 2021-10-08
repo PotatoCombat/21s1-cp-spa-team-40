@@ -27,7 +27,7 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
         Record record = make_pair(varName, p);
 
         // Record with wildcard varName, eg. (_, _"y * 5"_)
-        Record recordWithoutVarName = make_pair(WILDCARD_VARNAME, p);
+        Record recordWithoutVarName = make_pair(WILDCARD, p);
 
         // Map ("x", _"y * 5"_) : { stmt#1 }
         insertStmtWithPattern(record, stmtIndex);
@@ -40,7 +40,7 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     }
 
     // Record with wildcard pattern, eg. ("x", _)
-    Record recordWithoutPattern = make_pair(varName, WILDCARD_PATTERN);
+    Record recordWithoutPattern = make_pair(varName, WILDCARD);
 
     // Map ("x", _) : { stmt#1 }
     insertStmtWithPattern(recordWithoutPattern, stmtIndex);
@@ -57,10 +57,10 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
     Record exactRecord = make_pair(varName, exactPattern);
 
     // Exact record with wildcard varName, eg. (_, "y * 5")
-    Record exactRecordWithoutVarName = make_pair(WILDCARD_VARNAME, exactPattern);
+    Record exactRecordWithoutVarName = make_pair(WILDCARD, exactPattern);
 
     // Exact record with wildcard pattern, eg. ("x", _)
-    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD_PATTERN);
+    Record exactRecordWithoutPattern = make_pair(varName, WILDCARD);
 
     // Map ("x", "y * 5") : { stmt#1 }
     insertStmtWithExactPattern(exactRecord, stmtIndex);
@@ -256,7 +256,7 @@ string PatternTable::createPattern(vector<string> &postfix) {
     }
     if (stack.empty())
     {
-        return WILDCARD_PATTERN;
+        return WILDCARD;
     }
     return stack.top();
 }
