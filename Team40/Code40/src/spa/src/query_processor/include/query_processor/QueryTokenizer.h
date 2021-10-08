@@ -25,6 +25,8 @@ public:
                          vector<WithTuple> &withClauses);
 
 private:
+    // "get" methods are expectant - if the thing you are trying to get
+    // doesn't exist, it throws an exception (in contrast to "find" methods)
     vector<string> tokenizeReturnTuple(string input, string &remaining);
     string tokenizeReturnRef(string input, string &remaining);
     size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause);
@@ -41,11 +43,11 @@ private:
     size_t findNextToken(string input, size_t pos);
     string getTokenBeforeX(string input, char x, size_t startPos,
                            size_t &nextPos);
+    size_t getPosAfterRBracket(string input, size_t startPos);
     string removeWhitespaceWithinQuotes(string input);
     string removeWhitespaceAroundPeriod(string input);
     vector<string> tokenizeCommaSeparatedValues(string input);
     string extractPatternString(string input);
-    string getNextToken(string input, size_t pos);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
     // ClauseTypeHelper clsHelper = ClauseTypeHelper();
