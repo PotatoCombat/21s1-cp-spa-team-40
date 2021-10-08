@@ -360,58 +360,59 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
 size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
                                     WithTuple &clause) {
     string temp;
-    string token1;
-    string token2;
-    string token3;
-    string token4;
-    size_t nextPos;
+    string token1 = "";
+    string token2 = "";
+    string token3 = "";
+    string token4 = "";
+    //size_t nextPos;
+    size_t nextPos = startPos;
     size_t tempPos;
 
     // tokenize token by '=' and '.'
     // structure: token1.token2 = token3.token4
     // structure: "    name   " = token3.token4 // name stored in token1
     // structure: token1.token2 = 24 // 24 stored in token 3
-    temp = getTokenBeforeX(input, EQUAL, startPos, nextPos);
-    size_t periodPos = temp.find(PERIOD);
-    if (periodPos == string::npos) {
-        token1 = temp;
-        token2 = "";
-    } else {
-        token1 = trim(temp.substr(0, periodPos));
-        token2 = trim(temp.substr(periodPos + 1));
-    }
+    //temp = getTokenBeforeX(input, EQUAL, startPos, nextPos);
+    //size_t periodPos = temp.find(PERIOD);
+    //if (periodPos == string::npos) {
+    //    token1 = temp;
+    //    token2 = "";
+    //} else {
+    //    token1 = trim(temp.substr(0, periodPos));
+    //    token2 = trim(temp.substr(periodPos + 1));
+    //}
 
-    periodPos = input.find(PERIOD, nextPos);
+    //periodPos = input.find(PERIOD, nextPos);
 
-    if (periodPos == string::npos) { // no '.'
-        // TODO: Handle "     name      "
-        tempPos = findNextWhitespace(input, nextPos);
-        temp = input.substr(nextPos, tempPos - nextPos);
-        token3 = trim(temp);
-        token4 = "";
-        nextPos = tempPos;
-    } else {
-        size_t startTokenPos = findNextToken(input, nextPos);
-        size_t endTokenPos = findNextWhitespace(input, startTokenPos);
-        string tempToken =
-            input.substr(startTokenPos, endTokenPos - startTokenPos);
-        temp = trim(input.substr(nextPos, nextPos - periodPos));
-        if (temp == tempToken) {
-            token3 = temp;
-            startTokenPos = findNextToken(input, periodPos + 1);
-            endTokenPos = findNextWhitespace(input, startTokenPos);
-            token4 = input.substr(startTokenPos, endTokenPos - startTokenPos);
-        } else { // no '.'
-            // TODO: Handle "     name      "
-            token3 = tempToken;
-            token4 = "";
-        }
-        nextPos = endTokenPos;
-    }
+    //if (periodPos == string::npos) { // no '.'
+    //    // TODO: Handle "     name      "
+    //    tempPos = findNextWhitespace(input, nextPos);
+    //    temp = input.substr(nextPos, tempPos - nextPos);
+    //    token3 = trim(temp);
+    //    token4 = "";
+    //    nextPos = tempPos;
+    //} else {
+    //    size_t startTokenPos = findNextToken(input, nextPos);
+    //    size_t endTokenPos = findNextWhitespace(input, startTokenPos);
+    //    string tempToken =
+    //        input.substr(startTokenPos, endTokenPos - startTokenPos);
+    //    temp = trim(input.substr(nextPos, nextPos - periodPos));
+    //    if (temp == tempToken) {
+    //        token3 = temp;
+    //        startTokenPos = findNextToken(input, periodPos + 1);
+    //        endTokenPos = findNextWhitespace(input, startTokenPos);
+    //        token4 = input.substr(startTokenPos, endTokenPos - startTokenPos);
+    //    } else { // no '.'
+    //        // TODO: Handle "     name      "
+    //        token3 = tempToken;
+    //        token4 = "";
+    //    }
+    //    nextPos = endTokenPos;
+    //}
 
-    // remove whitespace within quotes of token1 and token3 if any!
-    token1 = removeWhitespaceWithinQuotes(token1);
-    token3 = removeWhitespaceWithinQuotes(token3);
+    //// remove whitespace within quotes of token1 and token3 if any!
+    //token1 = removeWhitespaceWithinQuotes(token1);
+    //token3 = removeWhitespaceWithinQuotes(token3);
 
     clause = vector<WithArg>{token1, token2, token3, token4};
     return nextPos;
