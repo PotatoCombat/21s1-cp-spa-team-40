@@ -7,16 +7,16 @@ using namespace std;
 
 PatternTable::PatternTable() = default;
 
-void PatternTable::insertPatternAssign(Statement *stmt) {
+void PatternTable::insertAssignPattern(Statement *stmt) {
     StmtIndex stmtIndex = stmt->getIndex();
     VarName varName = stmt->getVariable()->getName();
     vector<string> exprList = stmt->getExpressionLst();
 
     // ***************
-    // Normal Records
+    // Partial Records
     // ***************
     vector<string> postfix = createPostfix(exprList);
-    vector<string> patterns = createPatterns(postfix);
+    vector<string> patterns = createPartialPatterns(postfix);
 
     set<string> uniquePatterns = set<string>(patterns.begin(), patterns.end());
 
@@ -30,23 +30,23 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
         Record recordWithoutVarName = make_pair(WILDCARD, p);
 
         // Map ("x", _"y * 5"_) : { stmt#1 }
-        insertStmtWithPattern(record, stmtIndex);
+        insertStmtWithPartialPattern(record, stmtIndex);
 
         // Map (_, _"y * 5"_) : { stmt#1 }
-        insertStmtWithPattern(recordWithoutVarName, stmtIndex);
+        insertStmtWithPartialPattern(recordWithoutVarName, stmtIndex);
 
         // Map stmt#1 : { ("x", _"y * 5"_), (_, _"y * 5"_) }
-        insertPatternsOfStmt(stmtIndex, {record, recordWithoutVarName});
+        insertPartialPatternsOfStmt(stmtIndex, {record, recordWithoutVarName});
     }
 
     // Record with wildcard pattern, eg. ("x", _)
     Record recordWithoutPattern = make_pair(varName, WILDCARD);
 
     // Map ("x", _) : { stmt#1 }
-    insertStmtWithPattern(recordWithoutPattern, stmtIndex);
+    insertStmtWithPartialPattern(recordWithoutPattern, stmtIndex);
 
     // Map stmt#1 : { ("x", _) }
-    insertPatternsOfStmt(stmtIndex, {recordWithoutPattern});
+    insertPartialPatternsOfStmt(stmtIndex, {recordWithoutPattern});
 
     // ***************
     // Exact Records
@@ -79,21 +79,21 @@ void PatternTable::insertPatternAssign(Statement *stmt) {
                                          });
 }
 
-set<StmtIndex> PatternTable::getAssignPatternStmts(VarName varName, ExpressionList exprList) {
+set<StmtIndex> PatternTable::getPartialAssignPatternStmts(VarName varName, ExpressionList exprList) {
     vector<string> postfix = createPostfix(exprList);
-    string pattern = createPattern(postfix);
+    string pattern = createExactPattern(postfix);
     Record record = make_pair(varName, pattern);
 
-    auto kvp = stmtsWithPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
-    if (kvp == stmtsWithPatternMap.end()) { // Could not find a map entry with record as the key.
+    auto kvp = stmtsWithPartialPatternMap.find(record); // kvp stands for Key-Value Pair (map entry).
+    if (kvp == stmtsWithPartialPatternMap.end()) { // Could not find a map entry with record as the key.
         return {};
     }
     return kvp->second;
 }
 
-set<StmtIndex> PatternTable::getFullAssignPatternStmts(VarName varName, ExpressionList exprList) {
+set<StmtIndex> PatternTable::getExactAssignPatternStmts(VarName varName, ExpressionList exprList) {
     vector<string> postfix = createPostfix(exprList);
-    string pattern = createPattern(postfix);
+    string pattern = createExactPattern(postfix);
     Record record = make_pair(varName, pattern);
 
     auto kvp = stmtsWithExactPatternMap.find(record);
@@ -103,21 +103,21 @@ set<StmtIndex> PatternTable::getFullAssignPatternStmts(VarName varName, Expressi
     return kvp->second;
 }
 
-bool PatternTable::assignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
+bool PatternTable::partialAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
     vector<string> postfix = createPostfix(exprList);
-    string pattern = createPattern(postfix);
+    string pattern = createExactPattern(postfix);
     Record record = make_pair(varName, pattern);
 
-    auto kvp = patternsOfStmtMap.find(stmtIndex);
-    if (kvp == patternsOfStmtMap.end()) {
+    auto kvp = partialPatternsOfStmtMap.find(stmtIndex);
+    if (kvp == partialPatternsOfStmtMap.end()) {
         return false;
     }
     return kvp->second.find(record) != kvp->second.end();
 }
 
-bool PatternTable::fullAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
+bool PatternTable::exactAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList) {
     vector<string> postfix = createPostfix(exprList);
-    string pattern = createPattern(postfix);
+    string pattern = createExactPattern(postfix);
     Record record = make_pair(varName, pattern);
 
     auto kvp = exactPatternsOfStmtMap.find(stmtIndex);
@@ -127,10 +127,10 @@ bool PatternTable::fullAssignPattern(StmtIndex stmtIndex, VarName varName, Expre
     return kvp->second.find(record) != kvp->second.end();
 }
 
-void PatternTable::insertStmtWithPattern(Record record, StmtIndex stmtIndex) {
-    auto kvp = stmtsWithPatternMap.find(record);
-    if (kvp == stmtsWithPatternMap.end()) {
-        stmtsWithPatternMap[record] = {stmtIndex};
+void PatternTable::insertStmtWithPartialPattern(Record record, StmtIndex stmtIndex) {
+    auto kvp = stmtsWithPartialPatternMap.find(record);
+    if (kvp == stmtsWithPartialPatternMap.end()) {
+        stmtsWithPartialPatternMap[record] = {stmtIndex};
     } else {
         kvp->second.insert(stmtIndex);
     }
@@ -146,13 +146,13 @@ void PatternTable::insertStmtWithExactPattern(Record record,
     }
 }
 
-void PatternTable::insertPatternsOfStmt(StmtIndex stmtIndex,
-                                        set<Record> records) {
-    auto kvp = patternsOfStmtMap.find(stmtIndex);
-    if (kvp == patternsOfStmtMap.end()) {
-        patternsOfStmtMap[stmtIndex] = records;
+void PatternTable::insertPartialPatternsOfStmt(StmtIndex stmtIndex,
+                                               set<Record> record) {
+    auto kvp = partialPatternsOfStmtMap.find(stmtIndex);
+    if (kvp == partialPatternsOfStmtMap.end()) {
+        partialPatternsOfStmtMap[stmtIndex] = record;
     } else {
-        for (auto record : records) {
+        for (auto record : record) {
             kvp->second.insert(record);
         }
     }
@@ -228,7 +228,7 @@ vector<string> PatternTable::createPostfix(ExpressionList &exprList) {
     return postfix;
 }
 
-string PatternTable::createPattern(vector<string> &postfix) {
+string PatternTable::createExactPattern(vector<string> &postfix) {
     stack<string> stack;
 
     for (const string &s : postfix) {
@@ -261,7 +261,7 @@ string PatternTable::createPattern(vector<string> &postfix) {
     return stack.top();
 }
 
-vector<string> PatternTable::createPatterns(vector<string> &postfix) {
+vector<string> PatternTable::createPartialPatterns(vector<string> &postfix) {
     stack<string> stack;
     stack.push("#"); // Marks empty stack
 

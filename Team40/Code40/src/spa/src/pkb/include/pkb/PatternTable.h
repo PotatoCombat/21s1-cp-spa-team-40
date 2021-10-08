@@ -16,12 +16,12 @@ public:
 
     inline static VarName WILDCARD = "_";
 
-    void insertPatternAssign(Statement *stmt);
-    set<StmtIndex> getAssignPatternStmts(VarName varName, ExpressionList exprList);
-    set<StmtIndex> getFullAssignPatternStmts(VarName varName, ExpressionList exprList);
+    void insertAssignPattern(Statement *stmt);
+    set<StmtIndex> getPartialAssignPatternStmts(VarName varName, ExpressionList exprList);
+    set<StmtIndex> getExactAssignPatternStmts(VarName varName, ExpressionList exprList);
 
-    bool assignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList);
-    bool fullAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList pattern);
+    bool partialAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList);
+    bool exactAssignPattern(StmtIndex stmtIndex, VarName varName, ExpressionList exprList);
 
     typedef tuple<VarName, Pattern> Record;
 
@@ -30,8 +30,8 @@ public:
     static vector<string> tokenizePattern(Pattern &pattern);
     static vector<string> createPostfix(ExpressionList &exprList);
 
-    static string createPattern(vector<string> &postfix);
-    static vector<string> createPatterns(vector<string> &postfix); // Contains duplicates
+    static string createExactPattern(vector<string> &postfix);
+    static vector<string> createPartialPatterns(vector<string> &postfix); // Contains duplicates
 
 private:
     inline static map<string, int> PRECEDENCE{
@@ -50,15 +50,15 @@ private:
 
     inline static string SEPARATOR = " ";
 
-    map<Record, set<StmtIndex>> stmtsWithPatternMap;
+    map<Record, set<StmtIndex>> stmtsWithPartialPatternMap;
     map<Record, set<StmtIndex>> stmtsWithExactPatternMap;
 
-    map<StmtIndex, set<Record>> patternsOfStmtMap;
+    map<StmtIndex, set<Record>> partialPatternsOfStmtMap;
     map<StmtIndex, set<Record>> exactPatternsOfStmtMap;
 
-    void insertStmtWithPattern(Record record, StmtIndex stmtIndex);
+    void insertStmtWithPartialPattern(Record record, StmtIndex stmtIndex);
     void insertStmtWithExactPattern(Record record, StmtIndex stmtIndex);
 
-    void insertPatternsOfStmt(StmtIndex stmtIndex, set<Record> record);
+    void insertPartialPatternsOfStmt(StmtIndex stmtIndex, set<Record> record);
     void insertExactPatternsOfStmt(StmtIndex stmtIndex, set<Record> record);
 };

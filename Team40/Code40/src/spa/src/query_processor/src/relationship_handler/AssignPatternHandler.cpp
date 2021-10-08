@@ -28,7 +28,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
     if (variable->getRefType() == ReferenceType::CONSTANT) {
         VALUE_TO_POINTERS_MAP stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
+                pkb->getPartialAssignPatternStmts(variable->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults[to_string(stmt)] = POINTER_SET{};
         }
@@ -46,7 +46,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
         POINTER_SET related;
         bool valid = false;
         for (string var : vars) {
-            if (pkb->assignMatchesPattern(assign, var, pattern)) {
+            if (pkb->partialAssignPattern(assign, var, pattern)) {
                 valid = true;
                 if (variable->getRefType() == ReferenceType::SYNONYM) {
                     related.insert(make_pair(ref2Index, var));
@@ -62,7 +62,7 @@ Result AssignPatternHandler::eval(int ref1Index, int ref2Index) {
         POINTER_SET related;
         bool valid = false;
         for (int assignStmt : assigns) {
-            if (pkb->assignMatchesPattern(assignStmt, var, pattern)) {
+            if (pkb->partialAssignPattern(assignStmt, var, pattern)) {
                 valid = true;
                 if (assign->getRefType() == ReferenceType::SYNONYM) {
                     related.insert(make_pair(ref1Index, to_string(assignStmt)));

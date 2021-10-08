@@ -74,7 +74,7 @@ void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
 }
 
 void PKB::insertPatternAssign(Statement *stmt) {
-    patternTable.insertPatternAssign(stmt);
+    patternTable.insertAssignPattern(stmt);
 }
 
 // =============================================================================
@@ -244,22 +244,22 @@ bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
 // Pattern =====================================================================
 
 // TODO: Replace Pattern with ExpressionList
-set<StmtIndex> PKB::getAssignsMatchingPattern(VarName var, Pattern pattern) {
+set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, Pattern pattern) {
     auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.getAssignPatternStmts(var, exprList);
+    return patternTable.getPartialAssignPatternStmts(var, exprList);
 }
 
-set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var, Pattern pattern) {
+set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, Pattern pattern) {
     auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.getFullAssignPatternStmts(var, exprList);
+    return patternTable.getExactAssignPatternStmts(var, exprList);
 }
 
-bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
     auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.assignPattern(stmtIndex, var, exprList);
+    return patternTable.partialAssignPattern(stmtIndex, var, exprList);
 }
 
-bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
     auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.fullAssignPattern(stmtIndex, var, exprList);
+    return patternTable.exactAssignPattern(stmtIndex, var, exprList);
 }

@@ -192,141 +192,141 @@ struct TestPatterns {
     }
 };
 
-TEST_CASE("PatternTable: postfix patterns algorithm") {
+TEST_CASE("PatternTable: postfix partial patterns algorithm") {
     auto exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_1);
     auto postfix = PatternTable::createPostfix(exprList);
-    auto patterns = PatternTable::createPatterns(postfix);
+    auto patterns = PatternTable::createPartialPatterns(postfix);
     REQUIRE(TestPatterns::equalPatterns(patterns, TestPatterns::createPatterns1()));
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_2);
     postfix = PatternTable::createPostfix(exprList);
-    patterns = PatternTable::createPatterns(postfix);
+    patterns = PatternTable::createPartialPatterns(postfix);
     REQUIRE(TestPatterns::equalPatterns(patterns, TestPatterns::createPatterns2()));
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_3);
     postfix = PatternTable::createPostfix(exprList);
-    patterns = PatternTable::createPatterns(postfix);
+    patterns = PatternTable::createPartialPatterns(postfix);
     REQUIRE(TestPatterns::equalPatterns(patterns, TestPatterns::createPatterns3()));
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_4);
     postfix = PatternTable::createPostfix(exprList);
-    patterns = PatternTable::createPatterns(postfix);
+    patterns = PatternTable::createPartialPatterns(postfix);
     REQUIRE(TestPatterns::equalPatterns(patterns, TestPatterns::createPatterns4()));
 }
 
-TEST_CASE("PatternTable: postfix full pattern algorithm") {
+TEST_CASE("PatternTable: postfix exact pattern algorithm") {
     auto exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_1);
     auto postfix = PatternTable::createPostfix(exprList);
-    auto pattern = PatternTable::createPattern(postfix);
+    auto pattern = PatternTable::createExactPattern(postfix);
     REQUIRE(pattern == TestPatterns::POSTFIX_1);
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_2);
     postfix = PatternTable::createPostfix(exprList);
-    pattern = PatternTable::createPattern(postfix);
+    pattern = PatternTable::createExactPattern(postfix);
     REQUIRE(pattern == TestPatterns::POSTFIX_2);
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_3);
     postfix = PatternTable::createPostfix(exprList);
-    pattern = PatternTable::createPattern(postfix);
+    pattern = PatternTable::createExactPattern(postfix);
     REQUIRE(pattern == TestPatterns::POSTFIX_3);
 
     exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_4);
     postfix = PatternTable::createPostfix(exprList);
-    pattern = PatternTable::createPattern(postfix);
+    pattern = PatternTable::createExactPattern(postfix);
     REQUIRE(pattern == TestPatterns::POSTFIX_4);
 }
 
-TEST_CASE("PatternTable: assignPattern (with insertPatternAssign)") {
+TEST_CASE("PatternTable: partialAssignPattern (with insertAssignPattern)") {
     Statement *stmt = TestPatterns::createStatement1();
     StmtIndex stmtIndex = stmt->getIndex();
     VarName varName = stmt->getVariable()->getName();
 
     PatternTable table;
-    table.insertPatternAssign(stmt);
+    table.insertAssignPattern(stmt);
 
-    REQUIRE(table.assignPattern(stmtIndex, varName, TestPatterns::WILDCARD_EXPRLIST));
+    REQUIRE(table.partialAssignPattern(stmtIndex, varName, TestPatterns::WILDCARD_EXPRLIST));
 
     vector<string> testQueries = TestPatterns::createQueries1();
     for (auto query : testQueries) {
         auto exprList = TestPatterns::tokenizePattern(query);
-        REQUIRE(table.assignPattern(stmtIndex, varName, exprList));
-        REQUIRE(table.assignPattern(stmtIndex, TestPatterns::WILDCARD_VARNAME, exprList));
+        REQUIRE(table.partialAssignPattern(stmtIndex, varName, exprList));
+        REQUIRE(table.partialAssignPattern(stmtIndex, TestPatterns::WILDCARD_VARNAME, exprList));
     }
 
     delete stmt;
 }
 
-TEST_CASE("PatternTable: fullAssignPattern (with insertPatternAssign)") {
+TEST_CASE("PatternTable: exactAssignPattern (with insertAssignPattern)") {
     Statement *stmt = TestPatterns::createStatement2();
     StmtIndex stmtIndex = stmt->getIndex();
     VarName varName = stmt->getVariable()->getName();
 
     PatternTable table;
-    table.insertPatternAssign(stmt);
+    table.insertAssignPattern(stmt);
 
     auto exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_2);
-    REQUIRE(table.fullAssignPattern(stmtIndex, varName, TestPatterns::WILDCARD_EXPRLIST));
-    REQUIRE(table.fullAssignPattern(stmtIndex, varName, exprList));
-    REQUIRE(table.fullAssignPattern(stmtIndex, TestPatterns::WILDCARD_VARNAME, exprList));
+    REQUIRE(table.exactAssignPattern(stmtIndex, varName, TestPatterns::WILDCARD_EXPRLIST));
+    REQUIRE(table.exactAssignPattern(stmtIndex, varName, exprList));
+    REQUIRE(table.exactAssignPattern(stmtIndex, TestPatterns::WILDCARD_VARNAME, exprList));
 
     delete stmt;
 }
 
-TEST_CASE("PatternTable: getAssignPatternStmts (with insertPatternAssign)") {
+TEST_CASE("PatternTable: getPartialAssignPatternStmts (with insertAssignPattern)") {
     Statement *stmt = TestPatterns::createStatement1();
     StmtIndex stmtIndex = stmt->getIndex();
     VarName varName = stmt->getVariable()->getName();
     vector<string> testPatterns = TestPatterns::createPatterns1();
 
     PatternTable table;
-    table.insertPatternAssign(stmt);
+    table.insertAssignPattern(stmt);
 
-    set<StmtIndex> assignPatternStmts;
+    set<StmtIndex> stmts;
 
-    assignPatternStmts = table.getAssignPatternStmts(varName, TestPatterns::WILDCARD_EXPRLIST);
-    REQUIRE(assignPatternStmts.size() == 1);
-    REQUIRE(assignPatternStmts.count(stmtIndex) == 1);
+    stmts = table.getPartialAssignPatternStmts(varName, TestPatterns::WILDCARD_EXPRLIST);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
 
     vector<string> testQueries = TestPatterns::createQueries1();
     for (auto query : testQueries) {
         auto exprList = TestPatterns::tokenizePattern(query);
 
-        assignPatternStmts = table.getAssignPatternStmts(varName, exprList);
-        REQUIRE(assignPatternStmts.size() == 1);
-        REQUIRE(assignPatternStmts.count(stmtIndex) == 1);
+        stmts = table.getPartialAssignPatternStmts(varName, exprList);
+        REQUIRE(stmts.size() == 1);
+        REQUIRE(stmts.count(stmtIndex) == 1);
 
-        assignPatternStmts = table.getAssignPatternStmts(TestPatterns::WILDCARD_VARNAME, exprList);
-        REQUIRE(assignPatternStmts.size() == 1);
-        REQUIRE(assignPatternStmts.count(stmtIndex) == 1);
+        stmts = table.getPartialAssignPatternStmts(TestPatterns::WILDCARD_VARNAME, exprList);
+        REQUIRE(stmts.size() == 1);
+        REQUIRE(stmts.count(stmtIndex) == 1);
     }
 
     delete stmt;
 }
 
-TEST_CASE("PatternTable: getFullAssignPatternStmts (with insertPatternAssign)") {
+TEST_CASE("PatternTable: getExactAssignPatternStmts (with insertAssignPattern)") {
     Statement *stmt = TestPatterns::createStatement1();
     StmtIndex stmtIndex = stmt->getIndex();
     VarName varName = stmt->getVariable()->getName();
     vector<string> testPatterns = TestPatterns::createPatterns1();
 
     PatternTable table;
-    table.insertPatternAssign(stmt);
+    table.insertAssignPattern(stmt);
 
-    set<StmtIndex> fullAssignPatternStmts;
+    set<StmtIndex> stmts;
 
-    fullAssignPatternStmts = table.getFullAssignPatternStmts(varName, TestPatterns::WILDCARD_EXPRLIST);
-    REQUIRE(fullAssignPatternStmts.size() == 1);
-    REQUIRE(fullAssignPatternStmts.count(stmtIndex) == 1);
+    stmts = table.getExactAssignPatternStmts(varName, TestPatterns::WILDCARD_EXPRLIST);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
 
     auto exprList = TestPatterns::tokenizePattern(TestPatterns::EXPRESSION_1);
 
-    fullAssignPatternStmts = table.getFullAssignPatternStmts(varName, exprList);
-    REQUIRE(fullAssignPatternStmts.size() == 1);
-    REQUIRE(fullAssignPatternStmts.count(stmtIndex) == 1);
+    stmts = table.getExactAssignPatternStmts(varName, exprList);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
 
-    fullAssignPatternStmts = table.getFullAssignPatternStmts(TestPatterns::WILDCARD_VARNAME, exprList);
-    REQUIRE(fullAssignPatternStmts.size() == 1);
-    REQUIRE(fullAssignPatternStmts.count(stmtIndex) == 1);
+    stmts = table.getExactAssignPatternStmts(TestPatterns::WILDCARD_VARNAME, exprList);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
 
     delete stmt;
 }
