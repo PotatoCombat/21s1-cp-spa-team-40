@@ -65,7 +65,7 @@ PatternClause *PatternParser::parseWhile(Reference *identity) {
 PatternClause *PatternParser::parseIf(Reference *identity) {
     string var = this->args.at(0);
     Reference *ref = parseValidVariable(var);
-    
+
     if (!ParserUtil::isWildcard(this->args.at(1)) ||
         !ParserUtil::isWildcard(this->args.at(2))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
@@ -118,12 +118,12 @@ bool PatternParser::isAssignPattern(Reference *identity) {
 }
 
 bool PatternParser::isWhilePattern(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::ASSIGN &&
-           this->args.size() == 3;
+    return identity->getDeType() == DesignEntityType::WHILE &&
+           this->args.size() == 2;
 }
 
 bool PatternParser::isIfPattern(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::ASSIGN &&
+    return identity->getDeType() == DesignEntityType::IF &&
            this->args.size() == 3;
 }
 

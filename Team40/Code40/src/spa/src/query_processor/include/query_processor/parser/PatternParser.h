@@ -29,7 +29,6 @@ private:
     bool isWhilePattern(Reference *identity);
     bool isIfPattern(Reference *identity);
     bool isExactPattern(string pattern);
-    
 
     vector<Reference *> declList;
 
