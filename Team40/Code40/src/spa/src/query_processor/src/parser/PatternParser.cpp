@@ -48,8 +48,7 @@ PatternClause *PatternParser::parseAssign(Reference *identity) {
 
     bool isExactMatch = isExactPattern(pattern);
 
-    // temp change to make build success
-    return new PatternClause(*identity, *ref, pattern, true);
+    return new PatternClause(*identity, *ref, pattern, isExactMatch);
 }
 
 PatternClause *PatternParser::parseWhile(Reference *identity) {

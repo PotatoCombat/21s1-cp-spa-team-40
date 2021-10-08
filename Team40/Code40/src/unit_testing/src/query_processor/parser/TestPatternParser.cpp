@@ -49,7 +49,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
 
         expected = new PatternClause(D_ASSIGN, WILDCARD,
-                                     PATTERN_UNDERSCORE_QUOTED, true);
+                                     PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(
             make_pair("a", vector<string>{"_", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
@@ -72,7 +72,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
 
         expected = new PatternClause(D_ASSIGN, C_VARIABLE,
-                                     PATTERN_UNDERSCORE_QUOTED, true);
+                                     PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(make_pair(
             "a", vector<string>{"\"const\"", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
@@ -105,7 +105,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
 
         expected = new PatternClause(D_ASSIGN, D_VARIABLE,
-                                     PATTERN_UNDERSCORE_QUOTED, true);
+                                     PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(
             make_pair("a", vector<string>{"v", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
