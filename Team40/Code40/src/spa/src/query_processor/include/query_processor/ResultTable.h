@@ -41,6 +41,8 @@ public:
 
     vector<VALUE> getValues(INDEX refIndex);
 
+    bool empty(INDEX refIndex);
+
     bool hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
     void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);

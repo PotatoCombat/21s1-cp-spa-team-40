@@ -121,6 +121,11 @@ vector<VALUE> ResultTable::getValues(INDEX refIndex) {
     return res;
 }
 
+bool ResultTable::empty(INDEX refIndex) {
+    assertIndex(refIndex);
+    return table[refIndex].size() == 0;
+}
+
 bool ResultTable::hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2) {
     assertIndex(refIndex1);
     assertIndex(refIndex2);

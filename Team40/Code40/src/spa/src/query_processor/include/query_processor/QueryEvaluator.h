@@ -19,7 +19,7 @@
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
 
-#include "query_processor/relationship_handler/AssignPatternHandler.h"
+#include "query_processor/relationship_handler/PatternHandler.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
@@ -39,22 +39,24 @@ private:
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
-    vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
-    bool allQueriesReturnTrue;
 
     void clear();
 
-    void evalPattern();
+    Result getTempResult(Clause *clause);
 
-    void evalSuchThat();
+    void evalClauses(bool &exitEarly);
 
-    vector<string> finaliseResult();
+    vector<string> finaliseResult(bool exitEarly = false);
 
-    void combineResult(Result result, int ref1Index, int ref2Index);
+    void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
 
     int getRefIndex(Reference *ref);
+
+    // Decides if the program can exit early
+    // based on the state of the current resultTable at idx1 and idx2
+    bool canExitEarly(int idx1, int idx2);
 
 public:
     QueryEvaluator(PKB *pkb);

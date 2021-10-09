@@ -60,9 +60,9 @@ Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
 /**
  * Parse a `pattern` clause.
  * @param patTuple as <stmt, vector<args>>.
- * @return PatternClause object.
+ * @return Clause object.
  */
-PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
+Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
     return ptParser.parse(patTuple);
 }
 

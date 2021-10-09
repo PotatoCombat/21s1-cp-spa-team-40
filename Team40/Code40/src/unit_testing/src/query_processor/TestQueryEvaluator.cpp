@@ -187,3 +187,44 @@ TEST_CASE("QueryEvaluator: return multi result 2") {
                                      "3 10 4", "3 12 4", "4 10 12", "4 12 12",
                                      "6 10 9", "6 12 9", "9 10 10", "9 12 10"});
 }
+
+TEST_CASE("QueryEvaluator: 2 clauses share 2 synonyms") {
+    Query query;
+    Reference ifs(DesignEntityType::IF, ReferenceType::SYNONYM, "ifs");
+    Reference v(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "v");
+    Clause uses(ClauseType::USES_S, ifs, v);
+    Clause modifies(ClauseType::MODIFIES_S, ifs, v);
+
+    query.addReturnReference(&ifs);
+    query.addReturnReference(&v);
+    query.addClause(&uses);
+    query.addClause(&modifies);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"6 z"});
+}
+
+TEST_CASE("QueryEvaluator: return TRUE") {
+    Query query;
+    Reference a(DesignEntityType::STMT, ReferenceType::SYNONYM, "a");
+    Reference b(DesignEntityType::STMT, ReferenceType::SYNONYM, "b");
+    Clause parentT(ClauseType::PARENT_T, a, b);
+
+    query.addClause(&parentT);
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"TRUE"});
+}
+
+TEST_CASE("QueryEvaluator: return FALSE") {
+    Query query;
+    Reference a(DesignEntityType::IF, ReferenceType::SYNONYM, "a");
+    Reference b(DesignEntityType::CALL, ReferenceType::SYNONYM, "b");
+    Clause follows(ClauseType::FOLLOWS, a, b);
+
+    query.addClause(&follows);
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"FALSE"});
+}
