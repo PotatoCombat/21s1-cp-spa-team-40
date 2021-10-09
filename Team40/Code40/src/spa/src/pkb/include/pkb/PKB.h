@@ -92,6 +92,10 @@ public:
 
     virtual StatementType getStmtType(StmtIndex stmt);
 
+    virtual VarName getPrintVariable(StmtIndex printStmt);
+    virtual VarName getReadVariable(StmtIndex readStmt);
+    virtual ProcName getCallProcedure(StmtIndex callStmt);
+
     // Follows =================================================================
 
     /// Selects s such that Follows(stmt, s).
