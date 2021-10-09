@@ -25,13 +25,17 @@ private:
     Reference *parseValidVariable(string var);
 
     Reference *getReferenceIfDeclared(string syn);
-    bool isAssignPattern(Reference *identity);
-    bool isWhilePattern(Reference *identity);
-    bool isIfPattern(Reference *identity);
-    bool isExactPattern(string pattern);
+    bool isAssignPatternClause(Reference *identity);
+    bool isWhilePatternClause(Reference *identity);
+    bool isIfPatternClause(Reference *identity);
+    bool isExactPattern(vector<PatToken> pattern);
+    bool isWildcardPattern(vector<PatToken> pattern);
+    bool isQuotedPattern(vector<PatToken> pattern);
+    bool isUnderscoreQuotedPattern(vector<PatToken> pattern);
 
     vector<Reference *> declList;
 
     string ident;
-    vector<string> args;
+    string var;
+    vector<string> tokens;
 };

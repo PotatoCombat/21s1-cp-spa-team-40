@@ -13,6 +13,8 @@ ReferenceType ParserUtil::checkRefType(std::string val) {
 
 bool ParserUtil::isWildcard(std::string val) { return val == "_"; }
 
+bool ParserUtil::isQuote(std::string val) { return val == "\""; }
+
 bool ParserUtil::isInteger(std::string val) {
     return all_of(val.begin(), val.end(), isdigit);
 }

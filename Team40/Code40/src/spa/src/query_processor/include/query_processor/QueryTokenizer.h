@@ -23,6 +23,7 @@ public:
     void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                          vector<PatTuple> &patternClauses,
                          vector<WithTuple> &withClauses);
+    vector<PatToken> tokenizePattern(vector<string> patArgs);
 
 private:
     // "get" methods are expectant - if the thing you are trying to get
@@ -41,6 +42,7 @@ private:
     string trimR(string input);
     size_t findNextWhitespace(string input, size_t pos);
     size_t findNextToken(string input, size_t pos);
+    size_t findPatternDelimiter(string input, size_t pos);
     string getTokenBeforeX(string input, char x, size_t startPos,
                            size_t &nextPos);
     size_t getPosAfterRBracket(string input, size_t startPos);
@@ -60,6 +62,7 @@ private:
     inline static const string KEYWORD_WITH = "with";
     inline static const string KEYWORD_BOOLEAN = "BOOLEAN";
     inline static const string WHITESPACE_SET = " \n\t\r";
+    inline static const string PATTERN_DELIMITER_SET = "()+-*/%_\"";
 
     inline static const char SEMICOLON = ';';
     inline static const char COMMA = ',';

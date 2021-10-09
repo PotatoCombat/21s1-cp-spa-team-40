@@ -2,7 +2,8 @@
 
 PatternParser::PatternParser() {
     this->ident = "";
-    this->args.clear();
+    this->var = "";
+    this->tokens.clear();
 }
 
 void PatternParser::initReferences(vector<Reference *> &declList) {
@@ -12,14 +13,14 @@ void PatternParser::initReferences(vector<Reference *> &declList) {
 void PatternParser::clear() {
     this->declList.clear();
     this->ident = "";
-    this->args.clear();
+    this->var = "";
+    this->tokens.clear();
 }
 
 PatternClause *PatternParser::parse(PatTuple patTuple) {
-    this->ident = patTuple.first;
-    this->args = patTuple.second;
-    // first arg is reference (variable-type)
-    // remaining args are strings
+    this->ident = get<0>(patTuple);
+    this->var = get<1>(patTuple);
+    this->tokens = get<2>(patTuple);
 
     Reference *identity = getReferenceIfDeclared(this->ident);
 
@@ -29,11 +30,11 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 
     identity = identity->copy();
 
-    if (isAssignPattern(identity)) {
+    if (isAssignPatternClause(identity)) {
         return parseAssign(identity);
-    } else if (isWhilePattern(identity)) {
+    } else if (isWhilePatternClause(identity)) {
         return parseWhile(identity);
-    } else if (isIfPattern(identity)) {
+    } else if (isIfPatternClause(identity)) {
         return parseIf(identity);
     } else {
         delete identity;
@@ -42,31 +43,35 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 }
 
 PatternClause *PatternParser::parseAssign(Reference *identity) {
-    string var = this->args.at(0);
-    string pattern = this->args.at(1);
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    bool isExactMatch = isExactPattern(pattern);
+    bool isExactMatch = isExactPattern(tokens);
 
-    return new PatternClause(*identity, *ref, pattern, isExactMatch);
+    tokens = parsePatternTokens(tokens);
+
+    return new PatternClause(*identity, *ref, tokens, isExactMatch);
 }
 
 PatternClause *PatternParser::parseWhile(Reference *identity) {
-    string var = this->args.at(0);
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    if (!ParserUtil::isWildcard(this->args.at(1))) {
+    if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
     return new PatternClause(*identity, *ref);
 }
 
 PatternClause *PatternParser::parseIf(Reference *identity) {
-    string var = this->args.at(0);
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    if (!ParserUtil::isWildcard(this->args.at(1)) ||
-        !ParserUtil::isWildcard(this->args.at(2))) {
+    if (!ParserUtil::isWildcard(tokens.at(0)) ||
+        !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
     return new PatternClause(*identity, *ref);
@@ -111,26 +116,46 @@ Reference *PatternParser::getReferenceIfDeclared(string syn) {
     return nullptr;
 }
 
-bool PatternParser::isAssignPattern(Reference *identity) {
+bool PatternParser::isAssignPatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::ASSIGN &&
-           this->args.size() == 2;
+           this->tokens.size() > 0;
 }
 
-bool PatternParser::isWhilePattern(Reference *identity) {
+bool PatternParser::isWhilePatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::WHILE &&
-           this->args.size() == 2;
+           this->tokens.size() == 1;
 }
 
-bool PatternParser::isIfPattern(Reference *identity) {
+bool PatternParser::isIfPatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::IF &&
-           this->args.size() == 3;
+           this->tokens.size() == 2;
 }
 
-bool PatternParser::isExactPattern(string pattern) {
-    if (ParserUtil::isWildcard(pattern) || ParserUtil::isQuoted(pattern)) {
+bool PatternParser::isExactPattern(vector<PatToken> pattern) {
+    if (isWildcardPattern(pattern)) {
         return true;
-    } else if (ParserUtil::isUnderscoredQuoted(pattern)) {
+    } else if (isQuotedPattern(pattern)) {
+        return true;
+    } else if (isUnderscoreQuotedPattern(pattern)) {
         return false;
     }
     throw ValidityError("invalid pattern string");
+}
+
+bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
+    return pattern.size() == 1 && ParserUtil::isWildcard(pattern.at(0));
+}
+
+bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
+    return pattern.size() >= 2 && 
+           ParserUtil::isQuote(pattern.at(0)) &&
+           ParserUtil::isQuote(pattern.at(pattern.size() - 1));
+}
+
+bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
+    return pattern.size() >= 4 && 
+           ParserUtil::isWildcard(pattern.at(0)) &&
+           ParserUtil::isWildcard(pattern.at(pattern.size() - 1)) &&
+           ParserUtil::isQuote(pattern.at(1)) &&
+           ParserUtil::isQuote(pattern.at(pattern.size() - 2));
 }
