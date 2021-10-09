@@ -244,22 +244,19 @@ bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
 // Pattern =====================================================================
 
 // TODO: Replace Pattern with ExpressionList
-set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, Pattern pattern) {
-    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.getPartialAssignPatternStmts(var, exprList);
+set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, ExpressionList pattern) {
+    return patternTable.getPartialAssignPatternStmts(var, pattern);
 }
 
-set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, Pattern pattern) {
-    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.getExactAssignPatternStmts(var, exprList);
+set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, ExpressionList pattern) {
+    return patternTable.getExactAssignPatternStmts(var, pattern);
 }
 
-bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
-    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.partialAssignPattern(stmtIndex, var, exprList);
+bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
+    return patternTable.partialAssignPattern(stmtIndex, var, pattern);
 }
 
-bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, Pattern pattern) {
+bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
     auto exprList = PatternTable::tokenizePattern(pattern); // To remove
     return patternTable.exactAssignPattern(stmtIndex, var, exprList);
 }
