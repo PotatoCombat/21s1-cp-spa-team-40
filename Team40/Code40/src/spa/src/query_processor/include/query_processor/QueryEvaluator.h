@@ -44,6 +44,8 @@ private:
 
     void clear();
 
+    Result getTempResult(Clause *clause);
+
     void evalClauses(bool &exitEarly);
 
     vector<string> finaliseResult(bool exitEarly = false);

@@ -1,12 +1,15 @@
 #include "query_processor/model/Clause.h"
 
+const string Clause::DEFAULT_PATTERN = "";
+const bool Clause::DEFAULT_EXACT_MATCH = true;
+
 Clause::Clause(ClauseType type, Reference first, Reference second,
                string pattern, bool exactMatch)
     : type(type), first(first), second(second), pattern(pattern),
       exactMatch(exactMatch) {}
 
 Clause::Clause(ClauseType type, Reference first, Reference second)
-    : Clause(type, first, second, Clause::DEFAULT_PATTERN, Clause::DEFAULT_EXACT_MATCH) {}
+    : Clause(type, first, second, DEFAULT_PATTERN, DEFAULT_EXACT_MATCH) {}
 
 ClauseType Clause::getType() { return this->type; }
 

@@ -5,43 +5,41 @@ Result PatternHandler::eval() {
 
     validate();
 
+    Reference *stmtRef = patternClause->getFirstReference();
+    Reference *varRef = patternClause->getSecondReference();
+    string pattern = patternClause->getPattern();
+
     bool isSameAsModifies =
-        patternClause->getStmt()->getDeType() == DesignEntityType::IF ||
-        patternClause->getStmt()->getDeType() == DesignEntityType::WHILE ||
+        stmtRef->getDeType() == DesignEntityType::IF ||
+        varRef->getDeType() == DesignEntityType::WHILE ||
         patternClause->getPattern() == "_";
 
     // if same as modifies => use modifies handler
     if (isSameAsModifies) {
-        Reference *stmt = patternClause->getStmt();
-        Reference *variable = patternClause->getVar();
-        Clause clause(ClauseType::MODIFIES_S, *stmt, *variable);
+        Clause clause(ClauseType::MODIFIES_S, *stmtRef, *varRef);
         ModifiesStmtHandler handler(&clause, pkb);
         Result temp = handler.eval();
         // have to copy back because the Reference passed into clause is deleted
         // when this function finishes
         result.setValid(temp.isResultValid());
         if (temp.hasResultList1()) {
-            result.setResultList1(stmt, temp.getResultList1());
+            result.setResultList1(stmtRef, temp.getResultList1());
         }
         if (temp.hasResultList2()) {
-            result.setResultList2(variable, temp.getResultList2());
+            result.setResultList2(varRef, temp.getResultList2());
         }
         return result;
     }
 
-    Reference *assign = patternClause->getStmt();
-    Reference *variable = patternClause->getVar();
-    string pattern = patternClause->getPattern();
-
     // SYNONYM CONST
-    if (variable->getRefType() == ReferenceType::CONSTANT) {
+    if (varRef->getRefType() == ReferenceType::CONSTANT) {
         map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(variable->getValue(), pattern);
+            pkb->getAssignsMatchingPattern(varRef->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults[to_string(stmt)] = VALUE_SET{};
         }
-        result.setResultList1(assign, stmtResults);
+        result.setResultList1(stmtRef, stmtResults);
         return result;
     }
 
@@ -68,11 +66,11 @@ Result PatternHandler::eval() {
     for (string var : vars) {
         VALUE_SET related;
         bool valid = false;
-        for (int assignStmt : assigns) {
-            if (pkb->assignMatchesPattern(assignStmt, var, pattern)) {
+        for (int assign : assigns) {
+            if (pkb->assignMatchesPattern(assign, var, pattern)) {
                 valid = true;
-                if (assign->getRefType() == ReferenceType::SYNONYM) {
-                    related.insert(to_string(assignStmt));
+                if (stmtRef->getRefType() == ReferenceType::SYNONYM) {
+                    related.insert(to_string(assign));
                 }
             }
         }
@@ -81,18 +79,18 @@ Result PatternHandler::eval() {
         }
     }
 
-    result.setResultList1(assign, stmtResults);
+    result.setResultList1(stmtRef, stmtResults);
 
-    if (variable->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList2(variable, varResults);
+    if (varRef->getRefType() != ReferenceType::WILDCARD) {
+        result.setResultList2(varRef, varResults);
     }
 
     return result;
 }
 
 void PatternHandler::validate() {
-    Reference *stmt = patternClause->getStmt();
-    Reference *var = patternClause->getVar();
+    Reference *stmt = patternClause->getFirstReference();
+    Reference *var = patternClause->getSecondReference();
     set<DesignEntityType> validDesTypes = {DesignEntityType::ASSIGN,
                                            DesignEntityType::WHILE,
                                            DesignEntityType::IF};

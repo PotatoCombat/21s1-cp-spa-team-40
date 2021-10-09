@@ -13,11 +13,12 @@ private:
     string pattern; // optional, for pattern clause only
     bool exactMatch; // optional, for pattern clause only
 
+    static const string DEFAULT_PATTERN;
+    static const bool DEFAULT_EXACT_MATCH;
+
 protected:
     Clause(ClauseType type, Reference first, Reference second, string pattern,
            bool exactMatch);
-    const string DEFAULT_PATTERN = "";
-    const bool DEFAULT_EXACT_MATCH = true;
 
 public:
     Clause(ClauseType type, Reference first, Reference second);

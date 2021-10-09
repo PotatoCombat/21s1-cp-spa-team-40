@@ -33,78 +33,61 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-void QueryEvaluator::evalPattern(bool &exitEarly) {
-    for (PatternClause *pattern : patterns) {
-        Result tempResult;
-        PatternHandler *patternHandler;
-
-        if (pattern->getStmt()->getDeType() == DesignEntityType::ASSIGN) {
-            PatternHandler handler(pattern, pkb);
-            patternHandler = &handler;
-        }
-
-        // eval and combine result
-        int ref1Index = -1, ref2Index = -1;
-        if (pattern->getStmt()->getRefType() == ReferenceType::SYNONYM) {
-            ref1Index = getRefIndex(pattern->getStmt());
-        }
-        if (pattern->getVar()->getRefType() == ReferenceType::SYNONYM) {
-            ref2Index = getRefIndex(pattern->getVar());
-        }
-        tempResult = patternHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index, exitEarly);
-        if (exitEarly) {
-            return;
-        }
+Result QueryEvaluator::getTempResult(Clause* clause) {
+    if (clause->getType() == ClauseType::PATTERN) {
+        PatternHandler patternHandler(clause, pkb);
+        return patternHandler.eval();
     }
+
+    ClauseHandler *clauseHandler;
+
+    if (clause->getType() == ClauseType::FOLLOWS) {
+        FollowsHandler followsHandler(clause, pkb);
+        clauseHandler = &followsHandler;
+    }
+
+    if (clause->getType() == ClauseType::FOLLOWS_T) {
+        FollowsStarHandler followsStarHandler(clause, pkb);
+        clauseHandler = &followsStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT) {
+        ParentHandler parentHandler(clause, pkb);
+        clauseHandler = &parentHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT_T) {
+        ParentStarHandler parentStarHandler(clause, pkb);
+        clauseHandler = &parentStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_P) {
+        ModifiesProcHandler modifiesProcHandler(clause, pkb);
+        clauseHandler = &modifiesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_S) {
+        ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
+        clauseHandler = &modifiesStmtHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_P) {
+        UsesProcHandler usesProcHandler(clause, pkb);
+        clauseHandler = &usesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_S) {
+        UsesStmtHandler usesStmtHandler(clause, pkb);
+        clauseHandler = &usesStmtHandler;
+    }
+
+    return clauseHandler->eval();
 }
 
-void QueryEvaluator::evalSuchThat(bool &exitEarly) {
+void QueryEvaluator::evalClauses(bool &exitEarly) {
     // handle clauses
     for (Clause *clause : clauses) {
-        Result tempResult;
-
-        ClauseHandler *clauseHandler;
-
-        if (clause->getType() == ClauseType::FOLLOWS) {
-            FollowsHandler followsHandler(clause, pkb);
-            clauseHandler = &followsHandler;
-        }
-
-        if (clause->getType() == ClauseType::FOLLOWS_T) {
-            FollowsStarHandler followsStarHandler(clause, pkb);
-            clauseHandler = &followsStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT) {
-            ParentHandler parentHandler(clause, pkb);
-            clauseHandler = &parentHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT_T) {
-            ParentStarHandler parentStarHandler(clause, pkb);
-            clauseHandler = &parentStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_P) {
-            ModifiesProcHandler modifiesProcHandler(clause, pkb);
-            clauseHandler = &modifiesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_S) {
-            ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
-            clauseHandler = &modifiesStmtHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_P) {
-            UsesProcHandler usesProcHandler(clause, pkb);
-            clauseHandler = &usesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_S) {
-            UsesStmtHandler usesStmtHandler(clause, pkb);
-            clauseHandler = &usesStmtHandler;
-        }
+        Result tempResult = getTempResult(clause);
 
         int ref1Index = -1, ref2Index = -1;
         if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
@@ -114,12 +97,10 @@ void QueryEvaluator::evalSuchThat(bool &exitEarly) {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 
-        // eval and combine result
-        tempResult = clauseHandler->eval();
         combineResult(tempResult, ref1Index, ref2Index, exitEarly);
 
         if (exitEarly) {
-            return;
+            break;
         }
     }
 }
