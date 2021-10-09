@@ -54,6 +54,10 @@ private:
 
     int getRefIndex(Reference *ref);
 
+    // Decides if the program can exit early
+    // based on the state of the current resultTable at idx1 and idx2
+    bool canExitEarly(int idx1, int idx2);
+
 public:
     QueryEvaluator(PKB *pkb);
     vector<string> evaluateQuery(Query query);

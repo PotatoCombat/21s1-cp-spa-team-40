@@ -237,15 +237,7 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
                 }
             }
 
-            if (ref1Idx >= 0 && resultTable.empty(ref1Idx)) {
-                exitEarly = true;
-                return;
-            }
-
-            if (ref2Idx >= 0 && resultTable.empty(ref2Idx)) {
-                exitEarly = true;
-                return;
-            }
+            exitEarly = canExitEarly(ref1Idx, ref2Idx);
 
             return;
         }
@@ -312,15 +304,7 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
     
-    if (ref1Idx >= 0 && resultTable.empty(ref1Idx)) {
-        exitEarly = true;
-        return;
-    }
-
-    if (ref2Idx >= 0 && resultTable.empty(ref2Idx)) {
-        exitEarly = true;
-        return;
-    }
+    exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {
@@ -331,4 +315,15 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
         }
     }
     return index;
+}
+
+bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
+    if (idx1 >= 0 && resultTable.empty(idx1)) {
+        return true;
+    }
+
+    if (idx2 >= 0 && resultTable.empty(idx2)) {
+        return true;
+    }
+    return false;
 }
