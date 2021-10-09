@@ -20,7 +20,7 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
     // Next is procedure-scoped, unset previous statement
-    ExtractionContext::getInstance().unsetPreviousStatement();
+    ExtractionContext::getInstance().clearPreviousStatements();
 }
 
 void DepthFirstExtractor::extractStatement(Statement *statement) {
@@ -34,11 +34,12 @@ void DepthFirstExtractor::extractStatement(Statement *statement) {
     }
 
     // Handle Next(s1, s2)
-    optional<Statement *> previousStatement =
-        ExtractionContext::getInstance().getPreviousStatement();
-    if (!previousStatement.has_value()) {
-        pkb->insertNext(previousStatement.value(), statement);
+    vector<Statement *> previousStatements =
+        ExtractionContext::getInstance().getPreviousStatements();
+    for (Statement *previousStatement : previousStatements) {
+        pkb->insertNext(previousStatement, statement);
     }
+    ExtractionContext::getInstance().clearPreviousStatements();
 
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
@@ -124,11 +125,15 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     }
 
     // 3. Handle ELSE statements
+    ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(ifStatement);
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().unsetParentStatement(ifStatement);
+
+    ExtractionContext::getInstance().setPreviousStatement(
+        ifStatement->getThenStmtLst().back());
 }
 
 void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
@@ -175,6 +180,9 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     // Handle Next(w, s) where stmt s is the last child of while w
     pkb->insertNext(whileStatement->getThenStmtLst().back(), whileStatement);
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
+
+    ExtractionContext::getInstance().setPreviousStatement(
+        whileStatement->getThenStmtLst().back());
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
