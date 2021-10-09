@@ -16,4 +16,5 @@ enum class ClauseType {
     AFFECTS,
     AFFECTS_T,
     WITH,
+    PATTERN
 };
