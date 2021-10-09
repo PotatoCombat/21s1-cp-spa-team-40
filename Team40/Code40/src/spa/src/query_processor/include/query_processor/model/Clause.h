@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "ClauseType.h"
 #include "Reference.h"
 
@@ -10,24 +13,26 @@ private:
     ClauseType type;
     Reference first;
     Reference second;
-    string pattern; // optional, for pattern clause only
-    bool exactMatch; // optional, for pattern clause only
+    vector<string> pattern; // empty for non-pattern clause
+    bool exactMatch;        // true for non-pattern clause
 
-    static const string DEFAULT_PATTERN;
+    static const vector<string> DEFAULT_PATTERN;
     static const bool DEFAULT_EXACT_MATCH;
 
-protected:
-    Clause(ClauseType type, Reference first, Reference second, string pattern,
-           bool exactMatch);
+    Clause(ClauseType type, Reference first, Reference second,
+           vector<string> pattern, bool exactMatch);
 
 public:
     Clause(ClauseType type, Reference first, Reference second);
+    Clause(Reference first, Reference second, vector<string> pattern,
+           bool exactMatch);
+
+    ClauseType getType();
     Reference *getFirstReference();
     Reference *getSecondReference();
-    string getPattern();
+    vector<string> getPattern();
     bool isExactMatch();
-    ClauseType getType();
     bool equals(Clause &other);
-    Clause* copy();
+    Clause *copy();
     ~Clause();
 };
