@@ -27,10 +27,10 @@ procedure proc2 {
     read c;
     c = x - y;
     while((x <= y + z) || (a + b >= c)){
-        call proc4;
+        call proc5;
         a = y - z;
         if ((x + y < z) && (a > b + c)) then {
-            call proc2;
+            call proc4;
             y = a - c;
         } else {
             call proc3;
