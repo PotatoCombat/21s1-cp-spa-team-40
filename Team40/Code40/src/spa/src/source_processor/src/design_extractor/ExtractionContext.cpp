@@ -1,5 +1,5 @@
-#include <iterator>
 #include "source_processor/design_extractor/ExtractionContext.h"
+#include <iterator>
 
 ExtractionContext &ExtractionContext::getInstance() {
     static ExtractionContext instance;
@@ -72,6 +72,18 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
         throw runtime_error("Trying to unset another using statement.");
     }
     usingStatement = nullopt;
+}
+
+optional<Statement *> ExtractionContext::getPreviousStatement() {
+    return previousStatement;
+}
+
+void ExtractionContext::setPreviousStatement(Statement *statement) {
+    previousStatement = statement;
+}
+
+void ExtractionContext::unsetPreviousStatement() {
+    previousStatement = nullopt;
 }
 
 vector<Statement *> ExtractionContext::getParentStatements() {

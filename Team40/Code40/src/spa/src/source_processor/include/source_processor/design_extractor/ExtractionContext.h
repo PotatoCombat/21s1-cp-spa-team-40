@@ -21,6 +21,8 @@ private:
 
     optional<Statement *> modifyingStatement;
     optional<Statement *> usingStatement;
+    optional<Statement *> previousStatement;
+
     vector<Statement *> parentStatements;
     vector<Statement *> precedingStatements;
 
@@ -42,6 +44,9 @@ public:
     optional<Statement *> getUsingStatement();
     void setUsingStatement(Statement *statement);
     void unsetUsingStatement(Statement *statement);
+    optional<Statement *> getPreviousStatement();
+    void setPreviousStatement(Statement *statement);
+    void unsetPreviousStatement();
 
     vector<Statement *> getPrecedingStatements();
     void setPrecedingStatement(Statement *statement);
