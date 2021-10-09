@@ -30,14 +30,14 @@ TRUE
 
 7 - [Affects] All assignment affected by the given assignment
 assign a;
-Select a such that Affects(4,a) 
-17
+Select a such that Affects(24,a) 
+27, 29
 5000
 
 8 - [Affects] All assignment affecting the given assignment
 prog_line n;
-Select n such that Affects(n, 40)
-38, 39
+Select n such that Affects(n, 33)
+27, 29
 5000
 
 9 - [Affects] All assignment affected by the given assignment
@@ -49,11 +49,65 @@ none
 10 - [Affects] All assignment affecting some statement
 assign a1, a2;
 Select <a1, a2> such that Affects(a1, a2)
-4, 9, 26, 29, 38, 39
+4 17, 9 12, 21 27, 24 27, 24 29, 27 33, 29 33, 38 40, 39 40
 5000
 
 11 - [Affects] All assignment affected by some statement
 assign a1,  a2;
 Select <a1, a2> such that Affects(a1 ,a2) and Affects(a2, a1) 
+None
+5000
+
+12 - [Affects*] TRUE is affects relationship is present
+Select BOOLEAN such that Affects*(_, _) 
+TRUE
+5000
+
+13 - [Affects*] TRUE if any assignment affects given assignment
+Select BOOLEAN such that Affects*(_, 33)
+TRUE
+5000
+
+14 - [Affects*] TRUE if given assignment affects any assignment
+Select BOOLEAN such that Affects*(21, _)
+FALSE
+5000
+
+15 - [Affects*] FALSE if given synonym is not assignment
+Select BOOLEAN such that Affects*(22, _)
+FALSE
+5000
+
+16 - [Affects*] FALSE if given synonyms are not from the same procedure
+Select BOOLEAN such that Affects*(33, 34)
+FALSE
+5000
+
+17 - [Affects*] TRUE if given assignment affects directly or indirectly another given assignment
+Select BOOLEAN such that Affects*(21, 33)
+TRUE
+5000
+
+18 - [Affects*] All assignment affected directly or indirectly by the given assignment
+assign a;
+Select a such that Affects*(24,a) 
+27, 29, 33
+5000
+
+19 - [Affects*] All assignment affecting directly or indirectly the given assignment
+assign a;
+Select a such that Affects*(a, 33)
+21, 24, 27, 29 
+5000
+
+20 - [Affects*] All assignment affected directly or indirectly by the given assignment
+prog_line n;
+Select n such that Affects*(33, n) 
+none
+5000
+
+21 - [Affects*] All assignment affected directly or indirectly by some statement
+assign a1,  a2;
+Select <a1, a2> such that Affects*(a1 ,a2) and Affects*(a2, a1) 
 None
 5000
