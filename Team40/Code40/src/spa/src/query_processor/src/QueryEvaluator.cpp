@@ -36,10 +36,10 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 void QueryEvaluator::evalPattern(bool &exitEarly) {
     for (PatternClause *pattern : patterns) {
         Result tempResult;
-        AssignPatternHandler *patternHandler;
+        PatternHandler *patternHandler;
 
         if (pattern->getStmt()->getDeType() == DesignEntityType::ASSIGN) {
-            AssignPatternHandler handler(pattern, pkb);
+            PatternHandler handler(pattern, pkb);
             patternHandler = &handler;
         }
 

@@ -13,14 +13,14 @@
 
 using namespace std;
 
-class AssignPatternHandler {
+class PatternHandler {
 private:
     PatternClause *patternClause;
     PKB *pkb;
     void validate();
 
 public:
-    AssignPatternHandler(PatternClause *patternClause, PKB *pkb)
+    PatternHandler(PatternClause *patternClause, PKB *pkb)
         : patternClause(patternClause), pkb(pkb) {}
     Result eval();
 };

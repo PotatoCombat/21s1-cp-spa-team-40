@@ -1,28 +1,37 @@
-#include "query_processor/relationship_handler/AssignPatternHandler.h"
+#include "query_processor/relationship_handler/PatternHandler.h"
 
-Result AssignPatternHandler::eval() {
+Result PatternHandler::eval() {
     Result result;
-    Reference *assign = patternClause->getStmt();
-    Reference *variable = patternClause->getVar();
-    string pattern = patternClause->getPattern();
 
     validate();
 
-    // pattern = WILDCARD => ModifiesStmtHandler
-    if (pattern == "_") {
-        Clause clause(ClauseType::MODIFIES_S, *assign, *variable);
+    bool isSameAsModifies =
+        patternClause->getStmt()->getDeType() == DesignEntityType::IF ||
+        patternClause->getStmt()->getDeType() == DesignEntityType::WHILE ||
+        patternClause->getPattern() == "_";
+
+    // if same as modifies => use modifies handler
+    if (isSameAsModifies) {
+        Reference *stmt = patternClause->getStmt();
+        Reference *variable = patternClause->getVar();
+        Clause clause(ClauseType::MODIFIES_S, *stmt, *variable);
         ModifiesStmtHandler handler(&clause, pkb);
         Result temp = handler.eval();
         // have to copy back because the Reference passed into clause is deleted
         // when this function finishes
         result.setValid(temp.isResultValid());
         if (temp.hasResultList1()) {
-            result.setResultList1(assign, temp.getResultList1());
+            result.setResultList1(stmt, temp.getResultList1());
         }
         if (temp.hasResultList2()) {
-            result.setResultList2(assign, temp.getResultList2());
+            result.setResultList2(variable, temp.getResultList2());
         }
+        return result;
     }
+
+    Reference *assign = patternClause->getStmt();
+    Reference *variable = patternClause->getVar();
+    string pattern = patternClause->getPattern();
 
     // SYNONYM CONST
     if (variable->getRefType() == ReferenceType::CONSTANT) {
@@ -81,13 +90,16 @@ Result AssignPatternHandler::eval() {
     return result;
 }
 
-void AssignPatternHandler::validate() {
+void PatternHandler::validate() {
     Reference *stmt = patternClause->getStmt();
     Reference *var = patternClause->getVar();
-    if (stmt->getDeType() != DesignEntityType::ASSIGN ||
+    set<DesignEntityType> validDesTypes = {DesignEntityType::ASSIGN,
+                                           DesignEntityType::WHILE,
+                                           DesignEntityType::IF};
+    if (validDesTypes.count(stmt->getDeType()) == 0 ||
         stmt->getRefType() != ReferenceType::SYNONYM) {
         throw ClauseHandlerError(
-            "AssignPatternHandler: statement must be a synonym assignment");
+            "AssignPatternHandler: statement must be a synonym assigment, if, or while");
     }
 
     if (var->getDeType() != DesignEntityType::VARIABLE) {
