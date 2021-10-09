@@ -5,7 +5,6 @@ void QueryEvaluator::clear() {
     returnRefs.clear();
     references.clear();
     clauses.clear();
-    patterns.clear();
     referenceAppearInClauses.clear();
 }
 
@@ -18,16 +17,13 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         returnRefs = query.getReturnReferences();
         references = query.getReferences();
         clauses = query.getClauses();
-        patterns = query.getPatterns();
         resultTable.init(references.size());
         vector<bool> referenceAppearInClauses(references.size(), false);
         this->referenceAppearInClauses = referenceAppearInClauses;
 
         bool exitEarly = false;
-        
-        evalPattern(exitEarly);
 
-        if (!exitEarly) evalSuchThat(exitEarly);
+        evalClauses(exitEarly);
 
         return finaliseResult(exitEarly);
 
@@ -37,79 +33,61 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-void QueryEvaluator::evalPattern(bool &exitEarly) {
-    for (PatternClause *pattern : patterns) {
-        Result tempResult;
-        AssignPatternHandler *patternHandler;
-
-        if (pattern->getStmt()->getDeType() == DesignEntityType::ASSIGN) {
-            AssignPatternHandler handler(pattern, pkb);
-            patternHandler = &handler;
-        }
-
-        // eval and combine result
-        int ref1Index = -1, ref2Index = -1;
-        if (pattern->getStmt()->getRefType() == ReferenceType::SYNONYM) {
-            ref1Index = getRefIndex(pattern->getStmt());
-        }
-        if (pattern->getVar()->getRefType() == ReferenceType::SYNONYM) {
-            ref2Index = getRefIndex(pattern->getVar());
-        }
-        tempResult = patternHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index, exitEarly);
-        if (exitEarly) {
-            return;
-        }
+Result QueryEvaluator::getTempResult(Clause* clause) {
+    if (clause->getType() == ClauseType::PATTERN) {
+        PatternHandler patternHandler(clause, pkb);
+        return patternHandler.eval();
     }
+
+    ClauseHandler *clauseHandler;
+
+    if (clause->getType() == ClauseType::FOLLOWS) {
+        FollowsHandler followsHandler(clause, pkb);
+        clauseHandler = &followsHandler;
+    }
+
+    if (clause->getType() == ClauseType::FOLLOWS_T) {
+        FollowsStarHandler followsStarHandler(clause, pkb);
+        clauseHandler = &followsStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT) {
+        ParentHandler parentHandler(clause, pkb);
+        clauseHandler = &parentHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT_T) {
+        ParentStarHandler parentStarHandler(clause, pkb);
+        clauseHandler = &parentStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_P) {
+        ModifiesProcHandler modifiesProcHandler(clause, pkb);
+        clauseHandler = &modifiesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_S) {
+        ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
+        clauseHandler = &modifiesStmtHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_P) {
+        UsesProcHandler usesProcHandler(clause, pkb);
+        clauseHandler = &usesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_S) {
+        UsesStmtHandler usesStmtHandler(clause, pkb);
+        clauseHandler = &usesStmtHandler;
+    }
+
+    return clauseHandler->eval();
 }
 
-void QueryEvaluator::evalSuchThat(bool &exitEarly) {
+void QueryEvaluator::evalClauses(bool &exitEarly) {
     // handle clauses
     for (Clause *clause : clauses) {
-        Result tempResult;
-
-        ClauseHandler *clauseHandler;
-
-        // TODO: add more handlers for clauseType later
-        if (clause->getType() == ClauseType::FOLLOWS) {
-            FollowsHandler followsHandler(clause, pkb);
-            clauseHandler = &followsHandler;
-        }
-
-        if (clause->getType() == ClauseType::FOLLOWS_T) {
-            FollowsStarHandler followsStarHandler(clause, pkb);
-            clauseHandler = &followsStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT) {
-            ParentHandler parentHandler(clause, pkb);
-            clauseHandler = &parentHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT_T) {
-            ParentStarHandler parentStarHandler(clause, pkb);
-            clauseHandler = &parentStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_P) {
-            ModifiesProcHandler modifiesProcHandler(clause, pkb);
-            clauseHandler = &modifiesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_S) {
-            ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
-            clauseHandler = &modifiesStmtHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_P) {
-            UsesProcHandler usesProcHandler(clause, pkb);
-            clauseHandler = &usesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_S) {
-            UsesStmtHandler usesStmtHandler(clause, pkb);
-            clauseHandler = &usesStmtHandler;
-        }
+        Result tempResult = getTempResult(clause);
 
         int ref1Index = -1, ref2Index = -1;
         if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
@@ -119,12 +97,10 @@ void QueryEvaluator::evalSuchThat(bool &exitEarly) {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 
-        // eval and combine result
-        tempResult = clauseHandler->eval();
         combineResult(tempResult, ref1Index, ref2Index, exitEarly);
 
         if (exitEarly) {
-            return;
+            break;
         }
     }
 }
@@ -260,6 +236,9 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
                     resultTable.removeValue(ref2Idx, refValue);
                 }
             }
+
+            exitEarly = canExitEarly(ref1Idx, ref2Idx);
+
             return;
         }
     }
@@ -325,15 +304,7 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
     
-    if (ref1Idx >= 0 && resultTable.empty(ref1Idx)) {
-        exitEarly = true;
-        return;
-    }
-
-    if (ref2Idx >= 0 && resultTable.empty(ref2Idx)) {
-        exitEarly = true;
-        return;
-    }
+    exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {
@@ -344,4 +315,15 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
         }
     }
     return index;
+}
+
+bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
+    if (idx1 >= 0 && resultTable.empty(idx1)) {
+        return true;
+    }
+
+    if (idx2 >= 0 && resultTable.empty(idx2)) {
+        return true;
+    }
+    return false;
 }
