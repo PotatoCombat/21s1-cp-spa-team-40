@@ -197,7 +197,7 @@ bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
     return pattern.size() >= 2 && 
            ParserUtil::isQuote(pattern.at(0)) &&
            ParserUtil::isQuote(pattern.at(pattern.size() - 1)) &&
-           count(pattern.begin(), pattern.end(), ParserUtil::isQuote) == 2;
+           count(pattern.begin(), pattern.end(), "\"") == 2;
 }
 
 bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
@@ -206,8 +206,8 @@ bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
            ParserUtil::isWildcard(pattern.at(pattern.size() - 1)) &&
            ParserUtil::isQuote(pattern.at(1)) &&
            ParserUtil::isQuote(pattern.at(pattern.size() - 2)) &&
-           count(pattern.begin(), pattern.end(), ParserUtil::isWildcard) == 2 &&
-           count(pattern.begin(), pattern.end(), ParserUtil::isQuote) == 2;
+           count(pattern.begin(), pattern.end(), "_") == 2 &&
+           count(pattern.begin(), pattern.end(), "\"") == 2;
 }
 
 bool PatternParser::isOperator(string token) {

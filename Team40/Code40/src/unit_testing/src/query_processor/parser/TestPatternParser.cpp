@@ -16,25 +16,26 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     Reference DECLARED_CALL = Reference(DesignEntityType::CALL, refT, "c");
     vector<string> PATTERN_WILDCARD{"_"};
     vector<string> PATTERN_WILDCARD_2{"_", "_"};
-    vector<string> PATTERN_QUOTED{"\"x + y\""};
-    vector<string> PATTERN_UNDERSCORE_QUOTED{"_\"x + y\"_"};
+    vector<string> PATTERN_QUOTED{"\"", "x", "+", "y", "\""};
+    vector<string> PATTERN_UNDERSCORE_QUOTED{"_", "\"", "x", "+", "y", "\"", "_"};
+    vector<string> PATTERN{"x", "+", "y"};
     vector<Reference *> declarations{&D_ASSIGN, &D_WHILE, &D_IF, &D_VARIABLE,
                                      &DECLARED_CALL};
     p.initReferences(declarations);
 
     SECTION("wildcard") {
         Clause *expected =
-            new Clause(D_ASSIGN, WILDCARD, PATTERN_WILDCARD, true);
+            new Clause(D_ASSIGN, WILDCARD, vector<string>{}, true);
         Clause *actual = p.parse(make_tuple("a", "_", PATTERN_WILDCARD));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_WHILE, WILDCARD);
+        expected = new Clause(ClauseType::PATTERN, D_WHILE, WILDCARD);
         actual = p.parse(make_tuple("w", "_", PATTERN_WILDCARD));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_IF, WILDCARD);
+        expected = new Clause(ClauseType::PATTERN, D_IF, WILDCARD);
         actual = p.parse(make_tuple("ifs", "_", PATTERN_WILDCARD_2));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
@@ -42,13 +43,13 @@ TEST_CASE("PatternParser: parse pattern clauses") {
 
     SECTION("wildcard, ?") {
         Clause *expected = new Clause(D_ASSIGN, WILDCARD, PATTERN_QUOTED, true);
-        Clause *actual = p.parse(make_tuple("a", "_", PATTERN_QUOTED));
+        Clause *actual = p.parse(make_tuple("a", "_", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
         expected =
             new Clause(D_ASSIGN, WILDCARD, PATTERN_UNDERSCORE_QUOTED, false);
-        actual = p.parse(make_tuple("a", "_", PATTERN_UNDERSCORE_QUOTED));
+        actual = p.parse(make_tuple("a", "_", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
@@ -62,24 +63,23 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
 
         expected = new Clause(D_ASSIGN, C_VARIABLE, PATTERN_QUOTED, true);
-        actual = p.parse(make_tuple("a", "\"const\"", PATTERN_QUOTED));
+        actual = p.parse(make_tuple("a", "\"const\"", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
         expected =
             new Clause(D_ASSIGN, C_VARIABLE, PATTERN_UNDERSCORE_QUOTED, false);
-        actual =
-            p.parse(make_tuple("a", "\"const\"", PATTERN_UNDERSCORE_QUOTED));
+        actual = p.parse(make_tuple("a", "\"const\"", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_WHILE, C_VARIABLE);
-        actual = p.parse(make_tuple("w", "\"const\"", PATTERN_WILDCARD));
+        expected = new Clause(ClauseType::PATTERN, D_WHILE, C_VARIABLE);
+        actual = p.parse(make_tuple("w", "\"const\"", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_IF, C_VARIABLE);
-        actual = p.parse(make_tuple("ifs", "\"const\"", PATTERN_WILDCARD_2));
+        expected = new Clause(ClauseType::PATTERN, D_IF, C_VARIABLE);
+        actual = p.parse(make_tuple("ifs", "\"const\"", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
@@ -92,23 +92,23 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
 
         expected = new Clause(D_ASSIGN, D_VARIABLE, PATTERN_QUOTED, true);
-        actual = p.parse(make_tuple("a", "v", PATTERN_QUOTED));
+        actual = p.parse(make_tuple("a", "v", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
         expected =
             new Clause(D_ASSIGN, D_VARIABLE, PATTERN_UNDERSCORE_QUOTED, false);
-        actual = p.parse(make_tuple("a", "v", PATTERN_UNDERSCORE_QUOTED));
+        actual = p.parse(make_tuple("a", "v", PATTERN));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_WHILE, D_VARIABLE);
+        expected = new Clause(ClauseType::PATTERN, D_WHILE, D_VARIABLE);
         actual = p.parse(make_tuple("w", "v", PATTERN_WILDCARD));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new Clause(D_IF, D_VARIABLE);
-        actual = p.parse(make_tuple("ifs", "v", PATTERN_WILDCARD_2));
+        expected = new Clause(ClauseType::PATTERN, D_IF, D_VARIABLE);
+        actual = p.parse(make_tuple("ifs", "v", vector<string>{}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
@@ -127,10 +127,10 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     SECTION("TEST FAIL: invalid var/arg to assign") {
         REQUIRE_THROWS_AS(p.parse(make_tuple("a", "_\"x\"_", PATTERN_QUOTED)),
                           ValidityError);
-        REQUIRE_THROWS_AS(
-            p.parse(make_tuple("a", "_", vector<string>{"_\"x\""})),
+        REQUIRE_THROWS_AS(p.parse(make_tuple(
+                              "a", "_", vector<string>{"_", "\"", "x", "\""})),
             ValidityError);
-        REQUIRE_THROWS_AS(p.parse(make_tuple("a", "_", vector<string>{"\"x"})),
+        REQUIRE_THROWS_AS(p.parse(make_tuple("a", "_", vector<string>{"\"", "x"})),
                           ValidityError);
     }
 
@@ -201,20 +201,20 @@ TEST_CASE("PatternParser: parse pattern string into tokens") {
     }
 }
 
-//string P_SIMPLE_1 = "\"x + y\"";
-//string P_SIMPLE_2 = "\"x + 10 + y\"";
-//string P_BRACKETS_1 = "\"((y))\"";
-//string P_BRACKETS_2 = "\"x + ((y) * (x))\"";
-//string P_COMPLEX_1 = "\"x + y - 10 * (n4m3 % x) / y\"";
-//string P_COMPLEX_2 = "_\"(((x - y) * z) / (a - 20 % b) - 10) * x\"_";
+// string P_SIMPLE_1 = "\"x + y\"";
+// string P_SIMPLE_2 = "\"x + 10 + y\"";
+// string P_BRACKETS_1 = "\"((y))\"";
+// string P_BRACKETS_2 = "\"x + ((y) * (x))\"";
+// string P_COMPLEX_1 = "\"x + y - 10 * (n4m3 % x) / y\"";
+// string P_COMPLEX_2 = "_\"(((x - y) * z) / (a - 20 % b) - 10) * x\"_";
 //
-//vector<string> T_SIMPLE_1{"x", "+", "y"};
-//vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};
-//vector<string> T_BRACKETS_1{"(", "(", "y", ")", ")"};
-//vector<string> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
+// vector<string> T_SIMPLE_1{"x", "+", "y"};
+// vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};
+// vector<string> T_BRACKETS_1{"(", "(", "y", ")", ")"};
+// vector<string> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
 //                            "*", "(", "x", ")", ")"};
-//vector<string> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
+// vector<string> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
 //                           "n4m3", "%", "x", ")", "/",  "y"};
-//vector<string> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
+// vector<string> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
 //                           "z", ")", "/", "(",  "a", "-", "20", "%",
 //                           "b", ")", "-", "10", ")", "*", "x"};
