@@ -22,10 +22,8 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         this->referenceAppearInClauses = referenceAppearInClauses;
 
         bool exitEarly = false;
-        
-        evalPattern(exitEarly);
 
-        if (!exitEarly) evalSuchThat(exitEarly);
+        evalClauses(exitEarly);
 
         return finaliseResult(exitEarly);
 
@@ -68,7 +66,6 @@ void QueryEvaluator::evalSuchThat(bool &exitEarly) {
 
         ClauseHandler *clauseHandler;
 
-        // TODO: add more handlers for clauseType later
         if (clause->getType() == ClauseType::FOLLOWS) {
             FollowsHandler followsHandler(clause, pkb);
             clauseHandler = &followsHandler;

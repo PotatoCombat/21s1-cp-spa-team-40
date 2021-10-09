@@ -39,15 +39,12 @@ private:
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
-    vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
 
     void clear();
 
-    void evalPattern(bool &exitEarly);
-
-    void evalSuchThat(bool &exitEarly);
+    void evalClauses(bool &exitEarly);
 
     vector<string> finaliseResult(bool exitEarly = false);
 
