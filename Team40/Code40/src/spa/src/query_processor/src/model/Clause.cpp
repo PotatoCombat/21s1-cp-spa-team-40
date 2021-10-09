@@ -12,7 +12,6 @@ Clause::Clause(Reference first, Reference second, vector<string> pattern,
 Clause::Clause(ClauseType type, Reference first, Reference second)
     : Clause(type, first, second, DEFAULT_PATTERN, DEFAULT_EXACT_MATCH) {}
 
-// private
 Clause::Clause(ClauseType type, Reference first, Reference second,
                vector<string> pattern, bool exactMatch)
     : type(type), first(first), second(second), pattern(pattern),
