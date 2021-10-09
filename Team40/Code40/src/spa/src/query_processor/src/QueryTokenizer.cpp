@@ -221,19 +221,19 @@ void QueryTokenizer::tokenizeClauses(string input,
             switch (type) {
             case SUCH_THAT_CLAUSE: {
                 ClsTuple clause;
-                whitespacePos = tokenizeSuchThat(input, tokenPos, clause);
+                whitespacePos = tokenizeSuchThatClause(input, tokenPos, clause);
                 suchThatClauses.push_back(clause);
                 break;
             }
             case PATTERN_CLAUSE: {
                 PatTuple clause;
-                whitespacePos = tokenizePattern(input, tokenPos, clause);
+                whitespacePos = tokenizePatternClause(input, tokenPos, clause);
                 patternClauses.push_back(clause);
                 break;
             }
             case WITH_CLAUSE: {
                 WithTuple clause;
-                whitespacePos = tokenizeWith(input, tokenPos, clause);
+                whitespacePos = tokenizeWithClause(input, tokenPos, clause);
                 withClauses.push_back(clause);
                 break;
             }
@@ -263,7 +263,7 @@ void QueryTokenizer::tokenizeClauses(string input,
  * @param &clause ClsTuple.
  * @return Position of end of clause.
  */
-size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
+size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
                                         ClsTuple &clause) {
     string token1;
     string token2;
@@ -290,7 +290,7 @@ size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
  * @param &clause PatTuple.
  * @return Position of end of clause.
  */
-size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
+size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
                                        PatTuple &clause) {
     PatIdent ident;
     PatVar var;
@@ -364,7 +364,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
  * @return Position of end of clause.
  * @todo Fix algo and clean up
  */
-size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
+size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
                                     WithTuple &clause) {
     string temp;
     string token1 = "";

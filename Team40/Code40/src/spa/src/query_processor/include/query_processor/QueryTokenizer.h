@@ -30,9 +30,11 @@ private:
     // doesn't exist, it throws an exception (in contrast to "find" methods)
     vector<string> tokenizeReturnTuple(string input, string &remaining);
     string tokenizeReturnRef(string input, string &remaining);
-    size_t tokenizeSuchThat(string input, size_t startPos, ClsTuple &clause);
-    size_t tokenizePattern(string input, size_t startPos, PatTuple &clause);
-    size_t tokenizeWith(string input, size_t startPos, WithTuple &clause);
+    size_t tokenizeSuchThatClause(string input, size_t startPos,
+                                  ClsTuple &clause);
+    size_t tokenizePatternClause(string input, size_t startPos,
+                                 PatTuple &clause);
+    size_t tokenizeWithClause(string input, size_t startPos, WithTuple &clause);
 
     bool isQuotedString(string input);
     bool isWildcard(string input);
