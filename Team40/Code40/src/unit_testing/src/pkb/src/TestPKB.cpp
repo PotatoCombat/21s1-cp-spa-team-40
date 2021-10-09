@@ -33,8 +33,8 @@ vector<Statement> TestPKB::createStatements() {
 }
 
 vector<Variable> TestPKB::createVariables() {
-    return vector<Variable>{Variable("var_name_1"), Variable("var_name_1"),
-                            Variable("var_name_1")};
+    return vector<Variable>{Variable("var_name_1"), Variable("var_name_2"),
+                            Variable("var_name_3")};
 }
 
 vector<ConstantValue> TestPKB::createConstants() {
@@ -56,29 +56,33 @@ TEST_CASE("PKB: insertVar/getAllVars") {
     PKB pkb;
 
     vector<Variable> vars = TestPKB::createVariables();
-    for (Variable i : vars) {
-        pkb.insertVar(&i);
+    for (Variable v : vars) {
+        pkb.insertVar(&v);
     }
 
     vector<VarName> actual = pkb.getAllVars().asVector();
+    set<VarName> matches(actual.begin(), actual.end());
 
-    for (int i = 0; i < vars.size(); i++) {
-        REQUIRE(vars.at(i).getName() == actual.at(i));
+    REQUIRE(actual.size() == vars.size());
+    for (auto &v : vars) {
+        REQUIRE(matches.count(v.getName()) == 1);
     }
 }
 
 TEST_CASE("PKB: insertConst/getAllConsts") {
     PKB pkb;
 
-    vector<ConstantValue> items = TestPKB::createConstants();
-    for (ConstantValue i : items) {
-        pkb.insertConst(&i);
+    vector<ConstantValue> constants = TestPKB::createConstants();
+    for (ConstantValue c : constants) {
+        pkb.insertConst(&c);
     }
 
     vector<ConstName> actual = pkb.getAllConsts().asVector();
+    set<ConstName> matches(actual.begin(), actual.end());
 
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(items.at(i).getName() == actual.at(i));
+    REQUIRE(actual.size() == constants.size());
+    for (auto &c : constants) {
+        REQUIRE(matches.count(c.getName()) == 1);
     }
 }
 
@@ -91,26 +95,78 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
     }
 
     vector<ProcName> actual = pkb.getAllProcs().asVector();
+    set<ProcName> matches(actual.begin(), actual.end());
 
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(procs.at(i).getName() == actual.at(i));
+    REQUIRE(actual.size() == procs.size());
+    for (auto &p : procs) {
+        REQUIRE(matches.count(p.getName()) == 1);
     }
 }
 
 TEST_CASE("PKB: insertStmt/getAllStmts") {
     PKB pkb;
 
-    vector<Statement> items = TestPKB::createStatements();
-    for (Statement i : items) {
-        pkb.insertStmt(&i);
+    vector<Statement> stmts = TestPKB::createStatements();
+    for (Statement s : stmts) {
+        pkb.insertStmt(&s);
     }
 
-    vector<StmtIndex> test = vector<int>{1, 2, 3};
     vector<StmtIndex> actual = pkb.getAllStmts().asVector();
+    set<StmtIndex> matches(actual.begin(), actual.end());
 
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
+    REQUIRE(actual.size() == stmts.size());
+    for (auto &s : stmts) {
+        REQUIRE(matches.count(s.getIndex()) == 1);
     }
+}
+
+TEST_CASE("PKB: getPrintVariable") {
+    int stmtIndex = 1;
+    string varName = "x";
+
+    auto stmt = new Statement(stmtIndex, StatementType::PRINT);
+    auto var = new Variable(varName);
+    stmt->setVariable(var);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getPrintVariable(stmtIndex) == varName);
+
+    delete stmt;
+    delete var;
+}
+
+TEST_CASE("PKB: getReadVariable") {
+    int stmtIndex = 1;
+    string varName = "x";
+
+    auto stmt = new Statement(stmtIndex, StatementType::READ);
+    auto var = new Variable(varName);
+    stmt->setVariable(var);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getReadVariable(stmtIndex) == varName);
+
+    delete stmt;
+    delete var;
+}
+
+TEST_CASE("PKB: getCallProcedure") {
+    int stmtIndex = 1;
+    string procName = "Example";
+
+    auto stmt = new Statement(stmtIndex, StatementType::CALL);
+    stmt->setProcName(procName);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getCallProcedure(stmtIndex) == procName);
+
+    delete stmt;
 }
 
 TEST_CASE("Can handle transitive Follows") {

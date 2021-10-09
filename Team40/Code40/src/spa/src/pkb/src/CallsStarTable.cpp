@@ -7,7 +7,7 @@ void CallsStarTable::insertCallsStar(Procedure *proc, ProcName called) {
 
     insertIntoMaps(caller, called);
 
-    // Adding Calls*(callerProcs, proc2)
+    // Adding Calls*(callerProcs, called)
     auto searchForCallerProcs = callerStarMap.find(caller);
     if (searchForCallerProcs != callerStarMap.end()) {
         for (const ProcName &parentCaller : searchForCallerProcs->second) {
@@ -15,11 +15,11 @@ void CallsStarTable::insertCallsStar(Procedure *proc, ProcName called) {
         }
     }
 
-    // Adding Calls*(proc1, calledProcs)
+    // Adding Calls*(caller, calledProcs)
     auto searchForCalledProcs = calledStarMap.find(called);
     if (searchForCalledProcs != calledStarMap.end()) {
         for (const ProcName &childCalled : searchForCalledProcs->second) {
-            insertIntoMaps(called, childCalled);
+            insertIntoMaps(caller, childCalled);
         }
     }
 }
@@ -27,7 +27,7 @@ void CallsStarTable::insertCallsStar(Procedure *proc, ProcName called) {
 set<ProcName> CallsStarTable::getCalledStarProcs(ProcName caller) {
     auto searchForCalledProcs = calledStarMap.find(caller);
     if (searchForCalledProcs == calledStarMap.end()) {
-        return { };
+        return {};
     }
     return searchForCalledProcs->second;
 }
@@ -35,7 +35,7 @@ set<ProcName> CallsStarTable::getCalledStarProcs(ProcName caller) {
 set<ProcName> CallsStarTable::getCallerStarProcs(ProcName called) {
     auto searchForCallerProcs = callerStarMap.find(called);
     if (searchForCallerProcs == callerStarMap.end()) {
-        return { };
+        return {};
     }
     return searchForCallerProcs->second;
 }
@@ -52,17 +52,15 @@ bool CallsStarTable::callsStar(ProcName caller, ProcName called) {
 void CallsStarTable::insertIntoMaps(ProcName caller, ProcName called) {
     auto searchForCalledProcs = calledStarMap.find(caller);
     if (searchForCalledProcs == calledStarMap.end()) {
-        calledStarMap[caller] = { called };
-    }
-    else {
+        calledStarMap[caller] = {called};
+    } else {
         searchForCalledProcs->second.insert(called);
     }
 
     auto searchForCallerProcs = callerStarMap.find(called);
     if (searchForCallerProcs == callerStarMap.end()) {
-        callerStarMap[called] = { caller };
-    }
-    else {
+        callerStarMap[called] = {caller};
+    } else {
         searchForCallerProcs->second.insert(caller);
     }
 }

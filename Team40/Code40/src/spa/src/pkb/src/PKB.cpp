@@ -97,6 +97,30 @@ StatementType PKB::getStmtType(StmtIndex stmt) {
     return statementTable.getStmtType(stmt);
 }
 
+VarName PKB::getPrintVariable(StmtIndex printStmt) {
+    auto stmt = statementTable.getStmt(printStmt);
+    if (stmt->getStatementType() != StatementType::PRINT) {
+        throw runtime_error("This statement number does not refer to a print statement.");
+    }
+    return stmt->getVariable()->getName();
+}
+
+VarName PKB::getReadVariable(StmtIndex readStmt) {
+    auto stmt = statementTable.getStmt(readStmt);
+    if (stmt->getStatementType() != StatementType::READ) {
+        throw runtime_error("This statement number does not refer to a read statement.");
+    }
+    return stmt->getVariable()->getName();
+}
+
+ProcName PKB::getCallProcedure(StmtIndex callStmt) {
+    auto stmt = statementTable.getStmt(callStmt);
+    if (stmt->getStatementType() != StatementType::CALL) {
+        throw runtime_error("This statement number does not refer to a call statement.");
+    }
+    return stmt->getProcName();
+}
+
 // Follows =====================================================================
 
 StmtIndex PKB::getFollowingStmt(StmtIndex stmt) {
