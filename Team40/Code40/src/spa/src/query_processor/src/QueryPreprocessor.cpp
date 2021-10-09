@@ -42,9 +42,9 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             q.addClause(cls);
         }
 
-        vector<PatternClause *> patList;
+        vector<Clause *> patList;
         for (auto x : patStrings) {
-            PatternClause *pat = parser.parsePatternClause(x);
+            Clause *pat = parser.parsePatternClause(x);
             patList.push_back(pat);
             q.addClause(pat);
         }

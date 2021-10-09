@@ -3,10 +3,15 @@
 const vector<string> Clause::DEFAULT_PATTERN = vector<string>();
 const bool Clause::DEFAULT_EXACT_MATCH = true;
 
-// pattern clause
+// pattern assign clause
 Clause::Clause(Reference first, Reference second, vector<string> pattern,
                bool exactMatch)
     : Clause(ClauseType::PATTERN, first, second, pattern, exactMatch) {}
+
+// pattern if / while clause
+Clause::Clause(Reference first, Reference second)
+    : Clause(ClauseType::PATTERN, first, second, DEFAULT_PATTERN,
+             DEFAULT_EXACT_MATCH) {}
 
 // such that / with clause
 Clause::Clause(ClauseType type, Reference first, Reference second)

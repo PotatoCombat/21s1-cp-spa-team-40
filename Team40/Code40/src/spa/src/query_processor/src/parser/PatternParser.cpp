@@ -15,7 +15,7 @@ void PatternParser::clear() {
     this->args.clear();
 }
 
-PatternClause *PatternParser::parse(PatTuple patTuple) {
+Clause *PatternParser::parse(PatTuple patTuple) {
     this->ident = patTuple.first;
     this->args = patTuple.second;
     // first arg is reference (variable-type)
@@ -41,27 +41,27 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
     }
 }
 
-PatternClause *PatternParser::parseAssign(Reference *identity) {
+Clause *PatternParser::parseAssign(Reference *identity) {
     string var = this->args.at(0);
     string pattern = this->args.at(1);
     Reference *ref = parseValidVariable(var);
 
     bool isExactMatch = isExactPattern(pattern);
 
-    return new PatternClause(*identity, *ref, pattern, isExactMatch);
+    return new Clause(*identity, *ref, pattern, isExactMatch);
 }
 
-PatternClause *PatternParser::parseWhile(Reference *identity) {
+Clause *PatternParser::parseWhile(Reference *identity) {
     string var = this->args.at(0);
     Reference *ref = parseValidVariable(var);
 
     if (!ParserUtil::isWildcard(this->args.at(1))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
-    return new PatternClause(*identity, *ref);
+    return new Clause(*identity, *ref);
 }
 
-PatternClause *PatternParser::parseIf(Reference *identity) {
+Clause *PatternParser::parseIf(Reference *identity) {
     string var = this->args.at(0);
     Reference *ref = parseValidVariable(var);
 
@@ -69,7 +69,7 @@ PatternClause *PatternParser::parseIf(Reference *identity) {
         !ParserUtil::isWildcard(this->args.at(2))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
-    return new PatternClause(*identity, *ref);
+    return new Clause(*identity, *ref);
 }
 
 Reference *PatternParser::parseValidVariable(string var) {

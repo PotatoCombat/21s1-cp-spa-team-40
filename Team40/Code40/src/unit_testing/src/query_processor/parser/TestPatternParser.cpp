@@ -22,33 +22,33 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     p.initReferences(declarations);
 
     SECTION("wildcard") {
-        PatternClause *expected =
-            new PatternClause(D_ASSIGN, WILDCARD, PATTERN_WILDCARD, true);
-        PatternClause *actual =
+        Clause *expected =
+            new Clause(D_ASSIGN, WILDCARD, PATTERN_WILDCARD, true);
+        Clause *actual =
             p.parse(make_pair("a", vector<string>{"_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_WHILE, WILDCARD);
+        expected = new Clause(D_WHILE, WILDCARD);
         actual = p.parse(make_pair("w", vector<string>{"_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_IF, WILDCARD);
+        expected = new Clause(D_IF, WILDCARD);
         actual = p.parse(make_pair("ifs", vector<string>{"_", "_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
 
     SECTION("wildcard, ?") {
-        PatternClause *expected =
-            new PatternClause(D_ASSIGN, WILDCARD, PATTERN_QUOTED, true);
-        PatternClause *actual =
+        Clause *expected =
+            new Clause(D_ASSIGN, WILDCARD, PATTERN_QUOTED, true);
+        Clause *actual =
             p.parse(make_pair("a", vector<string>{"_", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_ASSIGN, WILDCARD,
+        expected = new Clause(D_ASSIGN, WILDCARD,
                                      PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(
             make_pair("a", vector<string>{"_", PATTERN_UNDERSCORE_QUOTED}));
@@ -57,33 +57,33 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     }
 
     SECTION("constant, ?") {
-        PatternClause *expected =
-            new PatternClause(D_ASSIGN, C_VARIABLE, PATTERN_WILDCARD, true);
-        PatternClause *actual =
+        Clause *expected =
+            new Clause(D_ASSIGN, C_VARIABLE, PATTERN_WILDCARD, true);
+        Clause *actual =
             p.parse(make_pair("a", vector<string>{"\"const\"", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
         expected =
-            new PatternClause(D_ASSIGN, C_VARIABLE, PATTERN_QUOTED, true);
+            new Clause(D_ASSIGN, C_VARIABLE, PATTERN_QUOTED, true);
         actual = p.parse(
             make_pair("a", vector<string>{"\"const\"", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_ASSIGN, C_VARIABLE,
+        expected = new Clause(D_ASSIGN, C_VARIABLE,
                                      PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(make_pair(
             "a", vector<string>{"\"const\"", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_WHILE, C_VARIABLE);
+        expected = new Clause(D_WHILE, C_VARIABLE);
         actual = p.parse(make_pair("w", vector<string>{"\"const\"", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_IF, C_VARIABLE);
+        expected = new Clause(D_IF, C_VARIABLE);
         actual =
             p.parse(make_pair("ifs", vector<string>{"\"const\"", "_", "_"}));
         REQUIRE(actual->equals(*expected));
@@ -91,32 +91,32 @@ TEST_CASE("PatternParser: parse pattern clauses") {
     }
 
     SECTION("synonym, ?") {
-        PatternClause *expected =
-            new PatternClause(D_ASSIGN, D_VARIABLE, PATTERN_WILDCARD, true);
-        PatternClause *actual =
+        Clause *expected =
+            new Clause(D_ASSIGN, D_VARIABLE, PATTERN_WILDCARD, true);
+        Clause *actual =
             p.parse(make_pair("a", vector<string>{"v", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
         expected =
-            new PatternClause(D_ASSIGN, D_VARIABLE, PATTERN_QUOTED, true);
+            new Clause(D_ASSIGN, D_VARIABLE, PATTERN_QUOTED, true);
         actual = p.parse(make_pair("a", vector<string>{"v", PATTERN_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_ASSIGN, D_VARIABLE,
+        expected = new Clause(D_ASSIGN, D_VARIABLE,
                                      PATTERN_UNDERSCORE_QUOTED, false);
         actual = p.parse(
             make_pair("a", vector<string>{"v", PATTERN_UNDERSCORE_QUOTED}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_WHILE, D_VARIABLE);
+        expected = new Clause(D_WHILE, D_VARIABLE);
         actual = p.parse(make_pair("w", vector<string>{"v", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected = new PatternClause(D_IF, D_VARIABLE);
+        expected = new Clause(D_IF, D_VARIABLE);
         actual = p.parse(make_pair("ifs", vector<string>{"v", "_", "_"}));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
