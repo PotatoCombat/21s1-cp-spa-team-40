@@ -163,3 +163,23 @@ bool PKBStub::stmtModifies(StmtIndex stmt, VarName var) {
     set<string> varsModified = getVarsModifiedByStmt(stmt);
     return varsModified.find(var) != varsModified.end();
 }
+
+VarName PKBStub::getPrintVariable(StmtIndex printStmt) {
+    // no print in Example procedure
+    return "no print";
+}
+
+VarName PKBStub::getReadVariable(StmtIndex readStmt) {
+    // no read in Example procedure
+    return "no read";
+}
+
+ProcName PKBStub::getCallProcedure(StmtIndex callStmt) {
+    if (callStmt == 10) {
+        return "q";
+    } else if (callStmt == 12) {
+        return "p";
+    } else {
+        return "invalid index";
+    }
+}
