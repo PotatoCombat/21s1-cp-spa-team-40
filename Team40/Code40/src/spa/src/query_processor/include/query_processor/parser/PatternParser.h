@@ -23,6 +23,7 @@ private:
     Clause *parseWhile(Reference *identity);
     Clause *parseIf(Reference *identity);
     Reference *parseValidVariable(string var);
+    vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
 
     Reference *getReferenceIfDeclared(string syn);
     bool isAssignPatternClause(Reference *identity);
@@ -32,6 +33,9 @@ private:
     bool isWildcardPattern(vector<PatToken> pattern);
     bool isQuotedPattern(vector<PatToken> pattern);
     bool isUnderscoreQuotedPattern(vector<PatToken> pattern);
+    bool isOperator(string token);
+    bool isLBracket(string token);
+    bool isRBracket(string token);
 
     vector<Reference *> declList;
 

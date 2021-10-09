@@ -17,6 +17,11 @@ void PatternParser::clear() {
     this->tokens.clear();
 }
 
+/**
+ * Parse a PatTuple into a Clause object.
+ * @param patTuple Tuple of <stmt, var, vector<token>>.
+ * @return Clause object of type PATTERN.
+ */
 Clause *PatternParser::parse(PatTuple patTuple) {
     this->ident = get<0>(patTuple);
     this->var = get<1>(patTuple);
@@ -47,10 +52,12 @@ Clause *PatternParser::parseAssign(Reference *identity) {
     vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
+    if (isWildcardPattern(tokens)) {
+        return new Clause(*identity, *ref, vector<string>{}, true);
+    }
+
     bool isExactMatch = isExactPattern(tokens);
-
     tokens = parsePatternTokens(tokens);
-
     return new Clause(*identity, *ref, tokens, isExactMatch);
 }
 
@@ -100,6 +107,44 @@ Reference *PatternParser::parseValidVariable(string var) {
     return new Reference(deT, refT, var);
 }
 
+vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
+    vector<PatToken> validatedTokens;
+    size_t bracketCount = 0;
+    bool isWord = true;
+
+    for (auto t : tokens) {
+        if (ParserUtil::isWildcard(t) || ParserUtil::isQuote(t)) {
+            continue;
+        }
+        if (isWord) {
+            if (isLBracket(t)) {
+                isWord = true;
+                bracketCount += 1;
+                validatedTokens.push_back(t);
+            } else if (ParserUtil::isValidName(t) ||
+                        ParserUtil::isInteger(t)) {
+                isWord = false;
+                validatedTokens.push_back(t);
+            } else {
+                throw ValidityError("Invalid pattern string");
+            }
+        } else {
+            if (isOperator(t)) {
+                isWord = true;
+                validatedTokens.push_back(t);
+            } else if (isRBracket(t)) {
+                isWord = false;
+                bracketCount -= 1;
+                validatedTokens.push_back(t);
+            } else {
+                throw ValidityError("Invalid pattern string");
+            }
+        }
+    }
+
+    return validatedTokens;
+}
+
 /**
  * Retrieves synonym in the declaration list if it exists.
  * @param syn The synonym name.
@@ -132,9 +177,7 @@ bool PatternParser::isIfPatternClause(Reference *identity) {
 }
 
 bool PatternParser::isExactPattern(vector<PatToken> pattern) {
-    if (isWildcardPattern(pattern)) {
-        return true;
-    } else if (isQuotedPattern(pattern)) {
+    if (isQuotedPattern(pattern)) {
         return true;
     } else if (isUnderscoreQuotedPattern(pattern)) {
         return false;
@@ -149,7 +192,8 @@ bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
 bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
     return pattern.size() >= 2 && 
            ParserUtil::isQuote(pattern.at(0)) &&
-           ParserUtil::isQuote(pattern.at(pattern.size() - 1));
+           ParserUtil::isQuote(pattern.at(pattern.size() - 1)) &&
+           count(pattern.begin(), pattern.end(), ParserUtil::isQuote) == 2;
 }
 
 bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
@@ -157,5 +201,16 @@ bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
            ParserUtil::isWildcard(pattern.at(0)) &&
            ParserUtil::isWildcard(pattern.at(pattern.size() - 1)) &&
            ParserUtil::isQuote(pattern.at(1)) &&
-           ParserUtil::isQuote(pattern.at(pattern.size() - 2));
+           ParserUtil::isQuote(pattern.at(pattern.size() - 2)) &&
+           count(pattern.begin(), pattern.end(), ParserUtil::isWildcard) == 2 &&
+           count(pattern.begin(), pattern.end(), ParserUtil::isQuote) == 2;
 }
+
+bool PatternParser::isOperator(string token) {
+    string OPERATOR_SET = "+-*/%";
+    return OPERATOR_SET.find(token) != string::npos;
+}
+
+bool PatternParser::isLBracket(string token) { return token == "("; }
+
+bool PatternParser::isRBracket(string token) { return token == ")"; }
