@@ -95,7 +95,7 @@ public:
     inline static vector<ConstantValue *> createExpressionConsts(vector<string> expressionLst) {
         vector<ConstantValue *> expressionConsts;
         for (auto constName : expressionLst) {
-            if (!isnumber(constName.at(0))) {
+            if (!isdigit(constName.at(0))) {
                 continue;
             }
             auto *constant = new ConstantValue(constName);
