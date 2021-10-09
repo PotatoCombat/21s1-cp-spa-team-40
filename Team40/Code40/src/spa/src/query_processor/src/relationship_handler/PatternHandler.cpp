@@ -7,18 +7,12 @@ Result PatternHandler::eval() {
 
     Reference *stmtRef = patternClause->getFirstReference();
     Reference *varRef = patternClause->getSecondReference();
-    string pattern = patternClause->getPattern();
-
-    // temp change to pass iter1 test, will update later when moving to the new PKB
-    if (pattern.at(0) == '_' && pattern.length() > 1) {
-        pattern = pattern.substr(2, pattern.length() - 4);
-    }
-    // --------------------------------------------
+    vector<string> pattern = patternClause->getPattern();
 
     bool isSameAsModifies =
         stmtRef->getDeType() == DesignEntityType::IF ||
         varRef->getDeType() == DesignEntityType::WHILE ||
-        patternClause->getPattern() == "_";
+        pattern.empty();
 
     // if same as modifies => use modifies handler
     if (isSameAsModifies) {
@@ -37,11 +31,21 @@ Result PatternHandler::eval() {
         return result;
     }
 
+    set<int> (PKB::*getAssignPatternStmts)(string, vector<string>);
+    bool(PKB::*assignMatchesPattern)(int, string, vector<string>);
+    if (patternClause->isExactMatch()) {
+        getAssignPatternStmts = &PKB::getExactAssignPatternStmts;
+        assignMatchesPattern = &PKB::exactAssignPattern;
+    } else {
+        getAssignPatternStmts = &PKB::getPartialAssignPatternStmts;
+        assignMatchesPattern = &PKB::partialAssignPattern;
+    }
+
     // SYNONYM CONST
     if (varRef->getRefType() == ReferenceType::CONSTANT) {
         map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
-            pkb->getAssignsMatchingPattern(varRef->getValue(), pattern);
+            (pkb->*getAssignPatternStmts)(varRef->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults[to_string(stmt)] = VALUE_SET{};
         }
@@ -59,7 +63,7 @@ Result PatternHandler::eval() {
         VALUE_SET related;
         bool valid = false;
         for (string var : vars) {
-            if (pkb->assignMatchesPattern(assign, var, pattern)) {
+            if ((pkb->*assignMatchesPattern)(assign, var, pattern)) {
                 valid = true;
                 related.insert(var);
             }
@@ -73,7 +77,7 @@ Result PatternHandler::eval() {
         VALUE_SET related;
         bool valid = false;
         for (int assign : assigns) {
-            if (pkb->assignMatchesPattern(assign, var, pattern)) {
+            if ((pkb->*assignMatchesPattern)(assign, var, pattern)) {
                 valid = true;
                 if (stmtRef->getRefType() == ReferenceType::SYNONYM) {
                     related.insert(to_string(assign));
