@@ -113,6 +113,55 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
     }
 }
 
+TEST_CASE("PKB: getPrintVariable") {
+    int stmtIndex = 1;
+    string varName = "x";
+
+    auto stmt = new Statement(stmtIndex, StatementType::PRINT);
+    auto var = new Variable(varName);
+    stmt->setVariable(var);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getPrintVariable(stmtIndex) == varName);
+
+    delete stmt;
+    delete var;
+}
+
+TEST_CASE("PKB: getReadVariable") {
+    int stmtIndex = 1;
+    string varName = "x";
+
+    auto stmt = new Statement(stmtIndex, StatementType::READ);
+    auto var = new Variable(varName);
+    stmt->setVariable(var);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getReadVariable(stmtIndex) == varName);
+
+    delete stmt;
+    delete var;
+}
+
+TEST_CASE("PKB: getCallProcedure") {
+    int stmtIndex = 1;
+    string procName = "Example";
+
+    auto stmt = new Statement(stmtIndex, StatementType::CALL);
+    stmt->setProcName(procName);
+
+    PKB pkb;
+    pkb.insertStmt(stmt);
+
+    REQUIRE(pkb.getCallProcedure(stmtIndex) == procName);
+
+    delete stmt;
+}
+
 TEST_CASE("Can handle transitive Follows") {
     PKB pkb;
     vector<Statement> items = TestPKB::createStatements();
