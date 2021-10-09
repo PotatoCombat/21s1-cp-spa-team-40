@@ -1,0 +1,89 @@
+procedure proc1 {
+    read w;
+    read x;
+    read y;
+    read z;
+    if () then {
+        while() {
+            if () then {
+
+            } else {
+
+            }
+        }
+    } else {
+        while() {
+            if () then {
+
+            } else {
+                
+            }
+        }
+    }
+    print a;
+    print b;
+    print c;
+    print d;
+}
+
+procedure proc2 {
+    read a;
+    read b;
+    read c;
+    read d;
+    while () {
+        if () then {
+            while () {
+
+            }
+        } else {
+            while () {
+                
+            }
+        }
+    }
+    print w;
+    print x;
+    print y;
+    print z;
+}
+
+procedure proc3 {
+    if () then {
+        while() {
+
+        }
+    } else {
+        while() {
+
+        }
+    }
+}
+
+procedure proc4 {
+    while () {
+        if () then {
+            
+        } else {
+            
+        }
+    }
+}
+
+procedure proc5 {
+    while() {
+
+    }
+}
+
+procedure proc6 {
+    if () then {
+            
+    } else {
+            
+    }
+}
+
+procedure proc7 {
+    
+}
