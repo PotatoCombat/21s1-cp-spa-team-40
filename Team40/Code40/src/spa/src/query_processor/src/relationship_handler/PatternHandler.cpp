@@ -9,6 +9,12 @@ Result PatternHandler::eval() {
     Reference *varRef = patternClause->getSecondReference();
     string pattern = patternClause->getPattern();
 
+    // temp change to pass iter1 test, will update later when moving to the new PKB
+    if (pattern.at(0) == '_' && pattern.length() > 1) {
+        pattern = pattern.substr(2, pattern.length() - 4);
+    }
+    // --------------------------------------------
+
     bool isSameAsModifies =
         stmtRef->getDeType() == DesignEntityType::IF ||
         varRef->getDeType() == DesignEntityType::WHILE ||
