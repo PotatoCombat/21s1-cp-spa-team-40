@@ -128,13 +128,11 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
     whileStatement.addExpressionVar(&variable);
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
+    whileStatement.addThenStmt(&thenStatement3);
     thenStatement1.setVariable(&variable);
     thenStatement2.setVariable(&variable);
     thenStatement3.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
-    procedure.addToStmtLst(&thenStatement1);
-    procedure.addToStmtLst(&thenStatement2);
-    procedure.addToStmtLst(&thenStatement3);
     program.addToProcLst(&procedure);
 
     DesignExtractor de(&TestExtractWhileStatement::pkb);

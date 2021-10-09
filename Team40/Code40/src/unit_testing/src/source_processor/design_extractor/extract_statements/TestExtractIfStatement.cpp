@@ -132,19 +132,104 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
 
     Program program;
     Procedure procedure(TestExtractIfStatement::PROC_NAME);
-    Statement whileStatement(1, StatementType::WHILE);
+    Statement ifStatement(1, StatementType::IF);
+    Statement thenStatement1(2, StatementType::READ);
+    Statement thenStatement2(3, StatementType::READ);
+    Statement thenStatement3(4, StatementType::READ);
+    Statement elseStatement1(5, StatementType::READ);
+    Statement elseStatement2(6, StatementType::READ);
+    Statement elseStatement3(7, StatementType::READ);
+    Variable variable(TestExtractIfStatement::VAR_NAME);
+
+    ifStatement.addExpressionVar(&variable);
+    ifStatement.addThenStmt(&thenStatement1);
+    ifStatement.addThenStmt(&thenStatement2);
+    ifStatement.addThenStmt(&thenStatement3);
+    ifStatement.addElseStmt(&elseStatement1);
+    ifStatement.addElseStmt(&elseStatement2);
+    ifStatement.addElseStmt(&elseStatement3);
+    thenStatement1.setVariable(&variable);
+    thenStatement2.setVariable(&variable);
+    thenStatement3.setVariable(&variable);
+    elseStatement1.setVariable(&variable);
+    elseStatement2.setVariable(&variable);
+    elseStatement3.setVariable(&variable);
+    procedure.addToStmtLst(&ifStatement);
+    program.addToProcLst(&procedure);
+
+    DesignExtractor de(&TestExtractIfStatement::pkb);
+    de.extract(&program);
+
+    auto follow1 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement1.getIndex());
+    auto followStar1 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement1.getIndex());
+    auto follow2 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement2.getIndex());
+    auto followStar2 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement2.getIndex());
+    auto follow3 =
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement3.getIndex());
+    auto followStar3 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+        thenStatement3.getIndex());
+
+    REQUIRE(follow1 == thenStatement2.getIndex());
+    REQUIRE(followStar1.size() == 2);
+    REQUIRE(followStar1.count(thenStatement2.getIndex()));
+    REQUIRE(followStar1.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow2 == thenStatement3.getIndex());
+    REQUIRE(followStar2.size() == 1);
+    REQUIRE(followStar2.count(thenStatement3.getIndex()));
+
+    REQUIRE(follow3 == -1);
+    REQUIRE(followStar3.empty());
+
+    //    follow1 =
+    //        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement1.getIndex());
+    //    followStar1 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+    //        elseStatement1.getIndex());
+    //    follow2 =
+    //        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement2.getIndex());
+    //    followStar2 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+    //        elseStatement2.getIndex());
+    //    follow3 =
+    //        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement3.getIndex());
+    //    followStar3 = TestExtractIfStatement::pkb.getFollowingStarStmts(
+    //        elseStatement3.getIndex());
+    //
+    //    REQUIRE(follow1 == elseStatement2.getIndex());
+    //
+    //    REQUIRE(followStar1.size() == 2);
+    //    REQUIRE(followStar1.count(elseStatement2.getIndex()));
+    //    REQUIRE(followStar1.count(elseStatement3.getIndex()));
+    //
+    //    REQUIRE(follow2 == elseStatement3.getIndex());
+    //    REQUIRE(followStar2.size() == 1);
+    //    REQUIRE(followStar2.count(elseStatement3.getIndex()));
+    //
+    //    REQUIRE(follow3 == -1);
+    //    REQUIRE(followStar3.empty());
+}
+
+TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
+    TestExtractIfStatement::reset();
+
+    Program program;
+    Procedure procedure(TestExtractIfStatement::PROC_NAME);
+    Statement ifStatement(1, StatementType::IF);
     Statement thenStatement1(2, StatementType::READ);
     Statement thenStatement2(3, StatementType::READ);
     Statement thenStatement3(4, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
-    whileStatement.addThenStmt(&thenStatement1);
-    whileStatement.addThenStmt(&thenStatement2);
+    ifStatement.addExpressionVar(&variable);
+    ifStatement.addThenStmt(&thenStatement1);
+    ifStatement.addThenStmt(&thenStatement2);
     thenStatement1.setVariable(&variable);
     thenStatement2.setVariable(&variable);
     thenStatement3.setVariable(&variable);
-    procedure.addToStmtLst(&whileStatement);
+    procedure.addToStmtLst(&ifStatement);
     procedure.addToStmtLst(&thenStatement1);
     procedure.addToStmtLst(&thenStatement2);
     procedure.addToStmtLst(&thenStatement3);
