@@ -236,6 +236,17 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
                     resultTable.removeValue(ref2Idx, refValue);
                 }
             }
+
+            if (ref1Idx >= 0 && resultTable.empty(ref1Idx)) {
+                exitEarly = true;
+                return;
+            }
+
+            if (ref2Idx >= 0 && resultTable.empty(ref2Idx)) {
+                exitEarly = true;
+                return;
+            }
+
             return;
         }
     }
