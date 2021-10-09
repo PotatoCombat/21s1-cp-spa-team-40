@@ -119,3 +119,16 @@ vector<Reference *> TestQueryParser::createReferenceV(int n) {
 //    }
 //}
 //
+//SECTION("test invalid name") {
+//string invalid = "stmt 0PD;";
+//REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+//                    SyntaxError);
+//
+//invalid = "assign s_fishy;";
+//REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+//                    SyntaxError);
+//
+//invalid = "print 11111;";
+//REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(invalid, vec),
+//                    SyntaxError);
+//}

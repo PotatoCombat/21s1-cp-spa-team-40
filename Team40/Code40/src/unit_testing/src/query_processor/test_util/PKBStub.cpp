@@ -91,7 +91,9 @@ set<StmtIndex> PKBStub::getParentStarStmts(StmtIndex stmt) {
 }
 
 set<StmtIndex> PKBStub::getChildStarStmts(StmtIndex stmt) {
-    vector<set<int>> childStarStmtsList = {{}, {}, {}, {5, 6, 7, 8, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}};
+    vector<set<int>> childStarStmtsList = {
+        {}, {}, {}, {5, 6, 7, 8, 9, 10, 11}, {}, {7, 8}, {}, {}, {},
+        {}, {}, {}};
     return childStarStmtsList[stmt - 1];
 }
 

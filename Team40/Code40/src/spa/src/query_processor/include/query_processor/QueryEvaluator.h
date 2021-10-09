@@ -39,17 +39,19 @@ private:
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
+    vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
-    bool allQueriesReturnTrue;
 
     void clear();
 
-    void evalClauses();
+    void evalPattern(bool &exitEarly);
 
-    vector<string> finaliseResult();
+    void evalSuchThat(bool &exitEarly);
 
-    void combineResult(Result result, int ref1Index, int ref2Index);
+    vector<string> finaliseResult(bool exitEarly = false);
+
+    void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
 
     int getRefIndex(Reference *ref);
 

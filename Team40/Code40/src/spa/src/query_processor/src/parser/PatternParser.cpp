@@ -18,7 +18,8 @@ void PatternParser::clear() {
 PatternClause *PatternParser::parse(PatTuple patTuple) {
     this->ident = patTuple.first;
     this->args = patTuple.second;
-    // first Reference type variable, others strings ?
+    // first arg is reference (variable-type)
+    // remaining args are strings
 
     Reference *identity = getReferenceIfDeclared(this->ident);
 
@@ -30,6 +31,10 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 
     if (isAssignPattern(identity)) {
         return parseAssign(identity);
+    } else if (isWhilePattern(identity)) {
+        return parseWhile(identity);
+    } else if (isIfPattern(identity)) {
+        return parseIf(identity);
     } else {
         delete identity;
         throw ValidityError("invalid pattern type");
@@ -39,37 +44,56 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 PatternClause *PatternParser::parseAssign(Reference *identity) {
     string var = this->args.at(0);
     string pattern = this->args.at(1);
+    Reference *ref = parseValidVariable(var);
+
+    bool isExactMatch = isExactPattern(pattern);
+
+    return new PatternClause(*identity, *ref, pattern, isExactMatch);
+}
+
+PatternClause *PatternParser::parseWhile(Reference *identity) {
+    string var = this->args.at(0);
+    Reference *ref = parseValidVariable(var);
+
+    if (!ParserUtil::isWildcard(this->args.at(1))) {
+        throw ValidityError("while clause 2nd argument should be _");
+    }
+    return new PatternClause(*identity, *ref);
+}
+
+PatternClause *PatternParser::parseIf(Reference *identity) {
+    string var = this->args.at(0);
+    Reference *ref = parseValidVariable(var);
+
+    if (!ParserUtil::isWildcard(this->args.at(1)) ||
+        !ParserUtil::isWildcard(this->args.at(2))) {
+        throw ValidityError("if clause 2nd & 3rd arguments should be _");
+    }
+    return new PatternClause(*identity, *ref);
+}
+
+Reference *PatternParser::parseValidVariable(string var) {
     Reference *ref = getReferenceIfDeclared(var);
 
     if (ref != nullptr) {
-        ref = ref->copy();
-    } else {
-        // TODO: assert quoted or wildcard
-        DesignEntityType deT = DesignEntityType::VARIABLE;
-        ReferenceType refT = ParserUtil::checkRefType(var);
-        if (ParserUtil::isQuoted(var)) {
-            var = var.substr(1, var.size() - 2);
+        if (ref->getDeType() != DesignEntityType::VARIABLE) {
+            throw ValidityError("invalid reference");
         }
-        ref = new Reference(deT, refT, var);
+        return ref->copy();
     }
 
-    return new PatternClause(*identity, *ref, pattern, true); // temp change to make build success
+    DesignEntityType deT = DesignEntityType::VARIABLE;
+    ReferenceType refT;
+    if (ParserUtil::isWildcard(var)) {
+        refT = ReferenceType::WILDCARD;
+    } else if (ParserUtil::isQuoted(var)) {
+        refT = ReferenceType::CONSTANT;
+        var = var.substr(1, var.size() - 2);
+    } else {
+        throw ValidityError("invalid reference");
+    }
+    return new Reference(deT, refT, var);
 }
-
-bool PatternParser::isAssignPattern(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::ASSIGN &&
-           this->args.size() == 2;
-}
-
-// bool isWhilePattern(Reference *identity) {
-//    return identity->getDeType() == DesignEntityType::ASSIGN &&
-//           this->args.size() == 3;
-//}
-//
-// bool isIfPattern(Reference *identity) {
-//    return identity->getDeType() == DesignEntityType::ASSIGN &&
-//           this->args.size() == 3;
-//}
 
 /**
  * Retrieves synonym in the declaration list if it exists.
@@ -85,4 +109,28 @@ Reference *PatternParser::getReferenceIfDeclared(string syn) {
         return *it;
     }
     return nullptr;
+}
+
+bool PatternParser::isAssignPattern(Reference *identity) {
+    return identity->getDeType() == DesignEntityType::ASSIGN &&
+           this->args.size() == 2;
+}
+
+bool PatternParser::isWhilePattern(Reference *identity) {
+    return identity->getDeType() == DesignEntityType::WHILE &&
+           this->args.size() == 2;
+}
+
+bool PatternParser::isIfPattern(Reference *identity) {
+    return identity->getDeType() == DesignEntityType::IF &&
+           this->args.size() == 3;
+}
+
+bool PatternParser::isExactPattern(string pattern) {
+    if (ParserUtil::isWildcard(pattern) || ParserUtil::isQuoted(pattern)) {
+        return true;
+    } else if (ParserUtil::isUnderscoredQuoted(pattern)) {
+        return false;
+    }
+    throw ValidityError("invalid pattern string");
 }
