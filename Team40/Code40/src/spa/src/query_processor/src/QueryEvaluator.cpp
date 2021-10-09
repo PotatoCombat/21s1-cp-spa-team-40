@@ -5,7 +5,6 @@ void QueryEvaluator::clear() {
     returnRefs.clear();
     references.clear();
     clauses.clear();
-    patterns.clear();
     referenceAppearInClauses.clear();
     allQueriesReturnTrue = true;
 }
@@ -19,7 +18,6 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         returnRefs = query.getReturnReferences();
         references = query.getReferences();
         clauses = query.getClauses();
-        patterns = query.getPatterns();
         resultTable.init(references.size());
         vector<bool> referenceAppearInClauses(references.size(), false);
         this->referenceAppearInClauses = referenceAppearInClauses;
@@ -27,7 +25,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 
         evalPattern();
 
-        evalSuchThat();
+        evalClauses();
 
         return finaliseResult();
 
@@ -60,7 +58,7 @@ void QueryEvaluator::evalPattern() {
     }
 }
 
-void QueryEvaluator::evalSuchThat() {
+void QueryEvaluator::evalClauses() {
     // handle clauses
     for (Clause *clause : clauses) {
         Result tempResult;

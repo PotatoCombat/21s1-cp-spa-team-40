@@ -53,7 +53,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         for (auto x : patStrings) {
             PatternClause *pat = parser.parsePatternClause(x);
             patList.push_back(pat);
-            q.addPattern(pat);
+            q.addClause(pat);
         }
 
         // parse with clauses here

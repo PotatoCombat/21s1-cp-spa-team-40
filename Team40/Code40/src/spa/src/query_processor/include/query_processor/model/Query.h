@@ -13,7 +13,6 @@ class Query {
 private:
     vector<Reference *> referenceList;
     vector<Clause *> clauseList;
-    vector<PatternClause *> patternList;
 
     vector<Reference *> returnRefs;
 

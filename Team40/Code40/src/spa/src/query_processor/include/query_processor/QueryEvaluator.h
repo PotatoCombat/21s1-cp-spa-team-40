@@ -39,16 +39,13 @@ private:
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
-    vector<PatternClause *> patterns;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
     bool allQueriesReturnTrue;
 
     void clear();
 
-    void evalPattern();
-
-    void evalSuchThat();
+    void evalClauses();
 
     vector<string> finaliseResult();
 
