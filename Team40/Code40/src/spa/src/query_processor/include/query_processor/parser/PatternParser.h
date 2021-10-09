@@ -18,12 +18,13 @@ public:
     void clear();
     Clause *parse(PatTuple patTuple);
 
+    vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
+
 private:
     Clause *parseAssign(Reference *identity);
     Clause *parseWhile(Reference *identity);
     Clause *parseIf(Reference *identity);
     Reference *parseValidVariable(string var);
-    vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
 
     Reference *getReferenceIfDeclared(string syn);
     bool isAssignPatternClause(Reference *identity);

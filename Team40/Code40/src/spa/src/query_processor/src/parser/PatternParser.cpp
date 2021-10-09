@@ -109,7 +109,7 @@ Reference *PatternParser::parseValidVariable(string var) {
 
 vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
     vector<PatToken> validatedTokens;
-    size_t bracketCount = 0;
+    int bracketCount = 0;
     bool isWord = true;
 
     for (auto t : tokens) {
@@ -140,6 +140,10 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
                 throw ValidityError("Invalid pattern string");
             }
         }
+    }
+
+    if (bracketCount != 0) {
+        throw ValidityError("Invalid pattern string");
     }
 
     return validatedTokens;

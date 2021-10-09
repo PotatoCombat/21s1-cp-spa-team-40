@@ -145,3 +145,76 @@ TEST_CASE("PatternParser: parse pattern clauses") {
                           ValidityError);
     }
 }
+
+TEST_CASE("PatternParser: parse pattern string into tokens") {
+    PatternParser p;
+
+    SECTION("PASS: valid patterns") {
+        vector<string> P_SIMPLE_1{"x", "+", "y"};
+        vector<string> P_SIMPLE_2{"x", "+", "10", "+", "y"};
+        vector<string> P_BRACKETS_1{"(", "(", "y", ")", ")"};
+        vector<string> P_BRACKETS_2{"x", "+", "(", "(", "y", ")",
+                                    "*", "(", "x", ")", ")"};
+        vector<string> P_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
+                                   "n4m3", "%", "x", ")", "/",  "y"};
+        vector<string> P_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
+                                   "z", ")", "/", "(",  "a", "-", "20", "%",
+                                   "b", ")", "-", "10", ")", "*", "x"};
+
+        vector<string> T_SIMPLE_1{"x", "+", "y"};
+        vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};
+        vector<string> T_BRACKETS_1{"(", "(", "y", ")", ")"};
+        vector<string> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
+                                    "*", "(", "x", ")", ")"};
+        vector<string> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
+                                   "n4m3", "%", "x", ")", "/",  "y"};
+        vector<string> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
+                                   "z", ")", "/", "(",  "a", "-", "20", "%",
+                                   "b", ")", "-", "10", ")", "*", "x"};
+
+        vector<string> tokens = p.parsePatternTokens(P_SIMPLE_1);
+        REQUIRE(tokens == T_SIMPLE_1);
+
+        tokens = p.parsePatternTokens(P_SIMPLE_2);
+        REQUIRE(tokens == T_SIMPLE_2);
+
+        tokens = p.parsePatternTokens(P_BRACKETS_1);
+        REQUIRE(tokens == T_BRACKETS_1);
+
+        tokens = p.parsePatternTokens(P_BRACKETS_2);
+        REQUIRE(tokens == T_BRACKETS_2);
+
+        tokens = p.parsePatternTokens(P_COMPLEX_1);
+        REQUIRE(tokens == T_COMPLEX_1);
+
+        tokens = p.parsePatternTokens(P_COMPLEX_2);
+        REQUIRE(tokens == T_COMPLEX_2);
+    }
+
+    SECTION("FAIL: mismatching brackets") {
+        vector<string> P_BRACKETS_1{"(", "(", "y", ")"};
+        vector<string> P_BRACKETS_2{"(", "y", ")", ")"};
+
+        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_1), ValidityError);
+
+        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_2), ValidityError);
+    }
+}
+
+//string P_SIMPLE_1 = "\"x + y\"";
+//string P_SIMPLE_2 = "\"x + 10 + y\"";
+//string P_BRACKETS_1 = "\"((y))\"";
+//string P_BRACKETS_2 = "\"x + ((y) * (x))\"";
+//string P_COMPLEX_1 = "\"x + y - 10 * (n4m3 % x) / y\"";
+//string P_COMPLEX_2 = "_\"(((x - y) * z) / (a - 20 % b) - 10) * x\"_";
+//
+//vector<string> T_SIMPLE_1{"x", "+", "y"};
+//vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};
+//vector<string> T_BRACKETS_1{"(", "(", "y", ")", ")"};
+//vector<string> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
+//                            "*", "(", "x", ")", ")"};
+//vector<string> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
+//                           "n4m3", "%", "x", ")", "/",  "y"};
+//vector<string> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
+//                           "z", ")", "/", "(",  "a", "-", "20", "%",
+//                           "b", ")", "-", "10", ")", "*", "x"};
