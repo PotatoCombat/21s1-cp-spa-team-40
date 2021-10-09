@@ -41,7 +41,7 @@ procedure proc1 {
         call proc3;
         x = c + c * c;
     }
-    b = y * y + y
+    b = y * y + y;
     print a;
     call proc4;
     print b;
@@ -75,7 +75,7 @@ procedure proc2 {
                 z = a / c;
                 call proc4;
             }
-            c = x * x + x
+            c = x * x + x;
         }
         y = c / c - c;
         call proc5;
