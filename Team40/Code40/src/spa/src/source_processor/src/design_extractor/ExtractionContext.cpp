@@ -74,18 +74,6 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
     usingStatement = nullopt;
 }
 
-optional<Statement *> ExtractionContext::getPreviousStatement() {
-    return previousStatement;
-}
-
-void ExtractionContext::setPreviousStatement(Statement *statement) {
-    previousStatement = statement;
-}
-
-void ExtractionContext::unsetPreviousStatement() {
-    previousStatement = nullopt;
-}
-
 vector<Statement *> ExtractionContext::getParentStatements() {
     return parentStatements;
 }
@@ -126,6 +114,28 @@ void ExtractionContext::unsetPrecedingStatement(Statement *statement) {
 
 void ExtractionContext::clearPrecedingStatements() {
     precedingStatements.clear();
+}
+
+vector<Statement *> ExtractionContext::getPreviousStatements() {
+    return previousStatements;
+}
+
+void ExtractionContext::setPreviousStatement(Statement *statement) {
+    previousStatements.push_back(statement);
+}
+
+void ExtractionContext::unsetPreviousStatement(Statement *statement) {
+    if (previousStatements.empty()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (previousStatements.back() != statement) {
+        throw runtime_error("Trying to unset another previous statement.");
+    }
+    previousStatements.pop_back();
+}
+
+void ExtractionContext::clearPreviousStatements() {
+    previousStatements.clear();
 }
 
 void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {

@@ -21,10 +21,10 @@ private:
 
     optional<Statement *> modifyingStatement;
     optional<Statement *> usingStatement;
-    optional<Statement *> previousStatement;
 
     vector<Statement *> parentStatements;
     vector<Statement *> precedingStatements;
+    vector<Statement *> previousStatements;
 
     // NOTE: Do not autofix to default constructor here
     ExtractionContext() {}
@@ -44,9 +44,6 @@ public:
     optional<Statement *> getUsingStatement();
     void setUsingStatement(Statement *statement);
     void unsetUsingStatement(Statement *statement);
-    optional<Statement *> getPreviousStatement();
-    void setPreviousStatement(Statement *statement);
-    void unsetPreviousStatement();
 
     vector<Statement *> getPrecedingStatements();
     void setPrecedingStatement(Statement *statement);
@@ -56,6 +53,10 @@ public:
     void setParentStatement(Statement *statement);
     void unsetParentStatement(Statement *statement);
     void clearParentStatements();
+    vector<Statement *> getPreviousStatements();
+    void setPreviousStatement(Statement *statement);
+    void unsetPreviousStatement(Statement *statement);
+    void clearPreviousStatements();
 
     void addProcDependency(ProcName caller, ProcName callee);
     bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
