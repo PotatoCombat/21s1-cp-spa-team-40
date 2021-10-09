@@ -1,17 +1,17 @@
 #include "query_processor/model/PatternClause.h"
 
-PatternClause::PatternClause(Reference stmt, Reference var, string pattern,
-                             bool exactMatch)
+PatternClause::PatternClause(Reference stmt, Reference var,
+                             vector<string> pattern, bool exactMatch)
     : stmt(stmt), var(var), pattern(pattern), exactMatch(exactMatch) {}
 
 PatternClause::PatternClause(Reference stmt, Reference var)
-    : PatternClause(stmt, var, "", true) {}
+    : PatternClause(stmt, var, vector<string>{}, true) {}
 
 Reference *PatternClause::getStmt() { return &this->stmt; }
 
 Reference *PatternClause::getVar() { return &this->var; }
 
-string PatternClause::getPattern() { return pattern; }
+vector<string> PatternClause::getPattern() { return this->pattern; }
 
 bool PatternClause::isExactMatch() { return this->exactMatch; }
 

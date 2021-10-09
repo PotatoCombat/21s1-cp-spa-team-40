@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Reference.h"
 
@@ -10,17 +11,18 @@ class PatternClause {
 private:
     Reference stmt;
     Reference var;
-    string pattern;
+    vector<string> pattern;
     bool exactMatch;
 
 public:
-    PatternClause(Reference stmt, Reference var, string pattern, bool isExactMatch);
+    PatternClause(Reference stmt, Reference var, vector<string> pattern,
+                  bool isExactMatch);
     PatternClause(Reference stmt, Reference var);
     Reference *getStmt();
     Reference *getVar();
-    string getPattern();
+    vector<string> getPattern();
     bool isExactMatch();
-    bool equals(PatternClause& other);
-    PatternClause* copy();
+    bool equals(PatternClause &other);
+    PatternClause *copy();
     ~PatternClause();
 };
