@@ -125,7 +125,7 @@
 //                           "_");
 //
 //        SECTION("test 1") {
-//            PatternClause *cls = new PatternClause(assign, wildcard, "_");
+//            Clause *cls = new Clause(assign, wildcard, "_");
 //            expected.addReturnReference(&assign);
 //            expected.addPattern(cls);
 //
@@ -136,7 +136,7 @@
 //        }
 //
 //        SECTION("test 2") {
-//            PatternClause *cls = new PatternClause(assign, var, "y");
+//            Clause *cls = new Clause(assign, var, "y");
 //            expected.addReturnReference(&assign);
 //            expected.addPattern(cls);
 //
@@ -164,7 +164,7 @@
 //
 //    SECTION("test 1") {
 //        Clause *cls = new Clause(ClauseType::USES_P, procedure, variableY);
-//        PatternClause *pat = new PatternClause(assign, variableX, "y");
+//        Clause *pat = new Clause(assign, variableX, "y");
 //        expected.addReturnReference(&stmt);
 //        expected.addClause(cls);
 //        expected.addPattern(pat);
@@ -179,7 +179,7 @@
 //
 //    SECTION("test 2") {
 //        Clause* cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
-//        PatternClause* pat = new PatternClause(assign, variableD, "a");
+//        Clause* pat = new Clause(assign, variableD, "a");
 //        expected.addReturnReference(&stmt);
 //        expected.addClause(cls);
 //        expected.addPattern(pat);

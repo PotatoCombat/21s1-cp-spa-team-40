@@ -9,8 +9,9 @@
 namespace ParserUtil {
 	ReferenceType checkRefType(std::string val);
 	bool isWildcard(std::string val);
+	bool isQuote(std::string val);
 	bool isInteger(std::string val);
 	bool isQuoted(std::string val);
-	bool isUnderscoredQuoted(std::string val);
+	bool isValidName(std::string val);
 	std::string getAttribute(std::string val);
 };

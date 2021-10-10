@@ -20,7 +20,10 @@ void QueryParser::clearDeclarations() {
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
     for (auto x : declPairs) {
         DesignEntityType type = deHelper.valueToDesType(x.first);
-        string syn = parseValidName(x.second);
+        string syn = x.second;
+        if (!ParserUtil::isValidName(syn)) {
+            throw ValidityError("QP-ERROR: invalid name");
+        }
         Reference *ref = new Reference(type, ReferenceType::SYNONYM, syn);
         declList.push_back(ref);
     }
@@ -59,10 +62,10 @@ Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
 
 /**
  * Parse a `pattern` clause.
- * @param patTuple as <stmt, vector<args>>.
- * @return PatternClause object.
+ * @param patTuple as <stmt, var, vector<token>>.
+ * @return Clause object.
  */
-PatternClause *QueryParser::parsePatternClause(PatTuple patTuple) {
+Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
     return ptParser.parse(patTuple);
 }
 
@@ -84,21 +87,4 @@ ReferenceAttribute QueryParser::parseValidAttr(string ref) {
     } else {
         throw ValidityError("QP-ERROR: invalid attribute");
     }
-}
-
-/**
- * Parses valid name. A valid name is one that starts with a LETTER and contains
- * only LETTERs and DIGITs.
- * @param name The string to parse.
- * @return Valid name.
- * @exception ValidityError if name is invalid.
- */
-string QueryParser::parseValidName(string name) {
-    if (isalpha(name[0])) {
-        auto it = find_if_not(begin(name), end(name), isalnum);
-        if (it == name.end()) {
-            return name;
-        }
-    }
-    throw ValidityError("QP-ERROR: invalid name");
 }

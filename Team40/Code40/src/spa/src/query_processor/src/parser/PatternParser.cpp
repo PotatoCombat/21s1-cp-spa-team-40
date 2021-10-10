@@ -2,7 +2,8 @@
 
 PatternParser::PatternParser() {
     this->ident = "";
-    this->args.clear();
+    this->var = "";
+    this->tokens.clear();
 }
 
 void PatternParser::initReferences(vector<Reference *> &declList) {
@@ -12,14 +13,19 @@ void PatternParser::initReferences(vector<Reference *> &declList) {
 void PatternParser::clear() {
     this->declList.clear();
     this->ident = "";
-    this->args.clear();
+    this->var = "";
+    this->tokens.clear();
 }
 
-PatternClause *PatternParser::parse(PatTuple patTuple) {
-    this->ident = patTuple.first;
-    this->args = patTuple.second;
-    // first arg is reference (variable-type)
-    // remaining args are strings
+/**
+ * Parse a PatTuple into a Clause object.
+ * @param patTuple Tuple of <stmt, var, vector<token>>.
+ * @return Clause object of type PATTERN.
+ */
+Clause *PatternParser::parse(PatTuple patTuple) {
+    this->ident = get<0>(patTuple);
+    this->var = get<1>(patTuple);
+    this->tokens = get<2>(patTuple);
 
     Reference *identity = getReferenceIfDeclared(this->ident);
 
@@ -29,11 +35,11 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
 
     identity = identity->copy();
 
-    if (isAssignPattern(identity)) {
+    if (isAssignPatternClause(identity)) {
         return parseAssign(identity);
-    } else if (isWhilePattern(identity)) {
+    } else if (isWhilePatternClause(identity)) {
         return parseWhile(identity);
-    } else if (isIfPattern(identity)) {
+    } else if (isIfPatternClause(identity)) {
         return parseIf(identity);
     } else {
         delete identity;
@@ -41,35 +47,41 @@ PatternClause *PatternParser::parse(PatTuple patTuple) {
     }
 }
 
-PatternClause *PatternParser::parseAssign(Reference *identity) {
-    string var = this->args.at(0);
-    string pattern = this->args.at(1);
+Clause *PatternParser::parseAssign(Reference *identity) {
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    bool isExactMatch = isExactPattern(pattern);
+    if (isWildcardPattern(tokens)) {
+        return new Clause(*identity, *ref, vector<string>{}, true);
+    }
 
-    return new PatternClause(*identity, *ref, pattern, isExactMatch);
+    bool isExactMatch = isExactPattern(tokens);
+    tokens = parsePatternTokens(tokens);
+    return new Clause(*identity, *ref, tokens, isExactMatch);
 }
 
-PatternClause *PatternParser::parseWhile(Reference *identity) {
-    string var = this->args.at(0);
+Clause *PatternParser::parseWhile(Reference *identity) {
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    if (!ParserUtil::isWildcard(this->args.at(1))) {
+    if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
-    return new PatternClause(*identity, *ref);
+    return new Clause(*identity, *ref);
 }
 
-PatternClause *PatternParser::parseIf(Reference *identity) {
-    string var = this->args.at(0);
+Clause *PatternParser::parseIf(Reference *identity) {
+    string var = this->var;
+    vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
-    if (!ParserUtil::isWildcard(this->args.at(1)) ||
-        !ParserUtil::isWildcard(this->args.at(2))) {
+    if (!ParserUtil::isWildcard(tokens.at(0)) ||
+        !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
-    return new PatternClause(*identity, *ref);
+    return new Clause(*identity, *ref);
 }
 
 Reference *PatternParser::parseValidVariable(string var) {
@@ -95,6 +107,48 @@ Reference *PatternParser::parseValidVariable(string var) {
     return new Reference(deT, refT, var);
 }
 
+vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
+    vector<PatToken> validatedTokens;
+    int bracketCount = 0;
+    bool isWord = true;
+
+    for (auto t : tokens) {
+        if (ParserUtil::isWildcard(t) || ParserUtil::isQuote(t)) {
+            continue;
+        }
+        if (isWord) {
+            if (isLBracket(t)) {
+                isWord = true;
+                bracketCount += 1;
+                validatedTokens.push_back(t);
+            } else if (ParserUtil::isValidName(t) ||
+                        ParserUtil::isInteger(t)) {
+                isWord = false;
+                validatedTokens.push_back(t);
+            } else {
+                throw ValidityError("Invalid pattern string");
+            }
+        } else {
+            if (isOperator(t)) {
+                isWord = true;
+                validatedTokens.push_back(t);
+            } else if (isRBracket(t)) {
+                isWord = false;
+                bracketCount -= 1;
+                validatedTokens.push_back(t);
+            } else {
+                throw ValidityError("Invalid pattern string");
+            }
+        }
+    }
+
+    if (bracketCount != 0 || isWord == true) {
+        throw ValidityError("Invalid pattern string");
+    }
+
+    return validatedTokens;
+}
+
 /**
  * Retrieves synonym in the declaration list if it exists.
  * @param syn The synonym name.
@@ -111,26 +165,66 @@ Reference *PatternParser::getReferenceIfDeclared(string syn) {
     return nullptr;
 }
 
-bool PatternParser::isAssignPattern(Reference *identity) {
+bool PatternParser::isAssignPatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::ASSIGN &&
-           this->args.size() == 2;
+           this->tokens.size() > 0;
 }
 
-bool PatternParser::isWhilePattern(Reference *identity) {
+bool PatternParser::isWhilePatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::WHILE &&
-           this->args.size() == 2;
+           this->tokens.size() == 1;
 }
 
-bool PatternParser::isIfPattern(Reference *identity) {
+bool PatternParser::isIfPatternClause(Reference *identity) {
     return identity->getDeType() == DesignEntityType::IF &&
-           this->args.size() == 3;
+           this->tokens.size() == 2;
 }
 
-bool PatternParser::isExactPattern(string pattern) {
-    if (ParserUtil::isWildcard(pattern) || ParserUtil::isQuoted(pattern)) {
+bool PatternParser::isExactPattern(vector<PatToken> pattern) {
+    if (isQuotedPattern(pattern)) {
         return true;
-    } else if (ParserUtil::isUnderscoredQuoted(pattern)) {
+    } else if (isUnderscoreQuotedPattern(pattern)) {
         return false;
     }
     throw ValidityError("invalid pattern string");
+}
+
+bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
+    return pattern.size() == 1 && ParserUtil::isWildcard(pattern.at(0));
+}
+
+bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
+    int c = countOccurences(pattern, "\"");
+    return pattern.size() >= 2 && c == 2 &&
+           ParserUtil::isQuote(pattern.at(0)) &&
+           ParserUtil::isQuote(pattern.at(pattern.size() - 1));
+}
+
+bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
+    int c1 = countOccurences(pattern, "_");
+    int c2 = countOccurences(pattern, "\"");
+    return pattern.size() >= 4 && c1 == 2 && c2 == 2 &&
+           ParserUtil::isWildcard(pattern.at(0)) &&
+           ParserUtil::isWildcard(pattern.at(pattern.size() - 1)) &&
+           ParserUtil::isQuote(pattern.at(1)) &&
+           ParserUtil::isQuote(pattern.at(pattern.size() - 2));
+}
+
+bool PatternParser::isOperator(string token) {
+    string OPERATOR_SET = "+-*/%";
+    return OPERATOR_SET.find(token) != string::npos;
+}
+
+bool PatternParser::isLBracket(string token) { return token == "("; }
+
+bool PatternParser::isRBracket(string token) { return token == ")"; }
+
+int PatternParser::countOccurences(vector<string> vec, string token) {
+    int c = 0;
+    for (auto x : vec) {
+        if (token == x) {
+            c += 1;
+        }
+    }
+    return c;
 }
