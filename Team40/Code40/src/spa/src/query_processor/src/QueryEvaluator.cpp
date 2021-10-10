@@ -348,7 +348,7 @@ vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) 
             ReferenceAttribute attr = ref->getAttr();
 
             if (attr != ReferenceAttribute::NAME) {
-                updatedRes.push_back(updatedValue);
+                updatedRes[i] = updatedValue;
                 continue;
             }
 
@@ -360,7 +360,7 @@ vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) 
                 updatedValue = pkb->getReadVariable(stoi(updatedValue));
             }
 
-            updatedRes.push_back(updatedValue);
+            updatedRes[i] = updatedValue;
         }
         updatedResList.push_back(updatedRes);
     }

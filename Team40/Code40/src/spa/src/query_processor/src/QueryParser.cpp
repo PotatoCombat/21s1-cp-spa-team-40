@@ -78,7 +78,7 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
 ReferenceAttribute QueryParser::parseValidAttr(string ref) {
     string attr = ParserUtil::getAttribute(ref);
     if (attr.empty()) {
-        return ReferenceAttribute::NONE;
+        return ReferenceAttribute::DEFAULT;
     }
     if (attr == "procName" || attr == "varName") {
         return ReferenceAttribute::NAME;
