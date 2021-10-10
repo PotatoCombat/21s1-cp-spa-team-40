@@ -267,7 +267,6 @@ bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
 
 // Pattern =====================================================================
 
-// TODO: Replace Pattern with ExpressionList
 set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, ExpressionList pattern) {
     return patternTable.getPartialAssignPatternStmts(var, pattern);
 }
@@ -281,6 +280,5 @@ bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList 
 }
 
 bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
-    auto exprList = PatternTable::tokenizePattern(pattern); // To remove
-    return patternTable.exactAssignPattern(stmtIndex, var, exprList);
+    return patternTable.exactAssignPattern(stmtIndex, var, pattern);
 }

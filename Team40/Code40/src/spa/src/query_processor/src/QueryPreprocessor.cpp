@@ -42,9 +42,11 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             q.addClause(cls);
         }
 
-        vector<PatternClause *> patList;
+        vector<Clause *> patList;
         for (auto x : patStrings) {
-            PatternClause *pat = parser.parsePatternClause(x);
+            vector<string> pattern = get<2>(x);
+            get<2>(x) = tokenizer.tokenizePattern(pattern);
+            Clause *pat = parser.parsePatternClause(x);
             patList.push_back(pat);
             q.addClause(pat);
         }
@@ -63,7 +65,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 }
 
 void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
-                                                  Query &q) {
+                                                   Query &q) {
     for (auto retString : retStrings) {
         Reference *returnRef = parser.parseReturnSynonym(retString);
         if (returnRef == nullptr) {

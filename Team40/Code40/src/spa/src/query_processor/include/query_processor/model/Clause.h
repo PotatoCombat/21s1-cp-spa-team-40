@@ -24,8 +24,10 @@ private:
 
 public:
     Clause(ClauseType type, Reference first, Reference second);
+
     Clause(Reference first, Reference second, vector<string> pattern,
            bool exactMatch);
+    Clause(Reference first, Reference second);
 
     ClauseType getType();
     Reference *getFirstReference();

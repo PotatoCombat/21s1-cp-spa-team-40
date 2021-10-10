@@ -221,19 +221,19 @@ void QueryTokenizer::tokenizeClauses(string input,
             switch (type) {
             case SUCH_THAT_CLAUSE: {
                 ClsTuple clause;
-                whitespacePos = tokenizeSuchThat(input, tokenPos, clause);
+                whitespacePos = tokenizeSuchThatClause(input, tokenPos, clause);
                 suchThatClauses.push_back(clause);
                 break;
             }
             case PATTERN_CLAUSE: {
                 PatTuple clause;
-                whitespacePos = tokenizePattern(input, tokenPos, clause);
+                whitespacePos = tokenizePatternClause(input, tokenPos, clause);
                 patternClauses.push_back(clause);
                 break;
             }
             case WITH_CLAUSE: {
                 WithTuple clause;
-                whitespacePos = tokenizeWith(input, tokenPos, clause);
+                whitespacePos = tokenizeWithClause(input, tokenPos, clause);
                 withClauses.push_back(clause);
                 break;
             }
@@ -263,7 +263,7 @@ void QueryTokenizer::tokenizeClauses(string input,
  * @param &clause ClsTuple.
  * @return Position of end of clause.
  */
-size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
+size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
                                         ClsTuple &clause) {
     string token1;
     string token2;
@@ -290,10 +290,12 @@ size_t QueryTokenizer::tokenizeSuchThat(string input, size_t startPos,
  * @param &clause PatTuple.
  * @return Position of end of clause.
  */
-size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
+size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
                                        PatTuple &clause) {
-    string ident;
-    vector<PatArg> arguments;
+    PatIdent ident;
+    PatVar var;
+    vector<PatToken> tokens;
+    vector<string> arguments;
     size_t nextPos;
     size_t commaPos;
     string token;
@@ -345,7 +347,12 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
     }
 
     arguments.push_back(token);
-    clause = make_pair(ident, arguments);
+
+    var = arguments.at(0);
+    for (int i = 1; i < arguments.size(); ++i) {
+        tokens.push_back(arguments.at(i));
+    }
+    clause = make_tuple(ident, var, tokens);
     return nextPos;
 }
 
@@ -357,7 +364,7 @@ size_t QueryTokenizer::tokenizePattern(string input, size_t startPos,
  * @return Position of end of clause.
  * @todo Fix algo and clean up
  */
-size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
+size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
                                     WithTuple &clause) {
     string temp;
     string token1 = "";
@@ -418,6 +425,45 @@ size_t QueryTokenizer::tokenizeWith(string input, size_t startPos,
     return nextPos;
 }
 
+vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
+    if (all_of(patArgs.begin(), patArgs.end(), 
+               [](string x) { return x == "_"; })) {
+        return patArgs;
+    }
+    
+    if (patArgs.size() != 1) {
+        throw SyntaxError("QP-ERROR: Pattern should have just 1 element");
+    }
+
+    string pattern = patArgs.at(0);
+
+    vector<PatToken> tokens;
+    string token;
+    size_t tokenPos;
+    size_t delimiterPos;
+
+    tokenPos = findNextToken(pattern, 0);
+    while (tokenPos != string::npos) {
+        char c = pattern[tokenPos];
+        delimiterPos = findPatternDelimiter(pattern, tokenPos);
+        if (delimiterPos == string::npos) {
+            token = trimR(pattern.substr(tokenPos));
+            tokens.push_back(token);
+            break;
+        }
+        if (delimiterPos == tokenPos) {
+            token = string(1, c);
+            tokenPos = findNextToken(pattern, delimiterPos + 1);
+        } else {
+            token = trimR(pattern.substr(tokenPos, delimiterPos - tokenPos));
+            tokenPos = findNextToken(pattern, delimiterPos);
+        }
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
 /********************* helper functions *********************/
 
 /**
@@ -466,6 +512,10 @@ size_t QueryTokenizer::findNextWhitespace(string input, size_t pos) {
 
 size_t QueryTokenizer::findNextToken(string input, size_t pos) {
     return input.find_first_not_of(WHITESPACE_SET, pos);
+}
+
+size_t QueryTokenizer::findPatternDelimiter(string input, size_t pos) {
+    return input.find_first_of(PATTERN_DELIMITER_SET, pos);
 }
 
 /**
