@@ -228,3 +228,16 @@ TEST_CASE("QueryEvaluator: return FALSE") {
     vector<string> actual = evaluator.evaluateQuery(query);
     REQUIRE(actual == vector<string>{"FALSE"});
 }
+
+TEST_CASE("QueryEvaluator: same reference, different attributes") {
+    Query query;
+    Reference c1(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
+                 ReferenceAttribute::DEFAULT);
+    Reference c2(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
+                 ReferenceAttribute::NAME);
+    query.addReturnReference(&c1);
+    query.addReturnReference(&c2);
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"10 q", "12 p"});
+}
