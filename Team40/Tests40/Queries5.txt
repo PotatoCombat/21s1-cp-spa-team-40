@@ -1,0 +1,120 @@
+1 - is affects relationship is present (boolean return)
+
+Select BOOLEAN such that Affects(_, _) 
+TRUE
+5000
+2 - any assignment affects given assignment (boolean return)
+
+Select BOOLEAN such that Affects(_, 4)
+FALSE
+5000
+3 - given assignment affects any assignment (boolean return)
+
+Select BOOLEAN such that Affects(33, _)
+FALSE
+5000
+4 - given synonyms are from the same procedure (boolean return)
+
+Select BOOLEAN such that Affects(34, 38)
+FALSE
+5000
+5 - given assignment affects another given assignment (boolean return)
+
+Select BOOLEAN such that Affects(38, 40)
+FALSE
+5000
+6 - all assignments affected by the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that Affects(24,a) 
+none
+5000
+7 - all assignment affecting the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that Affects(a, 33)
+none
+5000
+8 - all assignment affected by the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that Affects(9,n) 
+none
+5000
+9 - all assignment affecting the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that Affects(n,17) 
+none
+5000
+10 - all assignments affecting some statement (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that Affects(a1, a2)
+102 106,11 13,110 113,110 118,115 118,22 24,22 29,27 28,28 32,31 24,31 29,32 29,46 48,55 51,55 56,58 61,6 22,6 27,6 32,63 64,72 79,74 77,77 79,78 77,83 86,86 88,93 95,95 93,95 99,96 97,97 100,97 96
+5000
+11 - all assignments affecting some statement (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that Affects(a1, a2) and Affects(a2, a1)
+93 95,95 93,96 97,97 96
+5000
+12 - all assignments affecting some statement that affects another statement (assign declaration, tuple with 3 variables return)
+assign a1, a2, a3;
+Select <a1, a2, a3> such that Affects(a1 ,a2) and Affects(a2, a3) 
+27 28 32,28 32 29,6 22 24,6 22 29,6 27 28,6 32 29,74 77 79,78 77 79,83 86 88,93 95 93,93 95 99,95 93 95,96 97 100,96 97 96,97 96 97
+5000
+13 - all assignments affecting some statement that affects another statement (assign declaration, tuple with 4 variables return)
+assign a1, a2, a3, a4;
+Select <a1, a2, a3, a4> such that Affects(a1 ,a2) and Affects(a2, a3) and Affects(a3, a4) 
+27 28 32 29,6 27 28 32,93 95 93 95,95 93 95 93,95 93 95 99,96 97 96 97,97 96 97 100,97 96 97 96
+5000
+14 - all assignments affecting some statement that affects another statement (assign declaration, tuple with 10 variables return)
+assign a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
+Select <a1, a2, a3, a4, a5, a6, a7, a8, a9, a10> such that Affects(a1 ,a2) and Affects(a2, a3) and Affects(a3, a4) and Affects(a4, a5) and Affects(a5, a6) and Affects(a6, a7) and Affects(a7, a8) and Affects(a8, a9) and Affects(a9, a10)    
+93 95 93 95 93 95 93 95 93 95,95 93 95 93 95 93 95 93 95 93,95 93 95 93 95 93 95 93 95 99,96 97 96 97 96 97 96 97 96 97,97 96 97 96 97 96 97 96 97 100,97 96 97 96 97 96 97 96 97 96
+5000
+15 - is affects* relationship is present (boolean return)
+
+Select BOOLEAN such that Affects*(_, _) 
+TRUE
+5000
+16 - any assignment affects* given assignment (boolean return)
+
+Select BOOLEAN such that Affects*(_, 33)
+FALSE
+5000
+17 - given assignment affects* any assignment (boolean return)
+
+Select BOOLEAN such that Affects*(21, _)
+FALSE
+5000
+18 - given synonyms are from the same procedure (boolean return)
+
+Select BOOLEAN such that Affects*(33, 34)
+FALSE
+5000
+19 - given assignment affects* another given assignment (boolean return)
+
+Select BOOLEAN such that Affects*(21, 33)
+FALSE
+5000
+20 - all assignments affected* by the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that Affects*(24,a) 
+none
+5000
+21 - all assignment affecting* the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that Affects*(a, 33)
+none
+5000
+22 - all assignment affected* by the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that Affects*(33, n) 
+none
+5000
+23 - all assignment affecting* the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that Affects*(n, 24) 
+22,31,6
+5000
+24 - all assignments affecting* some statement (assign declaration, tuple with 2 variables return)
+assign a1,  a2;
+Select <a1, a2> such that Affects*(a1 ,a2)
+102 106,11 13,110 113,110 118,115 118,22 24,22 29,27 28,27 29,27 32,28 29,28 32,31 24,31 29,32 29,46 48,55 51,55 56,58 61,6 22,6 24,6 27,6 28,6 29,6 32,63 64,72 79,74 77,74 79,77 79,78 77,78 79,83 86,83 88,86 88,93 93,93 95,93 99,95 93,95 95,95 99,96 100,96 96,96 97,97 100,97 96,97 97
+5000
