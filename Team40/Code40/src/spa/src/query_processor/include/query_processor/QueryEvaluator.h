@@ -57,6 +57,9 @@ private:
     // based on the state of the current resultTable at idx1 and idx2
     bool canExitEarly(int idx1, int idx2);
 
+    // Convert return results based on the return ref's attribute
+    vector<vector<string>> handleAttr(vector<vector<string>> input);
+
 public:
     QueryEvaluator(PKB *pkb);
     vector<string> evaluateQuery(Query query);

@@ -15,7 +15,7 @@ enum class ReferenceType {
 enum class ReferenceAttribute {
     NAME,
     INTEGER,
-    NONE
+    DEFAULT
 };
 
 class Reference {
@@ -33,6 +33,8 @@ public:
     string getValue();
     DesignEntityType getDeType();
     ReferenceType getRefType();
+    ReferenceAttribute getAttr();
+    // NOTE: not comparing referenceAttr
     bool equals(Reference &other);
     Reference* copy();
     ~Reference();

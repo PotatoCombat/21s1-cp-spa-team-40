@@ -140,7 +140,10 @@ vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
     // generate and format result
     vector<vector<string>> unformattedRes =
         resultTable.generateResult(returnIndexes);
-    return ResultFormatter::formatResult(unformattedRes);
+
+    vector<vector<string>> updatedAttrRes = handleAttr(unformattedRes);
+
+    return ResultFormatter::formatResult(updatedAttrRes);
 }
 
 void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool &exitEarly) {
@@ -326,4 +329,40 @@ bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
         return true;
     }
     return false;
+}
+
+vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) {
+    vector<vector<string>> updatedResList;
+    for (auto res : input) {
+        if (returnRefs.size() != res.size()) {
+            throw invalid_argument(
+                "input res and returnRefs have different size");
+        }
+
+        int size = returnRefs.size();
+        vector<string> updatedRes(size);
+        for (int i = 0; i < size; i++) {
+            string updatedValue = res[i];
+            Reference *ref = returnRefs[i];
+            DesignEntityType desType = ref->getDeType();
+            ReferenceAttribute attr = ref->getAttr();
+
+            if (attr != ReferenceAttribute::NAME) {
+                updatedRes[i] = updatedValue;
+                continue;
+            }
+
+            if (desType == DesignEntityType::CALL) {
+                updatedValue = pkb->getCallProcedure(stoi(updatedValue));
+            } else if (desType == DesignEntityType::PRINT) {
+                updatedValue = pkb->getPrintVariable(stoi(updatedValue));
+            } else if (desType == DesignEntityType::READ) {
+                updatedValue = pkb->getReadVariable(stoi(updatedValue));
+            }
+
+            updatedRes[i] = updatedValue;
+        }
+        updatedResList.push_back(updatedRes);
+    }
+    return updatedResList;
 }
