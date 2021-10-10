@@ -383,8 +383,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
 
     SECTION("PASS: test assign wildcard, ?") {
         string input = "pattern a(_, _\"x\"_)"; // (_, _"x"_)
-        PatTuple expected =
-            make_tuple("a", "_", vector<string>{"_\"x\"_"});
+        PatTuple expected = make_tuple("a", "_", vector<string>{"_\"x\"_"});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(rel.empty());
         CHECK(wit.empty());
@@ -646,80 +645,47 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
     }
 }
 
-// TEST_CASE("QueryTokenizer: trim") {
-//    QueryTokenizer tokenizer;
-//    string input = "    \t\n\n       some thing\n   ";
-//
-//    SECTION("trim") {
-//        string expected = "some thing";
-//        string actual = tokenizer.trim(input);
-//        REQUIRE(expected == actual);
-//        REQUIRE(actual != input);
-//
-//        string empty = "       ";
-//        REQUIRE(tokenizer.trim(empty) == "");
-//    }
-//
-//    SECTION("trimL") {
-//        string expected = "some thing\n   ";
-//        string actual = tokenizer.trimL(input);
-//        REQUIRE(expected == actual);
-//
-//        string empty = "       ";
-//        REQUIRE(tokenizer.trim(empty) == "");
-//    }
-//
-//    SECTION("trimR") {
-//        string expected = "    \t\n\n       some thing";
-//        string actual = tokenizer.trimR(input);
-//        REQUIRE(expected == actual);
-//
-//        string empty = "       ";
-//        REQUIRE(tokenizer.trim(empty) == "");
-//    }
-//}
+TEST_CASE("QueryTokenizer: tokenizePattern") {
+    QueryTokenizer tokenizer;
 
-// TEST_CASE("QueryTokenizer: splitComma") {
-//    QueryTokenizer tokenizer;
-//    SECTION("test standard") {
-//        vector<string> result{ "x", "y", "z" };
-//        vector<string> actual;
-//        string input = "x, y, z";
-//        tokenizer.splitComma(input, actual);
-//        REQUIRE(actual == result);
-//    }
-//
-//    SECTION("test space") {
-//        vector<string> result{ "x", "y", "z" };
-//        vector<string> actual;
-//        string input = "x,   y,   z";
-//        tokenizer.splitComma(input, actual);
-//        REQUIRE(actual == result);
-//    }
-//
-//    SECTION("test no comma") {
-//        string input = "xyz";
-//        vector<string> result1{ "xyz" };
-//        vector<string> actual;
-//        tokenizer.splitComma(input, actual);
-//        REQUIRE(actual == result1);
-//    }
-//}
+    SECTION("PASS: valid patterns tokenized") {
+        vector<string> P_SIMPLE_1{"\"x + y\""};
+        vector<string> P_SIMPLE_2{"\"x + 10 + y\""};
+        vector<string> P_BRACKETS_1{"\"((y))\""};
+        vector<string> P_BRACKETS_2{"\"x + ((y) * (x))\""};
+        vector<string> P_COMPLEX_1{"\"x + y - 10 * (n4m3 % x) / y\""};
+        vector<string> P_COMPLEX_2{
+            "_\"(((x - y) * z) / (a - 20 % b) - 10) * x\"_"};
 
-// TEST_CASE("QueryTokenizer: splitBCBRel") {
-//    QueryTokenizer tokenizer;
-//    ClsTuple tup;
-//    ClsTuple correct = make_tuple("Follows", "name", "nextline");
-//    string in1 = "Follows(name, nextline)";
-//    string in2 = "Follows ( name , nextline )";
-//    string in3 = "Follows(, )";
-//    string in4 = "Follows(name nextline)";
-//    string in5 = "Follows name, nextline)";
-//    string in6 = "Follows(name,, nextline)";
-//    string in7 = "Follows(name, nextline))";
-//    string in8 = "Follows((name, nextline)";
-//    string in9 = "Follows, name( nextline)";
-//    string in10 = "Follows(,nextline)";
-//    string in11 = "Follows(name,)";
-//    string in12 = "(name, nextline)";
-//}
+        vector<string> T_SIMPLE_1{"\"", "x", "+", "y", "\""};
+        vector<string> T_SIMPLE_2{"\"", "x", "+", "10", "+", "y", "\""};
+        vector<string> T_BRACKETS_1{"\"", "(", "(", "y", ")", ")", "\""};
+        vector<string> T_BRACKETS_2{"\"", "x", "+", "(", "(", "y", ")",
+                                    "*",  "(", "x", ")", ")", "\""};
+        vector<string> T_COMPLEX_1{"\"",   "x", "+", "y", "-", "10", "*", "(",
+                                   "n4m3", "%", "x", ")", "/", "y",  "\""};
+        vector<string> T_COMPLEX_2{
+            "_", "\"", "(", "(",  "(", "x", "-", "y",  ")",
+            "*", "z",  ")", "/",  "(", "a", "-", "20", "%",
+            "b", ")",  "-", "10", ")", "*", "x", "\"", "_",
+        };
+
+        vector<string> tokens = tokenizer.tokenizePattern(P_SIMPLE_1);
+        REQUIRE(tokens == T_SIMPLE_1);
+
+        tokens = tokenizer.tokenizePattern(P_SIMPLE_2);
+        REQUIRE(tokens == T_SIMPLE_2);
+
+        tokens = tokenizer.tokenizePattern(P_BRACKETS_1);
+        REQUIRE(tokens == T_BRACKETS_1);
+
+        tokens = tokenizer.tokenizePattern(P_BRACKETS_2);
+        REQUIRE(tokens == T_BRACKETS_2);
+
+        tokens = tokenizer.tokenizePattern(P_COMPLEX_1);
+        REQUIRE(tokens == T_COMPLEX_1);
+
+        tokens = tokenizer.tokenizePattern(P_COMPLEX_2);
+        REQUIRE(tokens == T_COMPLEX_2);
+    }
+}

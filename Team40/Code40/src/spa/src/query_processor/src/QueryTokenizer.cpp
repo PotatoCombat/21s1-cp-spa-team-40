@@ -453,11 +453,12 @@ vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
         }
         if (delimiterPos == tokenPos) {
             token = string(1, c);
+            tokenPos = findNextToken(pattern, delimiterPos + 1);
         } else {
             token = trimR(pattern.substr(tokenPos, delimiterPos - tokenPos));
+            tokenPos = findNextToken(pattern, delimiterPos);
         }
         tokens.push_back(token);
-        tokenPos = findNextToken(pattern, delimiterPos + 1);
     }
 
     return tokens;
