@@ -37,6 +37,7 @@ private:
     bool isOperator(string token);
     bool isLBracket(string token);
     bool isRBracket(string token);
+    int countOccurences(vector<string> vec, string token);
 
     vector<Reference *> declList;
 

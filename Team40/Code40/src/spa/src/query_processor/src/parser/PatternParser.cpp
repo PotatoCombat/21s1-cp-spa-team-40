@@ -142,7 +142,7 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
         }
     }
 
-    if (bracketCount != 0) {
+    if (bracketCount != 0 || isWord == true) {
         throw ValidityError("Invalid pattern string");
     }
 
@@ -194,20 +194,20 @@ bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
 }
 
 bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
-    return pattern.size() >= 2 && 
+    int c = countOccurences(pattern, "\"");
+    return pattern.size() >= 2 && c == 2 &&
            ParserUtil::isQuote(pattern.at(0)) &&
-           ParserUtil::isQuote(pattern.at(pattern.size() - 1)) &&
-           count(pattern.begin(), pattern.end(), "\"") == 2;
+           ParserUtil::isQuote(pattern.at(pattern.size() - 1));
 }
 
 bool PatternParser::isUnderscoreQuotedPattern(vector<PatToken> pattern) {
-    return pattern.size() >= 4 && 
+    int c1 = countOccurences(pattern, "_");
+    int c2 = countOccurences(pattern, "\"");
+    return pattern.size() >= 4 && c1 == 2 && c2 == 2 &&
            ParserUtil::isWildcard(pattern.at(0)) &&
            ParserUtil::isWildcard(pattern.at(pattern.size() - 1)) &&
            ParserUtil::isQuote(pattern.at(1)) &&
-           ParserUtil::isQuote(pattern.at(pattern.size() - 2)) &&
-           count(pattern.begin(), pattern.end(), "_") == 2 &&
-           count(pattern.begin(), pattern.end(), "\"") == 2;
+           ParserUtil::isQuote(pattern.at(pattern.size() - 2));
 }
 
 bool PatternParser::isOperator(string token) {
@@ -218,3 +218,13 @@ bool PatternParser::isOperator(string token) {
 bool PatternParser::isLBracket(string token) { return token == "("; }
 
 bool PatternParser::isRBracket(string token) { return token == ")"; }
+
+int PatternParser::countOccurences(vector<string> vec, string token) {
+    int c = 0;
+    for (auto x : vec) {
+        if (token == x) {
+            c += 1;
+        }
+    }
+    return c;
+}
