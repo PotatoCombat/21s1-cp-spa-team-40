@@ -103,3 +103,8 @@ assign a1,  a2;
 Select <a1, a2> such that Affects*(a1 ,a2)
 4 17, 9 12, 24 27, 24 33, 27 33, 29 33, 38 40, 39 40, 24 24,27 24,27 27
 5000
+22 - all assignments affecting* some statement that affects some other statement (assign declaration, tuple with 2 variables return)
+assign a1,  a2, a3;
+Select <a1, a2, a3> such that Affects*(a1 ,a2) and Affects*(a2 ,a3)
+24 24 24,24 24 27,24 24 33,24 27 24,24 27 27,24 27 33,27 24 24,27 24 27,27 24 33,27 27 24,27 27 27,27 27 33
+5000
