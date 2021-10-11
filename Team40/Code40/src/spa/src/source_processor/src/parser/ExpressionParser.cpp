@@ -49,15 +49,15 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
     } 
     if(isLogicalOperator(curr)) {
         if (index == exprLst.size() - 1) {
-            throw invalid_argument("invalid logical operator");
+            throw invalid_argument("invalid expression: invalid logical operator");
         } else if (exprLst[index + 1] != "(") {
-            throw invalid_argument("invalid logical operator");
+            throw invalid_argument("invalid expression: invalid logical operator");
         }
         if (curr != "!") {
             if (index == 0) {
-                throw invalid_argument("invalid logical operator");
+                throw invalid_argument("invalid expression: invalid logical operator");
             } else if (exprLst[index - 1] != ")") {
-                throw invalid_argument("invalid logical operator");
+                throw invalid_argument("invalid expression: invalid logical operator");
             }
         }
     }

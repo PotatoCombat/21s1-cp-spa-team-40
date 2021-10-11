@@ -115,13 +115,13 @@ TEST_CASE("ExpressionParser: parseExpression - brackets") {
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
 
     parser = ExpressionParser({"(","(","a","!=","b","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid logical operator");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid logical operator");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid logical operator");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
@@ -139,10 +139,10 @@ TEST_CASE("ExpressionParser: parseExpression - brackets") {
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid logical operator");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid logical operator");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
