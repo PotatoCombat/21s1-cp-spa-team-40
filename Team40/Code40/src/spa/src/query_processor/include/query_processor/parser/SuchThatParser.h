@@ -23,6 +23,7 @@ public:
 
 private:
     Clause *parseStmtStmt();
+    Clause *parseProcProc();
     Clause *parseXEnt();
 
     Reference *getReferenceIfDeclared(string syn);
