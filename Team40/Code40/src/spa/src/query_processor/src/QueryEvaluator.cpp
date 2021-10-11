@@ -321,11 +321,11 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
 }
 
 bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
-    if (idx1 >= 0 && resultTable.empty(idx1)) {
+    if (idx1 >= 0 && resultTable.isColumnEmpty(idx1)) {
         return true;
     }
 
-    if (idx2 >= 0 && resultTable.empty(idx2)) {
+    if (idx2 >= 0 && resultTable.isColumnEmpty(idx2)) {
         return true;
     }
     return false;

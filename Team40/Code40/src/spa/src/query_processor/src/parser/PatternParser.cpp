@@ -69,7 +69,7 @@ Clause *PatternParser::parseWhile(Reference *identity) {
     if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
-    return new Clause(*identity, *ref);
+    return new Clause(ClauseType::PATTERN, *identity, *ref);
 }
 
 Clause *PatternParser::parseIf(Reference *identity) {
@@ -81,7 +81,7 @@ Clause *PatternParser::parseIf(Reference *identity) {
         !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
-    return new Clause(*identity, *ref);
+    return new Clause(ClauseType::PATTERN, *identity, *ref);
 }
 
 Reference *PatternParser::parseValidVariable(string var) {

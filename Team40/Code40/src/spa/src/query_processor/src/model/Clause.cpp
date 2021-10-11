@@ -8,12 +8,7 @@ Clause::Clause(Reference first, Reference second, vector<string> pattern,
                bool exactMatch)
     : Clause(ClauseType::PATTERN, first, second, pattern, exactMatch) {}
 
-// pattern if / while clause
-Clause::Clause(Reference first, Reference second)
-    : Clause(ClauseType::PATTERN, first, second, DEFAULT_PATTERN,
-             DEFAULT_EXACT_MATCH) {}
-
-// such that / with clause
+// all other clause
 Clause::Clause(ClauseType type, Reference first, Reference second)
     : Clause(type, first, second, DEFAULT_PATTERN, DEFAULT_EXACT_MATCH) {}
 

@@ -121,7 +121,7 @@ vector<VALUE> ResultTable::getValues(INDEX refIndex) {
     return res;
 }
 
-bool ResultTable::empty(INDEX refIndex) {
+bool ResultTable::isColumnEmpty(INDEX refIndex) {
     assertIndex(refIndex);
     return table[refIndex].size() == 0;
 }
