@@ -25,13 +25,9 @@ Statement *AssignStatementParser::parseAssignStatement() {
     if (next(assignItr) == content.end()) {
         throw invalid_argument("invalid assign statement");
     }
-    vector<string> exprLst(next(assignItr), endItr);
-    if (exprLst.empty()) {
-        throw invalid_argument("invalid expression");
-    }
+    ExpressionParser exprParser(vector<string>(next(assignItr), endItr), stmt);
+    vector<string> exprLst = exprParser.parseExpression();
     stmt->setExpressionLst(exprLst);
-    ExpressionParser exprParser;
-    exprParser.parseExpression(exprLst, stmt);
     return stmt;
 }
 

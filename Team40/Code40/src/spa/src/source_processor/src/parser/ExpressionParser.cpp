@@ -1,7 +1,10 @@
 #include "source_processor/parser/ExpressionParser.h"
 #include <algorithm>
 
-void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) {
+ExpressionParser::ExpressionParser(vector<string> exprLst, Statement *stmt)
+    : exprLst(exprLst), stmt(stmt) {};
+
+vector<string> ExpressionParser::parseExpression() { 
     bool oprtrFlag = false; // if false, must be variable/constant. if true, must be operator
     for (int i = 0; i < exprLst.size(); i++) {
         string curr = exprLst[i];
@@ -14,9 +17,9 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
             stmt->addExpressionVar(variable);
             oprtrFlag = true; // next token must be an operator
         } else if (isRoundBracket(curr)) {
-            checkValidBracket(curr);
+            checkValidBracket(curr, i);
         } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
-            checkValidOperator(curr, stmt);
+            checkValidOperator(curr);
             oprtrFlag = false; // next token must be a variable/constant
         } else {
             throw invalid_argument(
@@ -26,20 +29,21 @@ void ExpressionParser::parseExpression(vector<string> exprLst, Statement *stmt) 
     if (!brackets.empty()) {
         throw invalid_argument("invalid expression: brackets do not match");
     }
-    checkValidExpression(exprLst, stmt);
+    checkValidExpression();
+    return exprLst;
 }
 
-void ExpressionParser::checkValidOperator(string curr, Statement *stmt) {
+void ExpressionParser::checkValidOperator(string curr) {
     if (stmt->getStatementType() == StatementType::ASSIGN) {
-        if (!isValidAssignOperator(stmt, curr)) {
+        if (!isValidAssignOperator(curr)) {
             throw invalid_argument("invalid operator in assign statement");
         }
     } else if (stmt->getStatementType() == StatementType::WHILE) {
-        if (!isValidConditionalOperator(stmt, curr)) {
+        if (!isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid operator in while statement");
         }
     } else if (stmt->getStatementType() == StatementType::IF) {
-        if (!isValidConditionalOperator(stmt, curr)) {
+        if (!isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid operator in if statement");
         }
     } else {
@@ -47,7 +51,7 @@ void ExpressionParser::checkValidOperator(string curr, Statement *stmt) {
     }
 }
 
-void ExpressionParser::checkValidBracket(string curr) {
+void ExpressionParser::checkValidBracket(string curr, int index) {
     if (curr == "(") {
         brackets.push(curr);
     } else if (curr == ")") {
@@ -59,9 +63,59 @@ void ExpressionParser::checkValidBracket(string curr) {
             throw invalid_argument("invalid expression: brackets do not match");
         }
     }
+    int start = index; int end = index;
+    while (exprLst[start] == curr) {
+        start--; 
+        if (start < 0) break;
+    }
+    while (exprLst[end] == curr) {
+        end++; 
+        if (end >= exprLst.size()) break;
+    }
+    start++; end--;
+    if (curr == "(") checkValidOpenBracket(start, end);
+    else if (curr == ")") checkValidCloseBracket(start, end);
 }
 
-void ExpressionParser::checkValidExpression(vector<string> exprLst, Statement *stmt) {
+void ExpressionParser::checkValidOpenBracket(int start, int end) {
+    if (start == 0 && end == exprLst.size()-1) {
+        return;
+    } else if (start == 0) {
+        string next = exprLst[end+1];
+        if (!(isInteger(next) || isName(next))) {
+            throw invalid_argument("invalid expression");
+        }
+    } else if (end == exprLst.size()-1) {
+        throw invalid_argument("invalid expression");
+    } else {
+        string prev = exprLst[start-1];
+        string next = exprLst[end+1];
+        if (!(isOperator(prev) && (isInteger(next) || isName(next)))) {
+            throw invalid_argument("invalid expression");
+        }
+    }
+}
+
+void ExpressionParser::checkValidCloseBracket(int start, int end) {
+    if (start == 0 && end == exprLst.size()-1) {
+        return;
+    } else if (start == 0) {
+        throw invalid_argument("invalid expression");
+    } else if (end == exprLst.size()-1) {
+        string prev = exprLst[start-1];
+        if (!(isInteger(prev) || isName(prev))) {
+            throw invalid_argument("invalid expression");
+        }
+    } else {
+        string prev = exprLst[start-1];
+        string next = exprLst[end+1];
+        if (!(isOperator(next) && (isInteger(prev) || isName(prev)))) {
+            throw invalid_argument("invalid expression");
+        }
+    }
+}
+
+void ExpressionParser::checkValidExpression() {
     StatementType type = stmt->getStatementType();
     // condition should have at least one operator
     if (type == StatementType::IF || type == StatementType::WHILE) {
@@ -96,11 +150,11 @@ bool ExpressionParser::isName(string input) {
 
 bool ExpressionParser::isRoundBracket(string input) { return input == "(" || input == ")"; }
 
-bool ExpressionParser::isValidAssignOperator(Statement *stmt, string input) {
+bool ExpressionParser::isValidAssignOperator(string input) {
     return (isArtihmeticOperator(input));
 }
 
-bool ExpressionParser::isValidConditionalOperator(Statement *stmt, string input) {
+bool ExpressionParser::isValidConditionalOperator(string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input));
 }
 

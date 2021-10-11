@@ -25,36 +25,11 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     if (next(next(ifItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
     }
-    vector<string> condLst(next(next(ifItr)), prev(prev(endItr)));
-    if (condLst.empty()) {
-        throw invalid_argument("invalid condition");
-    }
-    checkValidCondition(condLst);
+    ExpressionParser exprParser(vector<string> (next(next(ifItr)), prev(prev(endItr))), stmt);
+    vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
-    ExpressionParser exprParser;
-    exprParser.parseExpression(condLst, stmt);
     parseChildStatements(programIndex);
     return stmt;
-}
-
-void IfStatementParser::checkValidCondition(vector<string> condLst) {
-    for (int i = 0; i < condLst.size(); i++) {
-        string curr = condLst[i];
-        if (curr == "!" || curr == "&&" || curr == "||") {
-            if (i == condLst.size() - 1) {
-                throw invalid_argument("logical operator must be followed by (");
-            } else if (condLst[i + 1] != "(") {
-                throw invalid_argument("logical operator must be followed by (");
-            }
-            if (curr == "&&" || curr == "||") {
-                if (i == 0) {
-                    throw invalid_argument("logical operator must be preceded by )");
-                } else if (condLst[i - 1] != ")") {
-                    throw invalid_argument("logical operator must be preceded by )");
-                }
-            }
-        }
-    }
 }
 
 void IfStatementParser::parseChildStatements(int &programIndex) {
