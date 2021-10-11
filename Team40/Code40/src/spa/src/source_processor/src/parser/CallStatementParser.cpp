@@ -7,13 +7,18 @@ CallStatementParser::CallStatementParser(vector<string> content, int index)
 };
 
 Statement *CallStatementParser::parseCallStatement() {
-    vector<string>::iterator callItr =
-        find(content.begin(), content.end(), "call");
+    vector<string>::iterator callItr = find(content.begin(), content.end(), "call");
+    if (next(callItr) == content.end()) {
+        throw invalid_argument("invalid call statement");
+    }
     string proc_name = *next(callItr);
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
     // call: 'call' proc_name ';'
+    if (next(next(callItr)) == content.end()) {
+        throw invalid_argument("invalid call statement");
+    }
     if (*next(next(callItr)) != ";") {
         throw invalid_argument("invalid call statement");
     }
@@ -28,6 +33,5 @@ bool CallStatementParser::isValidName(string input) {
     if (!isalpha(input.at(0))) {
         return false;
     }
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
+    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

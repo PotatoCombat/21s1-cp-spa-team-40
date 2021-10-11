@@ -19,4 +19,6 @@ public:
     string getName();
 
     vector<Statement *> getStmtLst();
+
+    bool operator==(const Procedure &other) const;
 };

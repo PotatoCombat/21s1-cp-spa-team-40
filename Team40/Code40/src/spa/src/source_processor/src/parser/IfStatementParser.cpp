@@ -14,11 +14,21 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     if (endItr == content.end())
         throw invalid_argument("invalid if statement");
     // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
+    if (next(ifItr) == content.end() || prev(endItr) == content.end() ||
+        prev(prev(endItr)) == content.end()) {
+        throw invalid_argument("invalid if statement");
+    }
     if (*next(ifItr) != "(" || *prev(endItr) != "then" || *prev(prev(endItr)) != ")") {
         throw invalid_argument("invalid if statement");
     }
 
+    if (next(next(ifItr)) == content.end()) {
+        throw invalid_argument("invalid if statement");
+    }
     vector<string> condLst(next(next(ifItr)), prev(prev(endItr)));
+    if (condLst.empty()) {
+        throw invalid_argument("invalid condition");
+    }
     checkValidCondition(condLst);
     stmt->setExpressionLst(condLst);
     ExpressionParser exprParser;

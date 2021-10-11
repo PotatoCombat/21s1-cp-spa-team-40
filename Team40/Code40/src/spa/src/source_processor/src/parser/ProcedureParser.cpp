@@ -4,13 +4,18 @@
 ProcedureParser::ProcedureParser(vector<string> content) : content(content) {}
 
 Procedure *ProcedureParser::parseProcedure() {
-    vector<string>::iterator procItr =
-        find(content.begin(), content.end(), "procedure");
+    vector<string>::iterator procItr = find(content.begin(), content.end(), "procedure");
+    if (next(procItr) == content.end()) {
+        throw invalid_argument("invalid procedure");
+    }
     string proc_name = *next(procItr);
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
     // procedure: 'procedure' proc_name '{' stmtLst '}'
+    if (next(next(procItr)) == content.end()) {
+        throw invalid_argument("invalid procedure");
+    }
     if (*next(next(procItr)) != "{") {
         throw invalid_argument("invalid procedure");
     }
@@ -25,6 +30,5 @@ bool ProcedureParser::isValidName(string input) {
     if (!isalpha(input.at(0))) {
         return false;
     }
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
+    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }
