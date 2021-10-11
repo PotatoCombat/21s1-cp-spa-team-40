@@ -95,16 +95,16 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
     } else if (start == 0) {
         string next = exprLst[end+1];
         if (!(isInteger(next) || isName(next) || next == "!")) {
-            throw invalid_argument("invalid expression: factor and ! must appear after (");
+            throw invalid_argument("invalid expression: factor or ! must appear after (");
         }
     } else if (end == exprLst.size()-1) {
-        throw invalid_argument("invalid expression: factor and ! must appear after (");
+        throw invalid_argument("invalid expression: factor or ! must appear after (");
     } else {
         string prev = exprLst[start-1];
         string next = exprLst[end+1];
         if (!(isOperator(prev) &&
               (isInteger(next) || isName(next) || next == "!"))) {
-            throw invalid_argument("invalid expression: factor and ! must appear after ( or operator must appear before (");
+            throw invalid_argument("invalid expression: factor or ! must appear after ( and operator must appear before (");
         }
     }
 }
@@ -113,17 +113,17 @@ void ExpressionParser::checkValidCloseBracket(int start, int end) {
     if (start == 0 && end == exprLst.size()-1) {
         return;
     } else if (start == 0) {
-        throw invalid_argument("invalid expression: factor and ! must appear before )");
+        throw invalid_argument("invalid expression: factor or ! must appear before )");
     } else if (end == exprLst.size()-1) {
         string prev = exprLst[start-1];
         if (!(isInteger(prev) || isName(prev))) {
-            throw invalid_argument("invalid expression: factor and ! must appear before )");
+            throw invalid_argument("invalid expression: factor or ! must appear before )");
         }
     } else {
         string prev = exprLst[start-1];
         string next = exprLst[end+1];
         if (!(isOperator(next) && (isInteger(prev) || isName(prev)))) {
-            throw invalid_argument("invalid expression: factor and ! must appear before ) or operator must appear after (");
+            throw invalid_argument("invalid expression: factor or ! must appear before ) and operator must appear after )");
         }
     }
 }

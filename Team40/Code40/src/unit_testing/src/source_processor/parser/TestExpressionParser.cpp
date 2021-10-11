@@ -7,55 +7,55 @@ TEST_CASE("ExpressionParser: parseExpression - expressions") {
     // REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression");
 
     auto parser = ExpressionParser({"(","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after (");
 
     parser = ExpressionParser({"(","1","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","1","(","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","1","+","(","1","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","1","+","(","1","/",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","4",")","+","(","1","%","5",")",")",")",}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-",")","+","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","(","1","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","%","5",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","5",")",")",")",}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%",")",")",")",}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before )");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before )");
 }
 
 TEST_CASE("ExpressionParser: parseExpression - conditions") {
@@ -64,47 +64,47 @@ TEST_CASE("ExpressionParser: parseExpression - conditions") {
     // REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression");
 
     auto parser = ExpressionParser({"(","(","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after (");
 
     parser = ExpressionParser({"(","(","a","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","(","a","!=",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c","x",")","&&","(","x","==","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=",")","&&","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","(","x","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before ) or operator must appear after (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before ) and operator must appear after )");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","==","y",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear after ( or operator must appear before (");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after ( and operator must appear before (");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==",")",")"}, &stmt);
-    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor and ! must appear before )");
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before )");
 }
