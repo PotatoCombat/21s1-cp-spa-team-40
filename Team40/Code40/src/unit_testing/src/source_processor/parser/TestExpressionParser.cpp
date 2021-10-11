@@ -3,8 +3,6 @@
 
 TEST_CASE("ExpressionParser: parseExpression - expressions") {
     Statement stmt = TestParserUtils::createAssignStmt(1, "test", "(1+(1/2))+((1*3)+((1-4)+(1%5)))");
-    // auto parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
-    // REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression");
 
     auto parser = ExpressionParser({"(","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after (");
@@ -60,8 +58,6 @@ TEST_CASE("ExpressionParser: parseExpression - expressions") {
 
 TEST_CASE("ExpressionParser: parseExpression - conditions") {
     Statement stmt = TestParserUtils::createIfStmt(1, "((a!=b)&&(!(x==y)))||((c>=x)&&(x==y))");
-    // auto parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
-    // REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression");
 
     auto parser = ExpressionParser({"(","(","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear after (");
@@ -107,4 +103,94 @@ TEST_CASE("ExpressionParser: parseExpression - conditions") {
 
     parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==",")",")"}, &stmt);
     REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: factor or ! must appear before )");
+}
+
+TEST_CASE("ExpressionParser: parseExpression - brackets") {
+    Statement stmt = TestParserUtils::createIfStmt(1, "((a!=b)&&(!(x==y)))||((c>=x)&&(x==y))");
+
+    auto parser = ExpressionParser({"(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","c",">=","x",")","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x","&&","(","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","x","==","y",")",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid logical operator");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y",")"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","(","a","!=","b",")","&&","(","!","(","x","==","y",")",")",")","||","(","(","c",">=","x",")","&&","(","x","==","y"}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    stmt = TestParserUtils::createAssignStmt(1, "test", "(1+(1/2))+((1*3)+((1-4)+(1%5)))");
+    
+    parser = ExpressionParser({"1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3","+","(","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","1","-","4",")","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4","+","(","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","1","%","5",")",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
+
+    parser = ExpressionParser({"(","1","+","(","1","/","2",")",")","+","(","(","1","*","3",")","+","(","(","1","-","4",")","+","(","1","%","5",")",}, &stmt);
+    REQUIRE_THROWS_WITH(parser.parseExpression(), "invalid expression: brackets do not match");
 }
