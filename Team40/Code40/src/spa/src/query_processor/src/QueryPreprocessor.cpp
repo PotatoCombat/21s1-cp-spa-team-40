@@ -11,7 +11,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         pair<string, string> parts = tokenizer.separateQueryString(input);
 
         vector<DeclPair> declPairs;
-        string retString;
+        vector<string> retStrings;
         string clauses;
 
         /*********** Parse declaration ***********/
@@ -19,16 +19,9 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         parser.parseDeclarations(declPairs);
 
         /*********** Parse return synonym ***********/
-        tokenizer.tokenizeReturnSynonym(parts.second, retString, clauses);
+        retStrings = tokenizer.tokenizeReturnSynonyms(parts.second, clauses);
 
-        bool found = false;
-        Reference *returnRef = parser.parseReturnSynonym(retString, found);
-
-        if (found) {
-            q.addReturnReference(returnRef);
-        } else {
-            throw ValidityError("QP-ERROR: return synonym is undeclared");
-        }
+        addReturnReferencesToQuery(retStrings, q);
 
         if (clauses.empty()) {
             parser.clear();
@@ -49,11 +42,13 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             q.addClause(cls);
         }
 
-        vector<PatternClause *> patList;
+        vector<Clause *> patList;
         for (auto x : patStrings) {
-            PatternClause *pat = parser.parsePatternClause(x);
+            vector<string> pattern = get<2>(x);
+            get<2>(x) = tokenizer.tokenizePattern(pattern);
+            Clause *pat = parser.parsePatternClause(x);
             patList.push_back(pat);
-            q.addPattern(pat);
+            q.addClause(pat);
         }
 
         // parse with clauses here
@@ -66,5 +61,16 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         // cout << e.what();
         parser.clear();
         return false;
+    }
+}
+
+void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
+                                                   Query &q) {
+    for (auto retString : retStrings) {
+        Reference *returnRef = parser.parseReturnSynonym(retString);
+        if (returnRef == nullptr) {
+            throw ValidityError("QP-ERROR: return synonym is undeclared");
+        }
+        q.addReturnReference(returnRef);
     }
 }

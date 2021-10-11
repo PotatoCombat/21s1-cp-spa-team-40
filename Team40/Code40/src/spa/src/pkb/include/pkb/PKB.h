@@ -257,23 +257,23 @@ public:
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
     virtual set<StmtIndex> getPartialAssignPatternStmts(VarName var,
-                                                        Pattern pattern);
+                                                        ExpressionList pattern);
 
     /// Selects a such that a(var, pattern), where a is an AssignStatement,
     /// and the pattern requires an exact match.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
     virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
-                                                      Pattern pattern);
+                                                      ExpressionList pattern);
 
     /// Selects BOOLEAN such that a(var, pattern).
     virtual bool partialAssignPattern(StmtIndex stmtIndex, VarName var,
-                                      Pattern pattern);
+                                      ExpressionList pattern);
 
     /// Selects BOOLEAN such that a(var, pattern), but pattern must be an exact
     /// match.
     virtual bool exactAssignPattern(StmtIndex stmtIndex, VarName var,
-                                    Pattern pattern);
+                                    ExpressionList pattern);
 
 private:
     ProcedureTable procTable;

@@ -7,16 +7,16 @@ using namespace std;
 
 typedef string DeclType;
 typedef string DeclValue;
+typedef pair<DeclType, DeclValue> DeclPair;
 
 typedef string ClsType;
 typedef string ClsArg;
+typedef tuple<ClsType, ClsArg, ClsArg> ClsTuple;
 
 typedef string PatIdent;
-typedef string PatArg;
+typedef string PatVar;
+typedef string PatToken;
+typedef tuple<PatIdent, PatVar, vector<PatToken>> PatTuple;
 
 typedef string WithArg;
-
-typedef pair<DeclType, DeclValue> DeclPair;
-typedef tuple<ClsType, ClsArg, ClsArg> ClsTuple;
-typedef pair<PatIdent, vector<PatArg>> PatTuple;
 typedef vector<WithArg> WithTuple; // always four args (for now)

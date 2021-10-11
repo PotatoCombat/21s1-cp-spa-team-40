@@ -90,7 +90,7 @@ TEST_CASE("QueryPreprocessor: single clause") {
             REQUIRE(expected.getClauses()[0]->equals(*actual.getClauses()[0]));
         }
 
-        SECTION("test 5") {
+        SECTION("test 6") {
             Reference a(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
             Reference v(DesignEntityType::VARIABLE, ReferenceType::SYNONYM,
                         "v");
@@ -125,25 +125,23 @@ TEST_CASE("QueryPreprocessor: single clause") {
                            "_");
 
         SECTION("test 1") {
-            PatternClause *cls = new PatternClause(assign, wildcard, "_");
+            Clause *cls = new Clause(ClauseType::PATTERN, assign, wildcard);
             expected.addReturnReference(&assign);
-            expected.addPattern(cls);
+            expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::PATTERN_1, actual);
 
-            REQUIRE(actual.getPatterns()[0]->equals(*cls));
-            REQUIRE(actual.getClauses().size() == 0);
+            REQUIRE(actual.getClauses()[0]->equals(*cls));
         }
 
         SECTION("test 2") {
-            PatternClause *cls = new PatternClause(assign, var, "y");
+            Clause *cls = new Clause(assign, var, vector<string>{"y"}, true);
             expected.addReturnReference(&assign);
-            expected.addPattern(cls);
+            expected.addClause(cls);
 
             qp.preprocessQuery(TestQPreprocessor::PATTERN_2, actual);
 
-            REQUIRE(actual.getPatterns()[0]->equals(*cls));
-            REQUIRE(actual.getClauses().size() == 0);
+            REQUIRE(actual.getClauses()[0]->equals(*cls));
         }
     }
 }
@@ -164,30 +162,30 @@ TEST_CASE("QueryPreprocessor: two clauses") {
 
     SECTION("test 1") {
         Clause *cls = new Clause(ClauseType::USES_P, procedure, variableY);
-        PatternClause *pat = new PatternClause(assign, variableX, "y");
+        Clause *pat = new Clause(assign, variableX, vector<string>{"y"}, true);
         expected.addReturnReference(&stmt);
         expected.addClause(cls);
-        expected.addPattern(pat);
+        expected.addClause(pat);
 
         qp.preprocessQuery(TestQPreprocessor::SUCH_THAT_PATTERN_1, actual);
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
-        REQUIRE((actual.getPatterns()[0])->equals(*pat));
+        REQUIRE((actual.getClauses()[1])->equals(*pat));
         REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 3));
     }
 
     SECTION("test 2") {
         Clause* cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
-        PatternClause* pat = new PatternClause(assign, variableD, "a");
+        Clause *pat = new Clause(assign, variableD, vector<string>{"a"}, false);
         expected.addReturnReference(&stmt);
         expected.addClause(cls);
-        expected.addPattern(pat);
+        expected.addClause(pat);
 
         qp.preprocessQuery(TestQPreprocessor::SUCH_THAT_PATTERN_2, actual);
 
         REQUIRE((actual.getClauses()[0])->equals(*cls));
-        REQUIRE((actual.getPatterns()[0])->equals(*pat));
+        REQUIRE((actual.getClauses()[1])->equals(*pat));
         REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 2));
     }

@@ -33,11 +33,3 @@ void Query::addReference(Reference *reference) {
 }
 
 vector<Clause *> Query::getClauses() { return this->clauseList; }
-
-void Query::addPattern(PatternClause *pattern) {
-    patternList.push_back(pattern);
-    addReference(pattern->getStmt());
-    addReference(pattern->getVar());
-}
-
-vector<PatternClause *> Query::getPatterns() { return patternList; }
