@@ -19,7 +19,7 @@ vector<string> ExpressionParser::parseExpression() {
         } else if (isRoundBracket(curr)) {
             checkValidBracket(curr, i);
         } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
-            checkValidOperator(curr);
+            checkValidOperator(curr, i);
             oprtrFlag = false; // next token must be a variable/constant
         } else {
             throw invalid_argument(
@@ -33,7 +33,7 @@ vector<string> ExpressionParser::parseExpression() {
     return exprLst;
 }
 
-void ExpressionParser::checkValidOperator(string curr) {
+void ExpressionParser::checkValidOperator(string curr, int index) {
     if (stmt->getStatementType() == StatementType::ASSIGN) {
         if (!isValidAssignOperator(curr)) {
             throw invalid_argument("invalid operator in assign statement");
@@ -46,8 +46,20 @@ void ExpressionParser::checkValidOperator(string curr) {
         if (!isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid operator in if statement");
         }
-    } else {
-        throw invalid_argument("invalid operator");
+    } 
+    if(isLogicalOperator(curr)) {
+        if (index == exprLst.size() - 1) {
+            throw invalid_argument("invalid logical operator");
+        } else if (exprLst[index + 1] != "(") {
+            throw invalid_argument("invalid logical operator");
+        }
+        if (curr != "!") {
+            if (index == 0) {
+                throw invalid_argument("invalid logical operator");
+            } else if (exprLst[index - 1] != ")") {
+                throw invalid_argument("invalid logical operator");
+            }
+        }
     }
 }
 

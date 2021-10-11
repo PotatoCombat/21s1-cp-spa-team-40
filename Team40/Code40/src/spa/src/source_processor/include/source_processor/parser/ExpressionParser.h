@@ -18,7 +18,7 @@ public:
     stack<string> brackets; // for bracket matching
 
     vector<string> parseExpression();
-    void checkValidOperator(string curr);
+    void checkValidOperator(string curr, int index);
     void checkValidBracket(string curr, int index);
     void checkValidOpenBracket(int start, int end);
     void checkValidCloseBracket(int start, int end);
