@@ -12,20 +12,20 @@ TEST_CASE("ReadStatementParser: parseReadStatement") {
 TEST_CASE("ReadStatementParser: parseReadStatement - throws invalid variable name") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = ReadStatementParser({"read", " x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseReadStatement());
+    REQUIRE_THROWS_WITH(*parser.parseReadStatement(), "invalid variable name");
 
     parser = ReadStatementParser({"read", "x ", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseReadStatement());
+    REQUIRE_THROWS_WITH(*parser.parseReadStatement(), "invalid variable name");
 
     parser = ReadStatementParser({"read", "1x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseReadStatement());
+    REQUIRE_THROWS_WITH(*parser.parseReadStatement(), "invalid variable name");
+
+    parser = ReadStatementParser({"read", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseReadStatement(), "invalid variable name");
 }
 
 TEST_CASE("ReadStatementParser: parseReadStatement - throws invalid read statement") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = ReadStatementParser({"read", "x"}, INDEX);
-    REQUIRE_THROWS(*parser.parseReadStatement());
-
-    parser = ReadStatementParser({"read", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseReadStatement());
+    REQUIRE_THROWS_WITH(*parser.parseReadStatement(), "invalid read statement");
 }

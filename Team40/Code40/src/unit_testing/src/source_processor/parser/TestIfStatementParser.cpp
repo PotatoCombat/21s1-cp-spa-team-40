@@ -22,29 +22,29 @@ TEST_CASE("IfStatementParser: parseIfStatement - throws invalid if statement") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = IfStatementParser({"if", "num1", ">", "num2", ")", "then", "{"}, 
                                     INDEX, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", ">", "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid expression: invalid variable, constant or operator encountered");
 
     parser = IfStatementParser({"if", "(", "num1" "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
 
     parser = IfStatementParser({"if", "(", "num1", ">", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2" "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2", ")", "{"}, 
                                INDEX, ifProgramLines); 
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2", ")"}, 
                                INDEX, ifProgramLines); 
-    REQUIRE_THROWS(*parser.parseIfStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid if statement");
 }

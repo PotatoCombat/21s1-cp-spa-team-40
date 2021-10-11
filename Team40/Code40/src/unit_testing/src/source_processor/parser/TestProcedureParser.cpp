@@ -10,19 +10,19 @@ TEST_CASE("ProcedureParser: parseProcedure") {
 
 TEST_CASE("ProcedureParser: parseProcedure - throws invalid procedure name") {
     auto parser = ProcedureParser({"procedure", " computeAverage", "{"});
-    REQUIRE_THROWS(*parser.parseProcedure());
+    REQUIRE_THROWS_WITH(*parser.parseProcedure(), "invalid procedure name");
 
     parser = ProcedureParser({"procedure", "computeAverage ", "{"});
-    REQUIRE_THROWS(*parser.parseProcedure());
+    REQUIRE_THROWS_WITH(*parser.parseProcedure(), "invalid procedure name");
 
     parser = ProcedureParser({"procedure", "1computeAverage", "{"});
-    REQUIRE_THROWS(*parser.parseProcedure());
+    REQUIRE_THROWS_WITH(*parser.parseProcedure(), "invalid procedure name");
+
+    parser = ProcedureParser({"procedure", "{"});
+    REQUIRE_THROWS_WITH(*parser.parseProcedure(), "invalid procedure name");
 }
 
-TEST_CASE("ProcedureParser: parseProcedure - throws invalid print statement") {
-    auto parser = ProcedureParser({"procedure", "{"});
-    REQUIRE_THROWS(*parser.parseProcedure());
-
-    parser = ProcedureParser({"procedure", "computeAverage"});
-    REQUIRE_THROWS(*parser.parseProcedure());
+TEST_CASE("ProcedureParser: parseProcedure - throws invalid procedure") {
+    auto parser = ProcedureParser({"procedure", "computeAverage"});
+    REQUIRE_THROWS_WITH(*parser.parseProcedure(), "invalid procedure");
 }

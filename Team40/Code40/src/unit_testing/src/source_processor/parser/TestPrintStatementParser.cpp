@@ -12,20 +12,20 @@ TEST_CASE("PrintStatementParser: parsePrintStatement") {
 TEST_CASE("PrintStatementParser: parsePrintStatement - throws invalid variable name") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = PrintStatementParser({"print", " x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 
     parser = PrintStatementParser({"print", "x ", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 
     parser = PrintStatementParser({"print", "1x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
+
+    parser = PrintStatementParser({"print", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 }
 
 TEST_CASE("PrintStatementParser: parsePrintStatement - throws invalid print statement") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = PrintStatementParser({"print", "x"}, INDEX);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
-
-    parser = PrintStatementParser({"print", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid print statement");
 }

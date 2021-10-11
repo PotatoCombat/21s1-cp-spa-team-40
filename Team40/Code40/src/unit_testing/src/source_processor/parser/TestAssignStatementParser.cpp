@@ -12,23 +12,23 @@ TEST_CASE("AssignStatementParser: parseAssignStatement") {
 TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid variable name") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = AssignStatementParser({" x", "=", "0", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(), "invalid variable name");
 
     parser = AssignStatementParser({"x ", "=", "0", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(), "invalid variable name");
 
     parser = AssignStatementParser({"1x", "=", "0", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(), "invalid variable name");
 }
 
 TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid assign statement") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = AssignStatementParser({"x", "=", "0"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(), "invalid assign statement");
 
     parser = AssignStatementParser({"x", "=", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(),"invalid expression");
 
     parser = AssignStatementParser({"=", "0", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseAssignStatement());
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(),"invalid assign statement");
 }

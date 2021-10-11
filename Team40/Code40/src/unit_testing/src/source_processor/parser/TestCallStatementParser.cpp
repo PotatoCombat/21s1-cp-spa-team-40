@@ -9,23 +9,23 @@ TEST_CASE("CallStatementParser: parseCallStatement") {
     delete actualStmt;
 }
 
-TEST_CASE("CallStatementParser: parseCallStatement - throws invalid variable name") {
+TEST_CASE("CallStatementParser: parseCallStatement - throws invalid procedure name") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = CallStatementParser({"call", " x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid procedure name");
 
     parser = CallStatementParser({"call", "x ", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(),"invalid procedure name");
 
     parser = CallStatementParser({"call", "1x", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(),"invalid procedure name");
+
+    parser = CallStatementParser({"call", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid procedure name");
 }
 
 TEST_CASE("CallStatementParser: parseCallStatement - throws invalid call statement") {
     int INDEX = TestParserUtils::INDEX;
     auto parser = CallStatementParser({"call", "x"}, INDEX);
-    REQUIRE_THROWS(*parser.parseCallStatement());
-
-    parser = CallStatementParser({"call", ";"}, INDEX);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid call statement");
 }

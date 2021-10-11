@@ -20,25 +20,25 @@ TEST_CASE("WhileStatementParser: parseWhileStatement - throws invalid while stat
     int INDEX = TestParserUtils::INDEX;
     auto parser = WhileStatementParser({"while", "", "number", ">", "0", ")", "{"}, INDEX, 
                                        whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid while statement");
 
     parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression");
 
     parser = WhileStatementParser({"while", "(", "number", ">", "0", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid while statement");
 
     parser = WhileStatementParser({"while", "(", "number", ">", "0", ")"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid while statement");
 }
