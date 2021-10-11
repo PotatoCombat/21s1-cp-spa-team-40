@@ -214,6 +214,172 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
     REQUIRE(elseFollowStar3.empty());
 }
 
+TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
+          "nested IfStatement.") {
+    TestExtractIfStatement::reset();
+
+    Program program;
+    Procedure procedure(TestExtractIfStatement::PROC_NAME);
+    Statement ifStatement(1, StatementType::IF);
+    Statement thenIfStatement(2, StatementType::IF);
+    Statement thenIfThenStatement1(3, StatementType::READ);
+    Statement thenIfThenStatement2(4, StatementType::READ);
+    Statement thenIfThenStatement3(5, StatementType::READ);
+    Statement thenIfElseStatement1(6, StatementType::READ);
+    Statement thenIfElseStatement2(7, StatementType::READ);
+    Statement thenIfElseStatement3(8, StatementType::READ);
+    Statement elseIfStatement(9, StatementType::IF);
+    Statement elseIfThenStatement1(10, StatementType::READ);
+    Statement elseIfThenStatement2(11, StatementType::READ);
+    Statement elseIfThenStatement3(12, StatementType::READ);
+    Statement elseIfElseStatement1(13, StatementType::READ);
+    Statement elseIfElseStatement2(14, StatementType::READ);
+    Statement elseIfElseStatement3(15, StatementType::READ);
+    Statement afterIfStatement(16, StatementType::READ);
+    Variable variable(TestExtractIfStatement::VAR_NAME);
+
+    ifStatement.addExpressionVar(&variable);
+    thenIfStatement.addExpressionVar(&variable);
+    elseIfStatement.addExpressionVar(&variable);
+
+    ifStatement.addThenStmt(&thenIfStatement);
+    ifStatement.addElseStmt(&elseIfStatement);
+    thenIfStatement.addThenStmt(&thenIfThenStatement1);
+    thenIfStatement.addThenStmt(&thenIfThenStatement2);
+    thenIfStatement.addThenStmt(&thenIfThenStatement3);
+    thenIfStatement.addElseStmt(&thenIfElseStatement1);
+    thenIfStatement.addElseStmt(&thenIfElseStatement2);
+    thenIfStatement.addElseStmt(&thenIfElseStatement3);
+    elseIfStatement.addThenStmt(&elseIfThenStatement1);
+    elseIfStatement.addThenStmt(&elseIfThenStatement2);
+    elseIfStatement.addThenStmt(&elseIfThenStatement3);
+    elseIfStatement.addElseStmt(&elseIfElseStatement1);
+    elseIfStatement.addElseStmt(&elseIfElseStatement2);
+    elseIfStatement.addElseStmt(&elseIfElseStatement3);
+
+    elseIfThenStatement1.setVariable(&variable);
+    elseIfThenStatement2.setVariable(&variable);
+    elseIfThenStatement3.setVariable(&variable);
+    elseIfElseStatement1.setVariable(&variable);
+    elseIfElseStatement2.setVariable(&variable);
+    elseIfElseStatement3.setVariable(&variable);
+    thenIfThenStatement1.setVariable(&variable);
+    thenIfThenStatement2.setVariable(&variable);
+    thenIfThenStatement3.setVariable(&variable);
+    thenIfElseStatement1.setVariable(&variable);
+    thenIfElseStatement2.setVariable(&variable);
+    thenIfElseStatement3.setVariable(&variable);
+    afterIfStatement.setVariable(&variable);
+
+    procedure.addToStmtLst(&ifStatement);
+    procedure.addToStmtLst(&afterIfStatement);
+    program.addToProcLst(&procedure);
+
+    DesignExtractor de(&TestExtractIfStatement::pkb);
+    de.extract(&program);
+
+    // Check Next(ifs, s1), Next(ifs, s2) where s1, s2 are the first THEN
+    // and ELSE statements respectively
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
+                .size() == 2);
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
+                .count(thenIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
+                .count(elseIfStatement.getIndex()));
+
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
+                .size() == 2);
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
+                .count(thenIfThenStatement1.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
+                .count(thenIfElseStatement1.getIndex()));
+
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
+                .size() == 2);
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
+                .count(elseIfThenStatement1.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
+                .count(elseIfElseStatement1.getIndex()));
+
+    // Check Next(s1, s2) where s1, s2 and consecutive THEN/ELSE statements
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement1.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement1.getIndex())
+                .count(thenIfThenStatement2.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement2.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement2.getIndex())
+                .count(thenIfThenStatement3.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement1.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement1.getIndex())
+                .count(thenIfElseStatement2.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement2.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement2.getIndex())
+                .count(thenIfElseStatement3.getIndex()));
+
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement1.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement1.getIndex())
+                .count(elseIfThenStatement2.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement2.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement2.getIndex())
+                .count(elseIfThenStatement3.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement1.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement1.getIndex())
+                .count(elseIfElseStatement2.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement2.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement2.getIndex())
+                .count(elseIfElseStatement3.getIndex()));
+
+    // Check Next(s1, s2) where s1 is the last THEN/ELSE statement and s2 is
+    // the statement which follows the IF statement
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement3.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfThenStatement3.getIndex())
+                .count(afterIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement3.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(thenIfElseStatement3.getIndex())
+                .count(afterIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement3.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfThenStatement3.getIndex())
+                .count(afterIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement3.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractIfStatement::pkb
+                .getNextLines(elseIfElseStatement3.getIndex())
+                .count(afterIfStatement.getIndex()));
+}
+
 TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
     TestExtractIfStatement::reset();
 
