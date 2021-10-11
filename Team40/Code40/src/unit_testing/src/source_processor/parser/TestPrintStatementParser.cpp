@@ -2,30 +2,30 @@
 #include "source_processor/parser/PrintStatementParser.h"
 
 TEST_CASE("PrintStatementParser: parsePrintStatement") {
-    int index = 1;
-    auto *actualStmt = PrintStatementParser({"print", "x", ";", }, index).parsePrintStatement();
-    auto testStmt = TestParserUtils::createPrintStmt(index, "x");
+    int INDEX = TestParserUtils::INDEX;
+    auto *actualStmt = PrintStatementParser({"print", "x", ";", }, INDEX).parsePrintStatement();
+    auto testStmt = TestParserUtils::createPrintStmt(INDEX, "x");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
 TEST_CASE("PrintStatementParser: parsePrintStatement - throws invalid variable name") {
-    int index = 1;
-    auto parser = PrintStatementParser({"print", " x", ";"}, index);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = PrintStatementParser({"print", " x", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 
-    parser = PrintStatementParser({"print", "x ", ";"}, index);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    parser = PrintStatementParser({"print", "x ", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 
-    parser = PrintStatementParser({"print", "1x", ";"}, index);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    parser = PrintStatementParser({"print", "1x", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
+
+    parser = PrintStatementParser({"print", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid variable name");
 }
 
 TEST_CASE("PrintStatementParser: parsePrintStatement - throws invalid print statement") {
-    int index = 1;
-    auto parser = PrintStatementParser({"print", "x"}, index);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
-
-    parser = PrintStatementParser({"print", ";"}, index);
-    REQUIRE_THROWS(*parser.parsePrintStatement());
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = PrintStatementParser({"print", "x"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parsePrintStatement(), "invalid print statement");
 }

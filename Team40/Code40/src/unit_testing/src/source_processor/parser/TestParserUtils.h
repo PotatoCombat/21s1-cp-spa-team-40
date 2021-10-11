@@ -17,6 +17,8 @@ using namespace std;
 
 struct TestParserUtils {
 public:
+    inline static int INDEX = 1;
+
     inline static VarName VARNAME_1 = "A";
     inline static VarName VARNAME_2 = "B";
     inline static VarName VARNAME_3 = "C";

@@ -8,6 +8,6 @@ TEST_CASE("Parser") {
     SourceProcessor sourceProcessor(&pkb);
 
     sourceProcessor.processSource("C:\\Users\\Admin\\source\\repos\\21s1-cp-spa-team-"
-        "40\\Team40\\Tests40\\TD_SIMPLE_2_source.txt");
+        "40\\Team40\\Tests40\\Source1.txt");
     int test = 0;
 }

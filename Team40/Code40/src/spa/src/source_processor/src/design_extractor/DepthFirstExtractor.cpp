@@ -11,6 +11,9 @@ void DepthFirstExtractor::extract(Program *program) {
 
 void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
+    if (pkb->getProcByName(procedure->getName()) != nullptr) {
+        throw runtime_error("Encountered a Procedure with a duplicate name.");
+    };
     pkb->insertProc(procedure);
     for (Statement *statement : procedure->getStmtLst()) {
         extractStatement(statement);

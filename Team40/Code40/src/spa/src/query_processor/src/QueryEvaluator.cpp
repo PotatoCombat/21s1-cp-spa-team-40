@@ -5,13 +5,11 @@ void QueryEvaluator::clear() {
     returnRefs.clear();
     references.clear();
     clauses.clear();
-    patterns.clear();
     referenceAppearInClauses.clear();
-    allQueriesReturnTrue = true;
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb), allQueriesReturnTrue(true) {}
+    : pkb(pkb) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
@@ -19,17 +17,15 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         returnRefs = query.getReturnReferences();
         references = query.getReferences();
         clauses = query.getClauses();
-        patterns = query.getPatterns();
         resultTable.init(references.size());
         vector<bool> referenceAppearInClauses(references.size(), false);
         this->referenceAppearInClauses = referenceAppearInClauses;
-        bool allQueriesReturnTrue = true;
 
-        evalPattern();
+        bool exitEarly = false;
 
-        evalSuchThat();
+        evalClauses(exitEarly);
 
-        return finaliseResult();
+        return finaliseResult(exitEarly);
 
     } catch (ClauseHandlerError &e) {
         // to be implemented later
@@ -37,76 +33,61 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-void QueryEvaluator::evalPattern() {
-    for (PatternClause *pattern : patterns) {
-        Result tempResult;
-        AssignPatternHandler *patternHandler;
-
-        if (pattern->getStmt()->getDeType() == DesignEntityType::ASSIGN) {
-            AssignPatternHandler handler(pattern, pkb);
-            patternHandler = &handler;
-        }
-
-        // eval and combine result
-        int ref1Index = -1, ref2Index = -1;
-        if (pattern->getStmt()->getRefType() == ReferenceType::SYNONYM) {
-            ref1Index = getRefIndex(pattern->getStmt());
-        }
-        if (pattern->getVar()->getRefType() == ReferenceType::SYNONYM) {
-            ref2Index = getRefIndex(pattern->getVar());
-        }
-        tempResult = patternHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index);
+Result QueryEvaluator::getTempResult(Clause* clause) {
+    if (clause->getType() == ClauseType::PATTERN) {
+        PatternHandler patternHandler(clause, pkb);
+        return patternHandler.eval();
     }
+
+    ClauseHandler *clauseHandler;
+
+    if (clause->getType() == ClauseType::FOLLOWS) {
+        FollowsHandler followsHandler(clause, pkb);
+        clauseHandler = &followsHandler;
+    }
+
+    if (clause->getType() == ClauseType::FOLLOWS_T) {
+        FollowsStarHandler followsStarHandler(clause, pkb);
+        clauseHandler = &followsStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT) {
+        ParentHandler parentHandler(clause, pkb);
+        clauseHandler = &parentHandler;
+    }
+
+    if (clause->getType() == ClauseType::PARENT_T) {
+        ParentStarHandler parentStarHandler(clause, pkb);
+        clauseHandler = &parentStarHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_P) {
+        ModifiesProcHandler modifiesProcHandler(clause, pkb);
+        clauseHandler = &modifiesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::MODIFIES_S) {
+        ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
+        clauseHandler = &modifiesStmtHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_P) {
+        UsesProcHandler usesProcHandler(clause, pkb);
+        clauseHandler = &usesProcHandler;
+    }
+
+    if (clause->getType() == ClauseType::USES_S) {
+        UsesStmtHandler usesStmtHandler(clause, pkb);
+        clauseHandler = &usesStmtHandler;
+    }
+
+    return clauseHandler->eval();
 }
 
-void QueryEvaluator::evalSuchThat() {
+void QueryEvaluator::evalClauses(bool &exitEarly) {
     // handle clauses
     for (Clause *clause : clauses) {
-        Result tempResult;
-
-        ClauseHandler *clauseHandler;
-
-        // TODO: add more handlers for clauseType later
-        if (clause->getType() == ClauseType::FOLLOWS) {
-            FollowsHandler followsHandler(clause, pkb);
-            clauseHandler = &followsHandler;
-        }
-
-        if (clause->getType() == ClauseType::FOLLOWS_T) {
-            FollowsStarHandler followsStarHandler(clause, pkb);
-            clauseHandler = &followsStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT) {
-            ParentHandler parentHandler(clause, pkb);
-            clauseHandler = &parentHandler;
-        }
-
-        if (clause->getType() == ClauseType::PARENT_T) {
-            ParentStarHandler parentStarHandler(clause, pkb);
-            clauseHandler = &parentStarHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_P) {
-            ModifiesProcHandler modifiesProcHandler(clause, pkb);
-            clauseHandler = &modifiesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::MODIFIES_S) {
-            ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
-            clauseHandler = &modifiesStmtHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_P) {
-            UsesProcHandler usesProcHandler(clause, pkb);
-            clauseHandler = &usesProcHandler;
-        }
-
-        if (clause->getType() == ClauseType::USES_S) {
-            UsesStmtHandler usesStmtHandler(clause, pkb);
-            clauseHandler = &usesStmtHandler;
-        }
+        Result tempResult = getTempResult(clause);
 
         int ref1Index = -1, ref2Index = -1;
         if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
@@ -116,25 +97,35 @@ void QueryEvaluator::evalSuchThat() {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 
-        // eval and combine result
-        tempResult = clauseHandler->eval();
-        combineResult(tempResult, ref1Index, ref2Index);
+        combineResult(tempResult, ref1Index, ref2Index, exitEarly);
+
+        if (exitEarly) {
+            break;
+        }
     }
 }
 
-vector<string> QueryEvaluator::finaliseResult() {
-    // returns empty result if one of the boolean clauses returns false
-    if (!allQueriesReturnTrue) {
-        return vector<string>();
-    }
+vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
+    vector<string> trueRes{"TRUE"};
+    vector<string> falseRes{"FALSE"};
+    vector<string> emptyRes = vector<string>{};
 
-    // returns empty result if one of the references has no matching result
-    for (int i = 0; i < references.size(); i++) {
-        if (referenceAppearInClauses[i] && resultTable.getValues(i).empty()) {
-            return vector<string>();
+    // handle exit early cases
+    if (exitEarly) {
+        if (returnRefs.empty()) {
+            return falseRes;
+        } else {
+            return emptyRes;
         }
     }
 
+    // if no return ref but not exit early then return TRUE
+    if (returnRefs.empty()) {
+        return trueRes;
+    }
+
+    // for values that is returned but not appear in any clauses, 
+    // fill in the table with all possible values
     vector<int> returnIndexes;
     for (auto ref : returnRefs) {
         int idx = getRefIndex(ref);
@@ -146,13 +137,20 @@ vector<string> QueryEvaluator::finaliseResult() {
         }
     }
 
+    // generate and format result
     vector<vector<string>> unformattedRes =
         resultTable.generateResult(returnIndexes);
-    return ResultFormatter::formatResult(unformattedRes);
+
+    vector<vector<string>> updatedAttrRes = handleAttr(unformattedRes);
+
+    return ResultFormatter::formatResult(updatedAttrRes);
 }
 
-void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
-    allQueriesReturnTrue = allQueriesReturnTrue && result.isResultValid();
+void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool &exitEarly) {
+    if (!result.isResultValid()) {
+        exitEarly = true;
+        return;
+    }
 
     map<VALUE, VALUE_SET> res1;
     map<VALUE, VALUE_SET> res2;
@@ -241,6 +239,9 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
                     resultTable.removeValue(ref2Idx, refValue);
                 }
             }
+
+            exitEarly = canExitEarly(ref1Idx, ref2Idx);
+
             return;
         }
     }
@@ -305,6 +306,8 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx) {
     for (auto& mapCoord : toRemove) {
         resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
+    
+    exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {
@@ -315,4 +318,51 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
         }
     }
     return index;
+}
+
+bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
+    if (idx1 >= 0 && resultTable.isColumnEmpty(idx1)) {
+        return true;
+    }
+
+    if (idx2 >= 0 && resultTable.isColumnEmpty(idx2)) {
+        return true;
+    }
+    return false;
+}
+
+vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) {
+    vector<vector<string>> updatedResList;
+    for (auto res : input) {
+        if (returnRefs.size() != res.size()) {
+            throw invalid_argument(
+                "input res and returnRefs have different size");
+        }
+
+        int size = returnRefs.size();
+        vector<string> updatedRes(size);
+        for (int i = 0; i < size; i++) {
+            string updatedValue = res[i];
+            Reference *ref = returnRefs[i];
+            DesignEntityType desType = ref->getDeType();
+            ReferenceAttribute attr = ref->getAttr();
+
+            if (attr != ReferenceAttribute::NAME) {
+                updatedRes[i] = updatedValue;
+                continue;
+            }
+
+            if (desType == DesignEntityType::CALL) {
+                updatedValue = pkb->getCallProcedure(stoi(updatedValue));
+            } else if (desType == DesignEntityType::PRINT) {
+                updatedValue = pkb->getPrintVariable(stoi(updatedValue));
+            } else if (desType == DesignEntityType::READ) {
+                updatedValue = pkb->getReadVariable(stoi(updatedValue));
+            }
+
+            updatedRes[i] = updatedValue;
+        }
+        updatedResList.push_back(updatedRes);
+    }
+    return updatedResList;
 }

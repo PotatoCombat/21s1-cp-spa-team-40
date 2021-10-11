@@ -2,30 +2,30 @@
 #include "source_processor/parser/CallStatementParser.h"
 
 TEST_CASE("CallStatementParser: parseCallStatement") {
-    int index = 1;
-    auto *actualStmt = CallStatementParser({"call", "x", ";", }, index).parseCallStatement();
-    auto testStmt = TestParserUtils::createCallStmt(index, "x");
+    int INDEX = TestParserUtils::INDEX;
+    auto *actualStmt = CallStatementParser({"call", "x", ";", }, INDEX).parseCallStatement();
+    auto testStmt = TestParserUtils::createCallStmt(INDEX, "x");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
-TEST_CASE("CallStatementParser: parseCallStatement - throws invalid variable name") {
-    int index = 1;
-    auto parser = CallStatementParser({"call", " x", ";"}, index);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+TEST_CASE("CallStatementParser: parseCallStatement - throws invalid procedure name") {
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = CallStatementParser({"call", " x", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid procedure name");
 
-    parser = CallStatementParser({"call", "x ", ";"}, index);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    parser = CallStatementParser({"call", "x ", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(),"invalid procedure name");
 
-    parser = CallStatementParser({"call", "1x", ";"}, index);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    parser = CallStatementParser({"call", "1x", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(),"invalid procedure name");
+
+    parser = CallStatementParser({"call", ";"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid procedure name");
 }
 
 TEST_CASE("CallStatementParser: parseCallStatement - throws invalid call statement") {
-    int index = 1;
-    auto parser = CallStatementParser({"call", "x"}, index);
-    REQUIRE_THROWS(*parser.parseCallStatement());
-
-    parser = CallStatementParser({"call", ";"}, index);
-    REQUIRE_THROWS(*parser.parseCallStatement());
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = CallStatementParser({"call", "x"}, INDEX);
+    REQUIRE_THROWS_WITH(*parser.parseCallStatement(), "invalid call statement");
 }

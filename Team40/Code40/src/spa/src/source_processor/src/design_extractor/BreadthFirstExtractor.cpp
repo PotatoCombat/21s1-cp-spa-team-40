@@ -73,11 +73,15 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     if (!currentProcedure.has_value()) {
         throw runtime_error("Current procedure not set");
     }
+
     ProcName calleeName = callStatement->getProcName();
     if (pkb->getProcByName(calleeName) == nullptr) {
         throw runtime_error("Trying to call a non-existent procedure at line " +
                             to_string(callStatement->getIndex()));
     }
+
+    // Extract Calls(proc, proc) relationship
+    pkb->insertCalls(currentProcedure.value(), calleeName);
 
     // Handle transitive Modifies(proc, var) relationship set<VarName>
     set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);

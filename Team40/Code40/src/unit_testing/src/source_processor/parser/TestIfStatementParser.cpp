@@ -9,42 +9,42 @@ vector<Line> ifProgramLines = {Line(0, {"procedure", "sumDigits", "{"}),
                              Line(1, {"}"})};
 
 TEST_CASE("IfStatementParser: parseIfStatement") {
-    int index = 1;
+    int INDEX = TestParserUtils::INDEX;
     auto *actualStmt = IfStatementParser({"if", "(", "num1", ">", "num2", ")", "then", "{"}, 
-                                          index, ifProgramLines).parseIfStatement(index);
-    index = 1;
-    auto testStmt = TestParserUtils::createIfStmt(index, "num1 > num2");
+                                          INDEX, ifProgramLines).parseIfStatement(INDEX);
+    INDEX = 1;
+    auto testStmt = TestParserUtils::createIfStmt(INDEX, "num1 > num2");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
 TEST_CASE("IfStatementParser: parseIfStatement - throws invalid if statement") {
-    int index = 1;
+    int INDEX = TestParserUtils::INDEX;
     auto parser = IfStatementParser({"if", "num1", ">", "num2", ")", "then", "{"}, 
-                                    index, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                                    INDEX, ifProgramLines);
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", ">", "num2", ")", "then", "{"}, 
-                               index, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines);
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid expression: invalid variable, constant or operator encountered");
 
     parser = IfStatementParser({"if", "(", "num1" "num2", ")", "then", "{"}, 
-                               index, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines);
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
 
     parser = IfStatementParser({"if", "(", "num1", ">", ")", "then", "{"}, 
-                               index, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines);
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2" "then", "{"}, 
-                               index, ifProgramLines);
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines);
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2", ")", "{"}, 
-                               index, ifProgramLines); 
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines); 
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid if statement");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2", ")"}, 
-                               index, ifProgramLines); 
-    REQUIRE_THROWS(*parser.parseIfStatement(index));
+                               INDEX, ifProgramLines); 
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid if statement");
 }

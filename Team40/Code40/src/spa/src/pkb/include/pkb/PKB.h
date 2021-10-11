@@ -10,6 +10,9 @@
 #include "PatternTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
+#include "NextTable.h"
+#include "CallsTable.h"
+#include "CallsStarTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -66,6 +69,13 @@ public:
     /// Stores the relationship Uses(stmt, var).
     virtual void insertStmtUsingVar(Statement *stmt, Variable *var);
 
+    /// Stores the relationship Calls(stmt1, stmt2), and updates *
+    /// relationships.
+    virtual void insertCalls(Procedure *proc, ProcName called);
+
+    /// Stores the relationship Next(stmt1, stmt2).
+    virtual void insertNext(Statement *previousStmt, Statement *nextStmt);
+
     /// Stores the relationship pattern a(var, exprList), where a is an assign.
     virtual void insertPatternAssign(Statement *stmt);
 
@@ -81,6 +91,10 @@ public:
     virtual Iterator<StmtIndex> getAllStmts(StatementType type);
 
     virtual StatementType getStmtType(StmtIndex stmt);
+
+    virtual VarName getPrintVariable(StmtIndex printStmt);
+    virtual VarName getReadVariable(StmtIndex readStmt);
+    virtual ProcName getCallProcedure(StmtIndex callStmt);
 
     // Follows =================================================================
 
@@ -194,29 +208,72 @@ public:
     /// Selects BOOLEAN such that Uses(stmt, var).
     virtual bool stmtUses(StmtIndex stmt, VarName var);
 
+    // Calls ==================================================================
+
+    /// Selects p such that Calls(caller, p).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCalledProcs(ProcName caller);
+
+    /// Selects p such that Calls*(caller, p).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCalledStarProcs(ProcName caller);
+
+    /// Selects p such that Calls(p, called).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCallerProcs(ProcName called);
+
+    /// Selects p such that Calls*(p, called).
+    /// \return p#procName that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<ProcName> getCallerStarProcs(ProcName called);
+
+    /// Selects BOOLEAN such that Calls(proc1, proc2).
+    virtual bool calls(ProcName caller, ProcName called);
+
+    /// Selects BOOLEAN such that Calls*(proc1, proc2).
+    virtual bool callsStar(ProcName caller, ProcName called);
+
+    // Next ==================================================================
+
+    /// Selects s such that Next(line, s).
+    /// \return all programLine#no that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<StmtIndex> getNextLines(ProgLineIndex line);
+
+    /// Selects s such that Next(s, line).
+    /// \return all programLine#no that fits the relationship, or an empty set if there
+    /// are none.
+    virtual set<StmtIndex> getPreviousLines(ProgLineIndex line);
+
+    /// Selects BOOLEAN such that Next(line1, line2).
+    virtual bool next(ProgLineIndex previousLine, ProgLineIndex nextLine);
+
     // Pattern =================================================================
 
     /// Selects a such that a(var, pattern), where a is an AssignStatement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getAssignsMatchingPattern(VarName var,
-                                                     Pattern pattern);
+    virtual set<StmtIndex> getPartialAssignPatternStmts(VarName var,
+                                                        ExpressionList pattern);
 
     /// Selects a such that a(var, pattern), where a is an AssignStatement,
     /// and the pattern requires an exact match.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
-    virtual set<StmtIndex> getAssignsMatchingExactPattern(VarName var,
-                                                          Pattern pattern);
+    virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
+                                                      ExpressionList pattern);
 
     /// Selects BOOLEAN such that a(var, pattern).
-    virtual bool assignMatchesPattern(StmtIndex stmt, VarName var,
-                                      Pattern pattern);
+    virtual bool partialAssignPattern(StmtIndex stmtIndex, VarName var,
+                                      ExpressionList pattern);
 
     /// Selects BOOLEAN such that a(var, pattern), but pattern must be an exact
     /// match.
-    virtual bool assignMatchesExactPattern(StmtIndex stmt, VarName var,
-                                           Pattern pattern);
+    virtual bool exactAssignPattern(StmtIndex stmtIndex, VarName var,
+                                    ExpressionList pattern);
 
 private:
     ProcedureTable procTable;
@@ -230,5 +287,8 @@ private:
     ParentStarTable parentStarTable;
     ModifiesTable modifiesTable;
     UsesTable usesTable;
+    CallsTable callsTable;
+    CallsStarTable callsStarTable;
+    NextTable nextTable;
     PatternTable patternTable;
 };

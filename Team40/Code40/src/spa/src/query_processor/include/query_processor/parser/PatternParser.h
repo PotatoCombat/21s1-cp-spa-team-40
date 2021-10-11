@@ -6,7 +6,7 @@
 #include "query_processor/Abstractions.h"
 
 #include "query_processor/exception/ValidityError.h"
-#include "query_processor/model/PatternClause.h"
+#include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/parser/ParserUtil.h"
 
@@ -16,16 +16,32 @@ public:
 
     void initReferences(vector<Reference *> &declList);
     void clear();
-    PatternClause *parse(PatTuple patTuple);
+    Clause *parse(PatTuple patTuple);
+
+    vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
 
 private:
-    PatternClause *parseAssign(Reference *identity);
+    Clause *parseAssign(Reference *identity);
+    Clause *parseWhile(Reference *identity);
+    Clause *parseIf(Reference *identity);
+    Reference *parseValidVariable(string var);
 
-    bool isAssignPattern(Reference *identity);
     Reference *getReferenceIfDeclared(string syn);
+    bool isAssignPatternClause(Reference *identity);
+    bool isWhilePatternClause(Reference *identity);
+    bool isIfPatternClause(Reference *identity);
+    bool isExactPattern(vector<PatToken> pattern);
+    bool isWildcardPattern(vector<PatToken> pattern);
+    bool isQuotedPattern(vector<PatToken> pattern);
+    bool isUnderscoreQuotedPattern(vector<PatToken> pattern);
+    bool isOperator(string token);
+    bool isLBracket(string token);
+    bool isRBracket(string token);
+    int countOccurences(vector<string> vec, string token);
 
     vector<Reference *> declList;
 
     string ident;
-    vector<string> args;
+    string var;
+    vector<string> tokens;
 };
