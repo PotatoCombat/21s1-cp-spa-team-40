@@ -82,7 +82,7 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
         return;
     } else if (start == 0) {
         string next = exprLst[end+1];
-        if (!(isInteger(next) || isName(next))) {
+        if (!(isInteger(next) || isName(next) || next == "!")) {
             throw invalid_argument("invalid expression");
         }
     } else if (end == exprLst.size()-1) {
@@ -90,7 +90,8 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
     } else {
         string prev = exprLst[start-1];
         string next = exprLst[end+1];
-        if (!(isOperator(prev) && (isInteger(next) || isName(next)))) {
+        if (!(isOperator(prev) &&
+              (isInteger(next) || isName(next) || next == "!"))) {
             throw invalid_argument("invalid expression");
         }
     }
