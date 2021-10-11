@@ -24,15 +24,15 @@ TEST_CASE("WhileStatementParser: parseWhileStatement - throws invalid while stat
 
     parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: invalid variable, constant or operator encountered");
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: conditions need at least one operator");
 
     parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: invalid variable, constant or operator encountered");
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: conditions need at least one operator");
 
     parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression");
+    REQUIRE_THROWS_WITH(*parser.parseWhileStatement(INDEX), "invalid expression: cannot end with an operator");
 
     parser = WhileStatementParser({"while", "(", "number", ">", "0", "{"}, INDEX, 
                                   whileProgramLines);
