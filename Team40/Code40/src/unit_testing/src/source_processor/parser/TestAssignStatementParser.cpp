@@ -2,33 +2,33 @@
 #include "source_processor/parser/AssignStatementParser.h"
 
 TEST_CASE("AssignStatementParser: parseAssignStatement") {
-    int index = 1;
-    auto *actualStmt = AssignStatementParser({"x", "=", "0", ";"}, index).parseAssignStatement();
-    auto testStmt = TestParserUtils::createAssignStmt(index, "x", "0");
+    int INDEX = TestParserUtils::INDEX;
+    auto *actualStmt = AssignStatementParser({"x", "=", "0", ";"}, INDEX).parseAssignStatement();
+    auto testStmt = TestParserUtils::createAssignStmt(INDEX, "x", "0");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
 TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid variable name") {
-    int index = 1;
-    auto parser = AssignStatementParser({" x", "=", "0", ";"}, index);
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = AssignStatementParser({" x", "=", "0", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    parser = AssignStatementParser({"x ", "=", "0", ";"}, index);
+    parser = AssignStatementParser({"x ", "=", "0", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    parser = AssignStatementParser({"1x", "=", "0", ";"}, index);
+    parser = AssignStatementParser({"1x", "=", "0", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 }
 
 TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid assign statement") {
-    int index = 1;
-    auto parser = AssignStatementParser({"x", "=", "0"}, index);
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = AssignStatementParser({"x", "=", "0"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    parser = AssignStatementParser({"x", "=", ";"}, index);
+    parser = AssignStatementParser({"x", "=", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 
-    parser = AssignStatementParser({"=", "0", ";"}, index);
+    parser = AssignStatementParser({"=", "0", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseAssignStatement());
 }

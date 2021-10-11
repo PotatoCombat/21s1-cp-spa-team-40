@@ -2,30 +2,30 @@
 #include "source_processor/parser/CallStatementParser.h"
 
 TEST_CASE("CallStatementParser: parseCallStatement") {
-    int index = 1;
-    auto *actualStmt = CallStatementParser({"call", "x", ";", }, index).parseCallStatement();
-    auto testStmt = TestParserUtils::createCallStmt(index, "x");
+    int INDEX = TestParserUtils::INDEX;
+    auto *actualStmt = CallStatementParser({"call", "x", ";", }, INDEX).parseCallStatement();
+    auto testStmt = TestParserUtils::createCallStmt(INDEX, "x");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
 TEST_CASE("CallStatementParser: parseCallStatement - throws invalid variable name") {
-    int index = 1;
-    auto parser = CallStatementParser({"call", " x", ";"}, index);
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = CallStatementParser({"call", " x", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseCallStatement());
 
-    parser = CallStatementParser({"call", "x ", ";"}, index);
+    parser = CallStatementParser({"call", "x ", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseCallStatement());
 
-    parser = CallStatementParser({"call", "1x", ";"}, index);
+    parser = CallStatementParser({"call", "1x", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseCallStatement());
 }
 
 TEST_CASE("CallStatementParser: parseCallStatement - throws invalid call statement") {
-    int index = 1;
-    auto parser = CallStatementParser({"call", "x"}, index);
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = CallStatementParser({"call", "x"}, INDEX);
     REQUIRE_THROWS(*parser.parseCallStatement());
 
-    parser = CallStatementParser({"call", ";"}, index);
+    parser = CallStatementParser({"call", ";"}, INDEX);
     REQUIRE_THROWS(*parser.parseCallStatement());
 }

@@ -7,38 +7,38 @@ vector<Line> whileProgramLines = {Line(0, {"procedure", "sumDigits", "{"}),
                              Line(1, {"}"})};
 
 TEST_CASE("WhileStatementParser: parseWhileStatement") {
-    int index = 1;
-    auto *actualStmt = WhileStatementParser({"while", "(", "number", ">", "0", ")", "{"}, index, 
-                                            whileProgramLines).parseWhileStatement(index);
-    index = 1;
-    auto testStmt = TestParserUtils::createWhileStmt(index, "number > 0");
+    int INDEX = TestParserUtils::INDEX;
+    auto *actualStmt = WhileStatementParser({"while", "(", "number", ">", "0", ")", "{"}, INDEX, 
+                                            whileProgramLines).parseWhileStatement(INDEX);
+    INDEX = 1;
+    auto testStmt = TestParserUtils::createWhileStmt(INDEX, "number > 0");
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
 
 TEST_CASE("WhileStatementParser: parseWhileStatement - throws invalid while statement") {
-    int index = 1;
-    auto parser = WhileStatementParser({"while", "", "number", ">", "0", ")", "{"}, index, 
+    int INDEX = TestParserUtils::INDEX;
+    auto parser = WhileStatementParser({"while", "", "number", ">", "0", ")", "{"}, INDEX, 
                                        whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 
-    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, index, 
+    parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 
-    parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, index, 
+    parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, index, 
+    parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", "0", "{"}, index, 
+    parser = WhileStatementParser({"while", "(", "number", ">", "0", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 
-    parser = WhileStatementParser({"while", "(", "number", ">", "0", ")"}, index, 
+    parser = WhileStatementParser({"while", "(", "number", ">", "0", ")"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS(*parser.parseWhileStatement(index));
+    REQUIRE_THROWS(*parser.parseWhileStatement(INDEX));
 }
