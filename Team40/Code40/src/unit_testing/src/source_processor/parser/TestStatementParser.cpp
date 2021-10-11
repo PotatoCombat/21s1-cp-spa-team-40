@@ -1,12 +1,12 @@
 #include "TestParserUtils.h"
 #include "source_processor/parser/StatementParser.h"
 
-int INDEX = TestParserUtils::INDEX;
 vector<Line> programLines = {Line(0, {"procedure", "sumDigits", "{"}), 
                              Line(1, {"blah", ";"}),  
                              Line(1, {"}"})};
                              
 TEST_CASE("StatementParser: isReadStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"read", }, INDEX, programLines, INDEX).isReadStmt());
     REQUIRE(StatementParser({"read", "blah"}, INDEX, programLines, INDEX).isReadStmt());
@@ -26,6 +26,7 @@ TEST_CASE("StatementParser: isReadStmt") {
 }
 
 TEST_CASE("StatementParser: isPrintStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"print", }, INDEX, programLines, INDEX).isPrintStmt());
     REQUIRE(StatementParser({"print", "blah"}, INDEX, programLines, INDEX).isPrintStmt());
@@ -45,6 +46,7 @@ TEST_CASE("StatementParser: isPrintStmt") {
 }
 
 TEST_CASE("StatementParser: isCallStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"call", }, INDEX, programLines, INDEX).isCallStmt());
     REQUIRE(StatementParser({"call", "blah"}, INDEX, programLines, INDEX).isCallStmt());
@@ -64,6 +66,7 @@ TEST_CASE("StatementParser: isCallStmt") {
 }
 
 TEST_CASE("StatementParser: isWhileStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"while", }, INDEX, programLines, INDEX).isWhileStmt());
     REQUIRE(StatementParser({"while", "blah"}, INDEX, programLines, INDEX).isWhileStmt());
@@ -83,6 +86,7 @@ TEST_CASE("StatementParser: isWhileStmt") {
 }
 
 TEST_CASE("StatementParser: isIfStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"if", }, INDEX, programLines, INDEX).isIfStmt());
     REQUIRE(StatementParser({"if", "blah"}, INDEX, programLines, INDEX).isIfStmt());
@@ -102,6 +106,7 @@ TEST_CASE("StatementParser: isIfStmt") {
 }
 
 TEST_CASE("StatementParser: isAssignStmt") {
+    int INDEX = TestParserUtils::INDEX;
     // True contents
     REQUIRE(StatementParser({"x", "=", "5", }, INDEX, programLines, INDEX).isAssignStmt());
     REQUIRE(StatementParser({"x", "=", "5", "+", "10", }, INDEX, programLines, INDEX).isAssignStmt());
