@@ -44,78 +44,16 @@ vector<Reference *> TestQueryParser::createReferenceV(int n) {
     return vect;
 }
 
-//TEST_CASE("QueryParser: parseDeclaration") {
-//    QueryParser parser;
-//    Reference expected = TestQueryParser::DECLARED_SYN;
-//    Reference *actual;
-//    actual = parser.parseDeclaration(TestQueryParser::DECL);
-//
-//    REQUIRE(actual->getDeType() == expected.getDeType());
-//    REQUIRE(actual->getRefType() == expected.getRefType());
-//    REQUIRE(actual->getValue() == expected.getValue());
-//    REQUIRE(actual->getDeType() == DesignEntityType::STMT);
-//}
-//
-//TEST_CASE("QueryParser: parseSuchThatClause") {
-//    QueryParser parser;
-//    vector<Reference *> refs = TestQueryParser::createReferenceV(1);
-//
-//    SECTION("test pass: constants/wildcards") {
-//        Clause *expected =
-//            new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
-//                       TestQueryParser::CONSTANT4);
-//        Clause *actual =
-//            parser.parseSuchThatClause(make_tuple("Follows*", "1", "4"));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//
-//        expected = new Clause(ClauseType::FOLLOWS_T, TestQueryParser::CONSTANT1,
-//                              TestQueryParser::WILDCARD_S);
-//        actual = parser.parseSuchThatClause(make_tuple("Follows*", "1", "_"));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//
-//        expected =
-//            new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD_S,
-//                       TestQueryParser::CONSTANT4);
-//        actual = parser.parseSuchThatClause(make_tuple("Follows*", "_", "4"));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//
-//        expected =
-//            new Clause(ClauseType::FOLLOWS_T, TestQueryParser::WILDCARD_S,
-//                       TestQueryParser::WILDCARD_S);
-//        actual = parser.parseSuchThatClause(make_tuple("Follows*", "_", "_"));
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//    }
-//
-//    SECTION("test pass: synonym declared") {
-//        Clause *expected =
-//            new Clause(ClauseType::FOLLOWS_T, TestQueryParser::DECLARED_SYN,
-//                       TestQueryParser::CONSTANT4);
-//        Clause *actual = parser.parseSuchThatClause(TestQueryParser::REL);
-//
-//        REQUIRE(actual->getType() == ClauseType::FOLLOWS_T);
-//        REQUIRE(actual->equals(*expected));
-//
-//        delete expected;
-//        delete actual;
-//    }
-//
-//    SECTION("test fail: synonym undeclared") {
-//        REQUIRE_THROWS(parser.parseSuchThatClause(
-//            make_tuple("Follows*", "undeclared", "4")));
-//        REQUIRE_THROWS(parser.parseSuchThatClause(
-//            make_tuple("Follows*", "4", "undeclared")));
-//    }
-//}
-//
+TEST_CASE("QueryParser: isValidName") {
+
+    SECTION("test fail: parse invalid name") {
+        string invalid = "stmt 0PD;";
+        REQUIRE(!ParserUtil::isValidName(invalid));
+
+        invalid = "assign s_fishy;";
+        REQUIRE(!ParserUtil::isValidName(invalid));
+
+        invalid = "print 11111;";
+        REQUIRE(!ParserUtil::isValidName(invalid));
+    }
+}

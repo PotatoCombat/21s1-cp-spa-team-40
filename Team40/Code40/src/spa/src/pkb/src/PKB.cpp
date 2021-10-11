@@ -64,8 +64,17 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesTable.insertStmtUsingVar(stmt, var);
 }
 
+void PKB::insertCalls(Procedure *proc, ProcName called) {
+    callsTable.insertCalls(proc, called);
+    callsStarTable.insertCallsStar(proc, called);
+}
+
+void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
+    nextTable.insertNext(previousStmt, nextStmt);
+}
+
 void PKB::insertPatternAssign(Statement *stmt) {
-    patternTable.insertPatternAssign(stmt);
+    patternTable.insertAssignPattern(stmt);
 }
 
 // =============================================================================
@@ -86,6 +95,30 @@ Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
 
 StatementType PKB::getStmtType(StmtIndex stmt) {
     return statementTable.getStmtType(stmt);
+}
+
+VarName PKB::getPrintVariable(StmtIndex printStmt) {
+    auto stmt = statementTable.getStmt(printStmt);
+    if (stmt->getStatementType() != StatementType::PRINT) {
+        throw runtime_error("This statement number does not refer to a print statement.");
+    }
+    return stmt->getVariable()->getName();
+}
+
+VarName PKB::getReadVariable(StmtIndex readStmt) {
+    auto stmt = statementTable.getStmt(readStmt);
+    if (stmt->getStatementType() != StatementType::READ) {
+        throw runtime_error("This statement number does not refer to a read statement.");
+    }
+    return stmt->getVariable()->getName();
+}
+
+ProcName PKB::getCallProcedure(StmtIndex callStmt) {
+    auto stmt = statementTable.getStmt(callStmt);
+    if (stmt->getStatementType() != StatementType::CALL) {
+        throw runtime_error("This statement number does not refer to a call statement.");
+    }
+    return stmt->getProcName();
 }
 
 // Follows =====================================================================
@@ -192,23 +225,60 @@ bool PKB::stmtUses(StmtIndex stmt, VarName var) {
     return usesTable.stmtUses(stmt, var);
 }
 
+// Calls =======================================================================
+
+set<ProcName> PKB::getCalledProcs(ProcName caller) {
+    return callsTable.getCalledProcs(caller);
+}
+
+set<ProcName> PKB::getCalledStarProcs(ProcName caller) {
+    return callsStarTable.getCalledStarProcs(caller);
+}
+
+set<ProcName> PKB::getCallerProcs(ProcName called) {
+    return callsTable.getCallerProcs(called);
+}
+
+set<ProcName> PKB::getCallerStarProcs(ProcName called) {
+    return callsStarTable.getCallerStarProcs(called);
+}
+
+bool PKB::calls(ProcName caller, ProcName called) {
+    return callsTable.calls(caller, called);
+}
+
+bool PKB::callsStar(ProcName caller, ProcName called) {
+    return callsStarTable.callsStar(caller, called);
+}
+
+// Next ========================================================================
+
+set<StmtIndex> PKB::getNextLines(ProgLineIndex line) {
+    return nextTable.getNextLines(line);
+}
+
+set<StmtIndex> PKB::getPreviousLines(ProgLineIndex line) {
+    return nextTable.getPreviousLines(line);
+}
+
+bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
+    return nextTable.next(previousLine, nextLine);
+}
+
 // Pattern =====================================================================
 
-set<StmtIndex> PKB::getAssignsMatchingPattern(VarName var, Pattern pattern) {
-    return patternTable.getAssignsMatchingPattern(var, pattern);
+set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, ExpressionList pattern) {
+    return patternTable.getPartialAssignPatternStmts(var, pattern);
 }
 
-set<StmtIndex> PKB::getAssignsMatchingExactPattern(VarName var,
-                                                   Pattern pattern) {
-    return patternTable.getAssignsMatchingExactPattern(var, pattern);
+set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, ExpressionList pattern) {
+    return patternTable.getExactAssignPatternStmts(var, pattern);
 }
 
-bool PKB::assignMatchesPattern(StmtIndex stmtIndex, VarName var,
-                               Pattern pattern) {
-    return patternTable.assignMatchesPattern(stmtIndex, var, pattern);
+bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
+    return patternTable.partialAssignPattern(stmtIndex, var, pattern);
 }
 
-bool PKB::assignMatchesExactPattern(StmtIndex stmtIndex, VarName var,
-                                    Pattern pattern) {
-    return patternTable.assignMatchesExactPattern(stmtIndex, var, pattern);
+bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
+    return patternTable.exactAssignPattern(stmtIndex, var, pattern);
 }

@@ -45,4 +45,8 @@ public:
     set<StmtIndex> getStmtsModifyingVar(VarName var);
     set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
     bool stmtModifies(StmtIndex stmt, VarName var);
+
+    VarName getPrintVariable(StmtIndex printStmt);
+    VarName getReadVariable(StmtIndex readStmt);
+    ProcName getCallProcedure(StmtIndex callStmt);
 };
