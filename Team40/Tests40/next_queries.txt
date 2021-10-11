@@ -1,0 +1,240 @@
+1 - everything next of end of while loop
+stmt s;
+Select s such that Next(6, s)
+3, 7
+5000
+2 - next of condition of if statement
+stmt s;
+Select s such that Next(7, s)
+8, 9, 10
+5000
+3 - next of condition of while loop
+stmt s;
+Select s such that Next(3, s)
+4, 7
+5000
+4 - next of else of if statement
+stmt s;
+Select s such that Next(9, s)
+10
+5000
+5 - next of then of if statement
+stmt s;
+Select s such that Next(8, s)
+10
+5000
+6 - next of statement list within while loop
+stmt s;
+Select s such that Next(4, s)
+5
+5000
+7 - next of statement list within if statement
+stmt s;
+Select s such that Next(16, s)
+17
+5000
+8 - boolean with two wild cards
+Select BOOLEAN such that Next(_, _)
+TRUE
+5000
+9 - reflexivity with while statement
+stmt s;
+Select s such that Next(s, s)
+19
+5000
+10 - reflexivity with any other statement (invalid)
+assign s;
+Select s such that Next(s, s)
+
+5000
+11 - Next of a call statement (next statement, not across procs)
+stmt s;
+Select s such that Next(5, s)
+6
+5000
+12 - all statements that come next of something
+stmt s;
+Select s such that Next(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+13 - all statements that have something next
+stmt s;
+Select s such that Next(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19
+5000
+14 - everything next of an assign statement
+assign a; stmt s;
+Select s such that Next(a, s)
+2, 3, 5, 7, 10, 11, 12, 13, 18, 17
+5000
+15 - everything next of end of proc
+stmt s;
+Select s such that Next(18, s)
+
+5000
+16 - everything next of a generic while loop
+while w, stmt s;
+Select s such that Next(w, s)
+4, 7, 14, 18
+5000
+17 - everything next of a generic if statement
+if i, stmt s;
+Select s such that Next(i, s)
+8, 9, 10, 15, 16, 13, 18
+5000
+18 - everything next of an assign statement
+assign a; stmt s;
+Select s such that Next(11, s)
+12
+5000
+19 - everything next of a call statement
+call c; stmt s;
+Select s such that Next(c, s)
+6
+5000
+20 - boolean with true condition
+Select BOOLEAN such that Next(13, 18)
+TRUE
+5000
+21 - boolean with false condition
+Select BOOLEAN such that Next(5, 19)
+FALSE
+5000
+22 - checking for a specific condition
+stmt s;
+Select s such that Next(6, 3)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+23 - statement that comes before statement after a while loop
+stmt s;
+Select s such that Next(s, 7)
+3, 6
+5000
+24 - statement that comes before statement after an if statement
+stmt s;
+Select s such that Next(s, 18)
+15, 17
+5000
+
+
+
+
+Next*
+
+25 - everything next* of end of while loop
+stmt s;
+Select s such that Next*(6, s)
+7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+26 - next* of condition of if statement
+stmt s;
+Select s such that Next*(7, s)
+8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+27 - next* of condition of while loop
+stmt s;
+Select s such that Next*(3, s)
+4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+28 - next* of else of if statement
+stmt s;
+Select s such that Next*(9, s)
+10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+29 - next* of then of if statement
+stmt s;
+Select s such that Next*(8, s)
+9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+30 - next* of statement list within while loop
+stmt s;
+Select s such that Next*(4, s)
+4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+31 - next* of statement list within if statement
+stmt s;
+Select s such that Next*(16, s)
+17, 18
+5000
+32 - boolean with two wild cards
+Select BOOLEAN such that Next*(_, _)
+TRUE
+5000
+33 - reflexivity with while statement
+stmt s;
+Select s such that Next*(s, s)
+3, 4, 5, 6, 13, 14, 15, 16, 17, 19
+5000
+34 - reflexivity with any other statement
+assign s;
+Select s such that Next*(s, s)
+4, 6, 15, 16, 17
+5000
+35 - Next* of a call statement (next* statement, not across procs)
+stmt s;
+Select s such that Next*(5, s)
+6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+36 - all statements that come next* of something
+stmt s;
+Select s such that Next*(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+37 - all statements that have something next*
+stmt s;
+Select s such that Next*(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19
+5000
+38 - everything next* of an assign statement
+assign a; stmt s;
+Select s such that Next*(a, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+39 - everything next* of end of proc
+stmt s;
+Select s such that Next*(18, s)
+
+5000
+40 - everything next* of a generic while loop
+while w, stmt s;
+Select s such that Next*(w, s)
+3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+41 - everything next* of a generic if statement
+if i, stmt s;
+Select s such that Next*(i, s)
+7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+42 - everything next* of an assign statement
+assign a; stmt s;
+Select s such that Next*(11, s)
+12, 13, 14, 15, 16, 17, 18
+5000
+43 - everything next* of a call statement
+call c; stmt s;
+Select s such that Next*(c, s)
+6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+44 - boolean with true condition
+Select BOOLEAN such that Next*(13, 18)
+TRUE
+5000
+45 - boolean with false condition
+Select BOOLEAN such that Next*(19, 11)
+FALSE
+5000
+46 - checking for a specific condition
+stmt s;
+Select s such that Next*(6, 3)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+47 - statement that comes before statement after a while loop
+stmt s;
+Select s such that Next*(s, 7)
+1, 2, 3, 4, 5, 6
+5000
+48 - statement that comes before statement after an if statement
+stmt s;
+Select s such that Next*(s, 18)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000

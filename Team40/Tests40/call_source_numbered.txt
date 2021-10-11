@@ -1,0 +1,48 @@
+procedure A {
+    x = 10;         (1)
+    x = 7 + 1;      (2)
+}
+procedure B {
+    x = 10;         (3)
+    x = 7 + 1;      (4)
+    call C;         (5)
+}
+procedure C {
+    x = 10;         (6)
+    x = 7 + 1;      (7)
+    call D;         (8)
+    call E;         (9)
+    call F;         (10)
+    call G;         (11)
+}
+procedure D {
+    call G;         (12)
+}
+procedure E {
+    call G;         (13)
+    call F;         (14)
+    call H;         (15)
+}
+procedure F {
+    a = 1;          (16)
+}
+procedure G {
+    b = 1;          (17)
+}
+procedure H {
+    c = 1;          (18)
+}
+
+
+A
+B calls C
+C calls DEFG called by B
+D calls G called by C
+E calls FG called by C
+G called by CDE
+H
+
+
+
+
+
