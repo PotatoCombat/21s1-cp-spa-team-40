@@ -81,6 +81,16 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &usesStmtHandler;
     }
 
+    if (clause->getType() == ClauseType::CALLS) {
+        CallsHandler callsHandler(clause, pkb);
+        clauseHandler = &callsHandler;
+    }
+
+    if (clause->getType() == ClauseType::CALLS_T) {
+        CallsStarHandler callsStarHandler(clause, pkb);
+        clauseHandler = &callsStarHandler;
+    }
+
     return clauseHandler->eval();
 }
 

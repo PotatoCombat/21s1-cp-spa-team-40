@@ -19,6 +19,8 @@
 #include "query_processor/model/Reference.h"
 
 #include "query_processor/relationship_handler/PatternHandler.h"
+#include "query_processor/relationship_handler/CallsHandler.h"
+#include "query_processor/relationship_handler/CallsStarHandler.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
