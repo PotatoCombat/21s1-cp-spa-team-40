@@ -36,28 +36,28 @@ vector<string> ExpressionParser::parseExpression() {
 void ExpressionParser::checkValidOperator(string curr, int index) {
     if (stmt->getStatementType() == StatementType::ASSIGN) {
         if (!isValidAssignOperator(curr)) {
-            throw invalid_argument("invalid operator in assign statement");
+            throw invalid_argument("invalid expression: invalid operator in assign statement");
         }
     } else if (stmt->getStatementType() == StatementType::WHILE) {
         if (!isValidConditionalOperator(curr)) {
-            throw invalid_argument("invalid operator in while statement");
+            throw invalid_argument("invalid expression: invalid operator in while statement");
         }
     } else if (stmt->getStatementType() == StatementType::IF) {
         if (!isValidConditionalOperator(curr)) {
-            throw invalid_argument("invalid operator in if statement");
+            throw invalid_argument("invalid expression: invalid operator in if statement");
         }
     } 
     if(isLogicalOperator(curr)) {
         if (index == exprLst.size() - 1) {
-            throw invalid_argument("invalid expression: invalid logical operator");
+            throw invalid_argument("invalid expression: ( must appear after logical operator");
         } else if (exprLst[index + 1] != "(") {
-            throw invalid_argument("invalid expression: invalid logical operator");
+            throw invalid_argument("invalid expression: ( must appear after logical operator");
         }
         if (curr != "!") {
             if (index == 0) {
-                throw invalid_argument("invalid expression: invalid logical operator");
+                throw invalid_argument("invalid expression: ) must appear before logical operator");
             } else if (exprLst[index - 1] != ")") {
-                throw invalid_argument("invalid expression: invalid logical operator");
+                throw invalid_argument("invalid expression: ) must appear before logical operator");
             }
         }
     }
