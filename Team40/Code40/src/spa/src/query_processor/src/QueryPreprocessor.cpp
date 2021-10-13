@@ -67,7 +67,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
                                                    Query &q) {
     for (auto retString : retStrings) {
-        Reference *returnRef = parser.parseReturnSynonym(retString);
+        Reference *returnRef = parser.parseReturnSynonyms(retString);
         if (returnRef == nullptr) {
             throw ValidityError("QP-ERROR: return synonym is undeclared");
         }

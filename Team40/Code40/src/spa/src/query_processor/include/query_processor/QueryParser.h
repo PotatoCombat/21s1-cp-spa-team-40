@@ -17,16 +17,14 @@ public:
     QueryParser() = default;
 
     void parseDeclarations(vector<DeclPair> declPairs);
-    Reference *parseReturnSynonym(string ref);
+    Reference *parseReturnSynonyms(string ref);
     Clause *parseSuchThatClause(ClsTuple clsTuple);
     Clause *parsePatternClause(PatTuple patTuple);
 
     void clear();
 
 private:
-    bool isValidAttribute(DesignEntityType type, string attribute);
     ReferenceAttribute parseValidAttr(string ref);
-    string parseValidName(string input);
     void clearDeclarations();
 
     DesignEntityTypeHelper deHelper;

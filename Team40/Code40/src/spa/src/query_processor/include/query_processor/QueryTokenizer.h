@@ -51,10 +51,8 @@ private:
     string removeWhitespaceWithinQuotes(string input);
     string removeWhitespaceAroundPeriod(string input);
     vector<string> tokenizeCommaSeparatedValues(string input);
-    string extractPatternString(string input);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
-    // ClauseTypeHelper clsHelper = ClauseTypeHelper();
 
     inline static const string KEYWORD_SELECT = "Select";
     inline static const string KEYWORD_SUCH = "such";

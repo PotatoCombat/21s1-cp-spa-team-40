@@ -609,20 +609,6 @@ vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
     return syns;
 }
 
-string QueryTokenizer::extractPatternString(string input) {
-    if (count(input.begin(), input.end(), QUOTE) == 2) {
-        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
-        if (n_underscore == 2) {
-            string underscored_r = trim(input.substr(1, input.size() - 2));
-            return trim(underscored_r.substr(1, underscored_r.size() - 2));
-        } else if (n_underscore == 1) {
-            throw SyntaxError("QP-ERROR: invalid pattern syntax");
-        }
-        return trim(input.substr(1, input.size() - 2));
-    }
-    return input;
-}
-
 bool QueryTokenizer::isWildcard(string input) { return input == "_"; }
 
 bool QueryTokenizer::isQuotedString(string input) {

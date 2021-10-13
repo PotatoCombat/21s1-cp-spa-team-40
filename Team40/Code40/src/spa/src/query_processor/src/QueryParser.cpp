@@ -40,7 +40,7 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
  * @todo Check for syn.attr syntax and set attr for reference object
  * @todo Check for attr validity based on synonym type
  */
-Reference *QueryParser::parseReturnSynonym(string ref) {
+Reference *QueryParser::parseReturnSynonyms(string ref) {
     ReferenceAttribute attr = parseValidAttr(ref);
 
     for (auto x : declList) {
