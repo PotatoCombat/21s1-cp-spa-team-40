@@ -3,22 +3,15 @@
 #include "query_processor/model/Reference.h"
 
 struct TestReference {
-    static const string VALUE;
-    static const string OTHER_VALUE;
-    static const DesignEntityType ASSIGN_TYPE;
-    static const DesignEntityType VAR_TYPE;
-    static const ReferenceType SYN_TYPE;
-    static const ReferenceType CONST_TYPE;
+    inline static const string VALUE = "a1";
+    inline static const string OTHER_VALUE = "v";
+    inline static const DesignEntityType ASSIGN_TYPE = DesignEntityType::ASSIGN;
+    inline static const DesignEntityType VAR_TYPE = DesignEntityType::VARIABLE;
+    inline static const ReferenceType SYN_TYPE = ReferenceType::SYNONYM;
+    inline static const ReferenceType CONST_TYPE = ReferenceType::CONSTANT;
     static Reference createReference();
     static Reference createOtherReference();
 };
-
-const string TestReference::VALUE = "a1";
-const string TestReference::OTHER_VALUE = "v";
-const DesignEntityType TestReference::ASSIGN_TYPE = DesignEntityType::ASSIGN;
-const DesignEntityType TestReference::VAR_TYPE = DesignEntityType::VARIABLE;
-const ReferenceType TestReference::SYN_TYPE = ReferenceType::SYNONYM;
-const ReferenceType TestReference::CONST_TYPE = ReferenceType::CONSTANT;
 
 Reference TestReference::createReference() {
     return Reference(ASSIGN_TYPE, SYN_TYPE, VALUE);

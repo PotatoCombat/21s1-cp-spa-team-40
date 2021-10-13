@@ -22,7 +22,7 @@ public:
     vector<string> tokenizeReturnSynonyms(string input, string &remaining);
     void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                          vector<PatTuple> &patternClauses,
-                         vector<WithTuple> &withClauses);
+                         vector<WithPair> &withClauses);
     vector<PatToken> tokenizePattern(vector<string> patArgs);
 
 private:
@@ -34,7 +34,7 @@ private:
                                   ClsTuple &clause);
     size_t tokenizePatternClause(string input, size_t startPos,
                                  PatTuple &clause);
-    size_t tokenizeWithClause(string input, size_t startPos, WithTuple &clause);
+    size_t tokenizeWithClause(string input, size_t startPos, WithPair &clause);
 
     bool isQuotedString(string input);
     bool isWildcard(string input);

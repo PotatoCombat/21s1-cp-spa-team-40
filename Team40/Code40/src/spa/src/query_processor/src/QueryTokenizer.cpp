@@ -173,7 +173,7 @@ string QueryTokenizer::tokenizeReturnRef(string input, string &remaining) {
 void QueryTokenizer::tokenizeClauses(string input,
                                      vector<ClsTuple> &suchThatClauses,
                                      vector<PatTuple> &patternClauses,
-                                     vector<WithTuple> &withClauses) {
+                                     vector<WithPair> &withClauses) {
     // State enums will be declared within class
     // unless a more elegant method is found
     enum { SUCH_THAT_CLAUSE, PATTERN_CLAUSE, WITH_CLAUSE, NULL_CLAUSE };
@@ -232,7 +232,7 @@ void QueryTokenizer::tokenizeClauses(string input,
                 break;
             }
             case WITH_CLAUSE: {
-                WithTuple clause;
+                WithPair clause;
                 whitespacePos = tokenizeWithClause(input, tokenPos, clause);
                 withClauses.push_back(clause);
                 break;
@@ -360,21 +360,20 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
  * Tokenizes a with clause into a tuple.
  * @param input The clauses string.
  * @param startPos The start of the clause.
- * @param &clause WithTuple.
+ * @param &clause WithPair.
  * @return Position of end of clause.
  * @todo Fix algo and clean up
  */
 size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
-                                    WithTuple &clause) {
+                                    WithPair &clause) {
     string temp;
     string token1 = "";
     string token2 = "";
-    string token3 = "";
-    string token4 = "";
     //size_t nextPos;
     size_t nextPos = startPos;
     size_t tempPos;
 
+    
     // tokenize token by '=' and '.'
     // structure: token1.token2 = token3.token4
     // structure: "    name   " = token3.token4 // name stored in token1
@@ -421,7 +420,7 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
     //token1 = removeWhitespaceWithinQuotes(token1);
     //token3 = removeWhitespaceWithinQuotes(token3);
 
-    clause = vector<WithArg>{token1, token2, token3, token4};
+    clause = make_pair(token1, token2);
     return nextPos;
 }
 

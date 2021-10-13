@@ -205,7 +205,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -219,7 +219,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that    Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -233,7 +233,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such      that Follows(s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -247,7 +247,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows (s, p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -261,7 +261,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows( s,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -275,7 +275,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows(s , p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -289,7 +289,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows(s ,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -303,7 +303,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows(s, p1 )";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -317,7 +317,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for such that") {
         string input = "such that Follows(s,p1)";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
-        vector<WithTuple> wit;
+        vector<WithPair> wit;
         vector<ClsTuple> expected =
             vector<ClsTuple>{make_tuple("Follows", "s", "p1")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -332,7 +332,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
     QueryTokenizer tokenizer;
     vector<ClsTuple> rel;
     vector<PatTuple> pat;
-    vector<WithTuple> wit;
+    vector<WithPair> wit;
 
     SECTION("PASS: test assign wildcard, wildcard") {
         string input = "pattern a(_, _)";
@@ -542,7 +542,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for multiple pattern clauses") {
     QueryTokenizer tokenizer;
     vector<ClsTuple> rel;
     vector<PatTuple> pat;
-    vector<WithTuple> wit;
+    vector<WithPair> wit;
 
     SECTION("PASS: test pattern x(x,x) pattern x(x,x)") {
         string input = "pattern a(_, _) pattern w (_, _)";
@@ -606,7 +606,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
     QueryTokenizer tokenizer;
     vector<ClsTuple> rel;
     vector<PatTuple> pat;
-    vector<WithTuple> wit;
+    vector<WithPair> wit;
 
     SECTION("PASS: pattern and such that such that pattern") {
         string input = "pattern a(x, _) and i(_, _, _ ) such that Calls*(p1, "

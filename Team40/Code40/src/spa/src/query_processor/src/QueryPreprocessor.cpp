@@ -31,7 +31,7 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         /*********** Parse clauses ***********/
         vector<ClsTuple> clsStrings;
         vector<PatTuple> patStrings;
-        vector<WithTuple> withStrings;
+        vector<WithPair> withStrings;
 
         tokenizer.tokenizeClauses(clauses, clsStrings, patStrings, withStrings);
 
