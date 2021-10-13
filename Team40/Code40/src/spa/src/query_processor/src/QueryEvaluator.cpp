@@ -81,6 +81,11 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &usesStmtHandler;
     }
 
+    if (clause->getType() == ClauseType::WITH) {
+        WithHandler withHandler(clause, pkb);
+        clauseHandler = &withHandler;
+    }
+
     return clauseHandler->eval();
 }
 

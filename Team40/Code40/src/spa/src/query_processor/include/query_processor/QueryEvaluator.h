@@ -29,6 +29,7 @@
 #include "query_processor/relationship_handler/ParentStarHandler.h"
 #include "query_processor/relationship_handler/UsesProcHandler.h"
 #include "query_processor/relationship_handler/UsesStmtHandler.h"
+#include "query_processor/relationship_handler/WithHandler.h"
 
 using namespace std;
 
