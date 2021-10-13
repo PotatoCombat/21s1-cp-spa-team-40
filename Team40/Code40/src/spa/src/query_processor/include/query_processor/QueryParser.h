@@ -9,6 +9,7 @@
 #include "query_processor/parser/ParserUtil.h"
 #include "query_processor/parser/PatternParser.h"
 #include "query_processor/parser/SuchThatParser.h"
+#include "query_processor/parser/WithParser.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ public:
     Reference *parseReturnSynonym(string ref);
     Clause *parseSuchThatClause(ClsTuple clsTuple);
     Clause *parsePatternClause(PatTuple patTuple);
+    Clause *parseWithClause(WithPair withPair);
 
     void clear();
 
@@ -30,6 +32,7 @@ private:
     DesignEntityTypeHelper deHelper;
     SuchThatParser stParser;
     PatternParser ptParser;
+    WithParser wtParser;
 
     vector<Reference *> declList;
 };

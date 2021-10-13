@@ -3,6 +3,7 @@
 void QueryParser::clear() {
     this->stParser.clear();
     this->ptParser.clear();
+    this->wtParser.clear();
     this->clearDeclarations();
 }
 
@@ -30,15 +31,14 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
 
     stParser.initReferences(declList);
     ptParser.initReferences(declList);
+    wtParser.initReferences(declList);
 }
 
 /**
  * Parse return reference by checking if it is in the declaration list.
  * @param ref Return reference to parse.
  * @param &found Whether the reference is found.
- * @return Reference object.
- * @todo Check for syn.attr syntax and set attr for reference object
- * @todo Check for attr validity based on synonym type
+ * @return Reference object, otherwise nullptr.
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
     string syn = ref;
@@ -77,6 +77,15 @@ Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
  */
 Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
     return ptParser.parse(patTuple);
+}
+
+/**
+ * Parse a `with` clause.
+ * @param withPair as <ref, ref>.
+ * @return Clause object.
+ */
+Clause *QueryParser::parseWithClause(WithPair withPair) {
+    return wtParser.parse(withPair);
 }
 
 /**

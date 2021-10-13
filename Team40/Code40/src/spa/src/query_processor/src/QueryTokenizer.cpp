@@ -356,7 +356,7 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
 }
 
 /**
- * Tokenizes a with clause into a tuple.
+ * Tokenizes a with clause into a pair.
  * @param input The clauses string.
  * @param startPos The start of the clause.
  * @param &clause WithPair.
@@ -370,9 +370,7 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
     size_t nextPos;
     size_t tempPos;
 
-    // the two refs must be of the same type (both strings or both integers)
-    // ref: '"' IDENT '"' | INTEGER | attrRef | synonym
-    // synonym must be of type prog_line
+    // '"' IDENT '"' | INTEGER | attrRef | synonym
 
     token1 = getTokenBeforeX(input, EQUAL, startPos, nextPos);
     token1 = removeWhitespaceWithinQuotes(token1);
