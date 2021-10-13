@@ -7,7 +7,8 @@ struct TestQueryTokenizer {
     static bool compareTuples(ClsTuple x1, ClsTuple x2);
     static bool compareVectors(vector<string> x1, vector<string> x2);
     static bool compareVectorPatTuple(vector<PatTuple> x1, vector<PatTuple> x2);
-    static bool compareVectorPair(vector<ClsTuple> x1, vector<ClsTuple> x2);
+    static bool compareVectorTuple(vector<ClsTuple> x1, vector<ClsTuple> x2);
+    static bool compareVectorPair(vector<DeclPair> x1, vector<DeclPair> x2);
 };
 
 bool TestQueryTokenizer::comparePairs(DeclPair x1, DeclPair x2) {
@@ -39,10 +40,20 @@ bool TestQueryTokenizer::compareVectorPatTuple(vector<PatTuple> x1,
     return true;
 }
 
-bool TestQueryTokenizer::compareVectorPair(vector<ClsTuple> x1,
-                                           vector<ClsTuple> x2) {
+bool TestQueryTokenizer::compareVectorTuple(vector<ClsTuple> x1,
+                                            vector<ClsTuple> x2) {
     for (int i = 0; i < x1.size(); ++i) {
         if (!compareTuples(x1[i], x2[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool TestQueryTokenizer::compareVectorPair(vector<DeclPair> x1,
+                                           vector<DeclPair> x2) {
+    for (int i = 0; i < x1.size(); ++i) {
+        if (!comparePairs(x1[i], x2[i])) {
             return false;
         }
     }
@@ -91,9 +102,7 @@ TEST_CASE("QueryTokenizer: tokenizeDeclarations") {
         vector<DeclPair> expected{p1, p2, p3};
 
         tokenizer.tokenizeDeclarations(DECL, vec);
-        REQUIRE(TestQueryTokenizer::comparePairs(vec[0], expected[0]));
-        REQUIRE(TestQueryTokenizer::comparePairs(vec[1], expected[1]));
-        REQUIRE(TestQueryTokenizer::comparePairs(vec[2], expected[2]));
+        REQUIRE(TestQueryTokenizer::compareVectorPair(vec, expected));
     }
 }
 
@@ -621,7 +630,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         CHECK(wit.empty());
         REQUIRE(TestQueryTokenizer::compareVectorPatTuple(pat, expP));
-        REQUIRE(TestQueryTokenizer::compareVectorPair(rel, relP));
+        REQUIRE(TestQueryTokenizer::compareVectorTuple(rel, relP));
     }
 
     SECTION("PASS: such that and and such that and") {
@@ -635,13 +644,138 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
         relP.push_back(make_tuple("Follows*", "i2", "i"));
         relP.push_back(make_tuple("Uses", "p1", "x"));
         tokenizer.tokenizeClauses(input, rel, pat, wit);
-        REQUIRE(TestQueryTokenizer::compareVectorPair(rel, relP));
+        REQUIRE(TestQueryTokenizer::compareVectorTuple(rel, relP));
     }
 
     SECTION("FAIL: start with `and`") {
         string input = "and a(x, _) such that Calls*(p1, p2)";
         REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(input, rel, pat, wit),
                           SyntaxError);
+    }
+}
+
+TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
+    QueryTokenizer tokenizer;
+
+    SECTION("PASS: synonym") {
+        string input = "with name1 = name2";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected =
+            vector<WithPair>{make_pair("name1", "name2")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with name1=name2";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+    }
+
+    SECTION("PASS: integer") {
+        string input = "with 123 = 456";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected = vector<WithPair>{make_pair("123", "456")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with  123   =       456     ";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+    }
+
+    SECTION("PASS: quoted") {
+        string input = "with \"something\" = \" a \"";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected =
+            vector<WithPair>{make_pair("\"something\"", "\"a\"")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with \" something else \" = \" a \"";
+        expected = vector<WithPair>{make_pair("\"something else\"", "\"a\"")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+    }
+
+    SECTION("PASS: attribute") {
+        string input = "with P.procName = v.varName";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected =
+            vector<WithPair>{make_pair("P.procName", "v.varName")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with P.procName = v . varName";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with P.procName = v .varName";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with P.procName = v. varName";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with P . procName = v . varName";
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+    }
+
+    SECTION("PASS: attribute and quoted") {
+        string input = "with P . procName = \" a \"";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected =
+            vector<WithPair>{make_pair("P.procName", "\"a\"")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with \" a \"=P . procName";
+        expected = vector<WithPair>{make_pair("\"a\"", "P.procName")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+    }
+
+    SECTION("PASS: multiple clauses") {
+        string input = "with P . procName = \" a \" and a.stmt# = n";
+        vector<ClsTuple> rel;
+        vector<PatTuple> pat;
+        vector<WithPair> wit;
+        vector<WithPair> expected = vector<WithPair>{
+            make_pair("P.procName", "\"a\""), make_pair("a.stmt#", "n")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with a.stmt# = n and P . procName = \" a \"";
+        expected = vector<WithPair>{make_pair("a.stmt#", "n"),
+                                    make_pair("P.procName", "\"a\"")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
+
+        wit.clear();
+        input = "with a.stmt# = c.value with P . procName = \" a \"";
+        expected = vector<WithPair>{make_pair("a.stmt#", "c.value"),
+                                    make_pair("P.procName", "\"a\"")};
+        tokenizer.tokenizeClauses(input, rel, pat, wit);
+        REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 }
 
