@@ -64,18 +64,18 @@ Reference *WithParser::parseReference(string ref) {
     }
 
     DesignEntityType deType;
-    ReferenceAttribute attrType;
+    ReferenceAttribute attr;
     if (ParserUtil::isQuoted(ref)) {
         syn = syn.substr(1, syn.size() - 2);
         deType = DesignEntityType::VARIABLE;
-        attrType = ReferenceAttribute::NAME;
+        attr = ReferenceAttribute::NAME;
     } else if (ParserUtil::isInteger(ref)) {
         deType = DesignEntityType::STMT;
-        attrType = ReferenceAttribute::INTEGER;
+        attr = ReferenceAttribute::INTEGER;
     } else {
         throw ValidityError("invalid with argument");
     }
-    return new Reference(deType, ReferenceType::CONSTANT, syn, attrType);
+    return new Reference(deType, ReferenceType::CONSTANT, syn, attr);
 }
 
 /**

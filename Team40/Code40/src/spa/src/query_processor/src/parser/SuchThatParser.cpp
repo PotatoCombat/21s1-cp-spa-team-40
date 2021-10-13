@@ -60,9 +60,10 @@ Clause *SuchThatParser::parseStmtStmt() {
         }
         r1 = r1->copy();
     } else {
-        DesignEntityType deType1 = DesignEntityType::STMT;
+        DesignEntityType deType = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref1);
-        r1 = new Reference(deType1, refT, this->ref1);
+        ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+        r1 = new Reference(deType, refT, this->ref1, attr);
     }
 
     if (r2 != nullptr) {
@@ -72,9 +73,10 @@ Clause *SuchThatParser::parseStmtStmt() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::STMT;
+        DesignEntityType deType = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
-        r2 = new Reference(deType2, refT, this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+        r2 = new Reference(deType, refT, this->ref2, attr);
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -103,12 +105,13 @@ Clause *SuchThatParser::parseProcProc() {
         }
         r1 = r1->copy();
     } else {
-        DesignEntityType deType1 = DesignEntityType::PROCEDURE;
+        DesignEntityType deType = DesignEntityType::PROCEDURE;
         ReferenceType refT = ParserUtil::checkRefType(this->ref1);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
         if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
             this->ref1 = ref1.substr(1, ref1.size() - 2);
         }
-        r1 = new Reference(deType1, refT, this->ref1);
+        r1 = new Reference(deType, refT, this->ref1, attr);
     }
 
     if (r2 != nullptr) {
@@ -118,12 +121,13 @@ Clause *SuchThatParser::parseProcProc() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::PROCEDURE;
+        DesignEntityType deType = DesignEntityType::PROCEDURE;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
         if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
             this->ref2 = ref2.substr(1, ref2.size() - 2);
         }
-        r2 = new Reference(deType2, refT, this->ref2);
+        r2 = new Reference(deType, refT, this->ref2, attr);
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -163,19 +167,22 @@ Clause *SuchThatParser::parseXEnt() {
         r1 = r1->copy();
     } else {
         // first argument is not declared, must be either integer or quoted
-        DesignEntityType deType1;
+        DesignEntityType deType;
+        ReferenceAttribute attr; 
         if (ParserUtil::isInteger(this->ref1)) {
             isStmtEnt = true;
-            deType1 = DesignEntityType::STMT;
+            deType = DesignEntityType::STMT;
+            attr = ReferenceAttribute::INTEGER;
         } else if (ParserUtil::isQuoted(this->ref1)) {
             isStmtEnt = false;
-            deType1 = DesignEntityType::PROCEDURE;
+            deType = DesignEntityType::PROCEDURE;
+            attr = ReferenceAttribute::NAME;
             this->ref1 = ref1.substr(1, ref1.size() - 2); // remove quotes
         } else {
             throw ValidityError("invalid clause argument");
         }
         ReferenceType refT = ReferenceType::CONSTANT;
-        r1 = new Reference(deType1, refT, this->ref1);
+        r1 = new Reference(deType, refT, this->ref1, attr);
     }
 
     // second argument must always be a variable
@@ -186,12 +193,13 @@ Clause *SuchThatParser::parseXEnt() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::VARIABLE;
+        DesignEntityType deType = DesignEntityType::VARIABLE;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
         if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
             this->ref2 = ref2.substr(1, ref2.size() - 2);
         }
-        r2 = new Reference(deType2, refT, this->ref2);
+        r2 = new Reference(deType, refT, this->ref2, attr);
     }
 
     if (isStmtEnt) {

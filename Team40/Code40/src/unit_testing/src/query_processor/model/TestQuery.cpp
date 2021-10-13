@@ -10,10 +10,11 @@ using namespace std;
 
 struct TestQueryHelper {
 public:
-    void checkQuery(Query *actualQuery, vector<Reference *>expectedReturnRefs,
+    void checkQuery(Query *actualQuery, vector<Reference *> expectedReturnRefs,
                     vector<Reference *> expectedRefList,
                     vector<Clause *> expectedClauseList) {
-        vector<Reference *> actualReturnRefs = actualQuery->getReturnReferences();
+        vector<Reference *> actualReturnRefs =
+            actualQuery->getReturnReferences();
         vector<Reference *> actualRefList = actualQuery->getReferences();
         vector<Clause *> actualClauseList = actualQuery->getClauses();
 
@@ -36,24 +37,30 @@ TestQueryHelper testQueryHelper;
 TEST_CASE("Query: query creation - all SYNONYM - adds all to referenceList") {
     Query query;
     Reference returnReference(DesignEntityType::CONSTANT,
-                              ReferenceType::SYNONYM, "x");
-    Reference a_syn(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
+                              ReferenceType::SYNONYM, "x",
+                              ReferenceAttribute::INTEGER);
+    Reference a_syn(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a",
+                    ReferenceAttribute::INTEGER);
     Clause clause(ClauseType::USES_S, a_syn, returnReference);
     query.addReturnReference(&returnReference);
     query.addClause(&clause);
 
-    testQueryHelper.checkQuery(&query, vector<Reference*>{&returnReference},
+    testQueryHelper.checkQuery(&query, vector<Reference *>{&returnReference},
                                vector<Reference *>{&returnReference, &a_syn},
                                vector<Clause *>{&clause});
 }
 
-TEST_CASE("Query: query creation - various RefernceType - only adds SYNONYM") {
+TEST_CASE("Query: query creation - various ReferenceType - only adds SYNONYM") {
     Query query;
     Reference returnReference(DesignEntityType::CONSTANT,
-                              ReferenceType::SYNONYM, "x");
-    Reference a_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "1");
-    Reference s_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "3");
-    Reference s_wc(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
+                              ReferenceType::SYNONYM, "x",
+                              ReferenceAttribute::INTEGER);
+    Reference a_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "1",
+                      ReferenceAttribute::INTEGER);
+    Reference s_const(DesignEntityType::ASSIGN, ReferenceType::CONSTANT, "3",
+                      ReferenceAttribute::INTEGER);
+    Reference s_wc(DesignEntityType::STMT, ReferenceType::WILDCARD, "_",
+                   ReferenceAttribute::INTEGER);
     Clause clause1(ClauseType::USES_S, a_const, returnReference);
     Clause clause2(ClauseType::FOLLOWS, s_const, s_wc);
     query.addClause(&clause1);
