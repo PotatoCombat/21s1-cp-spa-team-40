@@ -20,12 +20,14 @@ void QueryParser::clearDeclarations() {
  */
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
     for (auto x : declPairs) {
-        DesignEntityType type = deHelper.valueToDesType(x.first);
+        DesignEntityType deType = deHelper.valueToDesType(x.first);
+        ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
         if (!ParserUtil::isValidName(syn)) {
             throw ValidityError("QP-ERROR: invalid name");
         }
-        Reference *ref = new Reference(type, ReferenceType::SYNONYM, syn);
+        ReferenceAttribute attr = deHelper.typeToDefaultAttr(deType);
+        Reference *ref = new Reference(deType, refType, syn, attr);
         declList.push_back(ref);
     }
 
@@ -51,11 +53,15 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
         attrStr = attrRef.second;
     }
 
-    ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
-    
     for (auto x : declList) {
         if (syn == x->getValue()) {
-            return new Reference(x->getDeType(), x->getRefType(), syn, attr);
+            DesignEntityType deType = x->getDeType();
+            ReferenceType refType = x->getRefType();
+            ReferenceAttribute attr = x->getAttr();
+            if (isAttrRef) {
+                attr = ParserUtil::parseValidAttr(deType, attrStr);
+            }
+            return new Reference(deType, refType, syn, attr);
         }
     }
     return nullptr;

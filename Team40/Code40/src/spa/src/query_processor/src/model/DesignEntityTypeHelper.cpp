@@ -35,7 +35,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::CALL, true},
         {DesignEntityType::PROG_LINE, true}
     };
-    typeToAttrMap = {
+    typeToDefaultAttrMap = {
         {DesignEntityType::STMT, ReferenceAttribute::INTEGER},
         {DesignEntityType::ASSIGN, ReferenceAttribute::INTEGER},
         {DesignEntityType::VARIABLE, ReferenceAttribute::NAME},
@@ -48,19 +48,6 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::CALL, ReferenceAttribute::INTEGER},
         {DesignEntityType::PROG_LINE, ReferenceAttribute::INTEGER}
     };
-    hasNonDefaultAttrMap = {
-        {DesignEntityType::STMT, false},
-        {DesignEntityType::ASSIGN, false},
-        {DesignEntityType::VARIABLE, false},
-        {DesignEntityType::CONSTANT, false},
-        {DesignEntityType::PROCEDURE, false},
-        {DesignEntityType::READ, true},
-        {DesignEntityType::PRINT, true},
-        {DesignEntityType::WHILE, false},
-        {DesignEntityType::IF, false},
-        {DesignEntityType::CALL, true},
-        {DesignEntityType::PROG_LINE, false}
-    };
 }
 
 DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
@@ -71,9 +58,10 @@ DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
     return type->second;
 }
 
-ReferenceAttribute DesignEntityTypeHelper::typeToAttr(DesignEntityType type) {
-    auto val = typeToAttrMap.find(type);
-    if (val == typeToAttrMap.end()) {
+ReferenceAttribute
+DesignEntityTypeHelper::typeToDefaultAttr(DesignEntityType type) {
+    auto val = typeToDefaultAttrMap.find(type);
+    if (val == typeToDefaultAttrMap.end()) {
         throw ValidityError("invalid design entity type");
     }
     return val->second;
@@ -93,14 +81,6 @@ bool DesignEntityTypeHelper::isVariable(DesignEntityType type) {
 
 bool DesignEntityTypeHelper::isProcedure(DesignEntityType type) {
     return type == DesignEntityType::PROCEDURE;
-}
-
-bool DesignEntityTypeHelper::hasNonDefaultAttr(DesignEntityType type) {
-    auto val = hasNonDefaultAttrMap.find(type);
-    if (val == hasNonDefaultAttrMap.end()) {
-        throw ValidityError("invalid design entity type");
-    }
-    return val->second;
 }
 
 StatementType DesignEntityTypeHelper::desTypeToStmtType(DesignEntityType type) {

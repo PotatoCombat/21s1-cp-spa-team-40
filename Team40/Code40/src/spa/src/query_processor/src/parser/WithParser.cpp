@@ -51,14 +51,16 @@ Reference *WithParser::parseReference(string ref) {
 
     Reference *r = getReferenceIfDeclared(syn);
     if (r != nullptr) {
-        if (!isAttrRef && r->getDeType() != DesignEntityType::PROG_LINE) {
+        DesignEntityType deType = r->getDeType();
+        ReferenceType refType = r->getRefType();
+        ReferenceAttribute attr = r->getAttr();
+        if (!isAttrRef && deType != DesignEntityType::PROG_LINE) {
             throw ValidityError("invalid with argument");
         }
-        ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
-        if (attr == ReferenceAttribute::DEFAULT) {
-            attr = deHelper.typeToAttr(r->getDeType());
+        if (isAttrRef) {
+            attr = ParserUtil::parseValidAttr(deType, attrStr);
         }
-        return new Reference(r->getDeType(), r->getRefType(), syn, attr);
+        return new Reference(deType, refType, syn, attr);
     }
 
     DesignEntityType deType;

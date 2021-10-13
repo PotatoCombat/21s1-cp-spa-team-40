@@ -74,19 +74,34 @@ std::pair<std::string, std::string> ParserUtil::splitAttrRef(std::string val) {
 
 /**
  * Parse valid attribute.
+ * @param deType DesignEntityType enum
  * @param attr The string to parse.
  * @return ReferenceAttribute type.
  * @exception ValidityError if attr is invalid.
  */
-ReferenceAttribute ParserUtil::parseValidAttr(std::string val) {
-    if (val.empty()) {
-        return ReferenceAttribute::DEFAULT;
+ReferenceAttribute ParserUtil::parseValidAttr(DesignEntityType deType,
+                                              std::string val) {
+    if (val == "procName") {
+        if (deType == DesignEntityType::PROCEDURE ||
+            deType == DesignEntityType::CALL) {
+            return ReferenceAttribute::NAME;
+        }
+    } else if (val == "varName") {
+        if (deType == DesignEntityType::VARIABLE ||
+            deType == DesignEntityType::READ ||
+            deType == DesignEntityType::PRINT) {
+            return ReferenceAttribute::NAME;
+        }
+    } else if (val == "value") {
+        if (deType == DesignEntityType::CONSTANT) {
+            return ReferenceAttribute::INTEGER;
+        }
+    } else if (val == "stmt#") {
+        if (!(deType == DesignEntityType::PROCEDURE ||
+              deType == DesignEntityType::VARIABLE ||
+              deType == DesignEntityType::CONSTANT)) {
+            return ReferenceAttribute::INTEGER;
+        }
     }
-    if (val == "procName" || val == "varName") {
-        return ReferenceAttribute::NAME;
-    } else if (val == "stmt#" || val == "value") {
-        return ReferenceAttribute::INTEGER;
-    } else {
-        throw ValidityError("QP-ERROR: invalid attribute");
-    }
+    throw ValidityError("QP-ERROR: invalid attribute");
 }

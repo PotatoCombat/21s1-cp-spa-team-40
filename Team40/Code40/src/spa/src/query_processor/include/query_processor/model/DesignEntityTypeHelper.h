@@ -16,8 +16,7 @@ class DesignEntityTypeHelper {
 private:
     unordered_map<string, DesignEntityType> stringToTypeMap;
     unordered_map<DesignEntityType, bool> typeToIsStmtMap;
-    unordered_map<DesignEntityType, ReferenceAttribute> typeToAttrMap;
-    unordered_map<DesignEntityType, bool> hasNonDefaultAttrMap;
+    unordered_map<DesignEntityType, ReferenceAttribute> typeToDefaultAttrMap;
     static map<DesignEntityType, StatementType> desTypeToStmtTypeMap;
 
 public:
@@ -25,12 +24,11 @@ public:
 
     // get type from string
     DesignEntityType valueToDesType(string val);
-    ReferenceAttribute typeToAttr(DesignEntityType type);
+    ReferenceAttribute typeToDefaultAttr(DesignEntityType type);
 
     bool isStatement(DesignEntityType type);
     bool isVariable(DesignEntityType type);
     bool isProcedure(DesignEntityType type);
-    bool hasNonDefaultAttr(DesignEntityType type);
 
     // get stmt type from design entity type
     static StatementType desTypeToStmtType(DesignEntityType type);
