@@ -19,4 +19,4 @@ typedef string PatToken;
 typedef tuple<PatIdent, PatVar, vector<PatToken>> PatTuple;
 
 typedef string WithArg;
-typedef vector<WithArg> WithTuple; // always four args (for now)
+typedef pair<WithArg, WithArg> WithPair;

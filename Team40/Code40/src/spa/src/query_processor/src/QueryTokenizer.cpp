@@ -173,7 +173,7 @@ string QueryTokenizer::tokenizeReturnRef(string input, string &remaining) {
 void QueryTokenizer::tokenizeClauses(string input,
                                      vector<ClsTuple> &suchThatClauses,
                                      vector<PatTuple> &patternClauses,
-                                     vector<WithTuple> &withClauses) {
+                                     vector<WithPair> &withClauses) {
     // State enums will be declared within class
     // unless a more elegant method is found
     enum { SUCH_THAT_CLAUSE, PATTERN_CLAUSE, WITH_CLAUSE, NULL_CLAUSE };
@@ -232,7 +232,7 @@ void QueryTokenizer::tokenizeClauses(string input,
                 break;
             }
             case WITH_CLAUSE: {
-                WithTuple clause;
+                WithPair clause;
                 whitespacePos = tokenizeWithClause(input, tokenPos, clause);
                 withClauses.push_back(clause);
                 break;
@@ -264,7 +264,7 @@ void QueryTokenizer::tokenizeClauses(string input,
  * @return Position of end of clause.
  */
 size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
-                                        ClsTuple &clause) {
+                                              ClsTuple &clause) {
     string token1;
     string token2;
     string token3;
@@ -291,7 +291,7 @@ size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
  * @return Position of end of clause.
  */
 size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
-                                       PatTuple &clause) {
+                                             PatTuple &clause) {
     PatIdent ident;
     PatVar var;
     vector<PatToken> tokens;
@@ -336,8 +336,7 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
             nextPos = tokenPos + 1;
             token = "_";
         } else {
-            token =
-                getTokenBeforeX(input, UNDERSCORE, tokenPos, nextPos);
+            token = getTokenBeforeX(input, UNDERSCORE, tokenPos, nextPos);
             token = "_" + removeWhitespaceWithinQuotes(token) + "_";
             // check for R_BRACKET
             nextPos = getPosAfterRBracket(input, nextPos);
@@ -357,80 +356,57 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
 }
 
 /**
- * Tokenizes a with clause into a tuple.
+ * Tokenizes a with clause into a pair.
  * @param input The clauses string.
  * @param startPos The start of the clause.
- * @param &clause WithTuple.
+ * @param &clause WithPair.
  * @return Position of end of clause.
- * @todo Fix algo and clean up
  */
 size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
-                                    WithTuple &clause) {
-    string temp;
-    string token1 = "";
-    string token2 = "";
-    string token3 = "";
-    string token4 = "";
-    //size_t nextPos;
-    size_t nextPos = startPos;
+                                          WithPair &clause) {
+
+    string token1;
+    string token2;
+    size_t nextPos;
     size_t tempPos;
 
-    // tokenize token by '=' and '.'
-    // structure: token1.token2 = token3.token4
-    // structure: "    name   " = token3.token4 // name stored in token1
-    // structure: token1.token2 = 24 // 24 stored in token 3
-    //temp = getTokenBeforeX(input, EQUAL, startPos, nextPos);
-    //size_t periodPos = temp.find(PERIOD);
-    //if (periodPos == string::npos) {
-    //    token1 = temp;
-    //    token2 = "";
-    //} else {
-    //    token1 = trim(temp.substr(0, periodPos));
-    //    token2 = trim(temp.substr(periodPos + 1));
-    //}
+    // '"' IDENT '"' | INTEGER | attrRef | synonym
 
-    //periodPos = input.find(PERIOD, nextPos);
+    token1 = getTokenBeforeX(input, EQUAL, startPos, nextPos);
+    token1 = removeWhitespaceWithinQuotes(token1);
+    token1 = removeWhitespaceAroundPeriod(token1);
 
-    //if (periodPos == string::npos) { // no '.'
-    //    // TODO: Handle "     name      "
-    //    tempPos = findNextWhitespace(input, nextPos);
-    //    temp = input.substr(nextPos, tempPos - nextPos);
-    //    token3 = trim(temp);
-    //    token4 = "";
-    //    nextPos = tempPos;
-    //} else {
-    //    size_t startTokenPos = findNextToken(input, nextPos);
-    //    size_t endTokenPos = findNextWhitespace(input, startTokenPos);
-    //    string tempToken =
-    //        input.substr(startTokenPos, endTokenPos - startTokenPos);
-    //    temp = trim(input.substr(nextPos, nextPos - periodPos));
-    //    if (temp == tempToken) {
-    //        token3 = temp;
-    //        startTokenPos = findNextToken(input, periodPos + 1);
-    //        endTokenPos = findNextWhitespace(input, startTokenPos);
-    //        token4 = input.substr(startTokenPos, endTokenPos - startTokenPos);
-    //    } else { // no '.'
-    //        // TODO: Handle "     name      "
-    //        token3 = tempToken;
-    //        token4 = "";
-    //    }
-    //    nextPos = endTokenPos;
-    //}
+    tempPos = findNextToken(input, nextPos);
+    if (input[tempPos] == QUOTE) {
+        tempPos = tempPos + 1;
+        token2 = getTokenBeforeX(input, QUOTE, tempPos, nextPos);
+        token2 = "\"" + token2 + "\"";
+    } else {
+        size_t periodPos = input.find(PERIOD, tempPos);
+        nextPos = findNextWhitespace(input, tempPos);
+        if (periodPos != string::npos) {
+            size_t tokenPos = findNextToken(input, nextPos);
+            if (periodPos == tokenPos) {
+                tokenPos = findNextToken(input, periodPos + 1);
+                nextPos = findNextWhitespace(input, tokenPos);
+            } else if (periodPos == nextPos - 1) {
+                nextPos = findNextWhitespace(input, tokenPos);
+            }
+        }
+        token2 = input.substr(tempPos, nextPos - tempPos);
+        token2 = removeWhitespaceAroundPeriod(token2);
+    }
 
-    //// remove whitespace within quotes of token1 and token3 if any!
-    //token1 = removeWhitespaceWithinQuotes(token1);
-    //token3 = removeWhitespaceWithinQuotes(token3);
-
-    clause = vector<WithArg>{token1, token2, token3, token4};
+    clause = make_pair(token1, token2);
     return nextPos;
 }
 
 vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
-    if (all_of(patArgs.begin(), patArgs.end(), 
+    if (all_of(patArgs.begin(), patArgs.end(),
                [](string x) { return x == "_"; })) {
         return patArgs;
     }
-    
+
     if (patArgs.size() != 1) {
         throw SyntaxError("QP-ERROR: Pattern should have just 1 element");
     }
@@ -575,12 +551,12 @@ string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
  */
 string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
     size_t periodPos = input.find(PERIOD);
-    if (periodPos == string::npos) {
-        return input;
+    if (periodPos != string::npos) {
+        string token1 = trim(input.substr(0, periodPos));
+        string token2 = trim(input.substr(periodPos + 1));
+        return token1 + "." + token2;
     }
-    string token1 = trim(input.substr(0, periodPos));
-    string token2 = trim(input.substr(periodPos + 1));
-    return token1 + "." + token2;
+    return input;
 }
 
 /**
@@ -607,20 +583,6 @@ vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
         syns.push_back(remaining);
     }
     return syns;
-}
-
-string QueryTokenizer::extractPatternString(string input) {
-    if (count(input.begin(), input.end(), QUOTE) == 2) {
-        size_t n_underscore = count(input.begin(), input.end(), UNDERSCORE);
-        if (n_underscore == 2) {
-            string underscored_r = trim(input.substr(1, input.size() - 2));
-            return trim(underscored_r.substr(1, underscored_r.size() - 2));
-        } else if (n_underscore == 1) {
-            throw SyntaxError("QP-ERROR: invalid pattern syntax");
-        }
-        return trim(input.substr(1, input.size() - 2));
-    }
-    return input;
 }
 
 bool QueryTokenizer::isWildcard(string input) { return input == "_"; }
