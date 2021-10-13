@@ -40,12 +40,22 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
  * @todo Check for syn.attr syntax and set attr for reference object
  * @todo Check for attr validity based on synonym type
  */
-Reference *QueryParser::parseReturnSynonyms(string ref) {
-    ReferenceAttribute attr = parseValidAttr(ref);
+Reference *QueryParser::parseReturnSynonym(string ref) {
+    string syn = ref;
+    string attrStr = "";
+
+    bool isAttrRef = ParserUtil::isAttrRef(ref);
+    if (isAttrRef) {
+        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        syn = attrRef.first;
+        attrStr = attrRef.second;
+    }
+
+    ReferenceAttribute attr = parseValidAttr(attrStr);
 
     for (auto x : declList) {
-        if (ref == x->getValue()) {
-            return new Reference(x->getDeType(), x->getRefType(), ref, attr);
+        if (syn == x->getValue()) {
+            return new Reference(x->getDeType(), x->getRefType(), syn, attr);
         }
     }
     return nullptr;
@@ -71,12 +81,11 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
 
 /**
  * Parse valid attribute.
- * @param ref The string to parse.
- * @return Valid attribute.
- * @exception ValidityError if ref/attr is invalid.
+ * @param attr The string to parse.
+ * @return ReferenceAttribute type.
+ * @exception ValidityError if attr is invalid.
  */
-ReferenceAttribute QueryParser::parseValidAttr(string ref) {
-    string attr = ParserUtil::getAttribute(ref);
+ReferenceAttribute QueryParser::parseValidAttr(string attr) {
     if (attr.empty()) {
         return ReferenceAttribute::DEFAULT;
     }

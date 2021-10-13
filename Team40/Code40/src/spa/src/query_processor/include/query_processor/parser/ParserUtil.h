@@ -13,5 +13,6 @@ namespace ParserUtil {
 	bool isInteger(std::string val);
 	bool isQuoted(std::string val);
 	bool isValidName(std::string val);
-	std::string getAttribute(std::string val);
+	bool isAttrRef(std::string val);
+	pair<std::string, std::string> splitAttrRef(std::string val);
 };
