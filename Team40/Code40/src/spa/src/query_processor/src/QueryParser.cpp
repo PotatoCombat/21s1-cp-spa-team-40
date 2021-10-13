@@ -37,8 +37,6 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
  * @param ref Return reference to parse.
  * @param &found Whether the reference is found.
  * @return Reference object.
- * @todo Check for syn.attr syntax and set attr for reference object
- * @todo Check for attr validity based on synonym type
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
     string syn = ref;

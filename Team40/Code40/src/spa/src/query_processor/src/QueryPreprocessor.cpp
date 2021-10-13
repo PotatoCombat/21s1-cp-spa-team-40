@@ -35,19 +35,15 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
         tokenizer.tokenizeClauses(clauses, clsStrings, patStrings, withStrings);
 
-        vector<Clause *> clsList;
         for (auto x : clsStrings) {
             Clause *cls = parser.parseSuchThatClause(x);
-            clsList.push_back(cls);
             q.addClause(cls);
         }
 
-        vector<Clause *> patList;
         for (auto x : patStrings) {
             vector<string> pattern = get<2>(x);
             get<2>(x) = tokenizer.tokenizePattern(pattern);
             Clause *pat = parser.parsePatternClause(x);
-            patList.push_back(pat);
             q.addClause(pat);
         }
 
