@@ -14,5 +14,6 @@ namespace ParserUtil {
 	bool isQuoted(std::string val);
 	bool isValidName(std::string val);
 	bool isAttrRef(std::string val);
-	pair<std::string, std::string> splitAttrRef(std::string val);
+	std::pair<std::string, std::string> splitAttrRef(std::string val);
+	ReferenceAttribute parseValidAttr(std::string val);
 };

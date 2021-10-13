@@ -51,7 +51,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
         attrStr = attrRef.second;
     }
 
-    ReferenceAttribute attr = parseValidAttr(attrStr);
+    ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
 
     for (auto x : declList) {
         if (syn == x->getValue()) {
@@ -86,23 +86,4 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
  */
 Clause *QueryParser::parseWithClause(WithPair withPair) {
     return wtParser.parse(withPair);
-}
-
-/**
- * Parse valid attribute.
- * @param attr The string to parse.
- * @return ReferenceAttribute type.
- * @exception ValidityError if attr is invalid.
- */
-ReferenceAttribute QueryParser::parseValidAttr(string attr) {
-    if (attr.empty()) {
-        return ReferenceAttribute::DEFAULT;
-    }
-    if (attr == "procName" || attr == "varName") {
-        return ReferenceAttribute::NAME;
-    } else if (attr == "stmt#" || attr == "value") {
-        return ReferenceAttribute::INTEGER;
-    } else {
-        throw ValidityError("QP-ERROR: invalid attribute");
-    }
 }

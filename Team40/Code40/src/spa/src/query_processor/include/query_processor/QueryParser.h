@@ -26,7 +26,6 @@ public:
     void clear();
 
 private:
-    ReferenceAttribute parseValidAttr(string ref);
     void clearDeclarations();
 
     DesignEntityTypeHelper deHelper;

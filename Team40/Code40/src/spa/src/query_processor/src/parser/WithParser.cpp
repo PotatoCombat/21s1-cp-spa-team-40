@@ -25,15 +25,55 @@ Clause *WithParser::parse(WithPair withPair) {
     this->ref2 = withPair.second;
 
     // the two refs must be of the same type (both strings or both integers)
-    // ref: '"' IDENT '"' | INTEGER | attrRef | synonym
     // synonym must be of type prog_line
 
-    bool isInteger = true;
+    Reference *r1 = parseReference(ref1);
+    Reference *r2 = parseReference(ref2);
+    if (r1->getAttr() == r2->getAttr()) {
+        return new Clause(ClauseType::WITH, *r1, *r2);
+    } else {
+        delete r1, r2;
+        throw ValidityError("invalid with clause");
+    }
+}
 
+Reference *WithParser::parseReference(string ref) {
+    // ref: '"' IDENT '"' | INTEGER | attrRef | synonym
+    string syn = ref;
+    string attrStr = "";
+    bool isAttrRef = ParserUtil::isAttrRef(ref);
 
+    if (isAttrRef) {
+        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        syn = attrRef.first;
+        attrStr = attrRef.second;
+    }
 
+    Reference *r = getReferenceIfDeclared(syn);
+    if (r != nullptr) {
+        if (!isAttrRef && r->getDeType() != DesignEntityType::PROG_LINE) {
+            throw ValidityError("invalid with argument");
+        }
+        ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
+        if (attr == ReferenceAttribute::DEFAULT) {
+            attr = deHelper.typeToAttrType(r->getDeType());
+        }
+        return new Reference(r->getDeType(), r->getRefType(), syn, attr);
+    }
 
-    return;
+    DesignEntityType deType;
+    ReferenceAttribute attrType;
+    if (ParserUtil::isQuoted(ref)) {
+        syn = syn.substr(1, syn.size() - 2);
+        deType = DesignEntityType::VARIABLE;
+        attrType = ReferenceAttribute::NAME;
+    } else if (ParserUtil::isInteger(ref)) {
+        deType = DesignEntityType::STMT;
+        attrType = ReferenceAttribute::INTEGER;
+    } else {
+        throw ValidityError("invalid with argument");
+    }
+    return new Reference(deType, ReferenceType::CONSTANT, syn, attrType);
 }
 
 /**

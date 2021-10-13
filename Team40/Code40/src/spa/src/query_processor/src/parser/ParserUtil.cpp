@@ -65,9 +65,28 @@ bool ParserUtil::isAttrRef(std::string val) {
  * @param val String to split.
  * @return Pair<syn, attr>.
  */
-pair<std::string, std::string> ParserUtil::splitAttrRef(std::string val) {
+std::pair<std::string, std::string> ParserUtil::splitAttrRef(std::string val) {
     size_t pos = val.find('.');
     std::string syn = val.substr(0, pos);
     std::string attr = val.substr(pos + 1);
     return make_pair(syn, attr);
+}
+
+/**
+ * Parse valid attribute.
+ * @param attr The string to parse.
+ * @return ReferenceAttribute type.
+ * @exception ValidityError if attr is invalid.
+ */
+ReferenceAttribute ParserUtil::parseValidAttr(std::string val) {
+    if (val.empty()) {
+        return ReferenceAttribute::DEFAULT;
+    }
+    if (val == "procName" || val == "varName") {
+        return ReferenceAttribute::NAME;
+    } else if (val == "stmt#" || val == "value") {
+        return ReferenceAttribute::INTEGER;
+    } else {
+        throw ValidityError("QP-ERROR: invalid attribute");
+    }
 }
