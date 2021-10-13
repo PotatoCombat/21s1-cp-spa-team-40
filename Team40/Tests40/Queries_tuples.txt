@@ -1,0 +1,40 @@
+1 - all procedures that calls another procedure (procedure declaration, tuple with 2 variables return)
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2)
+proc1 proc2,proc1 proc3,proc1 proc4,proc1 proc5,proc2 proc3,proc2 proc4,proc2 proc5
+5000
+2 - all procedures that calls another procedure that calls itself i.e. semantically invalid, return none (procedure declaration, tuple with 2 variables return)
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2) and Calls(p2, p1)
+none
+5000
+3- all procedures that calls another procedure that calls another procedure (procedure declaration, tuple with 3 variables return)
+procedure p1, p2, p3;
+Select <p1, p2, p3> such that Calls(p1 ,p2) and Calls(p2, p3) 
+proc1 proc2 proc3,proc1 proc2 proc4,proc1 proc2 proc5
+5000
+4 - all procedures that calls another procedure that calls another procedure that... (procedure declaration, tuple with 10 variables return)
+procedure p1, p2, p3, p4, p5, p6, p7;
+Select <p1, p2, p3, p4, p5, p6, p7, p8, p9, p10> such that Calls(p1 ,p2) and Calls(p2, p3) and Calls(p3, p4) and Calls(p4, p5) and Calls(p5, p6) and Calls(p6, p7)    
+none
+5000
+5 - all procedures that calls* another procedure (procedure declaration, tuple with 2 variables return)
+procedure p1,  p2;
+Select <p1, p2> such that Calls*(p1 ,p2)
+proc1 proc2,proc1 proc3,proc1 proc4,proc1 proc5,proc2 proc3,proc2 proc4,proc2 proc5
+5000
+6 - all procedures that calls* another procedure that calls itself i.e. semantically invalid, return none (procedure declaration, tuple with 2 variables return)
+procedure p1,  p2;
+Select <p1, p2> such that Calls*(p1 ,p2) and Calls*(p2 ,p1)
+none
+5000
+7 - all procedures that calls* another procedure that calls* another procedure (procedure declaration, tuple with 2 variables return)
+procedure p1,  p2, p3;
+Select <p1, p2> such that Calls*(p1 ,p2) and Calls*(p2 ,p3)
+proc1 proc2
+5000
+8 - all procedures that calls* another procedure that calls* another procedure that... (procedure declaration, tuple with 9 variables return)
+procedure p1, p2, p3, p4, p5, p6, p7;
+Select <p1, p2, p3, p4, p5, p6, p7> such that Calls*(p1 ,p2) and Calls*(p2, p3) and Calls*(p3, p4) and Calls*(p4, p5) and Calls*(p5, p6) and Calls*(p6, p7)
+none
+5000
