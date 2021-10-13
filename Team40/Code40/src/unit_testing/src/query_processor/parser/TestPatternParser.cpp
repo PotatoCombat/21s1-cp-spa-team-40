@@ -94,8 +94,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
 
-        expected =
-            new Clause(D_ASSIGN, D_VARIABLE, PATTERN, false);
+        expected = new Clause(D_ASSIGN, D_VARIABLE, PATTERN, false);
         actual = p.parse(make_tuple("a", "v", PATTERN_UNDERSCORE_QUOTED));
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
@@ -151,16 +150,18 @@ TEST_CASE("PatternParser: parse pattern string into tokens") {
     PatternParser p;
 
     SECTION("PASS: valid patterns") {
-        vector<string> P_SIMPLE_1{"x", "+", "y"};
-        vector<string> P_SIMPLE_2{"x", "+", "10", "+", "y"};
-        vector<string> P_BRACKETS_1{"(", "(", "y", ")", ")"};
-        vector<string> P_BRACKETS_2{"x", "+", "(", "(", "y", ")",
-                                    "*", "(", "x", ")", ")"};
-        vector<string> P_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
-                                   "n4m3", "%", "x", ")", "/",  "y"};
-        vector<string> P_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
-                                   "z", ")", "/", "(",  "a", "-", "20", "%",
-                                   "b", ")", "-", "10", ")", "*", "x"};
+        vector<string> P_SIMPLE_1{"\"", "x", "+", "y", "\""};
+        vector<string> P_SIMPLE_2{"\"", "x", "+", "10", "+", "y", "\""};
+        vector<string> P_BRACKETS_1{"\"", "(", "(", "y", ")", ")", "\""};
+        vector<string> P_BRACKETS_2{"\"", "x", "+", "(", "(", "y", ")",
+                                    "*",  "(", "x", ")", ")", "\""};
+        vector<string> P_COMPLEX_1{"_",  "\"", "x", "+",    "y", "-",
+                                   "10", "*",  "(", "n4m3", "%", "x",
+                                   ")",  "/",  "y", "\"",   "_"};
+        vector<string> P_COMPLEX_2{"_",  "\"", "(",  "(", "(",  "x", "-",
+                                   "y",  ")",  "*",  "z", ")",  "/", "(",
+                                   "a",  "-",  "20", "%", "b",  ")", "-",
+                                   "10", ")",  "*",  "x", "\"", "_"};
 
         vector<string> T_SIMPLE_1{"x", "+", "y"};
         vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};

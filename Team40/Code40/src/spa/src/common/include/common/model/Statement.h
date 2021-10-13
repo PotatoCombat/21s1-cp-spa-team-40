@@ -38,6 +38,8 @@ public:
     void addThenStmt(Statement *stmt);
     void addElseStmt(Statement *stmt);
 
+    bool operator==(const Statement &other) const;
+
 private:
     int index;
     StatementType statementType;

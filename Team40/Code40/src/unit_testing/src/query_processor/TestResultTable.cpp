@@ -64,6 +64,6 @@ TEST_CASE("ResultTable:") {
         REQUIRE(table.getValues(1).front() == "a2");
         REQUIRE(table.getValues(2).size() == 1);
         REQUIRE(table.getValues(2).front() == "b1");
-        REQUIRE(table.empty(0));
+        REQUIRE(table.isColumnEmpty(0));
     }
 }

@@ -8,8 +8,10 @@ AssignStatementParser::AssignStatementParser(vector<string> content, int index)
 };
 
 Statement *AssignStatementParser::parseAssignStatement() {
-    vector<string>::iterator assignItr =
-        find(content.begin(), content.end(), "=");
+    vector<string>::iterator assignItr = find(content.begin(), content.end(), "=");
+    if (assignItr == content.begin()) {
+        throw invalid_argument("invalid assign statement");
+    }
     string var_name = *prev(assignItr);
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
@@ -20,7 +22,13 @@ Statement *AssignStatementParser::parseAssignStatement() {
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
     if (endItr == content.end())
         throw invalid_argument("invalid assign statement");
+    if (next(assignItr) == content.end()) {
+        throw invalid_argument("invalid assign statement");
+    }
     vector<string> exprLst(next(assignItr), endItr);
+    if (exprLst.empty()) {
+        throw invalid_argument("invalid expression");
+    }
     stmt->setExpressionLst(exprLst);
     ExpressionParser exprParser;
     exprParser.parseExpression(exprLst, stmt);
@@ -34,6 +42,5 @@ bool AssignStatementParser::isValidName(string input) {
     if (!isalpha(input.at(0))) {
         return false;
     }
-    return find_if(input.begin(), input.end(),
-                   [](char c) { return !(isalnum(c)); }) == input.end();
+    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

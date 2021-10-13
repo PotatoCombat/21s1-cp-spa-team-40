@@ -14,8 +14,7 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
         vector<string> subString = programTokens[i];
         currString.insert(currString.end(), subString.begin(), subString.end());
 
-        if (!isCurlyBracket(currString.back()) &&
-            !isSemiColon(currString.back())) {
+        if (!isCurlyBracket(currString.back()) && !isSemiColon(currString.back())) {
             continue;
         }
 
@@ -112,8 +111,7 @@ vector<string> Lexer::tokenizeLine(string input) {
 
 // helper functions
 
-void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr,
-                                 string &currString,
+void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr, string &currString,
                                  vector<string> &inputLine) {
     // check if operator has an additional character
     if (i < input.size() - 1) {
@@ -158,15 +156,12 @@ void Lexer::checkValidBracket(char curr) {
         }
         if (curr == ')' || curr == '}') {
             if (brackets.empty()) {
-                throw invalid_argument(
-                    "invalid program, brackets do not match");
+                throw invalid_argument("invalid program, brackets do not match");
             }
-            if ((curr == ')' && brackets.top() == '(') ||
-                (curr == '}' && brackets.top() == '{')) {
+            if ((curr == ')' && brackets.top() == '(') || (curr == '}' && brackets.top() == '{')) {
                 brackets.pop();
             } else {
-                throw invalid_argument(
-                    "invalid program, brackets do not match");
+                throw invalid_argument("invalid program, brackets do not match");
             }
         }
     }
@@ -175,9 +170,8 @@ void Lexer::checkValidBracket(char curr) {
 // special keywords
 
 bool Lexer::isKeyword(string input) {
-    return input == "read" || input == "print" || input == "call" ||
-           input == "while" || input == "if" || input == "then" ||
-           input == "procedure" || input == "else";
+    return input == "read" || input == "print" || input == "call" || input == "while" ||
+           input == "if" || input == "then" || input == "procedure" || input == "else";
 }
 
 bool Lexer::isAssignStmt(vector<string> content) {
@@ -185,18 +179,18 @@ bool Lexer::isAssignStmt(vector<string> content) {
 }
 
 bool Lexer::isStmt(vector<string> content) {
-    return ((content.front() != "}" && content.front() != "else" &&
-             content.front() != "procedure") ||
-            (isAssignStmt(content)));
+    return (
+        (content.front() != "}" && content.front() != "else" && content.front() != "procedure") ||
+        (isAssignStmt(content)));
 }
 
 // special symbols
 
 bool Lexer::isOperator(char input) { // logical, comparison, artihmetic and
                                      // assignment (they all overlap)
-    return input == '&' || input == '|' || input == '!' || input == '>' ||
-           input == '<' || input == '=' || input == '+' || input == '-' ||
-           input == '*' || input == '/' || input == '%';
+    return input == '&' || input == '|' || input == '!' || input == '>' || input == '<' ||
+           input == '=' || input == '+' || input == '-' || input == '*' || input == '/' ||
+           input == '%';
 }
 
 bool Lexer::isBracket(char input) {
@@ -205,8 +199,6 @@ bool Lexer::isBracket(char input) {
 
 bool Lexer::isSemiColon(char input) { return input == ';'; }
 
-bool Lexer::isCurlyBracket(string input) {
-    return input == "{" || input == "}";
-}
+bool Lexer::isCurlyBracket(string input) { return input == "{" || input == "}"; }
 
 bool Lexer::isSemiColon(string input) { return input == ";"; }

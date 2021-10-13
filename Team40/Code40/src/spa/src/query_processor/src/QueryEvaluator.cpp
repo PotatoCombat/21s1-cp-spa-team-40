@@ -81,6 +81,16 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &usesStmtHandler;
     }
 
+    if (clause->getType() == ClauseType::CALLS) {
+        CallsHandler callsHandler(clause, pkb);
+        clauseHandler = &callsHandler;
+    }
+
+    if (clause->getType() == ClauseType::CALLS_T) {
+        CallsStarHandler callsStarHandler(clause, pkb);
+        clauseHandler = &callsStarHandler;
+    }
+
     return clauseHandler->eval();
 }
 
@@ -321,11 +331,11 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
 }
 
 bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
-    if (idx1 >= 0 && resultTable.empty(idx1)) {
+    if (idx1 >= 0 && resultTable.isColumnEmpty(idx1)) {
         return true;
     }
 
-    if (idx2 >= 0 && resultTable.empty(idx2)) {
+    if (idx2 >= 0 && resultTable.isColumnEmpty(idx2)) {
         return true;
     }
     return false;

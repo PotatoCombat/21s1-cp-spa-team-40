@@ -30,15 +30,15 @@ Statement *StatementParser::parseStatement() {
     }
 }
 
-bool StatementParser::isReadStmt() { return content[0] == "read"; }
+bool StatementParser::isReadStmt() { return content.at(0) == "read"; }
 
-bool StatementParser::isPrintStmt() { return content[0] == "print"; }
+bool StatementParser::isPrintStmt() { return content.at(0) == "print"; }
 
-bool StatementParser::isCallStmt() { return content[0] == "call"; }
+bool StatementParser::isCallStmt() { return content.at(0) == "call"; }
 
-bool StatementParser::isWhileStmt() { return content[0] == "while"; }
+bool StatementParser::isWhileStmt() { return content.at(0) == "while"; }
 
-bool StatementParser::isIfStmt() { return content[0] == "if"; }
+bool StatementParser::isIfStmt() { return content.at(0) == "if"; }
 
 bool StatementParser::isAssignStmt() {
     return find(content.begin(), content.end(), "=") != content.end();
