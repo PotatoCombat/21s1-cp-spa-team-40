@@ -16,6 +16,8 @@ struct TestQPreprocessor {
     static const string PATTERN_2;
     static const string SUCH_THAT_PATTERN_1;
     static const string SUCH_THAT_PATTERN_2;
+    static const string WITH_1;
+    static const string WITH_2;
 };
 
 const string TestQPreprocessor::INPUT_1 =
@@ -35,9 +37,12 @@ const string TestQPreprocessor::PATTERN_2 =
 const string TestQPreprocessor::SUCH_THAT_PATTERN_1 =
     "\rstmt s; procedure PROC3DURE; assign a; Select s such that "
     "Uses(PROC3DURE, \"y\") pattern a(\"x\", \" y \")\r";
-
 const string TestQPreprocessor::SUCH_THAT_PATTERN_2 =
 "stmt s; assign a; Select s such that Follows*(s, a) pattern a(\"   d\", _\"a \"_)";
+const string TestQPreprocessor::WITH_1 =
+    "assign a; prog_line n;\nSelect a with a.stmt# = n and a.stmt# = 10";
+const string TestQPreprocessor::WITH_2 =
+    "call c; procedure p;\nSelect c with c.procName = p.procName and c.stmt# = 10";
 
 TEST_CASE("QueryPreprocessor: single clause") {
     QueryPreprocessor qp;
@@ -188,5 +193,48 @@ TEST_CASE("QueryPreprocessor: two clauses") {
         REQUIRE((actual.getClauses()[1])->equals(*pat));
         REQUIRE((actual.getReturnReferences()[0])->equals(stmt));
         REQUIRE((actual.getReferences().size() == 2));
+    }
+}
+
+TEST_CASE("QueryPreprocessor: with clauses") {
+    QueryPreprocessor qp;
+    Query expected;
+    Query actual;
+    Reference assign(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a", ReferenceAttribute::INTEGER);
+    Reference procedure(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM,
+                        "p", ReferenceAttribute::NAME);
+    Reference prog_line(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM,
+                        "n", ReferenceAttribute::INTEGER);
+    Reference call(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
+                   ReferenceAttribute::INTEGER);
+    Reference call_p(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
+                   ReferenceAttribute::NAME);
+    Reference constant(DesignEntityType::STMT, ReferenceType::CONSTANT, "10",
+                       ReferenceAttribute::INTEGER);
+
+    SECTION("test 1") {
+        Clause *c1 = new Clause(ClauseType::WITH, assign, prog_line);
+        Clause *c2 = new Clause(ClauseType::WITH, assign, constant);
+        expected.addReturnReference(&assign);
+        expected.addClause(c1);
+        expected.addClause(c2);
+
+        qp.preprocessQuery(TestQPreprocessor::WITH_1, actual);
+        REQUIRE((actual.getClauses()[0])->equals(*c1));
+        REQUIRE((actual.getClauses()[1])->equals(*c2));
+        REQUIRE((actual.getReturnReferences()[0])->equals(assign));
+    }
+
+    SECTION("test 2") {
+        Clause *c1 = new Clause(ClauseType::WITH, call_p, procedure);
+        Clause *c2 = new Clause(ClauseType::WITH, call, constant);
+        expected.addReturnReference(&call);
+        expected.addClause(c1);
+        expected.addClause(c2);
+
+        qp.preprocessQuery(TestQPreprocessor::WITH_2, actual);
+        REQUIRE((actual.getClauses()[0])->equals(*c1));
+        REQUIRE((actual.getClauses()[1])->equals(*c2));
+        REQUIRE((actual.getReturnReferences()[0])->equals(call));
     }
 }

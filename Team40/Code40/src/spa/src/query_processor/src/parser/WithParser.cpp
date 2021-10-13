@@ -56,7 +56,7 @@ Reference *WithParser::parseReference(string ref) {
         }
         ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
         if (attr == ReferenceAttribute::DEFAULT) {
-            attr = deHelper.typeToAttrType(r->getDeType());
+            attr = deHelper.typeToAttr(r->getDeType());
         }
         return new Reference(r->getDeType(), r->getRefType(), syn, attr);
     }

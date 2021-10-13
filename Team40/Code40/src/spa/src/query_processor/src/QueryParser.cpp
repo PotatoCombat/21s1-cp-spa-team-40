@@ -52,7 +52,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
     }
 
     ReferenceAttribute attr = ParserUtil::parseValidAttr(attrStr);
-
+    
     for (auto x : declList) {
         if (syn == x->getValue()) {
             return new Reference(x->getDeType(), x->getRefType(), syn, attr);
