@@ -32,23 +32,19 @@ void WithHandler::validate() {
     if (refType1 == ReferenceType::SYNONYM &&
         desType1 != DesignEntityType::STMT && 
         attr1 == ReferenceAttribute::DEFAULT) {
-        throw ClauseHandlerError("only default synonym of stmt is accepted");
+        throw ClauseHandlerError("with clause can only compare synonyms if they are of type stmt");
     }
     if (refType2 == ReferenceType::SYNONYM &&
         desType2 != DesignEntityType::STMT &&
         attr2 == ReferenceAttribute::DEFAULT) {
-        throw ClauseHandlerError("only default synonym of stmt is accepted");
+        throw ClauseHandlerError("with clause can only compare synonyms if they are of type stmt");
     }
 
     // the two refs must be of the same type (i.e., both strings or both
     // integers)
-    bool isFirstRefString = desType1 == DesignEntityType::PROCEDURE ||
-                            desType1 == DesignEntityType::VARIABLE ||
-                            attr1 == ReferenceAttribute::NAME;
-    bool isSecondRefString = desType2 == DesignEntityType::PROCEDURE ||
-                             desType2 == DesignEntityType::VARIABLE ||
-                             attr2 == ReferenceAttribute::NAME;
-    if (isFirstRefString != isSecondRefString) {
+    bool isFirstRefName = attr1 == ReferenceAttribute::NAME;
+    bool isSecondRefName = attr2 == ReferenceAttribute::NAME;
+    if (isFirstRefName != isSecondRefName) {
         throw ClauseHandlerError("LHS and RHS of with clause not same type");
     }
 }
