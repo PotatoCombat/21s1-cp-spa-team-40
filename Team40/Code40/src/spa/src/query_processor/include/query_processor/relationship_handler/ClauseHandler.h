@@ -27,6 +27,7 @@ protected:
     static set<DesignEntityType> STMT_DES_SET;
     static set<DesignEntityType> PROCEDURE_DES_SET;
     static set<DesignEntityType> VARIABLE_DES_SET;
+    static set<DesignEntityType> ALL_DES_SET;
 
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
@@ -37,7 +38,7 @@ protected:
     virtual set<string> getR2ClausedR1(string r1) = 0;
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
 
-    void validate();
+    virtual void validate();
     bool isType(string val, DesignEntityType type);
 
     Result evalWcWc();
@@ -52,6 +53,6 @@ public:
     // evaluates the clause and writes the answer to the result object
     // Result invalid = false only happens when neither of the references is
     // synonym
-    Result eval();
+    virtual Result eval();
     static set<string> getAll(PKB* pkb, Reference ref);
 };

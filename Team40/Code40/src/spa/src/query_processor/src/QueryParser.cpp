@@ -3,6 +3,7 @@
 void QueryParser::clear() {
     this->stParser.clear();
     this->ptParser.clear();
+    this->wtParser.clear();
     this->clearDeclarations();
 }
 
@@ -19,33 +20,48 @@ void QueryParser::clearDeclarations() {
  */
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
     for (auto x : declPairs) {
-        DesignEntityType type = deHelper.valueToDesType(x.first);
+        DesignEntityType deType = deHelper.valueToDesType(x.first);
+        ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
         if (!ParserUtil::isValidName(syn)) {
             throw ValidityError("QP-ERROR: invalid name");
         }
-        Reference *ref = new Reference(type, ReferenceType::SYNONYM, syn);
+        ReferenceAttribute attr = deHelper.typeToDefaultAttr(deType);
+        Reference *ref = new Reference(deType, refType, syn, attr);
         declList.push_back(ref);
     }
 
     stParser.initReferences(declList);
     ptParser.initReferences(declList);
+    wtParser.initReferences(declList);
 }
 
 /**
  * Parse return reference by checking if it is in the declaration list.
  * @param ref Return reference to parse.
  * @param &found Whether the reference is found.
- * @return Reference object.
- * @todo Check for syn.attr syntax and set attr for reference object
- * @todo Check for attr validity based on synonym type
+ * @return Reference object, otherwise nullptr.
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
-    ReferenceAttribute attr = parseValidAttr(ref);
+    string syn = ref;
+    string attrStr = "";
+
+    bool isAttrRef = ParserUtil::isAttrRef(ref);
+    if (isAttrRef) {
+        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        syn = attrRef.first;
+        attrStr = attrRef.second;
+    }
 
     for (auto x : declList) {
-        if (ref == x->getValue()) {
-            return new Reference(x->getDeType(), x->getRefType(), ref, attr);
+        if (syn == x->getValue()) {
+            DesignEntityType deType = x->getDeType();
+            ReferenceType refType = x->getRefType();
+            ReferenceAttribute attr = x->getAttr();
+            if (isAttrRef) {
+                attr = ParserUtil::parseValidAttr(deType, attrStr);
+            }
+            return new Reference(deType, refType, syn, attr);
         }
     }
     return nullptr;
@@ -70,21 +86,10 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
 }
 
 /**
- * Parse valid attribute.
- * @param ref The string to parse.
- * @return Valid attribute.
- * @exception ValidityError if ref/attr is invalid.
+ * Parse a `with` clause.
+ * @param withPair as <ref, ref>.
+ * @return Clause object.
  */
-ReferenceAttribute QueryParser::parseValidAttr(string ref) {
-    string attr = ParserUtil::getAttribute(ref);
-    if (attr.empty()) {
-        return ReferenceAttribute::DEFAULT;
-    }
-    if (attr == "procName" || attr == "varName") {
-        return ReferenceAttribute::NAME;
-    } else if (attr == "stmt#" || attr == "value") {
-        return ReferenceAttribute::INTEGER;
-    } else {
-        throw ValidityError("QP-ERROR: invalid attribute");
-    }
+Clause *QueryParser::parseWithClause(WithPair withPair) {
+    return wtParser.parse(withPair);
 }

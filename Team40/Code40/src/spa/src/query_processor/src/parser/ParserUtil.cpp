@@ -35,8 +35,8 @@ bool ParserUtil::isQuoted(std::string val) {
 }
 
 /**
- * Check if string is a valid name. A valid name is one that starts with a LETTER
- * and contains only LETTERs and DIGITs.
+ * Check if string is a valid name. A valid name is one that starts with a
+ * LETTER and contains only LETTERs and DIGITs.
  * @param val String to check.
  * @return True if valid, otherwise false.
  */
@@ -51,16 +51,57 @@ bool ParserUtil::isValidName(std::string val) {
 }
 
 /**
- * Get attribute from string in syn.attr syntax.
+ * Check if string is a attrRef.
  * @param val String to check.
- * @return Attribute if found, otherwise empty string.
+ * @return true if attrRef, otherwise false.
  */
-std::string ParserUtil::getAttribute(std::string val) {
+bool ParserUtil::isAttrRef(std::string val) {
     int c = count(val.begin(), val.end(), '.');
-    if (c != 1) {
-        return "";
-    }
+    return c == 1;
+}
 
+/**
+ * Split syn.attr given a attrRef.
+ * @param val String to split.
+ * @return Pair<syn, attr>.
+ */
+std::pair<std::string, std::string> ParserUtil::splitAttrRef(std::string val) {
     size_t pos = val.find('.');
-    return val.substr(pos + 1);
+    std::string syn = val.substr(0, pos);
+    std::string attr = val.substr(pos + 1);
+    return make_pair(syn, attr);
+}
+
+/**
+ * Parse valid attribute.
+ * @param deType DesignEntityType enum
+ * @param attr The string to parse.
+ * @return ReferenceAttribute type.
+ * @exception ValidityError if attr is invalid.
+ */
+ReferenceAttribute ParserUtil::parseValidAttr(DesignEntityType deType,
+                                              std::string val) {
+    if (val == "procName") {
+        if (deType == DesignEntityType::PROCEDURE ||
+            deType == DesignEntityType::CALL) {
+            return ReferenceAttribute::NAME;
+        }
+    } else if (val == "varName") {
+        if (deType == DesignEntityType::VARIABLE ||
+            deType == DesignEntityType::READ ||
+            deType == DesignEntityType::PRINT) {
+            return ReferenceAttribute::NAME;
+        }
+    } else if (val == "value") {
+        if (deType == DesignEntityType::CONSTANT) {
+            return ReferenceAttribute::INTEGER;
+        }
+    } else if (val == "stmt#") {
+        if (!(deType == DesignEntityType::PROCEDURE ||
+              deType == DesignEntityType::VARIABLE ||
+              deType == DesignEntityType::CONSTANT)) {
+            return ReferenceAttribute::INTEGER;
+        }
+    }
+    throw ValidityError("QP-ERROR: invalid attribute");
 }
