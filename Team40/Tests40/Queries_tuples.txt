@@ -159,8 +159,8 @@ Select <a1, ifs2, a3> such that Follows*(a1 ,ifs2) and Follows*(ifs2, a3)
 11 12 19,110 111 118,24 25 32,48 50 64,6 7 35,72 73 88,91 92 99
 5000
 33 - all statements that are parents of some statement (assign declaration, tuple with 2 variables return)
-while c1; stmt c2;
-Select <c1, c2> such that Parent(c1, c2)
+while w1; stmt s2;
+Select <w1, s2> such that Parent(w1, s2)
 104 105,104 106,23 24,23 25,23 32,47 48,47 49,47 50,47 64,47 65,52 53,52 54,52 55,59 60,59 61,59 62,75 76,75 77,75 78,82 83,82 84,82 85,9 10,9 11,9 12,9 18,9 19,90 91,90 92,90 99
 5000
 34 - all statements that are parents of some statement that are parents of itself i.e. invalid (assign declaration, tuple with 2 variables return)
@@ -169,18 +169,18 @@ Select <s1, s2> such that Parent(s1, s2) and Parent(s2, s1)
 none
 5000
 35 - all statements that are parents of some statement that that are parents of another statement (prog_line declaration, tuple with 3 variables return)
-while pr1; if pr2; stmt pr3;
-Select <pr1, pr2, pr3> such that Parent(pr1 ,pr2) and Parent(pr2, pr3) 
+while w1; if ifs2; stmt s3;
+Select <w1, ifs2, s3> such that Parent(w1 ,ifs2) and Parent(ifs2, s3) 
 23 25 26,23 25 27,23 25 28,23 25 29,23 25 30,23 25 31,47 50 51,47 50 52,47 50 56,47 50 57,47 50 58,47 50 59,47 50 63,9 12 13,9 12 14,9 12 15,9 12 16,9 12 17,90 92 93,90 92 94,90 92 95,90 92 96,90 92 97,90 92 98
 5000
 36 - all statements that are parents of some statement that that are parents of another statement that... (assign declaration, tuple with 4 variables return)
-stmt r1, r2, r3, r4;
-Select <r1, r2, r3, r4> such that Parent(r1 ,r2) and Parent(r2, r3) and Parent(r3, r4) 
+stmt s1, s2, s3, s4;
+Select <s1, s2, s3, s4> such that Parent(s1 ,s2) and Parent(s2, s3) and Parent(s3, s4) 
 47 50 52 53,47 50 52 54,47 50 52 55,47 50 59 60,47 50 59 61,47 50 59 62,7 23 25 26,7 23 25 27,7 23 25 28,7 23 25 29,7 23 25 30,7 23 25 31,7 9 12 13,7 9 12 14,7 9 12 15,7 9 12 16,7 9 12 17
 5000
 37 - all statements that are parents* of some statement (prog_line declaration, tuple with 2 variables return)
-if c1; while c2;
-Select <c1, c2> such that Parent*(c1 ,c2)
+if ifs1; while w2;
+Select <ifs1, w2> such that Parent*(ifs1 ,w2)
 50 52,50 59,7 23,7 9,73 75,73 82
 5000
 38 - all statements that are parents* of some statement that are parents of itself i.e. invalid (prog_line declaration, tuple with 2 variables return)
@@ -189,12 +189,12 @@ Select <s1, s2> such that Parent*(s1 ,s2) and Parent*(s2 ,s1)
 none
 5000
 39 - all statements that are parents* of some statement that that are parents* of another statement (assign declaration, tuple with 2 variables return)
-if r1, r3; while r2;
-Select <r1, r2, r3> such that Parent*(r1 ,r2) and Parent*(r2 ,r3)
+if ifs1, ifs3; while w2;
+Select <ifs1, w2, ifs3> such that Parent*(ifs1 ,w2) and Parent*(w2 ,ifs3)
 7 23 25,7 9 12
 5000
 40 - all statements that are parents* of some statement that are parents* of another statement that... (prog_line declaration, tuple with 4 variables return)
-stmt pr1, pr2, pr3, pr4;
-Select <pr1, pr2, pr3, pr4> such that Parent*(pr1 ,pr2) and Parent*(pr2, pr3) and Parent*(pr3, pr4) 
+stmt s1, s2, s3, s4;
+Select <s1, s2, s3, s4> such that Parent*(s1 ,s2) and Parent*(s2, s3) and Parent*(s3, s4) 
 47 50 52 53,47 50 52 54,47 50 52 55,47 50 59 60,47 50 59 61,47 50 59 62,7 23 25 26,7 23 25 27,7 23 25 28,7 23 25 29,7 23 25 30,7 23 25 31,7 9 12 13,7 9 12 14,7 9 12 15,7 9 12 16,7 9 12 17
 5000
