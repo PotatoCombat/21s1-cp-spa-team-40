@@ -133,7 +133,8 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     }
     ExtractionContext::getInstance().clearPreviousStatements();
 
-    // Set all last leaf-statements as previous statements
+    // Set all last non-while, non-if (a.k.a. leaf) statements as previous
+    // statements
     vector<Statement *> lastLeafStatements;
     extractLastLeafStatements(ifStatement->getThenStmtLst(),
                               lastLeafStatements);
@@ -205,18 +206,16 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     }
     ExtractionContext::getInstance().unsetParentStatement(whileStatement);
 
-    // Handle Next(w, s) where stmt s are all the last leaf statements of while
-    // w's THEN statement list
+    // Handle Next(w, s) where stmt s are all the last non-while, non-if (a.k.a.
+    // leaf) statements of the THEN statement list belonging to while w
     vector<Statement *> lastLeafStatements;
     extractLastLeafStatements(whileStatement->getThenStmtLst(),
                               lastLeafStatements);
     for (Statement *lastLeafStatement : lastLeafStatements) {
         pkb->insertNext(lastLeafStatement, whileStatement);
     }
+    ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
-
-    ExtractionContext::getInstance().setPreviousStatement(
-        whileStatement->getThenStmtLst().back());
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
