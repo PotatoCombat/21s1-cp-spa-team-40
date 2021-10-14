@@ -323,6 +323,9 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     }
 
     size_t tokenPos = findNextToken(input, nextPos);
+    if (tokenPos == string::npos) {
+        throw SyntaxError("QP-ERROR: incomplete pattern clause");
+    }
     if (input[tokenPos] == QUOTE) {
         tokenPos = tokenPos + 1;
         token = getTokenBeforeX(input, QUOTE, tokenPos, nextPos);
@@ -377,6 +380,9 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
     token1 = removeWhitespaceAroundPeriod(token1);
 
     tempPos = findNextToken(input, nextPos);
+    if (tempPos == string::npos) {
+        throw SyntaxError("QP-ERROR: incomplete with clause");
+    }
     if (input[tempPos] == QUOTE) {
         tempPos = tempPos + 1;
         token2 = getTokenBeforeX(input, QUOTE, tempPos, nextPos);
