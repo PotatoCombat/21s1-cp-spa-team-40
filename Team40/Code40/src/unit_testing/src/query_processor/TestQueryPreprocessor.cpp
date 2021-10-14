@@ -38,11 +38,13 @@ const string TestQPreprocessor::SUCH_THAT_PATTERN_1 =
     "\rstmt s; procedure PROC3DURE; assign a; Select s such that "
     "Uses(PROC3DURE, \"y\") pattern a(\"x\", \" y \")\r";
 const string TestQPreprocessor::SUCH_THAT_PATTERN_2 =
-"stmt s; assign a; Select s such that Follows*(s, a) pattern a(\"   d\", _\"a \"_)";
+    "stmt s; assign a; Select s such that Follows*(s, a) pattern a(\"   d\", "
+    "_\"a \"_)";
 const string TestQPreprocessor::WITH_1 =
     "assign a; prog_line n;\nSelect a with a.stmt# = n and a.stmt# = 10";
 const string TestQPreprocessor::WITH_2 =
-    "call c; procedure p;\nSelect c with c.procName = p.procName and c.stmt# = 10";
+    "call c; procedure p;\nSelect c with c.procName = p.procName and c.stmt# = "
+    "10";
 
 TEST_CASE("QueryPreprocessor: single clause") {
     QueryPreprocessor qp;
@@ -70,7 +72,8 @@ TEST_CASE("QueryPreprocessor: single clause") {
             qp.preprocessQuery(TestQPreprocessor::INPUT_2, actual);
 
             REQUIRE(actual.getClauses().size() == 0);
-            REQUIRE((actual.getReturnReferences()[0])->equals(*expected.getReturnReferences()[0]));
+            REQUIRE((actual.getReturnReferences()[0])
+                        ->equals(*expected.getReturnReferences()[0]));
         }
 
         SECTION("test 4") {
@@ -159,7 +162,8 @@ TEST_CASE("QueryPreprocessor: two clauses") {
                         "PROC3DURE");
     Reference stmt(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference assign(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
-    Reference variableD(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "d");
+    Reference variableD(DesignEntityType::VARIABLE, ReferenceType::CONSTANT,
+                        "d");
     Reference variableX(DesignEntityType::VARIABLE, ReferenceType::CONSTANT,
                         "x");
     Reference variableY(DesignEntityType::VARIABLE, ReferenceType::CONSTANT,
@@ -181,7 +185,7 @@ TEST_CASE("QueryPreprocessor: two clauses") {
     }
 
     SECTION("test 2") {
-        Clause* cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
+        Clause *cls = new Clause(ClauseType::FOLLOWS_T, stmt, assign);
         Clause *pat = new Clause(assign, variableD, vector<string>{"a"}, false);
         expected.addReturnReference(&stmt);
         expected.addClause(cls);
@@ -200,7 +204,8 @@ TEST_CASE("QueryPreprocessor: with clauses") {
     QueryPreprocessor qp;
     Query expected;
     Query actual;
-    Reference assign(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a", ReferenceAttribute::INTEGER);
+    Reference assign(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a",
+                     ReferenceAttribute::INTEGER);
     Reference procedure(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM,
                         "p", ReferenceAttribute::NAME);
     Reference prog_line(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM,
@@ -208,7 +213,7 @@ TEST_CASE("QueryPreprocessor: with clauses") {
     Reference call(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
                    ReferenceAttribute::INTEGER);
     Reference call_p(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
-                   ReferenceAttribute::NAME);
+                     ReferenceAttribute::NAME);
     Reference constant(DesignEntityType::STMT, ReferenceType::CONSTANT, "10",
                        ReferenceAttribute::INTEGER);
 
@@ -237,4 +242,16 @@ TEST_CASE("QueryPreprocessor: with clauses") {
         REQUIRE((actual.getClauses()[1])->equals(*c2));
         REQUIRE((actual.getReturnReferences()[0])->equals(call));
     }
+}
+
+TEST_CASE("QueryPreprocessor: Select BOOLEAN") {
+    const string SELECT_BOOLEAN = "Select BOOLEAN";
+
+    QueryPreprocessor qp;
+    Query q;
+
+    qp.preprocessQuery(SELECT_BOOLEAN, q);
+
+    REQUIRE(q.getReturnReferences().empty());
+    REQUIRE(q.getClauses().empty());
 }

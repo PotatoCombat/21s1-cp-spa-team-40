@@ -53,7 +53,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
 DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw ValidityError("invalid design entity type");
+        throw SyntaxError("invalid design entity type");
     }
     return type->second;
 }

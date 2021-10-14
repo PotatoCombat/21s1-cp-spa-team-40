@@ -10,7 +10,7 @@ pair<string, string> QueryTokenizer::separateQueryString(string input) {
     size_t lastSemicolon = input.rfind(SEMICOLON);
 
     if (lastSemicolon == string::npos) {
-        throw SyntaxError("QP-ERROR: no declarations");
+        return make_pair("", trim(input));
     }
 
     string decl = trim(input.substr(0, lastSemicolon + 1));
@@ -86,35 +86,6 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input,
         retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
     }
     return retStrings;
-
-    /*size_t nextWhitespacePos = findNextWhitespace(rest, 0);
-
-    string retString = rest.substr(0, nextWhitespacePos);
-    if (nextWhitespacePos == string::npos) {
-        remaining = "";
-    } else {
-        size_t periodPos = rest.find(PERIOD, 0);
-        size_t nextTokenPos = findNextToken(rest, nextWhitespacePos);
-        if (periodPos != string::npos) {
-            if (periodPos == nextTokenPos) {
-                rest = trimL(rest.substr(nextTokenPos + 1));
-                nextWhitespacePos = findNextWhitespace(rest, 0);
-                retString = retString + "." + rest.substr(0, nextWhitespacePos);
-            } else if (periodPos < nextTokenPos &&
-                       periodPos == nextWhitespacePos - 1) {
-                nextWhitespacePos = findNextWhitespace(rest, nextTokenPos);
-                retString =
-                    retString +
-                    rest.substr(nextTokenPos, nextWhitespacePos - nextTokenPos);
-            }
-        }
-        remaining = trimL(rest.substr(nextWhitespacePos + 1));
-    }
-
-    if (retString == KEYWORD_BOOLEAN) {
-        return vector<string>();
-    }
-    return vector<string>{retString};*/
 }
 
 vector<string> QueryTokenizer::tokenizeReturnTuple(string input,
