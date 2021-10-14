@@ -8,40 +8,48 @@ using namespace std;
 struct TestClause {
     static Reference R1;
     static Reference R2;
-    static Clause createFollowsClause();
-    static Clause *createParentClause(string x, string y);
+    static Clause *createFollowsClause();
+    static Clause *createParentClause();
 };
 
 Reference TestClause::R1 =
-    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
+    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s",
+              ReferenceAttribute::INTEGER);
 Reference TestClause::R2 =
-    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "_");
+    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "_",
+              ReferenceAttribute::INTEGER);
 
-Clause TestClause::createFollowsClause() {
-    return Clause(ClauseType::FOLLOWS, R1, R2);
+Clause *TestClause::createFollowsClause() {
+    return new Clause(ClauseType::FOLLOWS, R1, R2);
 }
 
-Clause *TestClause::createParentClause(string x, string y) {
-    Reference ref1 = TestClause::R1;
-    Reference ref2 = TestClause::R2;
+Clause *TestClause::createParentClause() {
+    Reference ref1 = R1;
+    Reference ref2 = R2;
     return new Clause(ClauseType::PARENT, ref1, ref2);
 }
 
 TEST_CASE("Clause: get methods") {
-    Clause clause = TestClause::createFollowsClause();
+    Clause *clause = TestClause::createFollowsClause();
 
-    REQUIRE(clause.getType() == ClauseType::FOLLOWS);
-    REQUIRE(TestClause::R1.equals(*clause.getFirstReference()));
-    REQUIRE(TestClause::R2.equals(*clause.getSecondReference()));
+    REQUIRE(clause->getType() == ClauseType::FOLLOWS);
+    REQUIRE(TestClause::R1.equals(*(clause->getFirstReference())));
+    REQUIRE(TestClause::R2.equals(*(clause->getSecondReference())));
 }
 
 TEST_CASE("Clause: equals") {
-    Reference ref1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
-    Reference ref2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
-    Reference ref3(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
-    Reference ref4(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "x");
-    Reference ref5(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "x");
-    Reference ref6(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "x");
+    Reference ref1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1",
+                   ReferenceAttribute::INTEGER);
+    Reference ref2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1",
+                   ReferenceAttribute::INTEGER);
+    Reference ref3(DesignEntityType::STMT, ReferenceType::CONSTANT, "2",
+                   ReferenceAttribute::INTEGER);
+    Reference ref4(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "x",
+                   ReferenceAttribute::NAME);
+    Reference ref5(DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "x",
+                   ReferenceAttribute::NAME);
+    Reference ref6(DesignEntityType::VARIABLE, ReferenceType::CONSTANT, "x",
+                   ReferenceAttribute::NAME);
 
     // all match
     Clause clause1(ClauseType::USES_S, ref1, ref4);
@@ -62,8 +70,8 @@ TEST_CASE("Clause: equals") {
 }
 
 TEST_CASE("Clause: copy") {
-    Clause* cls = TestClause::createParentClause("s", "_");
-    Clause* clsCopy = cls->copy();
+    Clause *cls = TestClause::createParentClause();
+    Clause *clsCopy = cls->copy();
 
     REQUIRE(cls->equals(*clsCopy));
 

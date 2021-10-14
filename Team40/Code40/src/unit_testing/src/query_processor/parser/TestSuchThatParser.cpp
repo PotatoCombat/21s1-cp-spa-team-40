@@ -10,6 +10,7 @@ struct TestSuchThatParser {
     static Reference DECLARED_PROCEDURE;
     static Reference WILDCARD_STMT;
     static Reference WILDCARD_VARIABLE;
+    static Reference WILDCARD_PROCEDURE;
     static Reference CONSTANT_STMT_1;
     static Reference CONSTANT_STMT_4;
     static Reference CONSTANT_VARIABLE;
@@ -18,6 +19,7 @@ struct TestSuchThatParser {
     static Clause *createParent(Reference r1, Reference r2);
     static Clause *createModifiesS(Reference r1, Reference r2);
     static Clause *createModifiesP(Reference r1, Reference r2);
+    static Clause *createCallsT(Reference r1, Reference r2);
 };
 
 Reference TestSuchThatParser::DECLARED_STMT =
@@ -32,6 +34,8 @@ Reference TestSuchThatParser::WILDCARD_STMT =
     Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
 Reference TestSuchThatParser::WILDCARD_VARIABLE =
     Reference(DesignEntityType::VARIABLE, ReferenceType::WILDCARD, "_");
+Reference TestSuchThatParser::WILDCARD_PROCEDURE =
+    Reference(DesignEntityType::PROCEDURE, ReferenceType::WILDCARD, "_");
 Reference TestSuchThatParser::CONSTANT_STMT_1 =
     Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
 Reference TestSuchThatParser::CONSTANT_STMT_4 =
@@ -54,6 +58,10 @@ Clause *TestSuchThatParser::createModifiesS(Reference r1, Reference r2) {
 
 Clause *TestSuchThatParser::createModifiesP(Reference r1, Reference r2) {
     return new Clause(ClauseType::MODIFIES_P, r1, r2);
+}
+
+Clause *TestSuchThatParser::createCallsT(Reference r1, Reference r2) {
+    return new Clause(ClauseType::CALLS_T, r1, r2);
 }
 
 TEST_CASE("SuchThatParser: parse parent clause - valid arguments") {
@@ -314,7 +322,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
     }
 };
 
- TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
+TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
     SuchThatParser p;
     p.initReferences(TestSuchThatParser::DECLARATIONS);
 
@@ -345,7 +353,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
     SECTION("TEST FAIL: second argument cannot be non-variable type") {
         ClsTuple tup = make_tuple("Modifies", "statement", "PROCEDURE");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-        
+
         tup = make_tuple("Modifies", "statement", "a");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
@@ -355,6 +363,103 @@ TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
         tup = make_tuple("Modifies", "procedure", "foodVariable");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+};
+
+TEST_CASE("SuchThatParser: parse calls* clause - valid arguments") {
+    SuchThatParser p;
+    p.initReferences(TestSuchThatParser::DECLARATIONS);
+    Reference wildcardRef = TestSuchThatParser::WILDCARD_PROCEDURE;
+    Reference declaredRef = TestSuchThatParser::DECLARED_PROCEDURE;
+    Reference constantRef = TestSuchThatParser::CONSTANT_PROCEDURE;
+
+    SECTION("wildcard ?/? wildcard") {
+        Clause *expected =
+            TestSuchThatParser::createCallsT(wildcardRef, wildcardRef);
+        ClsTuple tup = make_tuple("Calls*", "_", "_");
+        Clause *actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(wildcardRef, constantRef);
+        tup = make_tuple("Calls*", "_", "\"procedur3\"");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(wildcardRef, declaredRef);
+        tup = make_tuple("Calls*", "_", "PROCEDURE");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(constantRef, wildcardRef);
+        tup = make_tuple("Calls*", "\"procedur3\"", "_");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(declaredRef, wildcardRef);
+        tup = make_tuple("Calls*", "PROCEDURE", "_");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("quoted syn / syn quoted / quoted quoted / syn syn") {
+        Clause *expected =
+            TestSuchThatParser::createCallsT(constantRef, constantRef);
+        ClsTuple tup = make_tuple("Calls*", "\"procedur3\"", "\"procedur3\"");
+        Clause *actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(constantRef, declaredRef);
+        tup = make_tuple("Calls*", "\"procedur3\"", "PROCEDURE");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(declaredRef, constantRef);
+        tup = make_tuple("Calls*", "PROCEDURE", "\"procedur3\"");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createCallsT(declaredRef, declaredRef);
+        tup = make_tuple("Calls*", "PROCEDURE", "PROCEDURE");
+        actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+};
+
+TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
+    SuchThatParser p;
+    p.initReferences(TestSuchThatParser::DECLARATIONS);
+
+    SECTION("TEST FAIL: arguments cannot be non-procedure") {
+        ClsTuple tup = make_tuple("Calls*", "statement", "_");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Calls*", "_", "foodVariable");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: arguments cannot be integer") {
+        ClsTuple tup = make_tuple("Calls*", "1", "_");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Calls*", "_", "1");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+    }
+
+    SECTION("TEST FAIL: undeclared synonym") {
+        ClsTuple tup = make_tuple("Calls*", "PROCEDURE", "undeclared");
+        REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+        tup = make_tuple("Calls*", "undeclared", "PROCEDURE");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 };

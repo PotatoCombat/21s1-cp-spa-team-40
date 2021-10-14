@@ -3,29 +3,25 @@
 #include "query_processor/model/Reference.h"
 
 struct TestReference {
-    static const string VALUE;
-    static const string OTHER_VALUE;
-    static const DesignEntityType ASSIGN_TYPE;
-    static const DesignEntityType VAR_TYPE;
-    static const ReferenceType SYN_TYPE;
-    static const ReferenceType CONST_TYPE;
+    inline static const string VALUE = "a1";
+    inline static const string OTHER_VALUE = "v";
+    inline static const DesignEntityType ASSIGN_TYPE = DesignEntityType::ASSIGN;
+    inline static const DesignEntityType VAR_TYPE = DesignEntityType::VARIABLE;
+    inline static const ReferenceType SYN_TYPE = ReferenceType::SYNONYM;
+    inline static const ReferenceType CONST_TYPE = ReferenceType::CONSTANT;
+    inline static const ReferenceAttribute INT_TYPE =
+        ReferenceAttribute::INTEGER;
+    inline static const ReferenceAttribute NAME_TYPE = ReferenceAttribute::NAME;
     static Reference createReference();
     static Reference createOtherReference();
 };
 
-const string TestReference::VALUE = "a1";
-const string TestReference::OTHER_VALUE = "v";
-const DesignEntityType TestReference::ASSIGN_TYPE = DesignEntityType::ASSIGN;
-const DesignEntityType TestReference::VAR_TYPE = DesignEntityType::VARIABLE;
-const ReferenceType TestReference::SYN_TYPE = ReferenceType::SYNONYM;
-const ReferenceType TestReference::CONST_TYPE = ReferenceType::CONSTANT;
-
 Reference TestReference::createReference() {
-    return Reference(ASSIGN_TYPE, SYN_TYPE, VALUE);
+    return Reference(ASSIGN_TYPE, SYN_TYPE, VALUE, INT_TYPE);
 }
 
 Reference TestReference::createOtherReference() {
-    return Reference(VAR_TYPE, CONST_TYPE, OTHER_VALUE);
+    return Reference(VAR_TYPE, CONST_TYPE, OTHER_VALUE, NAME_TYPE);
 }
 
 TEST_CASE("Reference: get methods") {
@@ -56,7 +52,7 @@ TEST_CASE("Reference: equals") {
         // semantically wrong but just for testing purposes :)
         Reference refDiffRefType =
             Reference(TestReference::ASSIGN_TYPE, TestReference::CONST_TYPE,
-                      TestReference::VALUE);
+                      TestReference::VALUE, TestReference::INT_TYPE);
         REQUIRE(!ref.equals(refDiffRefType));
     }
 }
@@ -64,7 +60,7 @@ TEST_CASE("Reference: equals") {
 TEST_CASE("Reference: copy") {
     Reference *ref =
         new Reference(TestReference::ASSIGN_TYPE, TestReference::SYN_TYPE,
-                      TestReference::VALUE);
+                      TestReference::VALUE, TestReference::INT_TYPE);
     Reference *refCopy = ref->copy();
 
     REQUIRE(ref->equals(*refCopy));

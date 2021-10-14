@@ -22,7 +22,7 @@ public:
     vector<string> tokenizeReturnSynonyms(string input, string &remaining);
     void tokenizeClauses(string input, vector<ClsTuple> &suchThatClauses,
                          vector<PatTuple> &patternClauses,
-                         vector<WithTuple> &withClauses);
+                         vector<WithPair> &withClauses);
     vector<PatToken> tokenizePattern(vector<string> patArgs);
 
 private:
@@ -34,7 +34,7 @@ private:
                                   ClsTuple &clause);
     size_t tokenizePatternClause(string input, size_t startPos,
                                  PatTuple &clause);
-    size_t tokenizeWithClause(string input, size_t startPos, WithTuple &clause);
+    size_t tokenizeWithClause(string input, size_t startPos, WithPair &clause);
 
     bool isQuotedString(string input);
     bool isWildcard(string input);
@@ -51,10 +51,8 @@ private:
     string removeWhitespaceWithinQuotes(string input);
     string removeWhitespaceAroundPeriod(string input);
     vector<string> tokenizeCommaSeparatedValues(string input);
-    string extractPatternString(string input);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
-    // ClauseTypeHelper clsHelper = ClauseTypeHelper();
 
     inline static const string KEYWORD_SELECT = "Select";
     inline static const string KEYWORD_SUCH = "such";

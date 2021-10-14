@@ -95,6 +95,7 @@ Reference *PatternParser::parseValidVariable(string var) {
     }
 
     DesignEntityType deT = DesignEntityType::VARIABLE;
+    ReferenceAttribute attr = ReferenceAttribute::NAME;
     ReferenceType refT;
     if (ParserUtil::isWildcard(var)) {
         refT = ReferenceType::WILDCARD;
@@ -104,7 +105,7 @@ Reference *PatternParser::parseValidVariable(string var) {
     } else {
         throw ValidityError("invalid reference");
     }
-    return new Reference(deT, refT, var);
+    return new Reference(deT, refT, var, attr);
 }
 
 vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {

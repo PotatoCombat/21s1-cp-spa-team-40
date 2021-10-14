@@ -26,8 +26,12 @@ Clause *SuchThatParser::parse(ClsTuple clsTuple) {
     ClauseType clsType = clsHelper.valueToClsType(type);
     bool isStmtStmt =
         clsHelper.chooseDeType2(clsType) == DesignEntityType::STMT;
+    bool isProcProc =
+        clsType == ClauseType::CALLS || clsType == ClauseType::CALLS_T;
     if (isStmtStmt) {
         return parseStmtStmt();
+    } else if (isProcProc) {
+        return parseProcProc();
     } else {
         return parseXEnt();
     }
@@ -56,9 +60,10 @@ Clause *SuchThatParser::parseStmtStmt() {
         }
         r1 = r1->copy();
     } else {
-        DesignEntityType deType1 = DesignEntityType::STMT;
+        DesignEntityType deType = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref1);
-        r1 = new Reference(deType1, refT, this->ref1);
+        ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+        r1 = new Reference(deType, refT, this->ref1, attr);
     }
 
     if (r2 != nullptr) {
@@ -68,9 +73,61 @@ Clause *SuchThatParser::parseStmtStmt() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::STMT;
+        DesignEntityType deType = DesignEntityType::STMT;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
-        r2 = new Reference(deType2, refT, this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+        r2 = new Reference(deType, refT, this->ref2, attr);
+    }
+
+    return new Clause(clsType, *r1, *r2);
+}
+
+/**
+ * Parses a clause that takes in (procedure, procedure) as parameters.
+ * This includes: Calls(*).
+ */
+Clause *SuchThatParser::parseProcProc() {
+    // quoted/synonym/wildcard, quoted/synonym/wildcard
+
+    // procedure is a constant(quoted)/wildcard
+    if (ParserUtil::isInteger(this->ref1) || ParserUtil::isInteger(this->ref2)) {
+        throw ValidityError("invalid clause argument");
+    }
+
+    Reference *r1 = getReferenceIfDeclared(this->ref1);
+    Reference *r2 = getReferenceIfDeclared(this->ref2);
+
+    ClauseType clsType = clsHelper.valueToClsType(this->type);
+
+    if (r1 != nullptr) {
+        if (!deHelper.isProcedure(r1->getDeType())) {
+            throw ValidityError("invalid clause argument");
+        }
+        r1 = r1->copy();
+    } else {
+        DesignEntityType deType = DesignEntityType::PROCEDURE;
+        ReferenceType refT = ParserUtil::checkRefType(this->ref1);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
+        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
+            this->ref1 = ref1.substr(1, ref1.size() - 2);
+        }
+        r1 = new Reference(deType, refT, this->ref1, attr);
+    }
+
+    if (r2 != nullptr) {
+        if (!deHelper.isProcedure(r2->getDeType())) {
+            delete r1;
+            throw ValidityError("invalid clause argument");
+        }
+        r2 = r2->copy();
+    } else {
+        DesignEntityType deType = DesignEntityType::PROCEDURE;
+        ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
+        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
+            this->ref2 = ref2.substr(1, ref2.size() - 2);
+        }
+        r2 = new Reference(deType, refT, this->ref2, attr);
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -110,19 +167,22 @@ Clause *SuchThatParser::parseXEnt() {
         r1 = r1->copy();
     } else {
         // first argument is not declared, must be either integer or quoted
-        DesignEntityType deType1;
+        DesignEntityType deType;
+        ReferenceAttribute attr; 
         if (ParserUtil::isInteger(this->ref1)) {
             isStmtEnt = true;
-            deType1 = DesignEntityType::STMT;
+            deType = DesignEntityType::STMT;
+            attr = ReferenceAttribute::INTEGER;
         } else if (ParserUtil::isQuoted(this->ref1)) {
             isStmtEnt = false;
-            deType1 = DesignEntityType::PROCEDURE;
+            deType = DesignEntityType::PROCEDURE;
+            attr = ReferenceAttribute::NAME;
             this->ref1 = ref1.substr(1, ref1.size() - 2); // remove quotes
         } else {
             throw ValidityError("invalid clause argument");
         }
         ReferenceType refT = ReferenceType::CONSTANT;
-        r1 = new Reference(deType1, refT, this->ref1);
+        r1 = new Reference(deType, refT, this->ref1, attr);
     }
 
     // second argument must always be a variable
@@ -133,12 +193,13 @@ Clause *SuchThatParser::parseXEnt() {
         }
         r2 = r2->copy();
     } else {
-        DesignEntityType deType2 = DesignEntityType::VARIABLE;
+        DesignEntityType deType = DesignEntityType::VARIABLE;
         ReferenceType refT = ParserUtil::checkRefType(this->ref2);
+        ReferenceAttribute attr = ReferenceAttribute::NAME;
         if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
-            ref2 = ref2.substr(1, ref2.size() - 2);
+            this->ref2 = ref2.substr(1, ref2.size() - 2);
         }
-        r2 = new Reference(deType2, refT, this->ref2);
+        r2 = new Reference(deType, refT, this->ref2, attr);
     }
 
     if (isStmtEnt) {

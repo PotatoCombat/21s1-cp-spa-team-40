@@ -35,13 +35,18 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {DesignEntityType::CALL, true},
         {DesignEntityType::PROG_LINE, true}
     };
-    desTypeToStmtTypeMap = {
-        {DesignEntityType::ASSIGN, StatementType::ASSIGN},
-        {DesignEntityType::CALL, StatementType::CALL},
-        {DesignEntityType::IF, StatementType::IF},
-        {DesignEntityType::PRINT, StatementType::PRINT},
-        {DesignEntityType::READ, StatementType::READ},
-        {DesignEntityType::WHILE, StatementType::WHILE}
+    typeToDefaultAttrMap = {
+        {DesignEntityType::STMT, ReferenceAttribute::INTEGER},
+        {DesignEntityType::ASSIGN, ReferenceAttribute::INTEGER},
+        {DesignEntityType::VARIABLE, ReferenceAttribute::NAME},
+        {DesignEntityType::CONSTANT, ReferenceAttribute::INTEGER},
+        {DesignEntityType::PROCEDURE, ReferenceAttribute::NAME},
+        {DesignEntityType::READ, ReferenceAttribute::INTEGER},
+        {DesignEntityType::PRINT, ReferenceAttribute::INTEGER},
+        {DesignEntityType::WHILE, ReferenceAttribute::INTEGER},
+        {DesignEntityType::IF, ReferenceAttribute::INTEGER},
+        {DesignEntityType::CALL, ReferenceAttribute::INTEGER},
+        {DesignEntityType::PROG_LINE, ReferenceAttribute::INTEGER}
     };
 }
 
@@ -51,6 +56,15 @@ DesignEntityType DesignEntityTypeHelper::valueToDesType(string val) {
         throw ValidityError("invalid design entity type");
     }
     return type->second;
+}
+
+ReferenceAttribute
+DesignEntityTypeHelper::typeToDefaultAttr(DesignEntityType type) {
+    auto val = typeToDefaultAttrMap.find(type);
+    if (val == typeToDefaultAttrMap.end()) {
+        throw ValidityError("invalid design entity type");
+    }
+    return val->second;
 }
 
 bool DesignEntityTypeHelper::isStatement(DesignEntityType type) {
@@ -72,11 +86,13 @@ bool DesignEntityTypeHelper::isProcedure(DesignEntityType type) {
 StatementType DesignEntityTypeHelper::desTypeToStmtType(DesignEntityType type) {
     auto val = desTypeToStmtTypeMap.find(type);
     if (val == desTypeToStmtTypeMap.end()) {
-        throw ValidityError("invalid design entity type is not a statement type");
+        throw ValidityError(
+            "invalid design entity type is not a statement type");
     }
     return val->second;
 }
 
-bool DesignEntityTypeHelper::isDesTypeStmtType(DesignEntityType desType, StatementType stmtType) {
+bool DesignEntityTypeHelper::isDesTypeStmtType(DesignEntityType desType,
+                                               StatementType stmtType) {
     return desTypeToStmtType(desType) == stmtType;
 }
