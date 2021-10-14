@@ -11,6 +11,10 @@ class DepthFirstExtractor {
 private:
     PKB *pkb;
 
+    // Utility
+    void extractLastLeafStatements(vector<Statement *> statementList,
+                                   vector<Statement *> &result);
+
 public:
     // Constructor
     explicit DepthFirstExtractor(PKB *pkb);
