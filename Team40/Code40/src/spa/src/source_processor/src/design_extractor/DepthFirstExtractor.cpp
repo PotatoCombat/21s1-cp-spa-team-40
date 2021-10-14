@@ -19,7 +19,7 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
-    // Next is procedure-scoped, unset previous statement
+    // Next is procedure-scoped, clear all previous statements
     ExtractionContext::getInstance().clearPreviousStatements();
 }
 
@@ -133,8 +133,8 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     }
     ExtractionContext::getInstance().clearPreviousStatements();
 
-    // Set all last non-while, non-if (a.k.a. leaf) statements as previous
-    // statements
+    // Set all last non-while, non-if (a.k.a. leaf) statements in the THEN/ELSE
+    // statement lists as previous statements
     vector<Statement *> lastLeafStatements;
     extractLastLeafStatements(ifStatement->getThenStmtLst(),
                               lastLeafStatements);
@@ -149,7 +149,7 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
 }
 
 /**
- * Recursively extracts the last non-while, non-if (a.k.a. leaf) statements from
+ * Recursively extracts the last non-while, non-if (a.k.a. leaf) statements in
  * a statement list.
  */
 void DepthFirstExtractor::extractLastLeafStatements(
@@ -207,7 +207,7 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     ExtractionContext::getInstance().unsetParentStatement(whileStatement);
 
     // Handle Next(w, s) where stmt s are all the last non-while, non-if (a.k.a.
-    // leaf) statements of the THEN statement list belonging to while w
+    // leaf) statements in the THEN statement list belonging to while w
     vector<Statement *> lastLeafStatements;
     extractLastLeafStatements(whileStatement->getThenStmtLst(),
                               lastLeafStatements);
