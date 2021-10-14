@@ -22,4 +22,6 @@ private:
 
     QueryTokenizer tokenizer;
     QueryParser parser;
+
+    bool returnBoolean = false;
 };

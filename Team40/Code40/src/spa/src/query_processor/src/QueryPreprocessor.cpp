@@ -20,6 +20,9 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
         /*********** Parse return synonym ***********/
         retStrings = tokenizer.tokenizeReturnSynonyms(parts.second, clauses);
+        if (retStrings.empty()) {
+            returnBoolean = true;
+        }
 
         addReturnReferencesToQuery(retStrings, q);
 
@@ -55,9 +58,16 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         parser.clear();
         return true;
 
-    } catch (invalid_argument e) {
+    } catch (SyntaxError se) {
         // cout << e.what();
         parser.clear();
+        return false;
+    } catch (ValidityError ve) {
+        // cout << e.what();
+        parser.clear();
+        if (returnBoolean) {
+            throw ValidityError("Set results to FALSE");
+        }
         return false;
     }
 }

@@ -24,7 +24,7 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
         ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
         if (!ParserUtil::isValidName(syn)) {
-            throw ValidityError("QP-ERROR: invalid name");
+            throw SyntaxError("QP-ERROR: invalid name");
         }
         ReferenceAttribute attr = deHelper.typeToDefaultAttr(deType);
         Reference *ref = new Reference(deType, refType, syn, attr);
