@@ -275,9 +275,38 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
     procedure.addToStmtLst(&afterIfStatement);
     program.addToProcLst(&procedure);
 
+    /**
+     * THE ABOVE PROGRAM LOOKS AS FOLLOWS:
+     * ****************** START OF PROGRAM ******************
+     * procedure PROC_NAME {
+     *   if (...) {             (1)
+     *      if (...) {          (2)
+     *        read x;           (3)
+     *        read x;           (4)
+     *        read x;           (5)
+     *      } else {
+     *        read x;           (6)
+     *        read x;           (7)
+     *        read x;           (8)
+     *      }
+     *   } else {
+     *      if (...) {          (9)
+     *        read x;           (10)
+     *        read x;           (11)
+     *        read x;           (12)
+     *      } else {
+     *        read x;           (13)
+     *        read x;           (14)
+     *        read x;           (15)
+     *      }
+     *      read x;             (16)
+     *   }
+     * }
+     * ****************** END OF PROGRAM ******************
+     */
+
     DesignExtractor de(&TestExtractIfStatement::pkb);
     de.extract(&program);
-
     // Check Next(ifs, s1), Next(ifs, s2) where s1, s2 are the first THEN
     // and ELSE statements respectively
     REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())

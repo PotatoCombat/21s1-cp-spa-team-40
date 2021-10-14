@@ -119,6 +119,7 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
 
     // 2. Handle THEN statements
     ExtractionContext::getInstance().setPreviousStatement(ifStatement);
+    ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setParentStatement(ifStatement);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
@@ -130,10 +131,9 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
-    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
-
     ExtractionContext::getInstance().setPreviousStatement(
         ifStatement->getThenStmtLst().back());
+    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
 }
 
 void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
