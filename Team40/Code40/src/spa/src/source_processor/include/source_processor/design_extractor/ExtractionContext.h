@@ -58,7 +58,7 @@ public:
     void unsetPreviousStatement(Statement *statement);
     void clearPreviousStatements();
 
-    void addProcDependency(ProcName caller, ProcName callee);
+    void registerProcDependency(ProcName caller, ProcName callee);
     bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
     unordered_set<ProcName> getProcDependencies(ProcName from);
     vector<ProcName> getTopologicallySortedProcNames();

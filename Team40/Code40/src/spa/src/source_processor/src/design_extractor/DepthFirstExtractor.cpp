@@ -95,7 +95,7 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
     if (!currentProcedure.has_value()) {
         throw runtime_error("Current procedure not set.");
     }
-    ExtractionContext::getInstance().addProcDependency(
+    ExtractionContext::getInstance().registerProcDependency(
         currentProcedure.value()->getName(), calledProcName);
     ExtractionContext::getInstance().setPreviousStatement(callStatement);
 }
