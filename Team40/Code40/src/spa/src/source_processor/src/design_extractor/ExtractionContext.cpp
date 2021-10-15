@@ -138,12 +138,17 @@ void ExtractionContext::clearPreviousStatements() {
     previousStatements.clear();
 }
 
-void ExtractionContext::addProcDependency(ProcName caller, ProcName callee) {
+void ExtractionContext::registerProcDependency(ProcName caller,
+                                               ProcName callee) {
     // Note: We are guaranteed that there will be no circular dependencies in
     // SIMPLE (i.e. recursion)
     if (hasCyclicalProcDependency(caller, callee)) {
         throw runtime_error("There exists a cyclical dependency between " +
                             caller + " and " + callee);
+    }
+    // If the dependency already exists, do nothing
+    if (procDependencyMap[caller].count(callee)) {
+        return;
     }
     procDependencyMap[caller].insert(callee);
     procIndegreesCounter[callee]++;
