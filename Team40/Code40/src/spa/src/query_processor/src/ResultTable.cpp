@@ -172,7 +172,7 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     for (INDEX idx : indexes) {
         // 1st idx is the idx to be eval, 
         // 2nd idx is the index that calls this index
-        int NO_CALLER = 1;
+        int NO_CALLER = -1;
         vector<pair<INDEX, INDEX>> toBeEval;
         toBeEval.push_back({idx, NO_CALLER});
         while (!toBeEval.empty()) {
