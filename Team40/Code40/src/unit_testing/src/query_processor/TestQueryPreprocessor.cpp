@@ -3,7 +3,9 @@
 #include <string>
 
 #include "query_processor/QueryPreprocessor.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Query.h"
+#include "query_processor/parser/ParserUtil.h"
 
 struct TestQPreprocessor {
     static const string INPUT_1;
@@ -18,6 +20,7 @@ struct TestQPreprocessor {
     static const string SUCH_THAT_PATTERN_2;
     static const string WITH_1;
     static const string WITH_2;
+    static void buildQuery(pair<string, string> clauseArgs, Query &q);
 };
 
 const string TestQPreprocessor::INPUT_1 =
@@ -45,6 +48,161 @@ const string TestQPreprocessor::WITH_1 =
 const string TestQPreprocessor::WITH_2 =
     "call c; procedure p;\nSelect c with c.procName = p.procName and c.stmt# = "
     "10";
+
+void TestQPreprocessor::buildQuery(pair<string, string> clauseArgs, Query &q) {
+    Reference *WILDCARD =
+        new Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_",
+                      ReferenceAttribute::INTEGER);
+    Reference *ONE =
+        new Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "1",
+                      ReferenceAttribute::INTEGER);
+    Reference *s1 =
+        new Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1",
+                      ReferenceAttribute::INTEGER);
+    Reference *r1 = s1;
+    Reference *r2 = s1;
+
+    q.addReturnReference(r1);
+
+    string arg1 = clauseArgs.first;
+    string arg2 = clauseArgs.second;
+    if (arg1 == "_") {
+        r1 = WILDCARD;
+    } else if (arg1 == "1") {
+        r1 = ONE;
+    }
+
+    if (arg2 == "_") {
+        r2 = WILDCARD;
+    } else if (arg2 == "1") {
+        r2 = ONE;
+    } else if (arg2 == "s2") {
+        r2 = new Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, arg2,
+                           ReferenceAttribute::INTEGER);
+    } else if (arg2 == "a") {
+        r2 = new Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM,
+                           arg2, ReferenceAttribute::INTEGER);
+    } else if (arg2 == "n") {
+        r2 = new Reference(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM,
+                           arg2, ReferenceAttribute::INTEGER);
+    } else if (arg2 == "v") {
+        r2 = new Reference(DesignEntityType::VARIABLE, ReferenceType::SYNONYM,
+                           arg2, ReferenceAttribute::NAME);
+    } else if (arg2 == "p") {
+        r2 = new Reference(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM,
+                           arg2, ReferenceAttribute::NAME);
+    } else if (arg2 == "c") {
+        r2 = new Reference(DesignEntityType::CONSTANT, ReferenceType::SYNONYM,
+                           arg2, ReferenceAttribute::INTEGER);
+    }
+
+    Clause *c = new Clause(ClauseType::FOLLOWS, *r1, *r2);
+    q.addClause(c);
+}
+
+TEST_CASE("QueryPreprocessor: parse all valid and invalid Follows queries") {
+    QueryPreprocessor qp;
+    string q;
+    Query expected;
+    Query actual;
+
+    SECTION("at least one non-synonym argument") {
+        SECTION("PASS: first argument is wildcard") {
+            q = "stmt s1; Select s1 such that Follows(_, _)";
+            TestQPreprocessor::buildQuery(make_pair("_", "_"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(_, 1)";
+            TestQPreprocessor::buildQuery(make_pair("_", "1"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(_, s1)";
+            TestQPreprocessor::buildQuery(make_pair("_", "s1"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+        }
+
+        SECTION("PASS: first argument is integer") {
+            q = "stmt s1; Select s1 such that Follows(1, _)";
+            TestQPreprocessor::buildQuery(make_pair("1", "_"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(1, 1)";
+            TestQPreprocessor::buildQuery(make_pair("1", "1"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(1, s1)";
+            TestQPreprocessor::buildQuery(make_pair("1", "s1"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+        }
+
+        SECTION("FAIL: argument is quoted") {
+            q = "stmt s1; Select s1 such that Follows(\"1\", 1)";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(1, \"1\")";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(\"name\", 1)";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+            actual = Query();
+
+            q = "stmt s1; Select s1 such that Follows(1, \"name\")";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+        }
+    }
+
+    SECTION("two synonym arguments") {
+        SECTION("PASS: argument is statement-typed") {
+            q = "stmt s1, s2; Select s1 such that Follows(s1, s2)";
+            TestQPreprocessor::buildQuery(make_pair("s1", "s2"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; assign a; Select s1 such that Follows(s1, a)";
+            TestQPreprocessor::buildQuery(make_pair("s1", "a"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+            expected = Query();
+            actual = Query();
+
+            q = "stmt s1; prog_line n; Select s1 such that Follows(s1, n)";
+            TestQPreprocessor::buildQuery(make_pair("s1", "n"), expected);
+            REQUIRE(qp.preprocessQuery(q, actual));
+            REQUIRE(actual.equals(expected));
+        }
+
+        SECTION("FAIL: argument is not statement-typed") {
+            q = "stmt s1; variable v; Select s1 such that Follows(s1, v)";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+            actual = Query();
+
+            q = "stmt s1; procedure p; Select s1 such that Follows(s1, p)";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+            actual = Query();
+
+            q = "stmt s1; constant c; Select s1 such that Follows(s1, c)";
+            REQUIRE_FALSE(qp.preprocessQuery(q, actual));
+        }
+    }
+}
 
 TEST_CASE("QueryPreprocessor: single clause") {
     QueryPreprocessor qp;
