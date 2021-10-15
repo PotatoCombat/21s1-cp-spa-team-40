@@ -37,6 +37,8 @@ using namespace std;
 
 class QueryEvaluator {
 private:
+    static const int INVALID_INDEX = -1;
+
     PKB *pkb;
     vector<Reference *> returnRefs;
     vector<Reference *> references;

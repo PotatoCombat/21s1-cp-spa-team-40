@@ -109,7 +109,7 @@ void QueryEvaluator::evalClauses(bool &exitEarly) {
     for (Clause *clause : clauses) {
         Result tempResult = getTempResult(clause);
 
-        int ref1Index = -1, ref2Index = -1;
+        int ref1Index = INVALID_INDEX, ref2Index = INVALID_INDEX;
         if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
             ref1Index = getRefIndex(clause->getFirstReference());
         }
@@ -177,18 +177,18 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
     } else {
         // first ref is syn
         if (result.hasResultList1()) {
-            // ref1Idx should be >= 0
+            // ref1Idx should not be INVALID_INDEX
             combineOneSyn(result, ref1Idx, ref2Idx, false);
         }
 
         // second ref is syn
         if (result.hasResultList2()) {
-            // ref2Idx should be >= 0
+            // ref2Idx should not be INVALID_INDEX
             combineOneSyn(result, ref2Idx, ref1Idx, true);
         }
     }
 
-    if (ref1Idx >= 0 && ref2Idx >= 0) {
+    if (ref1Idx != INVALID_INDEX && ref2Idx != INVALID_INDEX) {
         haveLinkAlready[ref1Idx][ref2Idx] = true;
         haveLinkAlready[ref2Idx][ref1Idx] = true;
     }
@@ -198,7 +198,7 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
 
 void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
                                    bool isSecondRef) {
-    // refIdx should be >= 0
+    // refIdx should not be INVALID_INDEX
     map<VALUE, VALUE_SET> res;
     vector<pair<int, string>> toRemove;
 
@@ -223,7 +223,7 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
     }
     referenceAppearInClauses[refIdx] = true;
     for (auto &valueToValuesPair : res) {
-        if (otherRefIdx < 0) {
+        if (otherRefIdx == INVALID_INDEX) {
             resultTable.addValue(refIdx, valueToValuesPair.first);
         } else {
             resultTable.addValueWithLink(refIdx, valueToValuesPair.first,
@@ -237,7 +237,7 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
 }
 
 void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
-    // ref1Idx, ref2Idx should be >= 0
+    // ref1Idx, ref2Idx should not be INVALID_INDEX
     map<VALUE, VALUE_SET> res1;
     map<VALUE, VALUE_SET> res2;
     vector<pair<int, string>> toRemove;
@@ -322,7 +322,7 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
 }
 
 int QueryEvaluator::getRefIndex(Reference *ref) {
-    int index = -1;
+    int index = INVALID_INDEX;
     for (int i = 0; i < references.size(); i++) {
         if (references[i]->equals(*ref)) {
             index = i;
@@ -332,11 +332,11 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
 }
 
 bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
-    if (idx1 >= 0 && resultTable.isColumnEmpty(idx1)) {
+    if (idx1 != INVALID_INDEX && resultTable.isColumnEmpty(idx1)) {
         return true;
     }
 
-    if (idx2 >= 0 && resultTable.isColumnEmpty(idx2)) {
+    if (idx2 != INVALID_INDEX && resultTable.isColumnEmpty(idx2)) {
         return true;
     }
     return false;
