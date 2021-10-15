@@ -43,6 +43,7 @@ private:
     vector<Clause *> clauses;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
+    vector<vector<bool>> areInSameClause;
 
     void clear();
 
@@ -53,6 +54,9 @@ private:
     vector<string> finaliseResult(bool exitEarly = false);
 
     void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
+
+    void combineOneSyn(Result result, int refIdx, int otherRefIdx,
+                       bool isSecondRef);
 
     int getRefIndex(Reference *ref);
 

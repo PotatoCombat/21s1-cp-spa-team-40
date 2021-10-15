@@ -241,3 +241,29 @@ TEST_CASE("QueryEvaluator: same reference, different attributes") {
     vector<string> actual = evaluator.evaluateQuery(query);
     REQUIRE(actual == vector<string>{"10 q", "12 p"});
 }
+
+TEST_CASE("QueryEvaluator: 2 synonyms exists but not linked before") {
+    Query query;
+    Reference a(DesignEntityType::STMT, ReferenceType::SYNONYM, "a",
+                ReferenceAttribute::INTEGER);
+    Reference b(DesignEntityType::STMT, ReferenceType::SYNONYM, "b",
+                ReferenceAttribute::INTEGER);
+    Reference one(DesignEntityType::STMT, ReferenceType::CONSTANT, "1",
+                  ReferenceAttribute::INTEGER);
+    Reference two(DesignEntityType::STMT, ReferenceType::CONSTANT, "2",
+                  ReferenceAttribute::INTEGER);
+    Clause follows1(ClauseType::FOLLOWS, a, two);
+    Clause follows2(ClauseType::FOLLOWS, one, b);
+    Clause follows3(ClauseType::FOLLOWS, a, b);
+
+    query.addReturnReference(&a);
+    query.addReturnReference(&b);
+
+    query.addClause(&follows1);
+    query.addClause(&follows2);
+    query.addClause(&follows3);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    REQUIRE(actual == vector<string>{"1 2"});
+}
