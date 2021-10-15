@@ -43,7 +43,7 @@ private:
     vector<Clause *> clauses;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
-    vector<vector<bool>> areInSameClause;
+    vector<vector<bool>> haveLinkAlready;
 
     void clear();
 
@@ -57,6 +57,8 @@ private:
 
     void combineOneSyn(Result result, int refIdx, int otherRefIdx,
                        bool isSecondRef);
+
+    void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
     int getRefIndex(Reference *ref);
 
