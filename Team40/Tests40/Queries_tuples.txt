@@ -198,3 +198,23 @@ stmt s1, s2, s3, s4;
 Select <s1, s2, s3, s4> such that Parent*(s1 ,s2) and Parent*(s2, s3) and Parent*(s3, s4) 
 47 50 52 53,47 50 52 54,47 50 52 55,47 50 59 60,47 50 59 61,47 50 59 62,7 23 25 26,7 23 25 27,7 23 25 28,7 23 25 29,7 23 25 30,7 23 25 31,7 9 12 13,7 9 12 14,7 9 12 15,7 9 12 16,7 9 12 17
 5000
+41 - all variables used by statements (print declaration, tuple with 2 variables return)
+print pr; variable v;
+Select <pr, v> such that Uses (pr,v)
+36 a,38 b,39 c,40 d,67 w,68 x,70 y,71 z
+5000
+42 - all variables modified by statements (read declaration, tuple with 2 variables return)
+read r; variable v;
+Select <r, v> such that Modifies(r, v)
+1 w,2 x,3 y,4 z,41 a,42 b,43 c,45 d
+5000
+43 - all variables used by statements (if and while declaration, tuple with 3 variables return)
+while w; print pr; variable v;
+Select <w, pr, v> such that Uses (w,v) and Uses(pr, v)
+104 67 w,104 68 x,104 70 y,104 71 z,23 36 a,23 38 b,23 39 c,23 40 d,23 67 w,23 68 x,23 70 y,23 71 z,47 36 a,47 38 b,47 39 c,47 40 d,47 67 w,47 68 x,47 70 y,47 71 z,52 36 a,52 38 b,52 39 c,52 40 d,52 67 w,52 68 x,52 70 y,52 71 z,59 36 a,59 38 b,59 39 c,59 40 d,59 67 w,59 68 x,59 70 y,59 71 z,75 36 a,75 38 b,75 39 c,75 40 d,75 67 w,75 68 x,75 70 y,75 71 z,82 36 a,82 38 b,82 39 c,82 40 d,82 67 w,82 68 x,82 70 y,82 71 z,9 36 a,9 38 b,9 39 c,9 40 d,9 67 w,9 68 x,9 70 y,9 71 z,90 36 a,90 38 b,90 39 c,90 40 d,90 67 w,90 68 x,90 70 y,90 71 z
+5000
+44 - all variables modified by statements (if and while declaration, tuple with 3 variables return)
+if ifs; read r; variable v;
+Select <ifs, r, v> such that Modifies (ifs,v) and Modifies(r, v)
+111 2 x,111 3 y,111 42 b,111 43 c,12 1 w,12 2 x,12 3 y,12 4 z,12 41 a,12 42 b,12 43 c,12 45 d,25 1 w,25 2 x,25 3 y,25 4 z,25 41 a,25 42 b,25 43 c,25 45 d,50 1 w,50 2 x,50 3 y,50 4 z,50 41 a,50 42 b,50 43 c,50 45 d,7 1 w,7 2 x,7 3 y,7 4 z,7 41 a,7 42 b,7 43 c,7 45 d,73 1 w,73 2 x,73 3 y,73 4 z,73 41 a,73 42 b,73 43 c,73 45 d,92 1 w,92 2 x,92 3 y,92 4 z,92 41 a,92 42 b,92 43 c,92 45 d
+5000
