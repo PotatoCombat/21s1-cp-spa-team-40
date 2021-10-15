@@ -45,7 +45,7 @@ private:
     vector<Clause *> clauses;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
-    vector<vector<bool>> haveLinkAlready;
+    vector<vector<bool>> appearInSameClauseAlr;
 
     void clear();
 

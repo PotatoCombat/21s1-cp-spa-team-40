@@ -6,7 +6,7 @@ void QueryEvaluator::clear() {
     references.clear();
     clauses.clear();
     referenceAppearInClauses.clear();
-    haveLinkAlready.clear();
+    appearInSameClauseAlr.clear();
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
@@ -24,7 +24,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         this->referenceAppearInClauses = referenceAppearInClauses;
         vector<vector<bool>> areInSameClause(refSize,
                                              vector<bool>(refSize, false));
-        this->haveLinkAlready = areInSameClause;
+        this->appearInSameClauseAlr = areInSameClause;
 
         bool exitEarly = false;
 
@@ -172,7 +172,7 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         return;
     }
 
-    if (result.hasResultList1() && result.hasResultList2() && haveLinkAlready[ref1Idx][ref2Idx]) {
+    if (result.hasResultList1() && result.hasResultList2() && appearInSameClauseAlr[ref1Idx][ref2Idx]) {
         combineTwoSyn(result, ref1Idx, ref2Idx);
     } else {
         // first ref is syn
@@ -189,8 +189,8 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
     }
 
     if (ref1Idx != INVALID_INDEX && ref2Idx != INVALID_INDEX) {
-        haveLinkAlready[ref1Idx][ref2Idx] = true;
-        haveLinkAlready[ref2Idx][ref1Idx] = true;
+        appearInSameClauseAlr[ref1Idx][ref2Idx] = true;
+        appearInSameClauseAlr[ref2Idx][ref1Idx] = true;
     }
     
     exitEarly = canExitEarly(ref1Idx, ref2Idx);
@@ -250,7 +250,7 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
         VALUE_SET vals = it->second;
         bool erased = false;
         for (string targetVal : vals) {
-            if (!resultTable.hasLink(ref1Idx, sourceVal, ref2Idx, targetVal)) {
+            if (!resultTable.hasLinkBetweenValues(ref1Idx, sourceVal, ref2Idx, targetVal)) {
                 res1[sourceVal].erase(targetVal);
                 if (res1[sourceVal].size() == 0) {
                     it = res1.erase(it);
@@ -267,7 +267,7 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
         VALUE_SET vals = it->second;
         bool erased = false;
         for (string targetVal : vals) {
-            if (!resultTable.hasLink(ref2Idx, sourceVal, ref1Idx, targetVal)) {
+            if (!resultTable.hasLinkBetweenValues(ref2Idx, sourceVal, ref1Idx, targetVal)) {
                 res2[sourceVal].erase(targetVal);
                 if (res2[sourceVal].size() == 0) {
                     it = res2.erase(it);
