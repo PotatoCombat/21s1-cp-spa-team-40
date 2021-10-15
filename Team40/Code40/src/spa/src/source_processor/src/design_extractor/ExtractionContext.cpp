@@ -116,6 +116,28 @@ void ExtractionContext::clearPrecedingStatements() {
     precedingStatements.clear();
 }
 
+vector<Statement *> ExtractionContext::getPreviousStatements() {
+    return previousStatements;
+}
+
+void ExtractionContext::setPreviousStatement(Statement *statement) {
+    previousStatements.push_back(statement);
+}
+
+void ExtractionContext::unsetPreviousStatement(Statement *statement) {
+    if (previousStatements.empty()) {
+        throw runtime_error("Trying to unset a null value.");
+    }
+    if (previousStatements.back() != statement) {
+        throw runtime_error("Trying to unset another previous statement.");
+    }
+    previousStatements.pop_back();
+}
+
+void ExtractionContext::clearPreviousStatements() {
+    previousStatements.clear();
+}
+
 void ExtractionContext::registerProcDependency(ProcName caller,
                                                ProcName callee) {
     // Note: We are guaranteed that there will be no circular dependencies in
