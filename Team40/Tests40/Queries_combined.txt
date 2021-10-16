@@ -1,0 +1,6 @@
+(1 such that, 1 with)
+(2 such that)
+(2 with)
+(2 such that, 1 with)
+(2 with, 1 pattern)
+(1 with, 2 pattern)
