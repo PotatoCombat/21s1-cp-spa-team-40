@@ -59,11 +59,14 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
 }
 
 void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
+    ExtractionContext::getInstance().setParentStatement(ifStatement);
+    ExtractionContext::getInstance().setParentStatement(ifStatement);
     statementLists.push_back(ifStatement->getThenStmtLst());
     statementLists.push_back(ifStatement->getElseStmtLst());
 }
 
 void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
+    ExtractionContext::getInstance().setParentStatement(whileStatement);
     statementLists.push_back(whileStatement->getThenStmtLst());
 }
 
@@ -83,17 +86,36 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     // Extract Calls(proc, proc) relationship
     pkb->insertCalls(currentProcedure.value(), calleeName);
 
-    // Handle transitive Modifies(proc, var) relationship set<VarName>
+    Statement *parentStatement = nullptr;
+    if (!ExtractionContext::getInstance().getParentStatements().empty()) {
+        parentStatement =
+            ExtractionContext::getInstance().getParentStatements().back();
+    }
+
+    // Handle transitive Modifies
     set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
     for (VarName modifiedVarName : modifiedVarNames) {
         Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
+        // If Modifies(calleeProc, var) then Modifies(callerProc, var)
         pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
+        if (parentStatement != nullptr) {
+            // If Modifies(stmt, var) then Modifies(parentStmt, var)
+            pkb->insertStmtModifyingVar(parentStatement, modifiedVar);
+        }
     }
 
-    // Handle transitive Uses(proc, var) relationship
+    // Handle transitive Uses(proc, var)
     set<VarName> usedVarNames = pkb->getVarsUsedByProc(calleeName);
     for (VarName usedVarName : usedVarNames) {
         Variable *usedVar = pkb->getVarByName(usedVarName);
+        // If Uses(calleeProc, var) then Uses(callerProc, var)
         pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
+        if (parentStatement != nullptr) {
+            // If Uses(stmt, var) then Uses(parentStmt, var)
+            pkb->insertStmtUsingVar(parentStatement, usedVar);
+        }
+    }
+    if (parentStatement != nullptr) {
+        ExtractionContext::getInstance().unsetParentStatement(parentStatement);
     }
 }
