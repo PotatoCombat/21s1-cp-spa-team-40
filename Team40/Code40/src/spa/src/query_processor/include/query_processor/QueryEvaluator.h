@@ -37,12 +37,15 @@ using namespace std;
 
 class QueryEvaluator {
 private:
+    static const int INVALID_INDEX = -1;
+
     PKB *pkb;
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
     vector<bool> referenceAppearInClauses;
     ResultTable resultTable;
+    vector<vector<bool>> appearInSameClauseAlr;
 
     void clear();
 
@@ -53,6 +56,11 @@ private:
     vector<string> finaliseResult(bool exitEarly = false);
 
     void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
+
+    void combineOneSyn(Result result, int refIdx, int otherRefIdx,
+                       bool isSecondRef);
+
+    void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
     int getRefIndex(Reference *ref);
 

@@ -6,6 +6,7 @@ void QueryEvaluator::clear() {
     references.clear();
     clauses.clear();
     referenceAppearInClauses.clear();
+    appearInSameClauseAlr.clear();
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb)
@@ -17,9 +18,13 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
         returnRefs = query.getReturnReferences();
         references = query.getReferences();
         clauses = query.getClauses();
-        resultTable.init(references.size());
-        vector<bool> referenceAppearInClauses(references.size(), false);
+        int refSize = references.size();
+        resultTable.init(refSize);
+        vector<bool> referenceAppearInClauses(refSize, false);
         this->referenceAppearInClauses = referenceAppearInClauses;
+        vector<vector<bool>> areInSameClause(refSize,
+                                             vector<bool>(refSize, false));
+        this->appearInSameClauseAlr = areInSameClause;
 
         bool exitEarly = false;
 
@@ -104,7 +109,7 @@ void QueryEvaluator::evalClauses(bool &exitEarly) {
     for (Clause *clause : clauses) {
         Result tempResult = getTempResult(clause);
 
-        int ref1Index = -1, ref2Index = -1;
+        int ref1Index = INVALID_INDEX, ref2Index = INVALID_INDEX;
         if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
             ref1Index = getRefIndex(clause->getFirstReference());
         }
@@ -167,166 +172,157 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         return;
     }
 
-    map<VALUE, VALUE_SET> res1;
-    map<VALUE, VALUE_SET> res2;
-    vector<pair<int, string>> toRemove;
+    if (result.hasResultList1() && result.hasResultList2() && appearInSameClauseAlr[ref1Idx][ref2Idx]) {
+        combineTwoSyn(result, ref1Idx, ref2Idx);
+    } else {
+        // first ref is syn
+        if (result.hasResultList1()) {
+            // ref1Idx should not be INVALID_INDEX
+            combineOneSyn(result, ref1Idx, ref2Idx, false);
+        }
 
-    if (result.hasResultList1() && result.hasResultList2()) {
-        if (referenceAppearInClauses[ref1Idx] && referenceAppearInClauses[ref2Idx]) {
-            // ref1Idx, ref2Idx should be >= 0
-            res1 = result.getResultList1();
-            res2 = result.getResultList2();
-            // remove links
-            for (auto it = res1.begin(); it != res1.end();) {
-                string sourceVal = it->first;
-                VALUE_SET vals = it->second;
-                bool erased = false;
-                for (string targetVal : vals) {
-                    if (!resultTable.hasLink(ref1Idx, sourceVal, 
-                                             ref2Idx, targetVal)) {
-                        res1[sourceVal].erase(targetVal);
-                        if (res1[sourceVal].size() == 0) {
-                            it = res1.erase(it);
-                            erased = true;
-                        } 
-                    }
-                }
-                if (!erased) {
-                    ++it;
-                }
-            }
-            for (auto it = res2.begin(); it != res2.end();) {
-                string sourceVal = it->first;
-                VALUE_SET vals = it->second;
-                bool erased = false;
-                for (string targetVal : vals) {
-                    if (!resultTable.hasLink(ref2Idx, sourceVal,
-                                             ref1Idx, targetVal)) {
-                        res2[sourceVal].erase(targetVal);
-                        if (res2[sourceVal].size() == 0) {
-                            it = res2.erase(it);
-                            erased = true;
-                        } 
-                    }
-                }
-                if (!erased) {
-                    ++it;
-                }
-            }
-
-            vector<string> existingValues = resultTable.getValues(ref1Idx);
-            for (string sourceVal : resultTable.getValues(ref1Idx)) {
-                VALUE_SET vals =
-                    resultTable.getPointersToIdx(ref1Idx, sourceVal, ref2Idx);
-                for (string targetVal : vals) {
-                    bool hasLink = true;
-                    if (res1.find(sourceVal) == res1.end()) {
-                        hasLink = false;   
-                    } else if (res1[sourceVal].find(targetVal) ==
-                               res1[sourceVal].end()) {
-                        hasLink = false;
-                    }
-                    if (!hasLink) {
-                        resultTable.removeLink(ref1Idx, sourceVal, ref2Idx,
-                                               targetVal);
-                    }
-                }
-            }
-
-            // add all
-            for (auto &valueToVals : res1) {
-                resultTable.addValueWithLink(ref1Idx, valueToVals.first,
-                                             ref2Idx, valueToVals.second);
-            }
-            for (auto &valueToVals : res2) {
-                resultTable.addValueWithLink(ref2Idx, valueToVals.first,
-                                             ref1Idx, valueToVals.second);
-            }
-
-            // remove those with no link
-            for (string refValue : resultTable.getValues(ref1Idx)) {
-                if (!resultTable.hasPointerToIdx(ref1Idx, refValue, ref2Idx)) {
-                    resultTable.removeValue(ref1Idx, refValue);
-                }
-            }
-            for (string refValue : resultTable.getValues(ref2Idx)) {
-                if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
-                    resultTable.removeValue(ref2Idx, refValue);
-                }
-            }
-
-            exitEarly = canExitEarly(ref1Idx, ref2Idx);
-
-            return;
+        // second ref is syn
+        if (result.hasResultList2()) {
+            // ref2Idx should not be INVALID_INDEX
+            combineOneSyn(result, ref2Idx, ref1Idx, true);
         }
     }
 
-    // second ref is wildcard
-    if (result.hasResultList1()) {
-        // ref1Idx should be >= 0
-        res1 = result.getResultList1();
-        if (referenceAppearInClauses[ref1Idx]) {
-            for (auto &valueToValuesPair : res1) {
-                string val = valueToValuesPair.first;
-                if (!resultTable.hasVal(ref1Idx, val)) {
-                    toRemove.push_back({ref1Idx, val});
-                }
-            }
-            for (string val : resultTable.getValues(ref1Idx)) {
-                if (res1.find(val) == res1.end()) {
-                    toRemove.push_back({ref1Idx, val});
-                }
-            }
-        }
-        referenceAppearInClauses[ref1Idx] = true;
-        for (auto &valueToValuesPair : res1) {
-            if (ref2Idx < 0) {
-                resultTable.addValue(ref1Idx, valueToValuesPair.first);
-            } else {
-                resultTable.addValueWithLink(ref1Idx, valueToValuesPair.first,
-                                             ref2Idx, valueToValuesPair.second);
-            }
-            
-        }
-    }
-
-    // first ref is wildcard
-    if (result.hasResultList2()) {
-        // ref2Idx should be >= 0
-        res2 = result.getResultList2();
-        if (referenceAppearInClauses[ref2Idx]) {
-            for (auto &valueToValuesPair : res2) {
-                string val = valueToValuesPair.first;
-                if (!resultTable.hasVal(ref2Idx, val)) {
-                    toRemove.push_back({ref2Idx, val});
-                }
-            }
-            for (string val : resultTable.getValues(ref2Idx)) {
-                if (res2.find(val) == res2.end()) {
-                    toRemove.push_back({ref2Idx, val});
-                }
-            }
-        }
-        referenceAppearInClauses[ref2Idx] = true;
-        for (auto &valueToValuesPair : res2) {
-            if (ref1Idx < 0) {
-                resultTable.addValue(ref2Idx, valueToValuesPair.first);
-            } else {
-                resultTable.addValueWithLink(ref2Idx, valueToValuesPair.first,
-                                             ref1Idx, valueToValuesPair.second);
-            }
-        }
-    }
-
-    for (auto& mapCoord : toRemove) {
-        resultTable.removeValue(mapCoord.first, mapCoord.second);
+    if (ref1Idx != INVALID_INDEX && ref2Idx != INVALID_INDEX) {
+        appearInSameClauseAlr[ref1Idx][ref2Idx] = true;
+        appearInSameClauseAlr[ref2Idx][ref1Idx] = true;
     }
     
     exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
+void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
+                                   bool isSecondRef) {
+    // refIdx should not be INVALID_INDEX
+    map<VALUE, VALUE_SET> res;
+    vector<pair<int, string>> toRemove;
+
+    if (isSecondRef) {
+        res = result.getResultList2();
+    } else {
+        res = result.getResultList1();
+    }
+
+    if (referenceAppearInClauses[refIdx]) {
+        for (auto &valueToValuesPair : res) {
+            string val = valueToValuesPair.first;
+            if (!resultTable.hasVal(refIdx, val)) {
+                toRemove.push_back({refIdx, val});
+            }
+        }
+        for (string val : resultTable.getValues(refIdx)) {
+            if (res.find(val) == res.end()) {
+                toRemove.push_back({refIdx, val});
+            }
+        }
+    }
+    referenceAppearInClauses[refIdx] = true;
+    for (auto &valueToValuesPair : res) {
+        if (otherRefIdx == INVALID_INDEX) {
+            resultTable.addValue(refIdx, valueToValuesPair.first);
+        } else {
+            resultTable.addValueWithLink(refIdx, valueToValuesPair.first,
+                                         otherRefIdx, valueToValuesPair.second);
+        }
+    }
+
+    for (auto &mapCoord : toRemove) {
+        resultTable.removeValue(mapCoord.first, mapCoord.second);
+    }
+}
+
+void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
+    // ref1Idx, ref2Idx should not be INVALID_INDEX
+    map<VALUE, VALUE_SET> res1;
+    map<VALUE, VALUE_SET> res2;
+    vector<pair<int, string>> toRemove;
+
+    res1 = result.getResultList1();
+    res2 = result.getResultList2();
+    // remove links in the intermediate res
+    for (auto it = res1.begin(); it != res1.end();) {
+        string sourceVal = it->first;
+        VALUE_SET vals = it->second;
+        bool erased = false;
+        for (string targetVal : vals) {
+            if (!resultTable.hasLinkBetweenValues(ref1Idx, sourceVal, ref2Idx, targetVal)) {
+                res1[sourceVal].erase(targetVal);
+                if (res1[sourceVal].size() == 0) {
+                    it = res1.erase(it);
+                    erased = true;
+                }
+            }
+        }
+        if (!erased) {
+            ++it;
+        }
+    }
+    for (auto it = res2.begin(); it != res2.end();) {
+        string sourceVal = it->first;
+        VALUE_SET vals = it->second;
+        bool erased = false;
+        for (string targetVal : vals) {
+            if (!resultTable.hasLinkBetweenValues(ref2Idx, sourceVal, ref1Idx, targetVal)) {
+                res2[sourceVal].erase(targetVal);
+                if (res2[sourceVal].size() == 0) {
+                    it = res2.erase(it);
+                    erased = true;
+                }
+            }
+        }
+        if (!erased) {
+            ++it;
+        }
+    }
+
+    // remove links in the result table
+    vector<string> existingValues = resultTable.getValues(ref1Idx);
+    for (string sourceVal : resultTable.getValues(ref1Idx)) {
+        VALUE_SET vals =
+            resultTable.getPointersToIdx(ref1Idx, sourceVal, ref2Idx);
+        for (string targetVal : vals) {
+            bool hasLink = true;
+            if (res1.find(sourceVal) == res1.end()) {
+                hasLink = false;
+            } else if (res1[sourceVal].find(targetVal) ==
+                       res1[sourceVal].end()) {
+                hasLink = false;
+            }
+            if (!hasLink) {
+                resultTable.removeLink(ref1Idx, sourceVal, ref2Idx, targetVal);
+            }
+        }
+    }
+    // add all
+    for (auto &valueToVals : res1) {
+        resultTable.addValueWithLink(ref1Idx, valueToVals.first, ref2Idx,
+                                     valueToVals.second);
+    }
+    for (auto &valueToVals : res2) {
+        resultTable.addValueWithLink(ref2Idx, valueToVals.first, ref1Idx,
+                                     valueToVals.second);
+    }
+
+    // remove those with no link in the resultTable
+    for (string refValue : resultTable.getValues(ref1Idx)) {
+        if (!resultTable.hasPointerToIdx(ref1Idx, refValue, ref2Idx)) {
+            resultTable.removeValue(ref1Idx, refValue);
+        }
+    }
+    for (string refValue : resultTable.getValues(ref2Idx)) {
+        if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
+            resultTable.removeValue(ref2Idx, refValue);
+        }
+    }
+}
+
 int QueryEvaluator::getRefIndex(Reference *ref) {
-    int index = -1;
+    int index = INVALID_INDEX;
     for (int i = 0; i < references.size(); i++) {
         if (references[i]->equals(*ref)) {
             index = i;
@@ -336,11 +332,11 @@ int QueryEvaluator::getRefIndex(Reference *ref) {
 }
 
 bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
-    if (idx1 >= 0 && resultTable.isColumnEmpty(idx1)) {
+    if (idx1 != INVALID_INDEX && resultTable.isColumnEmpty(idx1)) {
         return true;
     }
 
-    if (idx2 >= 0 && resultTable.isColumnEmpty(idx2)) {
+    if (idx2 != INVALID_INDEX && resultTable.isColumnEmpty(idx2)) {
         return true;
     }
     return false;
