@@ -37,7 +37,7 @@ bool Query::equals(Query &other) {
         return false;
     }
 
-    for (int i = 0; i < returnRefs.size(); ++i) {
+    for (size_t i = 0; i < returnRefs.size(); ++i) {
         Reference a = *returnRefs.at(i);
         Reference b = *other.returnRefs.at(i);
         if (!a.equals(b)) {
@@ -45,7 +45,7 @@ bool Query::equals(Query &other) {
         }
     }
 
-    for (int i = 0; i < clauseList.size(); ++i) {
+    for (size_t i = 0; i < clauseList.size(); ++i) {
         Clause a = *clauseList.at(i);
         Clause b = *other.clauseList.at(i);
         if (!a.equals(b)) {
@@ -53,7 +53,7 @@ bool Query::equals(Query &other) {
         }
     }
 
-    for (int i = 0; i < referenceList.size(); ++i) {
+    for (size_t i = 0; i < referenceList.size(); ++i) {
         Reference a = *referenceList.at(i);
         Reference b = *other.referenceList.at(i);
         if (!a.equals(b)) {
