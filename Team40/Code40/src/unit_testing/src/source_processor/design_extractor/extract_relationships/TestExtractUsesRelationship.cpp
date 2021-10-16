@@ -129,7 +129,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    whileStatement.setVariable(&variable);
+    whileStatement.addExpressionVar(&variable);
     whileStatement.addThenStmt(&printStatement);
     printStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
