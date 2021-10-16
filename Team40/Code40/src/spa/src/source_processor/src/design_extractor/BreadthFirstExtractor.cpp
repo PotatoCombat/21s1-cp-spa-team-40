@@ -59,8 +59,6 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
 }
 
 void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
-    // Add ifStatement to the stack twice since each statement list will pop the
-    // stack once
     statementLists.push_back(ifStatement->getThenStmtLst());
     statementLists.push_back(ifStatement->getElseStmtLst());
 }
