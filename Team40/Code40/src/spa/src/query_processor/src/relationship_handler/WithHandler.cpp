@@ -63,7 +63,7 @@ set<string> WithHandler::getR2ClausedR1(string r1) {
     set<string> res;
     for (string r2 : getAll(pkb, *(clause->getSecondReference()))) {
         if (isR1ClauseR2(r1, r2)) {
-            res.insert(r1);
+            res.insert(r2);
         }
     }
     return res;
