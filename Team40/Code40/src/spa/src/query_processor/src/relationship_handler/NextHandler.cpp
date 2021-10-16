@@ -10,7 +10,7 @@ NextHandler::NextHandler(Clause* clause, PKB* pkb)
 
 set<string> NextHandler::getR1ClauseR2(string r2) {
     set<string> res;
-    for (int i : pkb->getNextLines(stoi(r2))) {
+    for (int i : pkb->getPreviousLines(stoi(r2))) {
         res.insert(to_string(i));
     }
     return res;
@@ -18,7 +18,7 @@ set<string> NextHandler::getR1ClauseR2(string r2) {
 
 set<string> NextHandler::getR2ClausedR1(string r1) {
     set<string> res;
-    for (int i : pkb->getPreviousLines(stoi(r1))) {
+    for (int i : pkb->getNextLines(stoi(r1))) {
         res.insert(to_string(i));
     }
     return res;
