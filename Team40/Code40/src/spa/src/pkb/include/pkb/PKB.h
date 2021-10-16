@@ -13,6 +13,7 @@
 #include "NextTable.h"
 #include "CallsTable.h"
 #include "CallsStarTable.h"
+#include "ConditionTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -76,8 +77,14 @@ public:
     /// Stores the relationship Next(stmt1, stmt2).
     virtual void insertNext(Statement *previousStmt, Statement *nextStmt);
 
-    /// Stores the relationship pattern a(var, exprList), where a is an assign.
+    /// Stores the relationship pattern a(var, exprList), where a is an assign design entity.
     virtual void insertPatternAssign(Statement *stmt);
+
+    /// Stores the relationship pattern ifs(var, _, _), where ifs is an if design entity.
+    virtual void insertIfPattern(Statement *stmt);
+
+    /// Stores the relationship pattern while(var, _, _), where while is a while design entity.
+    virtual void insertWhilePattern(Statement *stmt);
 
     // =========================================================================
     // Query Processor
@@ -266,6 +273,16 @@ public:
     virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
                                                       ExpressionList pattern);
 
+    /// Selects  such that a(var, pattern), where a is an AssignStatement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getIfPatternStmts(VarName var);
+
+    /// Selects a such that a(var, pattern), where a is an AssignStatement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getWhilePatternStmts(VarName var);
+
     /// Selects BOOLEAN such that a(var, pattern).
     virtual bool partialAssignPattern(StmtIndex stmtIndex, VarName var,
                                       ExpressionList pattern);
@@ -274,6 +291,12 @@ public:
     /// match.
     virtual bool exactAssignPattern(StmtIndex stmtIndex, VarName var,
                                     ExpressionList pattern);
+
+    /// Selects BOOLEAN such that a(var, pattern).
+    virtual bool ifPattern(StmtIndex stmtIndex, VarName var);
+
+    /// Selects BOOLEAN such that a(var, pattern).
+    virtual bool whilePattern(StmtIndex stmtIndex, VarName var);
 
 private:
     ProcedureTable procTable;
@@ -291,4 +314,5 @@ private:
     CallsStarTable callsStarTable;
     NextTable nextTable;
     PatternTable patternTable;
+    ConditionTable conditionTable;
 };

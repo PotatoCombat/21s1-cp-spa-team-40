@@ -77,6 +77,14 @@ void PKB::insertPatternAssign(Statement *stmt) {
     patternTable.insertAssignPattern(stmt);
 }
 
+void PKB::insertIfPattern(Statement *stmt) {
+    conditionTable.insertIfPattern(stmt);
+}
+
+void PKB::insertWhilePattern(Statement *stmt) {
+    conditionTable.insertWhilePattern(stmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -275,10 +283,26 @@ set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, ExpressionList patte
     return patternTable.getExactAssignPatternStmts(var, pattern);
 }
 
+set<StmtIndex> PKB::getIfPatternStmts(VarName var) {
+    return conditionTable.getIfPatternStmts(var);
+}
+
+set<StmtIndex> PKB::getWhilePatternStmts(VarName var) {
+    return conditionTable.getWhilePatternStmts(var);
+}
+
 bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
     return patternTable.partialAssignPattern(stmtIndex, var, pattern);
 }
 
 bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
     return patternTable.exactAssignPattern(stmtIndex, var, pattern);
+}
+
+bool PKB::ifPattern(StmtIndex stmtIndex, VarName var) {
+    return conditionTable.ifPattern(stmtIndex, var);
+}
+
+bool PKB::whilePattern(StmtIndex stmtIndex, VarName var) {
+    return conditionTable.whilePattern(stmtIndex, var);
 }
