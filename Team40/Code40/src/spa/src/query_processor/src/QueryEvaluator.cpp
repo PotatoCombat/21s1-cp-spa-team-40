@@ -101,6 +101,11 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &nextHandler;
     }
 
+    if (clause->getType() == ClauseType::NEXT_T) {
+        NextStarHandler nextStarHandler(clause, pkb);
+        clauseHandler = &nextStarHandler;
+    }
+
     if (clause->getType() == ClauseType::WITH) {
         WithHandler withHandler(clause, pkb);
         clauseHandler = &withHandler;
