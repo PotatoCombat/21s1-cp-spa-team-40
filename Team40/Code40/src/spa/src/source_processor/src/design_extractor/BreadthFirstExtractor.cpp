@@ -33,10 +33,10 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
 }
 
 void BreadthFirstExtractor::extractStatement(Statement *statement) {
-    vector<Statement *> previousStatements =
+    vector<Statement *> precedingStatements =
         ExtractionContext::getInstance().getPrecedingStatements();
-    if (!previousStatements.empty()) {
-        pkb->insertFollows(previousStatements.back(), statement);
+    if (!precedingStatements.empty()) {
+        pkb->insertFollows(precedingStatements.back(), statement);
     }
     switch (statement->getStatementType()) {
     case StatementType::WHILE:

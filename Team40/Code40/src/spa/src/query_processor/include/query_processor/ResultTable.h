@@ -43,7 +43,7 @@ public:
 
     bool isColumnEmpty(INDEX refIndex);
 
-    bool hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
+    bool hasLinkBetweenValues(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
     void removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2);
 
