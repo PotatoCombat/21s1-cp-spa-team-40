@@ -8,7 +8,6 @@
  */
 bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     try {
-        returnBoolean = false;
         pair<string, string> parts = tokenizer.separateQueryString(input);
 
         vector<DeclPair> declPairs;
