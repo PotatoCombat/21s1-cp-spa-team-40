@@ -3,30 +3,25 @@
 #include <string>
 #include <vector>
 
-#include "query_processor/Abstractions.h"
+#include "query_processor/parser/ClauseParser.h"
 
-#include "query_processor/exception/ValidityError.h"
-#include "query_processor/model/Clause.h"
-#include "query_processor/model/Reference.h"
-#include "query_processor/parser/ParserUtil.h"
-
-class PatternParser {
+class PatternParser : public ClauseParser {
 public:
-    PatternParser();
+    PatternParser() : ClauseParser() {}
 
-    void initReferences(vector<Reference *> &declList);
     void clear();
-    Clause *parse(PatTuple patTuple);
 
     vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
 
 private:
+    Clause *parsePt(PatTuple patTuple);
+
     Clause *parseAssign(Reference *identity);
     Clause *parseWhile(Reference *identity);
     Clause *parseIf(Reference *identity);
+
     Reference *parseValidVariable(string var);
 
-    Reference *getReferenceIfDeclared(string syn);
     bool isAssignPatternClause(Reference *identity);
     bool isWhilePatternClause(Reference *identity);
     bool isIfPatternClause(Reference *identity);
@@ -39,9 +34,7 @@ private:
     bool isRBracket(string token);
     int countOccurences(vector<string> vec, string token);
 
-    vector<Reference *> declList;
-
-    string ident;
-    string var;
+    string ref1;
+    string ref2;
     vector<string> tokens;
 };
