@@ -230,3 +230,78 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
         TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
             .count(variable.getName()));
 }
+
+TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
+          "call statement in a if statement") {
+    TestExtractUsesRelationship::reset();
+
+    Program program;
+    Procedure procedure1(TestExtractUsesRelationship::PROC_NAME_1);
+    Procedure procedure2(TestExtractUsesRelationship::PROC_NAME_2);
+    Statement ifStatement(1, StatementType::IF);
+    Statement callStatement(2, StatementType::CALL);
+    Statement printStatement(2, StatementType::PRINT);
+    Variable variable(TestExtractUsesRelationship::VAR_NAME);
+
+    ifStatement.setVariable(&variable);
+    ifStatement.addExpressionVar(&variable);
+    ifStatement.addThenStmt(&callStatement);
+    ifStatement.addElseStmt(&callStatement);
+    callStatement.setProcName(procedure2.getName());
+    printStatement.setVariable(&variable);
+    procedure1.addToStmtLst(&ifStatement);
+    procedure2.addToStmtLst(&printStatement);
+    program.addToProcLst(&procedure1);
+    program.addToProcLst(&procedure2);
+
+    /**
+     * THE ABOVE PROGRAM TRANSLATES TO:
+     * ****************** START OF PROGRAM ******************
+     * procedure PROC_1 {
+     *   if (...) {             (1)
+     *      call PROC_2;        (2)
+     *   } else {
+     *      call PROC_2;        (3)
+     *   }
+     * }
+     * procedure PROC_1 {
+     *   print x;               (4)
+     * }
+     * ****************** END OF PROGRAM ******************
+     */
+
+    DesignExtractor de(&TestExtractUsesRelationship::pkb);
+    de.extract(&program);
+
+    // Check that Uses(printStatement, variable)
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(printStatement.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(printStatement.getIndex())
+                .count(variable.getName()));
+
+    // Check that Calls(procedure1, procedure2)
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getCalledProcs(procedure1.getName())
+            .count(procedure2.getName()));
+    // Check that Parent(whileStatement, callStatement)
+    REQUIRE(TestExtractUsesRelationship::pkb.getParentStmt(
+                callStatement.getIndex()) == ifStatement.getIndex());
+
+    // Check that Uses(whileStatement, variable)
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(ifStatement.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(ifStatement.getIndex())
+                .count(variable.getName()));
+
+    // Check that Uses(procedure1, variable)
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
+            .size() == 1);
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
+            .count(variable.getName()));
+}
