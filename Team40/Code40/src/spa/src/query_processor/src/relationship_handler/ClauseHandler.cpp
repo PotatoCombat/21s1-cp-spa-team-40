@@ -161,14 +161,15 @@ Result ClauseHandler::evalNotConstNotConst() {
     // same synonym
     if (refType1 == ReferenceType::SYNONYM &&
         refType2 == ReferenceType::SYNONYM && val1 == val2) {
+        map<VALUE, VALUE_SET> resultList;
         set<string> res1s = getAll(pkb, *ref1);
         for (auto res1 : res1s) {
             if (isR1ClauseR2(res1, res1)) {
-                result.setValid(true);
-                return result;
+                resultList[res1] = VALUE_SET{};
             }
         }
-        result.setValid(false);
+        result.setResultList1(ref1, resultList);
+        result.setResultList2(ref2, resultList);
         return result;
     }
 
@@ -275,10 +276,14 @@ set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
 }
 
 bool ClauseHandler::isType(string val, DesignEntityType type) {
-    if (type == DesignEntityType::PROCEDURE ||
-        type == DesignEntityType::VARIABLE ||
-        type == DesignEntityType::CONSTANT ||
-        type == DesignEntityType::STMT) {
+    bool isNumber = !val.empty() && find_if(val.begin(), 
+        val.end(), [](unsigned char c) { return !isdigit(c); }) == val.end();
+
+    if (!isNumber) {
+        return true;
+    }
+
+    if (type == DesignEntityType::STMT) {
         return true;
     }
 
