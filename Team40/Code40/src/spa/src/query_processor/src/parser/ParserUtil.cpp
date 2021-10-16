@@ -99,7 +99,8 @@ ReferenceAttribute ParserUtil::parseValidAttr(DesignEntityType deType,
     } else if (val == "stmt#") {
         if (!(deType == DesignEntityType::PROCEDURE ||
               deType == DesignEntityType::VARIABLE ||
-              deType == DesignEntityType::CONSTANT)) {
+              deType == DesignEntityType::CONSTANT ||
+              deType == DesignEntityType::PROG_LINE)) {
             return ReferenceAttribute::INTEGER;
         }
     }
