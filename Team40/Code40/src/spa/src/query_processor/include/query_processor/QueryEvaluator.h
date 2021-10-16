@@ -27,6 +27,7 @@
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
 #include "query_processor/relationship_handler/ModifiesProcHandler.h"
 #include "query_processor/relationship_handler/ModifiesStmtHandler.h"
+#include "query_processor/relationship_handler/NextHandler.h"
 #include "query_processor/relationship_handler/ParentHandler.h"
 #include "query_processor/relationship_handler/ParentStarHandler.h"
 #include "query_processor/relationship_handler/UsesProcHandler.h"
