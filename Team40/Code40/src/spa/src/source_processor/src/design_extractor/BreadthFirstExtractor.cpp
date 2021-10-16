@@ -28,9 +28,6 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
         for (Statement *statement : statementList) {
             extractStatement(statement);
         }
-        if (!ExtractionContext::getInstance().getParentStatements().empty()) {
-            ExtractionContext::getInstance().getParentStatements().pop_back();
-        }
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
@@ -64,14 +61,11 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
 void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     // Add ifStatement to the stack twice since each statement list will pop the
     // stack once
-    ExtractionContext::getInstance().setParentStatement(ifStatement);
-    ExtractionContext::getInstance().setParentStatement(ifStatement);
     statementLists.push_back(ifStatement->getThenStmtLst());
     statementLists.push_back(ifStatement->getElseStmtLst());
 }
 
 void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
-    ExtractionContext::getInstance().setParentStatement(whileStatement);
     statementLists.push_back(whileStatement->getThenStmtLst());
 }
 
@@ -91,21 +85,17 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     // Extract Calls(proc, proc) relationship
     pkb->insertCalls(currentProcedure.value(), calleeName);
 
-    Statement *parentStatement = nullptr;
-    if (!ExtractionContext::getInstance().getParentStatements().empty()) {
-        parentStatement =
-            ExtractionContext::getInstance().getParentStatements().back();
-    }
-
     // Handle transitive Modifies
     set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
     for (VarName modifiedVarName : modifiedVarNames) {
         Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
         // If Modifies(calleeProc, var) then Modifies(callerProc, var)
         pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
-        if (parentStatement != nullptr) {
-            // If Modifies(stmt, var) then Modifies(parentStmt, var)
-            pkb->insertStmtModifyingVar(parentStatement, modifiedVar);
+        // If Modifies(stmt, var) then Modifies(parentStarStmt, var)
+        for (StmtIndex parentStarStatement :
+             pkb->getParentStarStmts(callStatement->getIndex())) {
+            pkb->insertStmtModifyingVar(
+                pkb->getStmtByIndex(parentStarStatement), modifiedVar);
         }
     }
 
@@ -115,9 +105,11 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         Variable *usedVar = pkb->getVarByName(usedVarName);
         // If Uses(calleeProc, var) then Uses(callerProc, var)
         pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
-        if (parentStatement != nullptr) {
-            // If Uses(stmt, var) then Uses(parentStmt, var)
-            pkb->insertStmtUsingVar(parentStatement, usedVar);
+        // If Uses(stmt, var) then Uses(parentStarStmt, var)
+        for (StmtIndex parentStarStatement :
+             pkb->getParentStarStmts(callStatement->getIndex())) {
+            pkb->insertStmtUsingVar(pkb->getStmtByIndex(parentStarStatement),
+                                    usedVar);
         }
     }
 }
