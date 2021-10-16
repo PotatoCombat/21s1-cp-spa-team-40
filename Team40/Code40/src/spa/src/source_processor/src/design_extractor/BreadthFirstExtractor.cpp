@@ -28,6 +28,9 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
         for (Statement *statement : statementList) {
             extractStatement(statement);
         }
+        if (!ExtractionContext::getInstance().getParentStatements().empty()) {
+            ExtractionContext::getInstance().getParentStatements().pop_back();
+        }
     }
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
@@ -116,8 +119,5 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
             // If Uses(stmt, var) then Uses(parentStmt, var)
             pkb->insertStmtUsingVar(parentStatement, usedVar);
         }
-    }
-    if (parentStatement != nullptr) {
-        ExtractionContext::getInstance().unsetParentStatement(parentStatement);
     }
 }
