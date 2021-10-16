@@ -119,8 +119,8 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(p1, v) where "
             .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts uses(s1, v) where "
-          "uses(s2, v) and parent(s1, s2)") {
+TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
+          "Uses(s2, v) and Parent(s1, s2)") {
     TestExtractUsesRelationship::reset();
 
     Program program;
@@ -157,4 +157,76 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts uses(s1, v) where "
     REQUIRE(TestExtractUsesRelationship::pkb
                 .getVarsUsedByStmt(whileStatement.getIndex())
                 .count(variable.getName()));
+}
+
+TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
+          "call statement in a while loop") {
+    TestExtractUsesRelationship::reset();
+
+    Program program;
+    Procedure procedure1(TestExtractUsesRelationship::PROC_NAME_1);
+    Procedure procedure2(TestExtractUsesRelationship::PROC_NAME_2);
+    Statement whileStatement(1, StatementType::WHILE);
+    Statement callStatement(2, StatementType::CALL);
+    Statement printStatement(2, StatementType::PRINT);
+    Variable variable(TestExtractUsesRelationship::VAR_NAME);
+
+    whileStatement.setVariable(&variable);
+    whileStatement.addExpressionVar(&variable);
+    whileStatement.addThenStmt(&callStatement);
+    callStatement.setProcName(procedure2.getName());
+    printStatement.setVariable(&variable);
+    procedure1.addToStmtLst(&whileStatement);
+    procedure2.addToStmtLst(&printStatement);
+    program.addToProcLst(&procedure1);
+    program.addToProcLst(&procedure2);
+
+    /**
+     * THE ABOVE PROGRAM TRANSLATES TO:
+     * ****************** START OF PROGRAM ******************
+     * procedure PROC_1 {
+     *   while (...) {             (1)
+     *      call PROC_2;           (2)
+     *   }
+     * }
+     * procedure PROC_1 {
+     *   print x;                  (3)
+     * }
+     * ****************** END OF PROGRAM ******************
+     */
+
+    DesignExtractor de(&TestExtractUsesRelationship::pkb);
+    de.extract(&program);
+
+    // Check that Uses(printStatement, variable)
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(printStatement.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(printStatement.getIndex())
+                .count(variable.getName()));
+
+    // Check that Calls(procedure1, procedure2)
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getCalledProcs(procedure1.getName())
+            .count(procedure2.getName()));
+    // Check that Parent(whileStatement, callStatement)
+    REQUIRE(TestExtractUsesRelationship::pkb.getParentStmt(
+                callStatement.getIndex()) == whileStatement.getIndex());
+
+    // Check that Uses(whileStatement, variable)
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(whileStatement.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractUsesRelationship::pkb
+                .getVarsUsedByStmt(whileStatement.getIndex())
+                .count(variable.getName()));
+
+    // Check that Uses(procedure1, variable)
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
+            .size() == 1);
+    REQUIRE(
+        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
+            .count(variable.getName()));
 }
