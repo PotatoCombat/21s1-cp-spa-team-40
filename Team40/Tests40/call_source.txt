@@ -21,6 +21,7 @@ procedure D {
 procedure E {
     call G;
     call F;
+    call H;
 }
 procedure F {
     a = 1;
@@ -31,11 +32,3 @@ procedure G {
 procedure H {
     c = 1;
 }
-
-
-
-
-
-
-
-

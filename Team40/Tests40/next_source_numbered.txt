@@ -27,5 +27,6 @@ procedure A {
 
 procedure B {
     while (x >= 1) {        (19)
+        x = x + 1;          (20)
     }
 }

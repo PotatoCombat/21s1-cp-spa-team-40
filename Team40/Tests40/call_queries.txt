@@ -58,23 +58,25 @@ procedure p;
 Select p
 A, B, C, D, E, F, G, H
 5000
-13 - synonym not in condition where condition is true
+13 - synonym not in condition where condition is TRUE
 stmt s;
 Select s such that Calls("  B", _)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
 5000
-14 - boolean for a true condition
+14 - boolean for a TRUE condition
+
 Select BOOLEAN such that Calls("B", "   C")
 TRUE
 5000
-15 - boolean for a false condition
+15 - boolean for a FALSE condition
+
 Select BOOLEAN such that Calls("A",   "C")
 FALSE
 5000
-16 - all tuple procedure pairs that call & are called
+16 - all tuple procedure pairs that call and are called
 procedure p, q;
 Select <p, q> such that Calls(p, q)
-B C,  C D, C E, C F, C G, D G, E F, E G
+B C, C D, C E, C F, C G, D G, E F, E G, E H
 5000
 17 - procedures that call themselves (not possible)
 procedure p;
@@ -82,8 +84,9 @@ Select p such that Calls(p, p)
 
 5000
 18 - call all booleans
+
 Select BOOLEAN
-TRUE, FALSE
+TRUE
 5000
 19 - all procedures that call another procedure using procName
 procedure p, q;
@@ -140,20 +143,20 @@ procedure p;
 Select p.procName
 A, B, C, D, E, F, G, H
 5000
-30 - all tuple procedure pairs that call & are called using procName
+30 - all tuple procedure pairs that call and are called using procName
 procedure p, q;
 Select <p.procName, q.procName> such that Calls(p, q)
-B C,  C D, C E, C F, C G, D G, E F, E G
+B C,  C D, C E, C F, C G, D G, E F, E G, E H
 5000
 31 - procedures that call themselves (not possible) using procName
 procedure p;
 Select p.procName such that Calls(p, p)
 
 5000
-32 - all tuple procedure pairs that call & are called using procName
+32 - all tuple procedure pairs that call and are called using procName
 procedure p, q;
 Select <p, q.procName> such that Calls(p, q)
-B C,  C D, C E, C F, C G, D G, E F, E G
+B C,  C D, C E, C F, C G, D G, E F, E G, E H
 5000
 33 - all procedures that call* another procedure
 procedure p, q;
@@ -205,20 +208,22 @@ stmt p;
 Select p such that Calls*(p, "G")
 
 5000
-43 - synonym not in condition where condition is true
+43 - synonym not in condition where condition is TRUE
 stmt s;
 Select s such that Calls*("  B", _)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
 5000
-44 - boolean for a true condition
+44 - boolean for a TRUE condition
+
 Select BOOLEAN such that Calls*("B", "   H")
 TRUE
 5000
-45 - boolean for a false condition
+45 - boolean for a FALSE condition
+
 Select BOOLEAN such that Calls*("A",   "C")
 FALSE
 5000
-46 - all tuple procedure pairs that call* & are called*
+46 - all tuple procedure pairs that call* and are called*
 procedure p, q;
 Select <p, q> such that Calls*(p, q)
 B C, B D, B E, B F, B G, B H, C D, C E, C F, C G, C H, D G, E F, E G, E H
@@ -226,5 +231,30 @@ B C, B D, B E, B F, B G, B H, C D, C E, C F, C G, C H, D G, E F, E G, E H
 47 - procedures that call* themselves (not possible)
 procedure p;
 Select p such that Calls*(p, p)
+
+5000
+48 - Get all call statements
+call c;
+Select c
+10,11,12,13,14,15,5,8,9
+5000
+49 - synonym not in relationship TRUE
+stmt s;
+Select s such that Calls("B", "C")
+1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9
+5000
+50 - synonym not in relationship FALSE
+stmt s;
+Select s such that Calls("B", "G")
+
+5000
+51 - synonym not in relationship TRUE
+stmt s;
+Select s such that Calls*("B", "G")
+1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9
+5000
+52 - synonym not in relationship FALSE
+stmt s;
+Select s such that Calls*("C", "B")
 
 5000
