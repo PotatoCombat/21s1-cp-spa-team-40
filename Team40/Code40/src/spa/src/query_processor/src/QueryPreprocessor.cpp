@@ -8,6 +8,7 @@
  */
 bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
     try {
+        returnBoolean = false;
         pair<string, string> parts = tokenizer.separateQueryString(input);
 
         vector<DeclPair> declPairs;
@@ -55,21 +56,28 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             q.addClause(cls);
         }
 
-        parser.clear();
+        this->clear();
         return true;
 
     } catch (SyntaxError se) {
         // cout << e.what();
-        parser.clear();
+        this->clear();
         return false;
+
     } catch (ValidityError ve) {
         // cout << e.what();
-        parser.clear();
         if (returnBoolean) {
+            this->clear();
             throw ValidityError("Set results to FALSE");
         }
+        this->clear();
         return false;
     }
+}
+
+void QueryPreprocessor::clear() { 
+    this->returnBoolean = false;
+    this->parser.clear();
 }
 
 void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
