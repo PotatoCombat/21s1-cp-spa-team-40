@@ -283,7 +283,7 @@ bool ClauseHandler::isType(string val, DesignEntityType type) {
         return true;
     }
 
-    if (type == DesignEntityType::STMT) {
+    if (type == DesignEntityType::STMT || type == DesignEntityType::CONSTANT) {
         return true;
     }
 
