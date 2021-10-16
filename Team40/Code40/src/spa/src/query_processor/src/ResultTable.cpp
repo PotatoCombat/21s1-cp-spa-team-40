@@ -126,7 +126,7 @@ bool ResultTable::isColumnEmpty(INDEX refIndex) {
     return table[refIndex].size() == 0;
 }
 
-bool ResultTable::hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2) {
+bool ResultTable::hasLinkBetweenValues(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2) {
     assertIndex(refIndex1);
     assertIndex(refIndex2);
     VALUE_TO_POINTERS_MAP *map = &table[refIndex1];
@@ -142,7 +142,7 @@ bool ResultTable::hasLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE 
 }
 
 void ResultTable::removeLink(INDEX refIndex1, VALUE value1, INDEX refIndex2, VALUE value2) {
-    if (!hasLink(refIndex1, value1, refIndex2, value2)) {
+    if (!hasLinkBetweenValues(refIndex1, value1, refIndex2, value2)) {
         return;
     }
 
@@ -172,7 +172,7 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     for (INDEX idx : indexes) {
         // 1st idx is the idx to be eval, 
         // 2nd idx is the index that calls this index
-        int NO_CALLER = 1;
+        int NO_CALLER = -1;
         vector<pair<INDEX, INDEX>> toBeEval;
         toBeEval.push_back({idx, NO_CALLER});
         while (!toBeEval.empty()) {

@@ -54,7 +54,7 @@ ClauseTypeHelper::ClauseTypeHelper() {
 ClauseType ClauseTypeHelper::valueToClsType(string val) {
     auto type = stringToTypeMap.find(val);
     if (type == stringToTypeMap.end()) {
-        throw ValidityError("invalid clause type");
+        throw SyntaxError("invalid clause type");
     }
     return type->second;
 }
