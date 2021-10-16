@@ -164,8 +164,7 @@ TEST_CASE(
 }
 
 TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
-          "Modifies for a "
-          "call statement in a while loop") {
+          "Modifies for a call statement in a while loop") {
     TestExtractModifiesRelationship::reset();
 
     Program program;
@@ -237,8 +236,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
 }
 
 TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
-          "Modifies for a "
-          "call statement in a if statement") {
+          "Modifies for a call statement in a if statement") {
     TestExtractModifiesRelationship::reset();
 
     Program program;
