@@ -12,7 +12,7 @@ public:
     void clear();
 
 private:
-    Clause *parseSt(ClsTuple clsTuple);
+    Clause *parseSt(ClsTuple clsTuple) override;
 
     Clause *parseStmtStmt();
     Clause *parseProcProc();

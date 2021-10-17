@@ -14,7 +14,7 @@ public:
     vector<PatToken> parsePatternTokens(vector<PatToken> tokens);
 
 private:
-    Clause *parsePt(PatTuple patTuple);
+    Clause *parsePt(PatTuple patTuple) override;
 
     Clause *parseAssign(Reference *identity);
     Clause *parseWhile(Reference *identity);
