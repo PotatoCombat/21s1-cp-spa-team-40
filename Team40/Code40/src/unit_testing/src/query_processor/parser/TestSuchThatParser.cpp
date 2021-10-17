@@ -169,7 +169,7 @@ TEST_CASE("SuchThatParser: parse parent clause - valid arguments") {
         delete expected;
         delete actual;
     }
-};
+}
 
 TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
     SuchThatParser p;
@@ -230,7 +230,7 @@ TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
         }
     }
-};
+}
 
 TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
     SuchThatParser p;
@@ -320,7 +320,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - valid arguments") {
         delete expected;
         delete actual;
     }
-};
+}
 
 TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
     SuchThatParser p;
@@ -365,7 +365,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
         tup = make_tuple("Modifies", "procedure", "foodVariable");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
-};
+}
 
 TEST_CASE("SuchThatParser: parse calls* clause - valid arguments") {
     SuchThatParser p;
@@ -433,7 +433,7 @@ TEST_CASE("SuchThatParser: parse calls* clause - valid arguments") {
         REQUIRE(actual->equals(*expected));
         delete expected, actual;
     }
-};
+}
 
 TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
     SuchThatParser p;
@@ -462,4 +462,4 @@ TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
         tup = make_tuple("Calls*", "undeclared", "PROCEDURE");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
-};
+}

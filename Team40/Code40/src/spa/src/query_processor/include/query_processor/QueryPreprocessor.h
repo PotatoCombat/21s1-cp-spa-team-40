@@ -19,6 +19,7 @@ public:
 
 private:
     void addReturnReferencesToQuery(vector<string> retStrings, Query &q);
+    void clear();
 
     QueryTokenizer tokenizer;
     QueryParser parser;
