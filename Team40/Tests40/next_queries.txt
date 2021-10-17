@@ -66,7 +66,7 @@ Select s such that Next(s, _)
 14 - everything next of an assign statement
 assign a; stmt s;
 Select s such that Next(a, s)
-2, 3, 5, 7, 10, 11, 12, 13, 18, 17
+2, 3, 5, 10, 11, 12, 13, 17, 19
 5000
 15 - everything next of end of proc
 stmt s;
@@ -74,12 +74,12 @@ Select s such that Next(18, s)
 
 5000
 16 - everything next of a generic while loop
-while w, stmt s;
+while w; stmt s;
 Select s such that Next(w, s)
 4, 14, 20
 5000
 17 - everything next of a generic if statement
-if i, stmt s;
+if i; stmt s;
 Select s such that Next(i, s)
 8, 9, 15, 16
 5000
@@ -194,12 +194,12 @@ Select s such that Next*(18, s)
 
 5000
 40 - everything next* of a generic while loop
-while w, stmt s;
+while w; stmt s;
 Select s such that Next*(w, s)
 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
 5000
 41 - everything next* of a generic if statement
-if i, stmt s;
+if i; stmt s;
 Select s such that Next*(i, s)
 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
 5000
