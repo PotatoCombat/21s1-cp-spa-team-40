@@ -13,6 +13,7 @@
 #include "NextTable.h"
 #include "CallsTable.h"
 #include "CallsStarTable.h"
+#include "ConditionTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -76,8 +77,14 @@ public:
     /// Stores the relationship Next(stmt1, stmt2).
     virtual void insertNext(Statement *previousStmt, Statement *nextStmt);
 
-    /// Stores the relationship pattern a(var, exprList), where a is an assign.
+    /// Stores the pattern a(var, exprList), where a is an ASSIGN statement.
     virtual void insertPatternAssign(Statement *stmt);
+
+    /// Stores the pattern if(var, _, _), where if is an IF statement.
+    virtual void insertIfPattern(Statement *stmt);
+
+    /// Stores the pattern while(var, _, _), where while is a WHILE statement.
+    virtual void insertWhilePattern(Statement *stmt);
 
     // =========================================================================
     // Query Processor
@@ -253,27 +260,43 @@ public:
 
     // Pattern =================================================================
 
-    /// Selects a such that a(var, pattern), where a is an AssignStatement.
+    /// Selects a such that a(var, pattern), where a is an ASSIGN statement.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
     virtual set<StmtIndex> getPartialAssignPatternStmts(VarName var,
                                                         ExpressionList pattern);
 
-    /// Selects a such that a(var, pattern), where a is an AssignStatement,
+    /// Selects a such that a(var, pattern), where a is an ASSIGN statement,
     /// and the pattern requires an exact match.
     /// \return stmt#no that fits the relationship, or an empty set there are
     /// none.
     virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
                                                       ExpressionList pattern);
 
-    /// Selects BOOLEAN such that a(var, pattern).
+    /// Selects if such that if(var, _, _), where if is an IF statement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getIfPatternStmts(VarName var);
+
+    /// Selects while such that while(var, _), where while is a WHILE statement.
+    /// \return stmt#no that fits the relationship, or an empty set there are
+    /// none.
+    virtual set<StmtIndex> getWhilePatternStmts(VarName var);
+
+    /// Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN statement.
     virtual bool partialAssignPattern(StmtIndex stmtIndex, VarName var,
                                       ExpressionList pattern);
 
-    /// Selects BOOLEAN such that a(var, pattern), but pattern must be an exact
-    /// match.
+    /// Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN statement
+    /// and the pattern must be an exact match.
     virtual bool exactAssignPattern(StmtIndex stmtIndex, VarName var,
                                     ExpressionList pattern);
+
+    /// Selects BOOLEAN such that if(var, _, _), where if is an IF statement.
+    virtual bool ifPattern(StmtIndex stmtIndex, VarName var);
+
+    /// Selects BOOLEAN such that while(var, _), where while is a WHILE statement.
+    virtual bool whilePattern(StmtIndex stmtIndex, VarName var);
 
 private:
     ProcedureTable procTable;
@@ -291,4 +314,5 @@ private:
     CallsStarTable callsStarTable;
     NextTable nextTable;
     PatternTable patternTable;
+    ConditionTable conditionTable;
 };

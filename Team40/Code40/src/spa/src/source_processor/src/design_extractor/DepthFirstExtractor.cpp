@@ -101,6 +101,8 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 }
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
+    pkb->insertIfPattern(ifStatement);
+
     // 1. Handle condition
     auto variables = ifStatement->getExpressionVars();
     auto constantValues = ifStatement->getExpressionConsts();
@@ -182,6 +184,8 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
 }
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
+    pkb->insertWhilePattern(whileStatement);
+
     // 1. Handle condition
     auto variables = whileStatement->getExpressionVars();
     auto constantValues = whileStatement->getExpressionConsts();
