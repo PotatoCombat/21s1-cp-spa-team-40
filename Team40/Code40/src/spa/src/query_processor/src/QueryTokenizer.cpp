@@ -82,7 +82,7 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input,
         }
     }
 
-    for (int i = 0; i < retStrings.size(); ++i) {
+    for (size_t i = 0; i < retStrings.size(); ++i) {
         retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
     }
     return retStrings;
@@ -98,7 +98,7 @@ vector<string> QueryTokenizer::tokenizeReturnTuple(string input,
     string tuple = trimR(input.substr(0, rCarrotPos));
 
     vector<string> retStrings = tokenizeCommaSeparatedValues(tuple);
-    for (int i = 0; i < retStrings.size(); ++i) {
+    for (size_t i = 0; i < retStrings.size(); ++i) {
         retStrings[i] = removeWhitespaceAroundPeriod(retStrings[i]);
     }
     remaining = trimL(input.substr(rCarrotPos + 1));
@@ -322,7 +322,7 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     arguments.push_back(token);
 
     var = arguments.at(0);
-    for (int i = 1; i < arguments.size(); ++i) {
+    for (size_t i = 1; i < arguments.size(); ++i) {
         tokens.push_back(arguments.at(i));
     }
     clause = make_tuple(ident, var, tokens);

@@ -89,6 +89,7 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
         // If Modifies(calleeProc, var) then Modifies(callerProc, var)
         pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
+        pkb->insertStmtModifyingVar(callStatement, modifiedVar);
         // If Modifies(stmt, var) then Modifies(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
              pkb->getParentStarStmts(callStatement->getIndex())) {
@@ -103,6 +104,7 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         Variable *usedVar = pkb->getVarByName(usedVarName);
         // If Uses(calleeProc, var) then Uses(callerProc, var)
         pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
+        pkb->insertStmtUsingVar(callStatement, usedVar);
         // If Uses(stmt, var) then Uses(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
              pkb->getParentStarStmts(callStatement->getIndex())) {

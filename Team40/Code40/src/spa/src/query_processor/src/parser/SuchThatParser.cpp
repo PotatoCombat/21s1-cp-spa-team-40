@@ -1,15 +1,5 @@
 #include "query_processor/parser/SuchThatParser.h"
 
-SuchThatParser::SuchThatParser() {
-    this->type = "";
-    this->ref1 = "";
-    this->ref2 = "";
-}
-
-void SuchThatParser::initReferences(vector<Reference *> &declList) {
-    this->declList = declList;
-}
-
 void SuchThatParser::clear() {
     this->declList.clear();
     this->type = "";
@@ -17,7 +7,7 @@ void SuchThatParser::clear() {
     this->ref2 = "";
 }
 
-Clause *SuchThatParser::parse(ClsTuple clsTuple) {
+Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
     type = get<0>(clsTuple);
     ref1 = get<1>(clsTuple);
     ref2 = get<2>(clsTuple);
@@ -90,7 +80,8 @@ Clause *SuchThatParser::parseProcProc() {
     // quoted/synonym/wildcard, quoted/synonym/wildcard
 
     // procedure is a constant(quoted)/wildcard
-    if (ParserUtil::isInteger(this->ref1) || ParserUtil::isInteger(this->ref2)) {
+    if (ParserUtil::isInteger(this->ref1) ||
+        ParserUtil::isInteger(this->ref2)) {
         throw ValidityError("invalid clause argument");
     }
 
@@ -134,7 +125,7 @@ Clause *SuchThatParser::parseProcProc() {
 }
 
 /**
- * Parses a clause that takes in (X, ent) as parameters. 
+ * Parses a clause that takes in (X, ent) as parameters.
  * This includes: Modifies/Uses (both P and S versions).
  */
 Clause *SuchThatParser::parseXEnt() {
@@ -168,7 +159,7 @@ Clause *SuchThatParser::parseXEnt() {
     } else {
         // first argument is not declared, must be either integer or quoted
         DesignEntityType deType;
-        ReferenceAttribute attr; 
+        ReferenceAttribute attr;
         if (ParserUtil::isInteger(this->ref1)) {
             isStmtEnt = true;
             deType = DesignEntityType::STMT;
@@ -206,20 +197,4 @@ Clause *SuchThatParser::parseXEnt() {
         return new Clause(clsHelper.valueToClsType(this->type), *r1, *r2);
     }
     return new Clause(clsHelper.valueToClsType(this->type + "*"), *r1, *r2);
-}
-
-/**
- * Retrieves synonym in the declaration list if it exists.
- * @param syn The synonym name.
- * @return Reference object if match, otherwise nullptr.
- */
-Reference *SuchThatParser::getReferenceIfDeclared(string syn) {
-    auto it = find_if(declList.begin(), declList.end(), [&syn](Reference *ref) {
-        return ref->getValue() == syn;
-    });
-
-    if (it != declList.end()) {
-        return *it;
-    }
-    return nullptr;
 }
