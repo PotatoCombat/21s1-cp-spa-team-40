@@ -32,6 +32,8 @@ public:
 
     VALUE_SET getLinkedValues(INDEX sourceIdx, VALUE value, INDEX targetIdx);
 
+    vector<INDEX> getLinkedIndexes(INDEX idx);
+
     bool hasPointerToIdx(INDEX sourceIdx, VALUE sourceValue, INDEX targetIdx);
 
     VALUE_SET getPointersToIdx(INDEX sourceIdx, VALUE sourceValue,

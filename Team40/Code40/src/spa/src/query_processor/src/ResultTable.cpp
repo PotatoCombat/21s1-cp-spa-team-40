@@ -49,6 +49,21 @@ VALUE_SET ResultTable::getLinkedValues(INDEX sourceIdx, VALUE value, INDEX targe
     return (*pIndexToValue)[targetIdx];
 }
 
+vector<INDEX> ResultTable::getLinkedIndexes(INDEX idx) {
+    vector<INDEX> res;
+    assertIndex(idx);
+    VALUE_TO_POINTERS_MAP vtp = table[idx];
+    if (vtp.empty()) {
+        return res;
+    }
+
+    IDX_TO_VALUES_MAP itv = vtp.begin()->second;
+    for (auto idxValsPair : itv) {
+        res.push_back(idxValsPair.first);
+    }
+    return res;
+}
+
 bool ResultTable::hasPointerToIdx(int sourceIdx, string sourceValue,
                      int targetIdx) {
     assertIndex(sourceIdx);
@@ -172,61 +187,61 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     for (INDEX idx : indexes) {
         // 1st idx is the idx to be eval, 
         // 2nd idx is the index that calls this index
-        int NO_CALLER = -1;
-        vector<pair<INDEX, INDEX>> toBeEval;
-        toBeEval.push_back({idx, NO_CALLER});
+
+        vector<INDEX> toBeEval;
+        set<INDEX> visitedInGroup; // so that don't need to check all visited idx
+        toBeEval.push_back(idx);
         while (!toBeEval.empty()) {
-            INDEX currIdx = toBeEval.back().first;
-            INDEX callIdx = toBeEval.back().second;
+            INDEX currIdx = toBeEval.back();
             toBeEval.pop_back();
             vector<vector<string>> newRes;
             if (visited.find(currIdx) != visited.end()) { // if visited already then continue
                 continue;
             }
-            if (callIdx == NO_CALLER) { // if it is the first idx in the group to be eval
-                for (vector<string> v : combinations) {
-                    for (auto &valueToPointers : table[currIdx]) {
-                        vector<string> temp = v;
-                        temp[currIdx] = valueToPointers.first;
-                        newRes.push_back(temp);
 
-                        // add related refs to toBeEval
-                        for (auto &idxToValues : valueToPointers.second) {
-                            toBeEval.push_back({idxToValues.first, currIdx});
+            for (vector<string> v : combinations) {
+                bool linkAdded = false;
+                for (string value : getValues(currIdx)) {
+                    bool valid = true;
+                    for (INDEX vIdx : visitedInGroup) {
+                        if (hasPointerToIdx(currIdx, value, vIdx) &&
+                            !hasLinkBetweenValues(currIdx, value, vIdx, v[vIdx])) {
+                            valid = false;
+                            break;
                         }
                     }
-                }
-            } else { // if it is called by another idx
-                for (vector<string> v : combinations) {
-                    for (auto &valueToPointers : table[currIdx]) {
-                        // if has link to the value in the current result
-                        if (valueToPointers.second[callIdx].count(v[callIdx])) {
-                            vector<string> temp = v;
-                            temp[currIdx] = valueToPointers.first;
-                            newRes.push_back(temp);
-                        }
 
-                        // add related refs to toBeEval
-                        for (auto &idxToValues : valueToPointers.second) {
-                            toBeEval.push_back({idxToValues.first, currIdx});
-                        }
+                    // if has link to values of all visited indexes
+                    if (valid) {
+                        vector<string> temp = v;
+                        temp[currIdx] = value;
+                        newRes.push_back(temp);
                     }
                 }
             }
 
+            for (auto otherIndex : getLinkedIndexes(currIdx)) {
+                toBeEval.push_back(otherIndex);
+            }
+
             combinations = newRes;
             visited.insert(currIdx);
+            visitedInGroup.insert(currIdx);
         }
     }
 
     // generate result
     vector<vector<string>> finalRes;
+    set<vector<string>> generatedAlready;
     for (vector<string> v : combinations) {
         vector<string> res;
         for (INDEX i : indexes) {
             res.push_back(v[i]);
         }
-        finalRes.push_back(res);
+        if (generatedAlready.count(res) == 0) {
+            finalRes.push_back(res);
+            generatedAlready.insert(res);
+        }
     }
 
     return finalRes;
