@@ -40,7 +40,7 @@ Clause *PatternParser::parsePt(PatTuple patTuple) {
 Clause *PatternParser::parseAssign(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseValidVariable(var);
+    Reference *ref = parseVariable(var);
 
     if (isWildcardPattern(tokens)) {
         return new Clause(*identity, *ref, vector<string>{}, true);
@@ -54,7 +54,7 @@ Clause *PatternParser::parseAssign(Reference *identity) {
 Clause *PatternParser::parseWhile(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseValidVariable(var);
+    Reference *ref = parseVariable(var);
 
     if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
@@ -65,37 +65,13 @@ Clause *PatternParser::parseWhile(Reference *identity) {
 Clause *PatternParser::parseIf(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseValidVariable(var);
+    Reference *ref = parseVariable(var);
 
     if (!ParserUtil::isWildcard(tokens.at(0)) ||
         !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
     return new Clause(ClauseType::PATTERN, *identity, *ref);
-}
-
-Reference *PatternParser::parseValidVariable(string var) {
-    Reference *ref = getReferenceIfDeclared(var);
-
-    if (ref != nullptr) {
-        if (ref->getDeType() != DesignEntityType::VARIABLE) {
-            throw ValidityError("invalid reference");
-        }
-        return ref->copy();
-    }
-
-    DesignEntityType deT = DesignEntityType::VARIABLE;
-    ReferenceAttribute attr = ReferenceAttribute::NAME;
-    ReferenceType refT;
-    if (ParserUtil::isWildcard(var)) {
-        refT = ReferenceType::WILDCARD;
-    } else if (ParserUtil::isQuoted(var)) {
-        refT = ReferenceType::CONSTANT;
-        var = var.substr(1, var.size() - 2);
-    } else {
-        throw ValidityError("invalid reference");
-    }
-    return new Reference(deT, refT, var, attr);
 }
 
 vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
