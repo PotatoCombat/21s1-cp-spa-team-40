@@ -1,12 +1,12 @@
 1 - everything next of end of while loop
 stmt s;
 Select s such that Next(6, s)
-3, 7
+3
 5000
 2 - next of condition of if statement
 stmt s;
 Select s such that Next(7, s)
-8, 9, 10
+8, 9
 5000
 3 - next of condition of while loop
 stmt s;
@@ -76,12 +76,12 @@ Select s such that Next(18, s)
 16 - everything next of a generic while loop
 while w, stmt s;
 Select s such that Next(w, s)
-4, 7, 14, 18
+4, 14, 20
 5000
 17 - everything next of a generic if statement
 if i, stmt s;
 Select s such that Next(i, s)
-8, 9, 10, 15, 16, 13, 18
+8, 9, 15, 16
 5000
 18 - everything next of an assign statement
 assign a; stmt s;
@@ -111,12 +111,12 @@ Select s such that Next(6, 3)
 23 - statement that comes before statement after a while loop
 stmt s;
 Select s such that Next(s, 7)
-3, 6
+3
 5000
 24 - statement that comes before statement after an if statement
 stmt s;
 Select s such that Next(s, 18)
-15, 17, 13
+13
 5000
 25 - everything next* of end of while loop
 stmt s;
@@ -201,7 +201,7 @@ Select s such that Next*(w, s)
 41 - everything next* of a generic if statement
 if i, stmt s;
 Select s such that Next*(i, s)
-7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
 5000
 42 - everything next* of an assign statement
 assign a; stmt s;
@@ -402,4 +402,9 @@ Select n1 such that Next(n1,n2)
 prog_line n1,n2;
 Select n2 such that Next(n1,n2)
 10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+82 - prog_line
+prog_line n;
+Select n
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,1
 5000
