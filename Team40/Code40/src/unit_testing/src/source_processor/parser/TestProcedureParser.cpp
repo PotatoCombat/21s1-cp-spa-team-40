@@ -2,10 +2,10 @@
 #include "source_processor/parser/ProcedureParser.h"
 
 TEST_CASE("ProcedureParser: parseProcedure") {
-    auto *actualStmt = ProcedureParser({"procedure", "computeAverage", "{"}).parseProcedure();
-    auto testStmt = TestParserUtils::createProcedure("computeAverage");
-    REQUIRE(*actualStmt == testStmt);
-    delete actualStmt;
+    auto *actualProc = ProcedureParser({"procedure", "computeAverage", "{"}).parseProcedure();
+    auto testProc = TestParserUtils::createProcedure("computeAverage");
+    REQUIRE(*actualProc == testProc);
+    delete actualProc;
 }
 
 TEST_CASE("ProcedureParser: parseProcedure - throws invalid procedure name") {

@@ -13,6 +13,9 @@ struct TestQueryProcessor {
         REQUIRE(results.size() == 1);
         REQUIRE(results.front() == "FALSE");
     };
+    static void requireResultsEmpty(list<string> results) {
+        REQUIRE(results.empty());
+    }
 };
 
 TEST_CASE("QueryProcessor: Select BOOLEAN = TRUE") {
@@ -51,4 +54,14 @@ TEST_CASE("QueryProcessor: Select BOOLEAN = FALSE") {
     SELECT_BOOLEAN = "assign a; Select BOOLEAN with \"variable\" = 10";
     qp.processQuery(SELECT_BOOLEAN, results);
     TestQueryProcessor::requireResultsFalse(results);
+}
+
+TEST_CASE("QueryProcessor: Select attrRef = semantic error") {
+    QueryProcessor qp(nullptr);
+    list<string> results;
+
+    // invalid attribute
+    string SELECT_ATTRREF = "stmt s; Select s.procName such that Calls(s, \"x\")";
+    qp.processQuery(SELECT_ATTRREF, results);
+    TestQueryProcessor::requireResultsEmpty(results);
 }
