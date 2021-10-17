@@ -1,0 +1,260 @@
+1 - all statements
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+2 - all procedures that call another procedure
+procedure p, q;
+Select p such that Calls(p, q)
+B, C, D, E
+5000
+3 - all procedures that are called by another procedure
+procedure p, q;
+Select q such that Calls(p, q)
+C, D, E, F, G, H
+5000
+4 - all procedures that call another procedure with wildcard
+procedure p;
+Select p such that Calls(p, _)
+B, C, D, E
+5000
+5 - all procedures that are called by another procedure with wildcard
+procedure q;
+Select q such that Calls(_, q)
+C, D, E, F, G, H
+5000
+6 - different synonym used where both are wild cards
+stmt s;
+Select s such that Calls(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+7 - procedures called by a specific procedure
+procedure p;
+Select p such that Calls("  C", p)
+D, E, F, G
+5000
+8 - procedures called by a specific procedure (doesn't exist)
+procedure p;
+Select p such that Calls("  A", p)
+
+5000
+9 - procedures calling a specific procedure
+procedure p;
+Select p such that Calls(p, "G")
+C, D, E
+5000
+10 - procedures calling a specific procedure (doesn't exist)
+procedure p;
+Select p such that Calls(p, "A")
+
+5000
+11 - invalid query looking for statements that call another procedure
+stmt p;
+Select p such that Calls(p, "G")
+
+5000
+12 - get all procedures
+procedure p;
+Select p
+A, B, C, D, E, F, G, H
+5000
+13 - synonym not in condition where condition is TRUE
+stmt s;
+Select s such that Calls("  B", _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+14 - boolean for a TRUE condition
+
+Select BOOLEAN such that Calls("B", "   C")
+TRUE
+5000
+15 - boolean for a FALSE condition
+
+Select BOOLEAN such that Calls("A",   "C")
+FALSE
+5000
+16 - all tuple procedure pairs that call and are called
+procedure p, q;
+Select <p, q> such that Calls(p, q)
+B C, C D, C E, C F, C G, D G, E F, E G, E H
+5000
+17 - procedures that call themselves (not possible)
+procedure p;
+Select p such that Calls(p, p)
+
+5000
+18 - call all booleans
+
+Select BOOLEAN
+TRUE
+5000
+19 - all procedures that call another procedure using procName
+procedure p, q;
+Select p.procName such that Calls(p, q)
+B, C, D, E
+5000
+20 - all procedures that are called by another procedure using procName
+procedure p, q;
+Select q.procName such that Calls(p, q)
+C, D, E, F, G, H
+5000
+21 - all procedures that call another procedure with wildcard using procName
+procedure p;
+Select p.procName such that Calls(p, _)
+B, C, D, E
+5000
+22 - all procedures that are called by another procedure with wildcard using procName
+procedure q;
+Select q.procName such that Calls(_, q)
+C, D, E, F, G, H
+5000
+23 - different synonym used where both are wild cards using procName
+stmt s;
+Select s such that Calls(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+24 - procedures called by a specific procedure using procName
+procedure p;
+Select p.procName such that Calls("  C", p)
+D, E, F, G
+5000
+25 - procedures called by a specific procedure (doesn't exist) using procName
+procedure p;
+Select p.procName such that Calls("  A", p)
+
+5000
+26 - procedures calling a specific procedure using procName
+procedure p;
+Select p.procName such that Calls(p, "G")
+C, D, E
+5000
+27 - procedures calling a specific procedure (doesn't exist) using procName
+procedure p;
+Select p.procName such that Calls(p, "A")
+
+5000
+28 - invalid query looking for statements that call another procedure using procName
+stmt p;
+Select p.procName such that Calls(p, "G")
+
+5000
+29 - get all procedures using procName
+procedure p;
+Select p.procName
+A, B, C, D, E, F, G, H
+5000
+30 - all tuple procedure pairs that call and are called using procName
+procedure p, q;
+Select <p.procName, q.procName> such that Calls(p, q)
+B C,  C D, C E, C F, C G, D G, E F, E G, E H
+5000
+31 - procedures that call themselves (not possible) using procName
+procedure p;
+Select p.procName such that Calls(p, p)
+
+5000
+32 - all tuple procedure pairs that call and are called using procName
+procedure p, q;
+Select <p, q.procName> such that Calls(p, q)
+B C,  C D, C E, C F, C G, D G, E F, E G, E H
+5000
+33 - all procedures that call* another procedure
+procedure p, q;
+Select p such that Calls*(p, q)
+B, C, D, E
+5000
+34 - all procedures that are called* by another procedure
+procedure p, q;
+Select q such that Calls*(p, q)
+C, D, E, F, G, H
+5000
+35 - all procedures that call* another procedure with wildcard
+procedure p;
+Select p such that Calls*(p, _)
+B, C, D, E
+5000
+36 - all procedures that are called* by another procedure with wildcard
+procedure q;
+Select q such that Calls*(_, q)
+C, D, E, F, G, H
+5000
+37 - different synonym used where both are wild cards
+stmt s;
+Select s such that Calls*(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+38 - procedures called* by a specific procedure
+procedure p;
+Select p such that Calls*("  B", p)
+C, D, E, F, G, H
+5000
+39 - procedures called* by a specific procedure (doesn't exist)
+procedure p;
+Select p such that Calls*("  A", p)
+
+5000
+40 - procedures calling* a specific procedure
+procedure p;
+Select p such that Calls*(p, "H")
+B, C, E
+5000
+41 - procedures calling* a specific procedure (doesn't exist)
+procedure p;
+Select p such that Calls*(p, "A")
+
+5000
+42 - invalid query looking for statements that call* another procedure
+stmt p;
+Select p such that Calls*(p, "G")
+
+5000
+43 - synonym not in condition where condition is TRUE
+stmt s;
+Select s such that Calls*("  B", _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+44 - boolean for a TRUE condition
+
+Select BOOLEAN such that Calls*("B", "   H")
+TRUE
+5000
+45 - boolean for a FALSE condition
+
+Select BOOLEAN such that Calls*("A",   "C")
+FALSE
+5000
+46 - all tuple procedure pairs that call* and are called*
+procedure p, q;
+Select <p, q> such that Calls*(p, q)
+B C, B D, B E, B F, B G, B H, C D, C E, C F, C G, C H, D G, E F, E G, E H
+5000
+47 - procedures that call* themselves (not possible)
+procedure p;
+Select p such that Calls*(p, p)
+
+5000
+48 - Get all call statements
+call c;
+Select c
+10,11,12,13,14,15,5,8,9
+5000
+49 - synonym not in relationship TRUE
+stmt s;
+Select s such that Calls("B", "C")
+1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9
+5000
+50 - synonym not in relationship FALSE
+stmt s;
+Select s such that Calls("B", "G")
+
+5000
+51 - synonym not in relationship TRUE
+stmt s;
+Select s such that Calls*("B", "G")
+1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9
+5000
+52 - synonym not in relationship FALSE
+stmt s;
+Select s such that Calls*("C", "B")
+
+5000

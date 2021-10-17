@@ -1,0 +1,26 @@
+procedure A {
+    x = x + 1 * 5;
+    if (x >= y) then {
+        y = y * z + x * a * b;
+        z = a * b;
+        x = z + x;
+    } else {
+        y = x + 1 * 5;
+    }
+    x = v + x * y + z * t;
+    while ( 1 == 2) {
+        a = v;
+        b = x * y;
+        c = v + x;
+        d = v + x * y;
+    }
+    if ( 1 > 2) then {
+        x = x + 1;
+    } else {
+        z = z * 5;
+    }
+    while (x != z) {
+        a = x * y + z * t;
+        b = v + x * y + z * t;
+    }
+}
