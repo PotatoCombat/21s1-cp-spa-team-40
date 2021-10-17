@@ -267,3 +267,53 @@ TEST_CASE("QueryEvaluator: 2 synonyms exists but not linked before") {
     vector<string> actual = evaluator.evaluateQuery(query);
     REQUIRE(actual == vector<string>{"1 2"});
 }
+
+TEST_CASE("QueryEvaluator: cycle relationship") {
+    Query query;
+    Reference a(DesignEntityType::STMT, ReferenceType::SYNONYM, "a",
+                ReferenceAttribute::INTEGER);
+    Reference b(DesignEntityType::STMT, ReferenceType::SYNONYM, "b",
+                ReferenceAttribute::INTEGER);
+    Reference c(DesignEntityType::STMT, ReferenceType::SYNONYM, "c",
+                ReferenceAttribute::INTEGER);
+    Clause follows1(ClauseType::FOLLOWS, a, b);
+    Clause follows2(ClauseType::FOLLOWS, b, c);
+    Clause follows3(ClauseType::FOLLOWS_T, a, c);
+
+    query.addReturnReference(&a);
+    query.addReturnReference(&b);
+    query.addReturnReference(&c);
+
+    query.addClause(&follows1);
+    query.addClause(&follows2);
+    query.addClause(&follows3);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    vector<string> expected{"1 2 3", "2 3 4",  "3 4 12",
+                            "5 6 9", "6 9 10", "9 10 11"};
+    REQUIRE(actual == expected);
+}
+
+TEST_CASE("QueryEvaluator: remove duplicate") {
+    Query query;
+    Reference a(DesignEntityType::STMT, ReferenceType::SYNONYM, "a",
+                ReferenceAttribute::INTEGER);
+    Reference b(DesignEntityType::STMT, ReferenceType::SYNONYM, "b",
+                ReferenceAttribute::INTEGER);
+    Reference c(DesignEntityType::STMT, ReferenceType::SYNONYM, "c",
+                ReferenceAttribute::INTEGER);
+    Clause follows1(ClauseType::FOLLOWS, a, b);
+    Clause follows2(ClauseType::FOLLOWS_T, b, c);
+
+    query.addReturnReference(&a);
+    query.addReturnReference(&b);
+
+    query.addClause(&follows1);
+    query.addClause(&follows2);
+
+    QueryEvaluator evaluator(&TestQueryEvaluator::pkbStub);
+    vector<string> actual = evaluator.evaluateQuery(query);
+    vector<string> expected{"1 2", "2 3", "3 4", "5 6", "6 9", "9 10"};
+    REQUIRE(actual == expected);
+}

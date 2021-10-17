@@ -185,16 +185,22 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
     if (result.hasResultList1() && result.hasResultList2() && appearInSameClauseAlr[ref1Idx][ref2Idx]) {
         combineTwoSyn(result, ref1Idx, ref2Idx);
     } else {
+        vector<pair<int, string>> toRemove;
+
         // first ref is syn
         if (result.hasResultList1()) {
             // ref1Idx should not be INVALID_INDEX
-            combineOneSyn(result, ref1Idx, ref2Idx, false);
+            combineOneSyn(result, ref1Idx, ref2Idx, false, &toRemove);
         }
 
         // second ref is syn
         if (result.hasResultList2()) {
             // ref2Idx should not be INVALID_INDEX
-            combineOneSyn(result, ref2Idx, ref1Idx, true);
+            combineOneSyn(result, ref2Idx, ref1Idx, true, &toRemove);
+        }
+
+        for (auto &mapCoord : toRemove) {
+            resultTable.removeValue(mapCoord.first, mapCoord.second);
         }
     }
 
@@ -207,10 +213,9 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
 }
 
 void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
-                                   bool isSecondRef) {
+                                   bool isSecondRef, vector<pair<int, string>> *toRemove) {
     // refIdx should not be INVALID_INDEX
     map<VALUE, VALUE_SET> res;
-    vector<pair<int, string>> toRemove;
 
     if (isSecondRef) {
         res = result.getResultList2();
@@ -222,12 +227,12 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
         for (auto &valueToValuesPair : res) {
             string val = valueToValuesPair.first;
             if (!resultTable.hasVal(refIdx, val)) {
-                toRemove.push_back({refIdx, val});
+                toRemove->push_back({refIdx, val});
             }
         }
         for (string val : resultTable.getValues(refIdx)) {
             if (res.find(val) == res.end()) {
-                toRemove.push_back({refIdx, val});
+                toRemove->push_back({refIdx, val});
             }
         }
     }
@@ -239,10 +244,6 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
             resultTable.addValueWithLink(refIdx, valueToValuesPair.first,
                                          otherRefIdx, valueToValuesPair.second);
         }
-    }
-
-    for (auto &mapCoord : toRemove) {
-        resultTable.removeValue(mapCoord.first, mapCoord.second);
     }
 }
 

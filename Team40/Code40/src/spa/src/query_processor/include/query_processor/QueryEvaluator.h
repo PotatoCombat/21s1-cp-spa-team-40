@@ -60,7 +60,7 @@ private:
     void combineResult(Result result, int ref1Index, int ref2Index, bool &exitEarly);
 
     void combineOneSyn(Result result, int refIdx, int otherRefIdx,
-                       bool isSecondRef);
+                       bool isSecondRef, vector<pair<int, string>> *toRemove);
 
     void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
