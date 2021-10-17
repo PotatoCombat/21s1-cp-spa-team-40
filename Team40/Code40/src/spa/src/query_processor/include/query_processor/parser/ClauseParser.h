@@ -33,6 +33,8 @@ protected:
     virtual Clause *parseWt(WithPair);
 
     Reference *getReferenceIfDeclared(string syn);
+    Reference *parseVariable(string syn);
+    Reference *parseStmt(string syn);
 
     vector<Reference *> declList;
 

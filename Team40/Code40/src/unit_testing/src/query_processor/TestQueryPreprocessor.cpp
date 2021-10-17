@@ -82,9 +82,9 @@ void TestQPreprocessor::buildQuery(pair<string, string> clauseArgs, Query &q) {
     } else if (arg2 == "a") {
         r2 = new Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM,
                            arg2, ReferenceAttribute::INTEGER);
-    } else if (arg2 == "n") {
-        r2 = new Reference(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM,
-                           arg2, ReferenceAttribute::INTEGER);
+    } else if (arg2 == "n") { // prog_line is converted to stmt internally
+        r2 = new Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, arg2,
+                           ReferenceAttribute::INTEGER);
     } else if (arg2 == "v") {
         r2 = new Reference(DesignEntityType::VARIABLE, ReferenceType::SYNONYM,
                            arg2, ReferenceAttribute::NAME);
@@ -366,7 +366,7 @@ TEST_CASE("QueryPreprocessor: with clauses") {
                      ReferenceAttribute::INTEGER);
     Reference procedure(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM,
                         "p", ReferenceAttribute::NAME);
-    Reference prog_line(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM,
+    Reference prog_line(DesignEntityType::STMT, ReferenceType::SYNONYM,
                         "n", ReferenceAttribute::INTEGER);
     Reference call(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
                    ReferenceAttribute::INTEGER);

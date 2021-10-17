@@ -20,8 +20,6 @@ private:
     Clause *parseWhile(Reference *identity);
     Clause *parseIf(Reference *identity);
 
-    Reference *parseValidVariable(string var);
-
     bool isAssignPatternClause(Reference *identity);
     bool isWhilePatternClause(Reference *identity);
     bool isIfPatternClause(Reference *identity);

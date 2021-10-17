@@ -463,3 +463,23 @@ TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 }
+
+TEST_CASE("SuchThatParser: prog_line is converted to stmt") {
+    SuchThatParser p;
+    Reference PROG_LINE =
+        Reference(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM, "n",
+                  ReferenceAttribute::INTEGER);
+    Reference PROG_LINE_CONVERTED =
+        Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "n",
+                  ReferenceAttribute::INTEGER);
+
+    p.initReferences(vector<Reference *>{&PROG_LINE});
+
+    SECTION("Next(n, n)") {
+        Clause *expected = new Clause(ClauseType::NEXT, PROG_LINE_CONVERTED,
+                                      PROG_LINE_CONVERTED);
+        ClsTuple tup = make_tuple("Next", "n", "n");
+        Clause *actual = p.parse(tup);
+        REQUIRE(actual->equals(*expected));
+    }
+}
