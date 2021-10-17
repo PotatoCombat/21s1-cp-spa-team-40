@@ -21,7 +21,6 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     if (*next(ifItr) != "(" || *prev(endItr) != "then" || *prev(prev(endItr)) != ")") {
         throw invalid_argument("invalid if statement");
     }
-
     if (next(next(ifItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
     }
@@ -29,6 +28,9 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
     parseChildStatements(programIndex);
+    if (stmt->getThenStmtLst().size() == 0 || stmt->getElseStmtLst().size() == 0) {
+        throw invalid_argument("nested stmtLst should have at least one statement.");
+    }
     return stmt;
 }
 

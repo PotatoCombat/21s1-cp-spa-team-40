@@ -22,7 +22,6 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     if (*next(whileItr) != "(" || *prev(endItr) != ")") {
         throw invalid_argument("invalid while statement");
     }
-
     if (next(next(whileItr)) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
@@ -30,6 +29,9 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
     parseChildStatements(programIndex);
+    if (stmt->getThenStmtLst().size() == 0) {
+        throw invalid_argument("nested stmtLst should have at least one statement.");
+    }
     return stmt;
 }
 
