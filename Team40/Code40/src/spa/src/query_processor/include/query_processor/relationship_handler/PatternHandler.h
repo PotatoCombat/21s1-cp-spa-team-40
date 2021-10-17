@@ -20,6 +20,19 @@ private:
     PKB *pkb;
     void validate();
 
+    // Wrappers for PKB functions
+    set<int> getPartialAssignPatternStmts(string var, vector<string> pattern);
+    set<int> getExactAssignPatternStmts(string var, vector<string> pattern);
+
+    set<int> getIfPatternStmts(string var, vector<string> pattern);
+    set<int> getWhilePatternStmts(string var, vector<string> pattern);
+
+    bool partialAssignPattern(int stmt, string var, vector<string> pattern);
+    bool exactAssignPattern(int stmt, string var, vector<string> pattern);
+
+    bool ifPattern(int stmt, string var, vector<string> pattern);
+    bool whilePattern(int stmt, string var, vector<string> pattern);
+
 public:
     PatternHandler(Clause *patternClause, PKB *pkb)
         : patternClause(patternClause), pkb(pkb) {}
