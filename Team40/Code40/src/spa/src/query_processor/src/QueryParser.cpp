@@ -8,7 +8,7 @@ void QueryParser::clear() {
 }
 
 void QueryParser::clearDeclarations() {
-    for (int i = 0; i < this->declList.size(); ++i) {
+    for (size_t i = 0; i < this->declList.size(); ++i) {
         delete this->declList[i];
     }
     this->declList.clear();

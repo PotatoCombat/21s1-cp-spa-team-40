@@ -1,19 +1,9 @@
 #include "query_processor/parser/PatternParser.h"
 
-PatternParser::PatternParser() {
-    this->ident = "";
-    this->var = "";
-    this->tokens.clear();
-}
-
-void PatternParser::initReferences(vector<Reference *> &declList) {
-    this->declList = declList;
-}
-
 void PatternParser::clear() {
     this->declList.clear();
-    this->ident = "";
-    this->var = "";
+    this->ref1 = "";
+    this->ref2 = "";
     this->tokens.clear();
 }
 
@@ -22,12 +12,12 @@ void PatternParser::clear() {
  * @param patTuple Tuple of <stmt, var, vector<token>>.
  * @return Clause object of type PATTERN.
  */
-Clause *PatternParser::parse(PatTuple patTuple) {
-    this->ident = get<0>(patTuple);
-    this->var = get<1>(patTuple);
+Clause *PatternParser::parsePt(PatTuple patTuple) {
+    this->ref1 = get<0>(patTuple);
+    this->ref2 = get<1>(patTuple);
     this->tokens = get<2>(patTuple);
 
-    Reference *identity = getReferenceIfDeclared(this->ident);
+    Reference *identity = getReferenceIfDeclared(this->ref1);
 
     if (identity == nullptr) {
         throw ValidityError("undeclared pattern synonym");
@@ -48,7 +38,7 @@ Clause *PatternParser::parse(PatTuple patTuple) {
 }
 
 Clause *PatternParser::parseAssign(Reference *identity) {
-    string var = this->var;
+    string var = this->ref2;
     vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
@@ -62,7 +52,7 @@ Clause *PatternParser::parseAssign(Reference *identity) {
 }
 
 Clause *PatternParser::parseWhile(Reference *identity) {
-    string var = this->var;
+    string var = this->ref2;
     vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
@@ -73,7 +63,7 @@ Clause *PatternParser::parseWhile(Reference *identity) {
 }
 
 Clause *PatternParser::parseIf(Reference *identity) {
-    string var = this->var;
+    string var = this->ref2;
     vector<string> tokens = this->tokens;
     Reference *ref = parseValidVariable(var);
 
@@ -122,8 +112,7 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
                 isWord = true;
                 bracketCount += 1;
                 validatedTokens.push_back(t);
-            } else if (ParserUtil::isValidName(t) ||
-                        ParserUtil::isInteger(t)) {
+            } else if (ParserUtil::isValidName(t) || ParserUtil::isInteger(t)) {
                 isWord = false;
                 validatedTokens.push_back(t);
             } else {
@@ -148,22 +137,6 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
     }
 
     return validatedTokens;
-}
-
-/**
- * Retrieves synonym in the declaration list if it exists.
- * @param syn The synonym name.
- * @return Reference object if match, otherwise nullptr.
- */
-Reference *PatternParser::getReferenceIfDeclared(string syn) {
-    auto it = find_if(declList.begin(), declList.end(), [&syn](Reference *ref) {
-        return ref->getValue() == syn;
-    });
-
-    if (it != declList.end()) {
-        return *it;
-    }
-    return nullptr;
 }
 
 bool PatternParser::isAssignPatternClause(Reference *identity) {

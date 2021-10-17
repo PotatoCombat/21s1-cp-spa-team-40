@@ -24,10 +24,10 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
             returnBoolean = true;
         }
 
-        addReturnReferencesToQuery(retStrings, q);
+        this->addReturnReferencesToQuery(retStrings, q);
 
         if (clauses.empty()) {
-            parser.clear();
+            this->clear();
             return true;
         }
 

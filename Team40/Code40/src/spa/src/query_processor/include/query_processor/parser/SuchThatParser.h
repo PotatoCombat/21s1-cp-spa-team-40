@@ -3,35 +3,20 @@
 #include <string>
 #include <vector>
 
-#include "query_processor/Abstractions.h"
+#include "query_processor/parser/ClauseParser.h"
 
-#include "query_processor/model/Clause.h"
-#include "query_processor/model/ClauseTypeHelper.h"
-#include "query_processor/model/DesignEntityType.h"
-#include "query_processor/model/DesignEntityTypeHelper.h"
-#include "query_processor/model/Reference.h"
-#include "query_processor/parser/ParserUtil.h"
-
-class SuchThatParser {
+class SuchThatParser : public ClauseParser {
 public:
-    SuchThatParser();
+    SuchThatParser() : ClauseParser() {}
 
-    Clause *parse(ClsTuple clsTuple);
-
-    void initReferences(vector<Reference *> &declList);
     void clear();
 
 private:
+    Clause *parseSt(ClsTuple clsTuple) override;
+
     Clause *parseStmtStmt();
     Clause *parseProcProc();
     Clause *parseXEnt();
-
-    Reference *getReferenceIfDeclared(string syn);
-
-    ClauseTypeHelper clsHelper;
-    DesignEntityTypeHelper deHelper;
-
-    vector<Reference *> declList;
 
     string type;
     string ref1;
