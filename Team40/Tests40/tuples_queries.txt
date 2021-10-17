@@ -1,0 +1,220 @@
+1 - all procedures that calls another procedure (procedure declaration, tuple with 2 variables return)
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2)
+proc1 proc2,proc1 proc3,proc1 proc4,proc1 proc5,proc1 proc6,proc1 proc7,proc2 proc3,proc2 proc4,proc2 proc5,proc2 proc6,proc2 proc7,proc3 proc4,proc3 proc5,proc3 proc6,proc3 proc7,proc4 proc5,proc4 proc6,proc4 proc7,proc5 proc6,proc5 proc7,proc6 proc7
+5000
+2 - all procedures that calls another procedure that calls itself i.e. semantically invalid, return none (procedure declaration, tuple with 2 variables return)
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2) and Calls(p2, p1)
+none
+5000
+3 - all procedures that calls another procedure that calls another procedure (procedure declaration, tuple with 3 variables return)
+procedure p1, p2, p3;
+Select <p1, p2, p3> such that Calls(p1 ,p2) and Calls(p2, p3) 
+proc1 proc2 proc3,proc1 proc2 proc4,proc1 proc2 proc5,proc1 proc2 proc6,proc1 proc2 proc7,proc1 proc3 proc4,proc1 proc3 proc5,proc1 proc3 proc6,proc1 proc3 proc7,proc1 proc4 proc5,proc1 proc4 proc6,proc1 proc4 proc7,proc1 proc5 proc6,proc1 proc5 proc7,proc1 proc6 proc7,proc2 proc3 proc4,proc2 proc3 proc5,proc2 proc3 proc6,proc2 proc3 proc7,proc2 proc4 proc5,proc2 proc4 proc6,proc2 proc4 proc7,proc2 proc5 proc6,proc2 proc5 proc7,proc2 proc6 proc7,proc3 proc4 proc5,proc3 proc4 proc6,proc3 proc4 proc7,proc3 proc5 proc6,proc3 proc5 proc7,proc3 proc6 proc7,proc4 proc5 proc6,proc4 proc5 proc7,proc4 proc6 proc7,proc5 proc6 proc7
+5000
+4 - all procedures that calls another procedure that calls another procedure that... (procedure declaration, tuple with 4 variables return)
+procedure p1, p2, p3, p4;
+Select <p1, p2, p3, p4> such that Calls(p1 ,p2) and Calls(p2, p3) and Calls(p3, p4) 
+proc1 proc2 proc3 proc4,proc1 proc2 proc3 proc5,proc1 proc2 proc3 proc6,proc1 proc2 proc3 proc7,proc1 proc2 proc4 proc5,proc1 proc2 proc4 proc6,proc1 proc2 proc4 proc7,proc1 proc2 proc5 proc6,proc1 proc2 proc5 proc7,proc1 proc2 proc6 proc7,proc1 proc3 proc4 proc5,proc1 proc3 proc4 proc6,proc1 proc3 proc4 proc7,proc1 proc3 proc5 proc6,proc1 proc3 proc5 proc7,proc1 proc3 proc6 proc7,proc1 proc4 proc5 proc6,proc1 proc4 proc5 proc7,proc1 proc4 proc6 proc7,proc1 proc5 proc6 proc7,proc2 proc3 proc4 proc5,proc2 proc3 proc4 proc6,proc2 proc3 proc4 proc7,proc2 proc3 proc5 proc6,proc2 proc3 proc5 proc7,proc2 proc3 proc6 proc7,proc2 proc4 proc5 proc6,proc2 proc4 proc5 proc7,proc2 proc4 proc6 proc7,proc2 proc5 proc6 proc7,proc3 proc4 proc5 proc6,proc3 proc4 proc5 proc7,proc3 proc4 proc6 proc7,proc3 proc5 proc6 proc7,proc4 proc5 proc6 proc7
+5000
+5 - all procedures that calls another procedure that calls another procedure that... (procedure declaration, tuple with 7 variables return)
+procedure p1, p2, p3, p4, p5, p6, p7;
+Select <p1, p2, p3, p4, p5, p6, p7> such that Calls(p1 ,p2) and Calls(p2, p3) and Calls(p3, p4) and Calls(p4, p5) and Calls(p5, p6) and Calls(p6, p7)    
+proc1 proc2 proc3 proc4 proc5 proc6 proc7
+5000
+6 - all procedures that calls* another procedure (procedure declaration, tuple with 2 variables return)
+procedure p1,  p2;
+Select <p1, p2> such that Calls*(p1 ,p2)
+proc1 proc2,proc1 proc3,proc1 proc4,proc1 proc5,proc1 proc6,proc1 proc7,proc2 proc3,proc2 proc4,proc2 proc5,proc2 proc6,proc2 proc7,proc3 proc4,proc3 proc5,proc3 proc6,proc3 proc7,proc4 proc5,proc4 proc6,proc4 proc7,proc5 proc6,proc5 proc7,proc6 proc7
+5000
+7 - all procedures that calls* another procedure that calls itself i.e. semantically invalid, return none (procedure declaration, tuple with 2 variables return)
+procedure p1,  p2;
+Select <p1, p2> such that Calls*(p1 ,p2) and Calls*(p2 ,p1)
+none
+5000
+8 - all procedures that calls* another procedure that calls* another procedure (procedure declaration, tuple with 3 variables return)
+procedure p1,  p2, p3;
+Select <p1, p2, p3> such that Calls*(p1 ,p2) and Calls*(p2 ,p3)
+proc1 proc2 proc3,proc1 proc2 proc4,proc1 proc2 proc5,proc1 proc2 proc6,proc1 proc2 proc7,proc1 proc3 proc4,proc1 proc3 proc5,proc1 proc3 proc6,proc1 proc3 proc7,proc1 proc4 proc5,proc1 proc4 proc6,proc1 proc4 proc7,proc1 proc5 proc6,proc1 proc5 proc7,proc1 proc6 proc7,proc2 proc3 proc4,proc2 proc3 proc5,proc2 proc3 proc6,proc2 proc3 proc7,proc2 proc4 proc5,proc2 proc4 proc6,proc2 proc4 proc7,proc2 proc5 proc6,proc2 proc5 proc7,proc2 proc6 proc7,proc3 proc4 proc5,proc3 proc4 proc6,proc3 proc4 proc7,proc3 proc5 proc6,proc3 proc5 proc7,proc3 proc6 proc7,proc4 proc5 proc6,proc4 proc5 proc7,proc4 proc6 proc7,proc5 proc6 proc7
+5000
+9 - all procedures that calls* another procedure that calls* another procedure that... (procedure declaration, tuple with 4 variables return)
+procedure p1,  p2, p3, p4;
+Select <p1, p2, p3, p4> such that Calls*(p1 ,p2) and Calls*(p2 ,p3) and Calls*(p3 ,p4)
+proc1 proc2 proc3 proc4,proc1 proc2 proc3 proc5,proc1 proc2 proc3 proc6,proc1 proc2 proc3 proc7,proc1 proc2 proc4 proc5,proc1 proc2 proc4 proc6,proc1 proc2 proc4 proc7,proc1 proc2 proc5 proc6,proc1 proc2 proc5 proc7,proc1 proc2 proc6 proc7,proc1 proc3 proc4 proc5,proc1 proc3 proc4 proc6,proc1 proc3 proc4 proc7,proc1 proc3 proc5 proc6,proc1 proc3 proc5 proc7,proc1 proc3 proc6 proc7,proc1 proc4 proc5 proc6,proc1 proc4 proc5 proc7,proc1 proc4 proc6 proc7,proc1 proc5 proc6 proc7,proc2 proc3 proc4 proc5,proc2 proc3 proc4 proc6,proc2 proc3 proc4 proc7,proc2 proc3 proc5 proc6,proc2 proc3 proc5 proc7,proc2 proc3 proc6 proc7,proc2 proc4 proc5 proc6,proc2 proc4 proc5 proc7,proc2 proc4 proc6 proc7,proc2 proc5 proc6 proc7,proc3 proc4 proc5 proc6,proc3 proc4 proc5 proc7,proc3 proc4 proc6 proc7,proc3 proc5 proc6 proc7,proc4 proc5 proc6 proc7
+5000
+10 - all procedures that calls* another procedure that calls* another procedure that... (procedure declaration, tuple with 7 variables return)
+procedure p1, p2, p3, p4, p5, p6, p7;
+Select <p1, p2, p3, p4, p5, p6, p7> such that Calls*(p1 ,p2) and Calls*(p2, p3) and Calls*(p3, p4) and Calls*(p4, p5) and Calls*(p5, p6) and Calls*(p6, p7)
+proc1 proc2 proc3 proc4 proc5 proc6 proc7
+5000
+11 - all program lines that execute next after another program line (call declaration, tuple with 2 variables return)
+call c1, c2;
+Select <c1, c2> such that Next(c1, c2)
+114 117,15 18,80 87
+5000
+12 - all program lines that execute next after another program line that executes itself next (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that Next(a1, a2) and Next(a2, a1)
+none
+5000
+13 - all program lines that execute next after another program line that execute next after another program line (print declaration, tuple with 3 variables return)
+print pr1, pr2, pr3;
+Select <pr1, pr2, pr3> such that Next(pr1 ,pr2) and Next(pr2, pr3) 
+38 39 40
+5000
+14 - all program lines that execute next after another program line that execute next after another program line that executes itself next (stmt declaration, tuple with 3 variables return)
+stmt s1, s2, s3;
+Select <s1, s2, s3> such that Next(s1 ,s2) and Next(s2, s3) and Next(s3, s1)
+104 105 106,105 106 104,106 104 105
+5000
+15 - all program lines that execute next after another program line that execute next... (read declaration, tuple with 4 variables return)
+read r1, r2, r3, r4;
+Select <r1, r2, r3, r4> such that Next(r1 ,r2) and Next(r2, r3) and Next(r3, r4) 
+1 2 3 4
+5000
+16 - all program lines that execute next after another program line that execute next... (prog_line declaration, tuple with 10 variables return)
+prog_line n1, n2, n3, n4, n5, n6, n7, n8, n9, n10;
+Select <n1, n2, n3, n4, n5, n6, n7, n8, n9, n10> such that Next(n1 ,n2) and Next(n2, n3) and Next(n3, n4) and Next(n4, n5) and Next(n5, n6) and Next(n6, n7) and Next(n7, n8) and Next(n8, n9) and Next(n9, n10)    
+1 2 3 4 5 6 7 21 22 23,1 2 3 4 5 6 7 8 9 10,1 2 3 4 5 6 7 8 9 20,10 11 12 13 14 15 18 19 9 10,10 11 12 13 14 15 18 19 9 20,10 11 12 16 17 18 19 9 10 11,10 11 12 16 17 18 19 9 20 35,102 103 104 105 106 104 105 106 104 105,102 103 104 105 106 104 105 106 104 107,103 104 105 106 104 105 106 104 105 106,103 104 105 106 104 105 106 104 107 108,104 105 106 104 105 106 104 105 106 104,105 106 104 105 106 104 105 106 104 105,105 106 104 105 106 104 105 106 104 107,106 104 105 106 104 105 106 104 105 106,106 104 105 106 104 105 106 104 107 108,11 12 13 14 15 18 19 9 10 11,11 12 13 14 15 18 19 9 20 35,11 12 16 17 18 19 9 10 11 12,11 12 16 17 18 19 9 20 35 36,12 13 14 15 18 19 9 10 11 12,12 13 14 15 18 19 9 20 35 36,12 16 17 18 19 9 10 11 12 13,12 16 17 18 19 9 10 11 12 16,12 16 17 18 19 9 20 35 36 37,13 14 15 18 19 9 10 11 12 13,13 14 15 18 19 9 10 11 12 16,13 14 15 18 19 9 20 35 36 37,14 15 18 19 9 10 11 12 13 14,14 15 18 19 9 10 11 12 16 17,14 15 18 19 9 20 35 36 37 38,15 18 19 9 10 11 12 13 14 15,15 18 19 9 10 11 12 16 17 18,15 18 19 9 20 35 36 37 38 39,16 17 18 19 9 10 11 12 13 14,16 17 18 19 9 10 11 12 16 17,16 17 18 19 9 20 35 36 37 38,17 18 19 9 10 11 12 13 14 15,17 18 19 9 10 11 12 16 17 18,17 18 19 9 20 35 36 37 38 39,18 19 9 10 11 12 13 14 15 18,18 19 9 10 11 12 16 17 18 19,18 19 9 20 35 36 37 38 39 40,19 9 10 11 12 13 14 15 18 19,19 9 10 11 12 16 17 18 19 9,2 3 4 5 6 7 21 22 23 24,2 3 4 5 6 7 21 22 23 33,2 3 4 5 6 7 8 9 10 11,2 3 4 5 6 7 8 9 20 35,21 22 23 24 25 26 27 28 32 23,21 22 23 24 25 29 30 31 32 23,21 22 23 33 34 35 36 37 38 39,22 23 24 25 26 27 28 32 23 24,22 23 24 25 26 27 28 32 23 33,22 23 24 25 29 30 31 32 23 24,22 23 24 25 29 30 31 32 23 33,22 23 33 34 35 36 37 38 39 40,23 24 25 26 27 28 32 23 24 25,23 24 25 26 27 28 32 23 33 34,23 24 25 29 30 31 32 23 24 25,23 24 25 29 30 31 32 23 33 34,24 25 26 27 28 32 23 24 25 26,24 25 26 27 28 32 23 24 25 29,24 25 26 27 28 32 23 33 34 35,24 25 29 30 31 32 23 24 25 26,24 25 29 30 31 32 23 24 25 29,24 25 29 30 31 32 23 33 34 35,25 26 27 28 32 23 24 25 26 27,25 26 27 28 32 23 24 25 29 30,25 26 27 28 32 23 33 34 35 36,25 29 30 31 32 23 24 25 26 27,25 29 30 31 32 23 24 25 29 30,25 29 30 31 32 23 33 34 35 36,26 27 28 32 23 24 25 26 27 28,26 27 28 32 23 24 25 29 30 31,26 27 28 32 23 33 34 35 36 37,27 28 32 23 24 25 26 27 28 32,27 28 32 23 24 25 29 30 31 32,27 28 32 23 33 34 35 36 37 38,28 32 23 24 25 26 27 28 32 23,28 32 23 24 25 29 30 31 32 23,28 32 23 33 34 35 36 37 38 39,29 30 31 32 23 24 25 26 27 28,29 30 31 32 23 24 25 29 30 31,29 30 31 32 23 33 34 35 36 37,3 4 5 6 7 21 22 23 24 25,3 4 5 6 7 21 22 23 33 34,3 4 5 6 7 8 9 10 11 12,3 4 5 6 7 8 9 20 35 36,30 31 32 23 24 25 26 27 28 32,30 31 32 23 24 25 29 30 31 32,30 31 32 23 33 34 35 36 37 38,31 32 23 24 25 26 27 28 32 23,31 32 23 24 25 29 30 31 32 23,31 32 23 33 34 35 36 37 38 39,32 23 24 25 26 27 28 32 23 24,32 23 24 25 26 27 28 32 23 33,32 23 24 25 29 30 31 32 23 24,32 23 24 25 29 30 31 32 23 33,32 23 33 34 35 36 37 38 39 40,4 5 6 7 21 22 23 24 25 26,4 5 6 7 21 22 23 24 25 29,4 5 6 7 21 22 23 33 34 35,4 5 6 7 8 9 10 11 12 13,4 5 6 7 8 9 10 11 12 16,4 5 6 7 8 9 20 35 36 37,41 42 43 44 45 46 47 48 49 50,41 42 43 44 45 46 47 66 67 68,42 43 44 45 46 47 48 49 50 51,42 43 44 45 46 47 48 49 50 57,42 43 44 45 46 47 66 67 68 69,43 44 45 46 47 48 49 50 51 52,43 44 45 46 47 48 49 50 57 58,43 44 45 46 47 66 67 68 69 70,44 45 46 47 48 49 50 51 52 53,44 45 46 47 48 49 50 51 52 56,44 45 46 47 48 49 50 57 58 59,44 45 46 47 66 67 68 69 70 71,45 46 47 48 49 50 51 52 53 54,45 46 47 48 49 50 51 52 56 64,45 46 47 48 49 50 57 58 59 60,45 46 47 48 49 50 57 58 59 63,46 47 48 49 50 51 52 53 54 55,46 47 48 49 50 51 52 56 64 65,46 47 48 49 50 57 58 59 60 61,46 47 48 49 50 57 58 59 63 64,47 48 49 50 51 52 53 54 55 52,47 48 49 50 51 52 56 64 65 47,47 48 49 50 57 58 59 60 61 62,47 48 49 50 57 58 59 63 64 65,48 49 50 51 52 53 54 55 52 53,48 49 50 51 52 53 54 55 52 56,48 49 50 51 52 56 64 65 47 48,48 49 50 51 52 56 64 65 47 66,48 49 50 57 58 59 60 61 62 59,48 49 50 57 58 59 63 64 65 47,49 50 51 52 53 54 55 52 53 54,49 50 51 52 53 54 55 52 56 64,49 50 51 52 56 64 65 47 48 49,49 50 51 52 56 64 65 47 66 67,49 50 57 58 59 60 61 62 59 60,49 50 57 58 59 60 61 62 59 63,49 50 57 58 59 63 64 65 47 48,49 50 57 58 59 63 64 65 47 66,5 6 7 21 22 23 24 25 26 27,5 6 7 21 22 23 24 25 29 30,5 6 7 21 22 23 33 34 35 36,5 6 7 8 9 10 11 12 13 14,5 6 7 8 9 10 11 12 16 17,5 6 7 8 9 20 35 36 37 38,50 51 52 53 54 55 52 53 54 55,50 51 52 53 54 55 52 56 64 65,50 51 52 56 64 65 47 48 49 50,50 51 52 56 64 65 47 66 67 68,50 57 58 59 60 61 62 59 60 61,50 57 58 59 60 61 62 59 63 64,50 57 58 59 63 64 65 47 48 49,50 57 58 59 63 64 65 47 66 67,51 52 53 54 55 52 53 54 55 52,51 52 53 54 55 52 56 64 65 47,51 52 56 64 65 47 48 49 50 51,51 52 56 64 65 47 48 49 50 57,51 52 56 64 65 47 66 67 68 69,52 53 54 55 52 53 54 55 52 53,52 53 54 55 52 53 54 55 52 56,52 53 54 55 52 56 64 65 47 48,52 53 54 55 52 56 64 65 47 66,52 56 64 65 47 48 49 50 51 52,52 56 64 65 47 48 49 50 57 58,52 56 64 65 47 66 67 68 69 70,53 54 55 52 53 54 55 52 53 54,53 54 55 52 53 54 55 52 56 64,53 54 55 52 56 64 65 47 48 49,53 54 55 52 56 64 65 47 66 67,54 55 52 53 54 55 52 53 54 55,54 55 52 53 54 55 52 56 64 65,54 55 52 56 64 65 47 48 49 50,54 55 52 56 64 65 47 66 67 68,55 52 53 54 55 52 53 54 55 52,55 52 53 54 55 52 56 64 65 47,55 52 56 64 65 47 48 49 50 51,55 52 56 64 65 47 48 49 50 57,55 52 56 64 65 47 66 67 68 69,56 64 65 47 48 49 50 51 52 53,56 64 65 47 48 49 50 51 52 56,56 64 65 47 48 49 50 57 58 59,56 64 65 47 66 67 68 69 70 71,57 58 59 60 61 62 59 60 61 62,57 58 59 60 61 62 59 63 64 65,57 58 59 63 64 65 47 48 49 50,57 58 59 63 64 65 47 66 67 68,58 59 60 61 62 59 60 61 62 59,58 59 60 61 62 59 63 64 65 47,58 59 63 64 65 47 48 49 50 51,58 59 63 64 65 47 48 49 50 57,58 59 63 64 65 47 66 67 68 69,59 60 61 62 59 60 61 62 59 60,59 60 61 62 59 60 61 62 59 63,59 60 61 62 59 63 64 65 47 48,59 60 61 62 59 63 64 65 47 66,59 63 64 65 47 48 49 50 51 52,59 63 64 65 47 48 49 50 57 58,59 63 64 65 47 66 67 68 69 70,6 7 21 22 23 24 25 26 27 28,6 7 21 22 23 24 25 29 30 31,6 7 21 22 23 33 34 35 36 37,6 7 8 9 10 11 12 13 14 15,6 7 8 9 10 11 12 16 17 18,6 7 8 9 20 35 36 37 38 39,60 61 62 59 60 61 62 59 60 61,60 61 62 59 60 61 62 59 63 64,60 61 62 59 63 64 65 47 48 49,60 61 62 59 63 64 65 47 66 67,61 62 59 60 61 62 59 60 61 62,61 62 59 60 61 62 59 63 64 65,61 62 59 63 64 65 47 48 49 50,61 62 59 63 64 65 47 66 67 68,62 59 60 61 62 59 60 61 62 59,62 59 60 61 62 59 63 64 65 47,62 59 63 64 65 47 48 49 50 51,62 59 63 64 65 47 48 49 50 57,62 59 63 64 65 47 66 67 68 69,63 64 65 47 48 49 50 51 52 53,63 64 65 47 48 49 50 51 52 56,63 64 65 47 48 49 50 57 58 59,63 64 65 47 66 67 68 69 70 71,64 65 47 48 49 50 51 52 53 54,64 65 47 48 49 50 51 52 56 64,64 65 47 48 49 50 57 58 59 60,64 65 47 48 49 50 57 58 59 63,65 47 48 49 50 51 52 53 54 55,65 47 48 49 50 51 52 56 64 65,65 47 48 49 50 57 58 59 60 61,65 47 48 49 50 57 58 59 63 64,7 21 22 23 24 25 26 27 28 32,7 21 22 23 24 25 29 30 31 32,7 21 22 23 33 34 35 36 37 38,7 8 9 10 11 12 13 14 15 18,7 8 9 10 11 12 16 17 18 19,7 8 9 20 35 36 37 38 39 40,72 73 74 75 76 77 78 75 76 77,72 73 74 75 76 77 78 75 79 80,72 73 81 82 83 84 85 82 83 84,72 73 81 82 83 84 85 82 86 87,73 74 75 76 77 78 75 76 77 78,73 74 75 76 77 78 75 79 80 87,73 81 82 83 84 85 82 83 84 85,73 81 82 83 84 85 82 86 87 88,74 75 76 77 78 75 76 77 78 75,74 75 76 77 78 75 79 80 87 88,75 76 77 78 75 76 77 78 75 76,75 76 77 78 75 76 77 78 75 79,76 77 78 75 76 77 78 75 76 77,76 77 78 75 76 77 78 75 79 80,77 78 75 76 77 78 75 76 77 78,77 78 75 76 77 78 75 79 80 87,78 75 76 77 78 75 76 77 78 75,78 75 76 77 78 75 79 80 87 88,8 9 10 11 12 13 14 15 18 19,8 9 10 11 12 16 17 18 19 9,81 82 83 84 85 82 83 84 85 82,82 83 84 85 82 83 84 85 82 83,82 83 84 85 82 83 84 85 82 86,83 84 85 82 83 84 85 82 83 84,83 84 85 82 83 84 85 82 86 87,84 85 82 83 84 85 82 83 84 85,84 85 82 83 84 85 82 86 87 88,85 82 83 84 85 82 83 84 85 82,89 90 91 92 93 94 95 99 90 100,89 90 91 92 93 94 95 99 90 91,89 90 91 92 96 97 98 99 90 100,89 90 91 92 96 97 98 99 90 91,9 10 11 12 13 14 15 18 19 9,9 10 11 12 16 17 18 19 9 10,9 10 11 12 16 17 18 19 9 20,90 91 92 93 94 95 99 90 100 101,90 91 92 93 94 95 99 90 91 92,90 91 92 96 97 98 99 90 100 101,90 91 92 96 97 98 99 90 91 92,91 92 93 94 95 99 90 91 92 93,91 92 93 94 95 99 90 91 92 96,91 92 96 97 98 99 90 91 92 93,91 92 96 97 98 99 90 91 92 96,92 93 94 95 99 90 91 92 93 94,92 93 94 95 99 90 91 92 96 97,92 96 97 98 99 90 91 92 93 94,92 96 97 98 99 90 91 92 96 97,93 94 95 99 90 91 92 93 94 95,93 94 95 99 90 91 92 96 97 98,94 95 99 90 91 92 93 94 95 99,94 95 99 90 91 92 96 97 98 99,95 99 90 91 92 93 94 95 99 90,95 99 90 91 92 96 97 98 99 90,96 97 98 99 90 91 92 93 94 95,96 97 98 99 90 91 92 96 97 98,97 98 99 90 91 92 93 94 95 99,97 98 99 90 91 92 96 97 98 99,98 99 90 91 92 93 94 95 99 90,98 99 90 91 92 96 97 98 99 90,99 90 91 92 93 94 95 99 90 100,99 90 91 92 93 94 95 99 90 91,99 90 91 92 96 97 98 99 90 100,99 90 91 92 96 97 98 99 90 91
+5000
+17 - all program lines that execute next* after another program line (if declaration, tuple with 2 variables return)
+if ifs1, ifs2;
+Select <ifs1, ifs2> such that Next*(ifs1 ,ifs2)
+12 12,25 25,50 50,7 12,7 25,92 92
+5000
+18 - all program lines that execute next* after another program line that executes itself next* (while declaration, tuple with 2 variables return)
+while w1, w2;
+Select <w1, w2> such that Next*(w1 ,w2) and Next*(w2 ,w1)
+104 104,23 23,47 47,47 52,47 59,52 47,52 52,52 59,59 47,59 52,59 59,75 75,82 82,9 9,90 90
+5000
+19 - all program lines that execute next* after another program line that execute next* after another program line (if declaration, tuple with 3 variables return)
+if ifs1,  ifs2, ifs3;
+Select <ifs1, ifs2, ifs3> such that Next*(ifs1 ,ifs2) and Next*(ifs2 ,ifs3)
+12 12 12,25 25 25,50 50 50,7 12 12,7 25 25,92 92 92
+5000
+20 - all program lines that execute next* after another program line that execute next* after another program line that executes itself next* (while declaration, tuple with 3 variables return)
+while w1,  w2, w3;
+Select <w1, w2, w3> such that Next*(w1 ,w2) and Next*(w2 ,w3) and Next*(w3 ,w1)
+104 104 104,23 23 23,47 47 47,47 47 52,47 47 59,47 52 47,47 52 52,47 52 59,47 59 47,47 59 52,47 59 59,52 47 47,52 47 52,52 47 59,52 52 47,52 52 52,52 52 59,52 59 47,52 59 52,52 59 59,59 47 47,59 47 52,59 47 59,59 52 47,59 52 52,59 52 59,59 59 47,59 59 52,59 59 59,75 75 75,82 82 82,9 9 9,90 90 90
+5000
+21 - all program lines that execute next* after another program line that execute next*... (if declaration, tuple with 4 variables return)
+if ifs1, ifs2, ifs3, ifs4;
+Select <ifs1, ifs2, ifs3, ifs4> such that Next*(ifs1 ,ifs2) and Next*(ifs2, ifs3) and Next*(ifs3, ifs4) 
+12 12 12 12,25 25 25 25,50 50 50 50,7 12 12 12,7 25 25 25,92 92 92 92
+5000
+22 - all program lines that execute next* after another program line that execute next*... (if declaration, tuple with 10 variables return)
+if ifs1, ifs2, ifs3, ifs4, ifs5, ifs6, ifs7, ifs8, ifs9, ifs10;
+Select <ifs1, ifs2, ifs3, ifs4, ifs5, ifs6, ifs7, ifs8, ifs9, ifs10> such that Next*(ifs1 ,ifs2) and Next*(ifs2, ifs3) and Next*(ifs3, ifs4) and Next*(ifs4, ifs5) and Next*(ifs5, ifs6) and Next*(ifs6, ifs7) and Next*(ifs7, ifs8) and Next*(ifs8, ifs9) and Next*(ifs9, ifs10)
+12 12 12 12 12 12 12 12 12 12,25 25 25 25 25 25 25 25 25 25,50 50 50 50 50 50 50 50 50 50,7 12 12 12 12 12 12 12 12 12,7 25 25 25 25 25 25 25 25 25,92 92 92 92 92 92 92 92 92 92
+5000
+23 - all statements following some statement (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that Follows(a1, a2)
+105 106,112 113,115 116,119 120,13 14,16 17,27 28,60 61,77 78,96 97
+5000
+24 - all statements following some statement that follows itself i.e. invalid (assign declaration, tuple with 2 variables return)
+stmt s1, s2;
+Select <s1, s2> such that Follows(s1, s2) and Follows(s2, s1)
+none
+5000
+25 - all statements following some statement that follows another statement (prog_line declaration, tuple with 3 variables return)
+print pr1, pr2, pr3;
+Select <pr1, pr2, pr3> such that Follows(pr1 ,pr2) and Follows(pr2, pr3) 
+38 39 40
+5000
+26 - all statements following some statement that follows another statement that... (assign declaration, tuple with 4 variables return)
+read r1, r2, r3, r4;
+Select <r1, r2, r3, r4> such that Follows(r1 ,r2) and Follows(r2, r3) and Follows(r3, r4) 
+1 2 3 4
+5000
+27 - all statements following some statement that follows another statement that... (assign declaration, tuple with 10 variables return)
+assign a1, a3; while w2;
+Select <a1, w2, a3> such that Follows(a1 ,w2) and Follows(w2, a3)
+46 47 66,51 52 56,58 59 63,74 75 79,8 9 20,81 82 86,89 90 100
+5000
+28 - all statements following* some statement (prog_line declaration, tuple with 2 variables return)
+call c1,  c2;
+Select <c1, c2> such that Follows*(c1 ,c2)
+10 18,103 107,109 117,21 33,44 69,49 65,5 37
+5000
+29 - all statements following* some statement that follows itself i.e. invalid (prog_line declaration, tuple with 2 variables return)
+stmt s1,  s2;
+Select <s1, s2> such that Follows*(s1 ,s2) and Follows*(s2 ,s1)
+none
+5000
+30 - all statements following* some statement that follows* another statement (assign declaration, tuple with 2 variables return)
+read r1,  r2, r3;
+Select <r1, r2, r3> such that Follows*(r1 ,r2) and Follows*(r2 ,r3)
+1 2 3,1 2 4,1 3 4,2 3 4,41 42 43,41 42 45,41 43 45,42 43 45
+5000
+31 - all statements following* some statement that follows* another statement that... (prog_line declaration, tuple with 4 variables return)
+print pr1, pr2, pr3, pr4;
+Select <pr1, pr2, pr3, pr4> such that Follows*(pr1 ,pr2) and Follows*(pr2, pr3) and Follows*(pr3, pr4) 
+36 38 39 40,67 68 70 71
+5000
+32 - all statements following* some statement that follows* another statement that.. (prog_line declaration, tuple with 9 variables return)
+assign a1, a3; if ifs2;
+Select <a1, ifs2, a3> such that Follows*(a1 ,ifs2) and Follows*(ifs2, a3)
+11 12 19,110 111 118,24 25 32,48 50 64,6 7 35,72 73 88,91 92 99
+5000
+33 - all statements that are parents of some statement (assign declaration, tuple with 2 variables return)
+while w1; stmt s2;
+Select <w1, s2> such that Parent(w1, s2)
+104 105,104 106,23 24,23 25,23 32,47 48,47 49,47 50,47 64,47 65,52 53,52 54,52 55,59 60,59 61,59 62,75 76,75 77,75 78,82 83,82 84,82 85,9 10,9 11,9 12,9 18,9 19,90 91,90 92,90 99
+5000
+34 - all statements that are parents of some statement that are parents of itself i.e. invalid (assign declaration, tuple with 2 variables return)
+stmt s1, s2;
+Select <s1, s2> such that Parent(s1, s2) and Parent(s2, s1)
+none
+5000
+35 - all statements that are parents of some statement that that are parents of another statement (prog_line declaration, tuple with 3 variables return)
+while w1; if ifs2; stmt s3;
+Select <w1, ifs2, s3> such that Parent(w1 ,ifs2) and Parent(ifs2, s3) 
+23 25 26,23 25 27,23 25 28,23 25 29,23 25 30,23 25 31,47 50 51,47 50 52,47 50 56,47 50 57,47 50 58,47 50 59,47 50 63,9 12 13,9 12 14,9 12 15,9 12 16,9 12 17,90 92 93,90 92 94,90 92 95,90 92 96,90 92 97,90 92 98
+5000
+36 - all statements that are parents of some statement that that are parents of another statement that... (assign declaration, tuple with 4 variables return)
+stmt s1, s2, s3, s4;
+Select <s1, s2, s3, s4> such that Parent(s1 ,s2) and Parent(s2, s3) and Parent(s3, s4) 
+47 50 52 53,47 50 52 54,47 50 52 55,47 50 59 60,47 50 59 61,47 50 59 62,7 23 25 26,7 23 25 27,7 23 25 28,7 23 25 29,7 23 25 30,7 23 25 31,7 9 12 13,7 9 12 14,7 9 12 15,7 9 12 16,7 9 12 17
+5000
+37 - all statements that are parents* of some statement (prog_line declaration, tuple with 2 variables return)
+if ifs1; while w2;
+Select <ifs1, w2> such that Parent*(ifs1 ,w2)
+50 52,50 59,7 23,7 9,73 75,73 82
+5000
+38 - all statements that are parents* of some statement that are parents of itself i.e. invalid (prog_line declaration, tuple with 2 variables return)
+stmt s1,  s2;
+Select <s1, s2> such that Parent*(s1 ,s2) and Parent*(s2 ,s1)
+none
+5000
+39 - all statements that are parents* of some statement that that are parents* of another statement (assign declaration, tuple with 2 variables return)
+if ifs1, ifs3; while w2;
+Select <ifs1, w2, ifs3> such that Parent*(ifs1 ,w2) and Parent*(w2 ,ifs3)
+7 23 25,7 9 12
+5000
+40 - all statements that are parents* of some statement that are parents* of another statement that... (prog_line declaration, tuple with 4 variables return)
+stmt s1, s2, s3, s4;
+Select <s1, s2, s3, s4> such that Parent*(s1 ,s2) and Parent*(s2, s3) and Parent*(s3, s4) 
+47 50 52 53,47 50 52 54,47 50 52 55,47 50 59 60,47 50 59 61,47 50 59 62,7 23 25 26,7 23 25 27,7 23 25 28,7 23 25 29,7 23 25 30,7 23 25 31,7 9 12 13,7 9 12 14,7 9 12 15,7 9 12 16,7 9 12 17
+5000
+41 - all variables used by statements (print declaration, tuple with 2 variables return)
+print pr; variable v;
+Select <pr, v> such that Uses (pr,v)
+36 a,38 b,39 c,40 d,67 w,68 x,70 y,71 z
+5000
+42 - all variables modified by statements (read declaration, tuple with 2 variables return)
+read r; variable v;
+Select <r, v> such that Modifies(r, v)
+1 w,2 x,3 y,4 z,41 a,42 b,43 c,45 d
+5000
+43 - all variables used by statements (if and while declaration, tuple with 3 variables return)
+while w; print pr; variable v;
+Select <w, pr, v> such that Uses (w,v) and Uses(pr, v)
+104 67 w,104 68 x,104 70 y,104 71 z,23 36 a,23 38 b,23 39 c,23 40 d,23 67 w,23 68 x,23 70 y,23 71 z,47 36 a,47 38 b,47 39 c,47 40 d,47 67 w,47 68 x,47 70 y,47 71 z,52 36 a,52 38 b,52 39 c,52 40 d,52 67 w,52 68 x,52 70 y,52 71 z,59 36 a,59 38 b,59 39 c,59 40 d,59 67 w,59 68 x,59 70 y,59 71 z,75 36 a,75 38 b,75 39 c,75 40 d,75 67 w,75 68 x,75 70 y,75 71 z,82 36 a,82 38 b,82 39 c,82 40 d,82 67 w,82 68 x,82 70 y,82 71 z,9 36 a,9 38 b,9 39 c,9 40 d,9 67 w,9 68 x,9 70 y,9 71 z,90 36 a,90 38 b,90 39 c,90 40 d,90 67 w,90 68 x,90 70 y,90 71 z
+5000
+44 - all variables modified by statements (if and while declaration, tuple with 3 variables return)
+if ifs; read r; variable v;
+Select <ifs, r, v> such that Modifies (ifs,v) and Modifies(r, v)
+111 2 x,111 3 y,111 42 b,111 43 c,12 1 w,12 2 x,12 3 y,12 4 z,12 41 a,12 42 b,12 43 c,12 45 d,25 1 w,25 2 x,25 3 y,25 4 z,25 41 a,25 42 b,25 43 c,25 45 d,50 1 w,50 2 x,50 3 y,50 4 z,50 41 a,50 42 b,50 43 c,50 45 d,7 1 w,7 2 x,7 3 y,7 4 z,7 41 a,7 42 b,7 43 c,7 45 d,73 1 w,73 2 x,73 3 y,73 4 z,73 41 a,73 42 b,73 43 c,73 45 d,92 1 w,92 2 x,92 3 y,92 4 z,92 41 a,92 42 b,92 43 c,92 45 d
+5000
