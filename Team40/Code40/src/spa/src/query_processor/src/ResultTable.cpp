@@ -79,7 +79,7 @@ bool ResultTable::hasPointerToIdx(int sourceIdx, string sourceValue,
         return false;
     }
 
-    return pIndexToValue[targetIdx].size() > 0;
+    return !(*pIndexToValue)[targetIdx].empty();
 }
 
 VALUE_SET ResultTable::getPointersToIdx(INDEX sourceIdx, VALUE sourceValue,
