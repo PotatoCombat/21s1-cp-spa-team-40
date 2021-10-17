@@ -1,0 +1,41 @@
+procedure    procName {
+    x = 7 * 4 + 5 * l;					        (1)
+    if (3 == 3) then {				            (2)
+        z = z;								    (3)
+        print y;						        (4)
+        read a;							        (5)
+        if (3 == 4) then {			            (6)
+            m = 3 + ((y));			            (7)
+        } else {
+            l = 3 + (3/4) + (4  /   5) + (6 * 7);			(8)
+            if (x == 1) then {				    (9)
+                while (y > 10) {			    (10)
+                    d = a + b + c + d;		    (11)
+                }
+            } else {
+                while (i > j) {					(12)
+                    while (j != y) {		    (13)
+                        read a;					(14)
+                    }
+                    xyzaaaaaaaaaaaaaaaaaaaaaaaaalongvarnameeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = y;			(15)
+                    d = d + a + b;				(16)
+                    if (!((a > b) || (((a >= b) && (b >= c)) || (z + 10 - 4 % 7 <= 110)))) then {	    (17)
+                        z = 10;					(18)
+                    } else {
+                        while (x == 5) {		(19)
+                            while (z > 10) {	(20)
+                                y = y;			(21)
+                            }}}
+                }
+            }
+        }
+        y = 44;									(22)
+        print z;								(23)
+    } else {
+        bigNum = 1098765432109876;	            (24)
+    }
+}
+
+procedure proc2 {
+	call procName;				(25)
+}
