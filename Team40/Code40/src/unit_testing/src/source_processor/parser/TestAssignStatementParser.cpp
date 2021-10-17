@@ -27,7 +27,7 @@ TEST_CASE("AssignStatementParser: parseAssignStatement - throws invalid assign s
     REQUIRE_THROWS_WITH(*parser.parseAssignStatement(), "invalid assign statement");
 
     parser = AssignStatementParser({"x", "=", ";"}, INDEX);
-    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(),"invalid expression");
+    REQUIRE_THROWS_WITH(*parser.parseAssignStatement(),"invalid expression: no arguments");
 
     parser = AssignStatementParser({"=", "0", ";"}, INDEX);
     REQUIRE_THROWS_WITH(*parser.parseAssignStatement(),"invalid assign statement");

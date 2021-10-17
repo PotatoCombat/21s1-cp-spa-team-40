@@ -26,15 +26,15 @@ TEST_CASE("IfStatementParser: parseIfStatement - throws invalid if statement") {
 
     parser = IfStatementParser({"if", "(", ">", "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid expression: invalid variable, constant or operator encountered");
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX),"invalid expression: conditions need at least one operator");
 
     parser = IfStatementParser({"if", "(", "num1" "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression: conditions need at least one operator");
 
     parser = IfStatementParser({"if", "(", "num1", ">", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression");
+    REQUIRE_THROWS_WITH(*parser.parseIfStatement(INDEX), "invalid expression: cannot end with an operator");
 
     parser = IfStatementParser({"if", "(", "num1", ">", "num2" "then", "{"}, 
                                INDEX, ifProgramLines);
