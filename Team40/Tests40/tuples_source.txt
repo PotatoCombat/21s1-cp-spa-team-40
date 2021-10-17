@@ -1,0 +1,163 @@
+procedure proc1 {
+    read w;
+    read x;
+    read y;
+    read z;
+    call proc2;
+    w = b + c - d;
+    if (w < x + y * z) then {
+        a = x + y * z;
+        while(a > b - c / d) {
+            call proc3;
+            w = a * b / c;
+            if (w + x <= y * z) then {
+                a = w - x / y;
+                z = d;
+                call proc4;
+            } else {
+                w = a + a * a;
+                c = y;
+            }
+            call proc5;
+            a = z * z + z;
+        }
+        w = d / d - d;
+    } else {
+        call proc6;
+        a = w - w / w;
+        while(a - b >= c / d) {
+            x = a + c - d;
+            if (w + x * y == z) then {
+                call proc7;
+                b = w + y * z;
+                x = b;
+            } else {
+                x = a * b / d;
+                call proc2;
+                a = w;
+            }
+            b = w - x / z;
+        }
+        call proc3;
+        x = c + c * c;
+    }
+    b = y * y + y;
+    print a;
+    call proc4;
+    print b;
+    print c;
+    print d;
+}
+
+procedure proc2 {
+    read a;
+    read b;
+    read c;
+    call proc5;
+    read d;
+    x = b / b - b;
+    while (a - b / c != d) {
+        b = x - x / x;
+        call proc6;
+        if (w + x < y) then {
+            y = a + b - d;
+            while (a > b - c) {
+                c = w + x * z;
+                call proc7;
+                d = x - y;
+            }
+            y = a * c / d;
+        } else {
+            call proc3;
+            c = w - y / z;
+            while (w <= x * z) {
+                y = b + b * b;
+                z = a / c;
+                call proc4;
+            }
+            c = x * x + x;
+        }
+        y = c / c - c;
+        call proc5;
+    }
+    c = y - y / y;
+    print w;
+    print x;
+    call proc6;
+    print y;
+    print z;
+}
+
+procedure proc3 {
+    z = a + b - c;
+    if (a / c >= d) then {
+        d = w + x * y;
+        while(w + y == z ) {
+            call proc7;
+            z = b + c / d;
+            d = w + y;
+        }
+        d = x - y / z;
+        call proc4;
+    } else {
+        z = a + a * a;
+        while(a != b - d) {
+            d = w * w + w;
+            call proc5;
+            z = b * c;
+        }
+        z = d / d - d;
+    }
+    call proc6;
+    d = z - z / z;
+}
+
+procedure proc4 {
+    w = b + c;
+    while (a != b - d) {
+        a = x * y;
+        if (c / b < d) then {
+            w = b - d;
+            call proc7;
+            d = w / x;
+        } else {
+            a = x / z;
+            z = a - b;
+            call proc5;
+        }
+        w = c * d;
+    }
+    a = y + z;
+    call proc6;
+}
+
+procedure proc5 {
+    x = a / c;
+    call proc7;
+    while(z != w + x * y) {
+        b = w - y;
+        c = x * v;
+    }
+    call proc6;
+    x = a + d;
+}
+
+procedure proc6 {
+    call proc7;
+    b = w * z;
+    if ( d == a - b / c) then {
+        x = c - d;
+        y = b + d;
+        call proc7;
+    } else {
+        b = y / z; 
+        c = w - z;
+    }
+    call proc7;
+    y = a * b;
+}
+
+procedure proc7 {
+    c = w + x;
+    y = a / d;
+}

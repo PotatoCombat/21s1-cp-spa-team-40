@@ -14,7 +14,7 @@ private:
 public:
     Procedure(string name);
 
-    void addToStmtLst(Statement* stmt);
+    void addToStmtLst(Statement *stmt);
 
     string getName();
 

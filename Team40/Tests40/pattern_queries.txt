@@ -1,0 +1,197 @@
+1- both wildcards
+assign a;
+Select a pattern a(_,_)
+1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17, 18
+5000
+2 - second wild card
+assign a, variable v;
+Select <a, v> pattern a(v,_)
+1 x, 3 y, 4 z, 5 x, 6 y, 7 x, 9 a, 10 b, 11 c, 12 d, 14 x, 15 z, 17 a, 18 b
+5000
+3 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   a    * b"_)
+4
+5000
+4 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   z + x"_)
+5
+5000
+5 - Finding a partial match
+assign a;
+Select a pattern a(_, _" v + x * y + z * t"_)
+7, 18
+5000
+6 - Finding a partial match
+assign a;
+Select a pattern a(_, _"v"_)
+7, 9, 11, 12
+5000
+7 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   x * y"_)
+7, 10, 12, 17, 18
+5000
+8 - Finding a partial match
+assign a;
+Select a pattern a(_, _"v + x"_)
+11
+5000
+9 - Finding a partial match
+assign a;
+Select a pattern a(_, _"v + x * y"_)
+18, 12, 7
+5000
+10 - Finding a partial match
+assign a;
+Select a pattern a(_, _" y + z * t"_)
+
+5000
+11 - Finding a partial match
+assign a;
+Select a pattern a(_, _"x * y + z * t"_)
+17
+5000
+12 - Finding a partial match
+assign a;
+Select a pattern a(_, _" v + x * y  + z * t  "_)
+18, 7
+5000
+13 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   ((a)    * (b))"_)
+4
+5000
+14 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   (((((z + x))))"_)
+5
+5000
+15 - Finding a partial match
+assign a;
+Select a pattern a(_, _" (v + (x * y) + z * t)"_)
+18, 7
+5000
+16 - Finding a partial match invalid bracket matching
+assign a;
+Select a pattern a(_, _"(((v))"_)
+
+5000
+17 - Finding a partial match
+assign a;
+Select a pattern a(_, _"   (x * y)"_)
+7, 10, 12, 17, 18
+5000
+18 - Finding a partial match
+assign a;
+Select a pattern a(_, _"(v + x)"_)
+11
+5000
+19 - Finding a partial match
+assign a;
+Select a pattern a(_, _"(v + x) * y"_)
+
+5000
+20 - Finding a partial match
+assign a;
+Select a pattern a(_, _" (y + z) * t"_)
+
+5000
+21 - Finding a partial match
+assign a;
+Select a pattern a(_, _"x * (y + z) * t"_)
+
+5000
+22 - Finding a partial match
+assign a;
+Select a pattern a(_, _" v + x * y  + (z * t)  "_)
+18, 7
+5000
+23 - Finding a partial match
+assign a;
+Select a pattern a(_, _" x + 1"_)
+14
+5000
+24 - Finding a partial match
+assign a;
+Select a pattern a(b, _" y + z * t"_)
+
+5000
+25 - Finding a partial match
+assign a;
+Select a pattern a(b, _"x * y + z * t"_)
+
+5000
+26 - Finding a partial match
+assign a;
+Select a pattern a(b, _" v + x * y  + z * t  "_)
+18
+5000
+27 - Finding a partial match
+assign a;
+Select a pattern a(z, _"   ((a)    * (b))"_)
+4
+5000
+28 - Finding a partial match
+assign a;
+Select a pattern a(y, _"   (((((z + x))))"_)
+
+5000
+29 - Finding a partial match
+assign a;
+Select a pattern a(b, _"(x * y)"_)
+10, 18
+5000
+30 - Finding an exact match
+assign a;
+Select a pattern a(_, " (v + (x * y) + z * t)")
+7, 18
+5000
+31 - Finding an exact match
+assign a;
+Select a pattern a(_, " v + x * y + z * t")
+7, 18
+5000
+32 - Finding an exact match
+assign a;
+Select a pattern a("x", " v + x * y + z * t")
+7
+5000
+33 - Finding an exact match
+assign a;
+Select a pattern a("b", " v + x * y + z * t")
+18
+5000
+34 - Finding an exact match
+assign a;
+Select a pattern a(_, "x * y ")
+10
+5000
+35 - Finding an exact match
+assign a; variable v;
+Select v pattern a(v, " (v + (x * y) + z * t)")
+x, b
+5000
+36 - Finding an exact match
+if ifs;
+Select ifs pattern ifs(_,_,_)
+2
+5000
+37 - Finding an exact match
+while w;
+Select w pattern w(_,_)
+16
+5000
+38 - Finding an exact match
+if ifs; variable v;
+Select <ifs, v> pattern ifs(v,_,_)
+2 x, 2 y
+5000
+39 - Finding an exact match
+while w; variable v;
+Select <w, v> pattern w(v,_)
+16 x, 16 z
+5000
+
+
