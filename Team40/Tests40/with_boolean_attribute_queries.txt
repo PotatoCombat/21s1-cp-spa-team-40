@@ -503,3 +503,43 @@ if ifs; while w; assign a;
 Select BOOLEAN pattern a("y", _) such that Parent*(ifs, a) pattern a(_, "b")
 FALSE
 5000
+102 - Invalid attribute selection
+assign a;
+Select a.value
+
+5000
+103 - Invalid attribute selection
+assign a;
+Select a.procName
+
+5000
+104 - Invalid comparision return empty result
+assign a;
+Select a.stmt# with a.stmt# = "a"
+
+5000
+105 - Invalid attribute return empty result
+assign a;
+Select a with a.procName = "a"
+
+5000
+106 - No attribute for non-prog_line entity returns empty result
+stmt s;
+Select s with s = 1
+
+5000
+107 - with prog_line entity returns correct result
+prog_line n;
+Select n with n = 1
+1
+5000
+108 - prog_line attribute returns empty result
+prog_line n;
+Select n.stmt#
+
+5000
+108 - prog_line attribute returns empty result
+prog_line n;
+Select n with n.stmt# = 1
+
+5000
