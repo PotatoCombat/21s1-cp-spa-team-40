@@ -218,3 +218,12 @@ if ifs; read r; variable v;
 Select <ifs, r, v> such that Modifies (ifs,v) and Modifies(r, v)
 111 2 x,111 3 y,111 42 b,111 43 c,12 1 w,12 2 x,12 3 y,12 4 z,12 41 a,12 42 b,12 43 c,12 45 d,25 1 w,25 2 x,25 3 y,25 4 z,25 41 a,25 42 b,25 43 c,25 45 d,50 1 w,50 2 x,50 3 y,50 4 z,50 41 a,50 42 b,50 43 c,50 45 d,7 1 w,7 2 x,7 3 y,7 4 z,7 41 a,7 42 b,7 43 c,7 45 d,73 1 w,73 2 x,73 3 y,73 4 z,73 41 a,73 42 b,73 43 c,73 45 d,92 1 w,92 2 x,92 3 y,92 4 z,92 41 a,92 42 b,92 43 c,92 45 d
 5000
+45 - should remove duplicate results
+read r1, r2, r3;
+Select <r1, r2> such that Follows(r1, r2) and Follows*(r2, r3)
+1 2, 2 3, 41 42, 42 43
+5000
+46 - variables are splited into 2 groups
+print pr1, pr2, pr3, pr4;
+Select <pr1, pr2, pr3, pr4> such that Follows(pr1, pr2) and Follows(pr3, pr4)
+38 39 38 39, 38 39 39 40, 38 39 67 68, 38 39 70 71, 39 40 38 39, 39 40 39 40, 39 40 67 68, 39 40 70 71, 67 68 38 39, 67 68 39 40, 67 68 67 68, 67 68 70 71, 70 71 38 39, 70 71 39 40, 70 71 67 68, 70 71 70 71
