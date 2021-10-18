@@ -1,23 +1,28 @@
 #include "catch.hpp"
 
-#include <string>
-#include <vector>
-
+#include "TestIntegrationUtils.h"
 #include "pkb/PKB.h"
 #include "source_processor/SourceProcessor.h"
 
 using namespace std;
 
-TEST_CASE("Integration: SP read statements") {
+TEST_CASE("Integration: SP process Source1") {
     PKB pkb;
     SourceProcessor sourceProcessor(&pkb);
+    sourceProcessor.processSource("../../../../Tests40/Source1.txt");
 
-    sourceProcessor.processSource("../../../../Tests40/TD_SIMPLE_2_source.txt");
+    REQUIRE(pkb.getAllProcs().asVector().size() == 1); // Only one procedure
 
-    vector<ProcName> procedures{"computeAverage"};
-    vector<ProcName> results = pkb.getAllProcs().asVector();
+    string procName = "Examp1le";
+    Procedure *actualProc = pkb.getProcByName(procName);
+    Procedure testProc = TestIntegrationUtils::createExampleProcedure();
 
-    for (int i = 0; i < results.size(); i++) {
-        REQUIRE(results.at(i) == procedures.at(i));
+    auto testStmtList = testProc.getStmtLst();
+    auto actualStmtList = actualProc->getStmtLst();
+
+    REQUIRE(testStmtList.size() == actualStmtList.size());
+    for (size_t i = 0; i < testStmtList.size(); i++) {
+        // Statement contents are equal
+        REQUIRE(*testStmtList[i] == *actualStmtList[i]);
     }
 }
