@@ -76,7 +76,7 @@ Select s such that Next(18, s)
 16 - everything next of a generic while loop
 while w; stmt s;
 Select s such that Next(w, s)
-4, 14, 20
+4, 7, 14, 18, 20
 5000
 17 - everything next of a generic if statement
 if i; stmt s;
@@ -196,7 +196,7 @@ Select s such that Next*(18, s)
 40 - everything next* of a generic while loop
 while w; stmt s;
 Select s such that Next*(w, s)
-3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
 5000
 41 - everything next* of a generic if statement
 if i; stmt s;
