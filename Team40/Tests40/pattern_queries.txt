@@ -4,7 +4,7 @@ Select a pattern a(_,_)
 1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17, 18
 5000
 2 - second wild card
-assign a, variable v;
+assign a; variable v;
 Select <a, v> pattern a(v,_)
 1 x, 3 y, 4 z, 5 x, 6 y, 7 x, 9 a, 10 b, 11 c, 12 d, 14 x, 15 z, 17 a, 18 b
 5000
@@ -26,7 +26,7 @@ Select a pattern a(_, _" v + x * y + z * t"_)
 6 - Finding a partial match
 assign a;
 Select a pattern a(_, _"v"_)
-7, 9, 11, 12
+7, 9, 11, 12, 18
 5000
 7 - Finding a partial match
 assign a;
@@ -65,7 +65,7 @@ Select a pattern a(_, _"   ((a)    * (b))"_)
 5000
 14 - Finding a partial match
 assign a;
-Select a pattern a(_, _"   (((((z + x))))"_)
+Select a pattern a(_, _"   ((((z + x))))"_)
 5
 5000
 15 - Finding a partial match
@@ -125,12 +125,12 @@ Select a pattern a(b, _"x * y + z * t"_)
 5000
 26 - Finding a partial match
 assign a;
-Select a pattern a(b, _" v + x * y  + z * t  "_)
+Select a pattern a("b", _" v + x * y  + z * t  "_)
 18
 5000
 27 - Finding a partial match
 assign a;
-Select a pattern a(z, _"   ((a)    * (b))"_)
+Select a pattern a("z", _"   ((a)    * (b))"_)
 4
 5000
 28 - Finding a partial match
@@ -140,7 +140,7 @@ Select a pattern a(y, _"   (((((z + x))))"_)
 5000
 29 - Finding a partial match
 assign a;
-Select a pattern a(b, _"(x * y)"_)
+Select a pattern a("b", _"(x * y)"_)
 10, 18
 5000
 30 - Finding an exact match
