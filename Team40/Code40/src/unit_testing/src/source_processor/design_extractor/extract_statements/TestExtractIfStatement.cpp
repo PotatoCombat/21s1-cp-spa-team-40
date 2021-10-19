@@ -75,9 +75,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     Procedure procedure(TestExtractIfStatement::PROC_NAME);
     Statement ifStatement(1, StatementType::IF);
     Statement thenIfStatement(2, StatementType::IF);
-    Statement elseStatement(3, StatementType::READ);
-    Statement thenIfThenStatement(5, StatementType::READ);
-    Statement thenIfElseStatement(6, StatementType::READ);
+    Statement thenIfThenStatement(3, StatementType::READ);
+    Statement thenIfElseStatement(4, StatementType::READ);
+    Statement elseStatement(5, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
     ifStatement.setProcName(procedure.getName());
