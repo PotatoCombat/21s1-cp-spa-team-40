@@ -10,7 +10,7 @@ name: Run Autotester on Windows Environment
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.
 # Comment the above 7 lines, and uncomment the following 3 lines
-# Runs job at 8am and 6pm daily
+Runs job at 8am and 6pm daily
 on:
  schedule:
    - cron: "0 0,10 * * *"
@@ -42,7 +42,7 @@ jobs:
         id: restore-build
         with:
           path: ./*
-          key: ${{ runner.os }}-build
+          key: ${{ github.sha }}-build
 
   test:
     needs: build
@@ -52,27 +52,37 @@ jobs:
       fail-fast: false
       matrix:
         test-files:
-          #- { source: Source1, queries: Queries1, output: out1 } 
-          #- { source: Source2, queries: Queries2, output: out2 } 
+          - { source: Source1, queries: Queries1, output: out1 } 
+          - { source: Source2, queries: Queries2, output: out2 } 
           - { source: Source3, queries: Queries3, output: out3 } 
           - { source: TA_source, queries: TA_queries, output: TA } 
-          #- { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
-          #- { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
-          #- { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
+          - { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
+          - { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
+          - { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
           - { source: TD_SIMPLE_1_source, queries: TD_SIMPLE_1_queries, output: TD_SIMPLE_1 } 
-          #- { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
+          - { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
           - { source: TD_SIMPLE_3_source, queries: TD_SIMPLE_3_queries, output: TD_SIMPLE_3 } 
-          #- { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 } 
+          - { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 }
+          - { source: call_source, queries: call_queries, output: call }
+          - { source: next_source, queries: next_queries, output: next }
+          - { source: with_boolean_attribute_source, queries: with_boolean_attribute_queries, output: with_boolean_attribute }
+          - { source: pattern_source, queries: pattern_queries, output: pattern }
+          - { source: tuples_source, queries: tuples_queries, output: tuples }
+          - { source: pattern_source, queries: pattern_queries , output: pattern }
+          - { source: multiclause_source, queries: multiclause_queries, output: multiclause }
+          - { source: multiclause_source, queries: multiclause_2st1p_queries, output: multiclause_2st1p }
 
     steps:
       - uses: actions/checkout@v2
-
+      - name: Run git garbage collector
+        run: |
+          git gc
       - name: Use Cache
         uses: actions/cache@v2
         id: restore-build
         with: 
           path: ./*
-          key: ${{ runner.os }}-build
+          key: ${{ github.sha }}-build
       - name: Run Tests
         run: Team40\Code40\build\src\autotester\Release\autotester.exe Team40\Tests40\${{ matrix.test-files.source }}.txt Team40\Tests40\${{ matrix.test-files.queries }}.txt Team40\Code40\tests\${{ matrix.test-files.output }}.xml
       - name: Archive System Test Results
