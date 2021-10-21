@@ -41,8 +41,8 @@ Clause *SuchThatParser::parseStmtStmt() {
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    Reference *r1 = parseStmt(this->ref1);
-    Reference *r2 = parseStmt(this->ref2);
+    Reference *r1 = parseStmtRef(this->ref1);
+    Reference *r2 = parseStmtRef(this->ref2);
 
     return new Clause(clsType, *r1, *r2);
 }
@@ -157,7 +157,7 @@ Clause *SuchThatParser::parseXEnt() {
     }
 
     // second argument must always be a variable
-    Reference *r2 = parseVariable(this->ref2);
+    Reference *r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
 
     if (isStmtEnt) {
         return new Clause(clsHelper.valueToClsType(this->type), *r1, *r2);

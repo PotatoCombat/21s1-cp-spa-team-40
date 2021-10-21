@@ -40,7 +40,7 @@ Clause *PatternParser::parsePt(PatTuple patTuple) {
 Clause *PatternParser::parseAssign(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseVariable(var);
+    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (isWildcardPattern(tokens)) {
         return new Clause(*identity, *ref, vector<string>{}, true);
@@ -54,7 +54,7 @@ Clause *PatternParser::parseAssign(Reference *identity) {
 Clause *PatternParser::parseWhile(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseVariable(var);
+    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
@@ -65,7 +65,7 @@ Clause *PatternParser::parseWhile(Reference *identity) {
 Clause *PatternParser::parseIf(Reference *identity) {
     string var = this->ref2;
     vector<string> tokens = this->tokens;
-    Reference *ref = parseVariable(var);
+    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (!ParserUtil::isWildcard(tokens.at(0)) ||
         !ParserUtil::isWildcard(tokens.at(1))) {
