@@ -9,43 +9,40 @@ Result PatternHandler::eval() {
     Reference *varRef = patternClause->getSecondReference();
     vector<string> pattern = patternClause->getPattern();
 
-    bool isSameAsModifies =
-        stmtRef->getDeType() == DesignEntityType::IF ||
-        varRef->getDeType() == DesignEntityType::WHILE ||
-        pattern.empty();
+    set<int> (PatternHandler::*getPatternStmts)(string, vector<string>);
+    bool (PatternHandler::*hasPattern)(int, string, vector<string>);
+    StatementType stmtType;
 
-    // if same as modifies => use modifies handler
-    if (isSameAsModifies) {
-        Clause clause(ClauseType::MODIFIES_S, *stmtRef, *varRef);
-        ModifiesStmtHandler handler(&clause, pkb);
-        Result temp = handler.eval();
-        // have to copy back because the Reference passed into clause is deleted
-        // when this function finishes
-        result.setValid(temp.isResultValid());
-        if (temp.hasResultList1()) {
-            result.setResultList1(stmtRef, temp.getResultList1());
-        }
-        if (temp.hasResultList2()) {
-            result.setResultList2(varRef, temp.getResultList2());
-        }
-        return result;
-    }
-
-    set<int> (PKB::*getAssignPatternStmts)(string, vector<string>);
-    bool(PKB::*assignMatchesPattern)(int, string, vector<string>);
-    if (patternClause->isExactMatch()) {
-        getAssignPatternStmts = &PKB::getExactAssignPatternStmts;
-        assignMatchesPattern = &PKB::exactAssignPattern;
-    } else {
-        getAssignPatternStmts = &PKB::getPartialAssignPatternStmts;
-        assignMatchesPattern = &PKB::partialAssignPattern;
+    switch (stmtRef->getDeType()) {
+        case DesignEntityType::ASSIGN:
+            if (patternClause->isExactMatch()) {
+                getPatternStmts = &PatternHandler::getExactAssignPatternStmts;
+                hasPattern = &PatternHandler::exactAssignPattern;
+            } else {
+                getPatternStmts = &PatternHandler::getPartialAssignPatternStmts;
+                hasPattern = &PatternHandler::partialAssignPattern;
+            }
+            stmtType = StatementType::ASSIGN;
+            break;
+        case DesignEntityType::IF:
+            getPatternStmts = &PatternHandler::getIfPatternStmts;
+            hasPattern = &PatternHandler::ifPattern;
+            stmtType = StatementType::IF;
+            break;
+        case DesignEntityType::WHILE:
+            getPatternStmts = &PatternHandler::getWhilePatternStmts;
+            hasPattern = &PatternHandler::whilePattern;
+            stmtType = StatementType::WHILE;
+            break;
+        default:
+            throw ClauseHandlerError("PatternHandler: unknown pattern clause type!");
     }
 
     // SYNONYM CONST
     if (varRef->getRefType() == ReferenceType::CONSTANT) {
         map<VALUE, VALUE_SET> stmtResults;
         set<int> stmts =
-            (pkb->*getAssignPatternStmts)(varRef->getValue(), pattern);
+            (this->*getPatternStmts)(varRef->getValue(), pattern);
         for (auto stmt : stmts) {
             stmtResults[to_string(stmt)] = VALUE_SET{};
         }
@@ -56,14 +53,14 @@ Result PatternHandler::eval() {
     // SYNONYM SYNONYM, SYNONYM WILDCARD
     map<VALUE, VALUE_SET> stmtResults;
     map<VALUE, VALUE_SET> varResults;
-    vector<int> assigns = pkb->getAllStmts(StatementType::ASSIGN).asVector();
+    vector<int> assigns = pkb->getAllStmts(stmtType).asVector();
     vector<string> vars = pkb->getAllVars().asVector();
 
     for (int assign : assigns) {
         VALUE_SET related;
         bool valid = false;
         for (string var : vars) {
-            if ((pkb->*assignMatchesPattern)(assign, var, pattern)) {
+            if ((this->*hasPattern)(assign, var, pattern)) {
                 valid = true;
                 related.insert(var);
             }
@@ -77,7 +74,7 @@ Result PatternHandler::eval() {
         VALUE_SET related;
         bool valid = false;
         for (int assign : assigns) {
-            if ((pkb->*assignMatchesPattern)(assign, var, pattern)) {
+            if ((this->*hasPattern)(assign, var, pattern)) {
                 valid = true;
                 if (stmtRef->getRefType() == ReferenceType::SYNONYM) {
                     related.insert(to_string(assign));
@@ -114,4 +111,36 @@ void PatternHandler::validate() {
         throw ClauseHandlerError(
             "AssignPatternHandler: second argument must be variable");
     }
+}
+
+set<int> PatternHandler::getPartialAssignPatternStmts(string var, vector<string> pattern) {
+    return pkb->getPartialAssignPatternStmts(var, pattern);
+}
+
+set<int> PatternHandler::getExactAssignPatternStmts(string var, vector<string> pattern) {
+    return pkb->getExactAssignPatternStmts(var, pattern);
+}
+
+set<int> PatternHandler::getIfPatternStmts(string var, vector<string> pattern) {
+    return pkb->getIfPatternStmts(var);
+}
+
+set<int> PatternHandler::getWhilePatternStmts(string var, vector<string> pattern) {
+    return pkb->getWhilePatternStmts(var);
+}
+
+bool PatternHandler::partialAssignPattern(int stmt, string var, vector<string> pattern) {
+    return pkb->partialAssignPattern(stmt, var, pattern);
+}
+
+bool PatternHandler::exactAssignPattern(int stmt, string var, vector<string> pattern) {
+    return pkb->exactAssignPattern(stmt, var, pattern);
+}
+
+bool PatternHandler::ifPattern(int stmt, string var, vector<string> pattern) {
+    return pkb->ifPattern(stmt, var);
+}
+
+bool PatternHandler::whilePattern(int stmt, string var, vector<string> pattern) {
+    return pkb->whilePattern(stmt, var);
 }

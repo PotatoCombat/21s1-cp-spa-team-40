@@ -51,6 +51,9 @@ Reference *WithParser::parseReference(string ref) {
         if (isAttrRef) {
             attr = ParserUtil::parseValidAttr(deType, attrStr);
         }
+        if (deType == DesignEntityType::PROG_LINE) {
+            deType = DesignEntityType::STMT;
+        }
         return new Reference(deType, refType, syn, attr);
     }
 

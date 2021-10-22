@@ -101,6 +101,8 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 }
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
+    pkb->insertIfPattern(ifStatement);
+
     // 1. Handle condition
     auto variables = ifStatement->getExpressionVars();
     auto constantValues = ifStatement->getExpressionConsts();
@@ -182,6 +184,8 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
 }
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
+    pkb->insertWhilePattern(whileStatement);
+
     // 1. Handle condition
     auto variables = whileStatement->getExpressionVars();
     auto constantValues = whileStatement->getExpressionConsts();
@@ -291,109 +295,3 @@ void DepthFirstExtractor::extractModifiesRelationship(Variable *variable) {
 void DepthFirstExtractor::extractConstantValue(ConstantValue *constantValue) {
     pkb->insertConst(constantValue);
 }
-
-/**
- * The following methods are not used in iteration 1,
- * but are likely relevant in the future. Do not remove.
- */
-
-// void DepthFirstExtractor::extractCondition(Condition condition) {
-//     switch (condition.getConditionType()) {
-//     case ConditionType::SINGLE:
-//         extractSingleCondition(condition);
-//     case ConditionType::AND:
-//     case ConditionType::OR:
-//         extractBinaryCondition(condition);
-//     case ConditionType::NOT:
-//         extractNotCondition(condition);
-//     default:
-//         throw runtime_error("Invalid ConditionType.");
-//     }
-// }
-
-// void DepthFirstExtractor::extractSingleCondition(Condition singleCondition) {
-//     extractRelation(singleCondition.getRelation());
-// }
-//
-// void DepthFirstExtractor::extractNotCondition(Condition notCondition) {
-//     extractCondition(notCondition.getPrimaryCondition());
-// }
-//
-// void DepthFirstExtractor::extractBinaryCondition(Condition binaryCondition) {
-//     extractCondition(binaryCondition.getPrimaryCondition());
-//     extractCondition(binaryCondition.getSecondaryCondition());
-// }
-//
-// void DepthFirstExtractor::extractRelation(Relation relation) {
-//     extractFactor(relation.getLeftFactor());
-//     extractFactor(relation.getRightFactor());
-// }
-//
-// void DepthFirstExtractor::extractExpression(Expression expression) {
-//     switch (expression.getExpressionType()) {
-//     case ExpressionType::SINGLE_TERM:
-//         extractSingleTermExpression(expression);
-//         break;
-//     case ExpressionType::SUBTRACT_TERMS:
-//         extractSubtractTermsExpression(expression);
-//         break;
-//     case ExpressionType::SUM_TERMS:
-//         extractSumTermsExpression(expression);
-//         break;
-//     default:
-//         throw runtime_error("Invalid ExpressionType.");
-//     }
-// }
-//
-// void DepthFirstExtractor::extractSingleTermExpression(
-//     Expression singleTermExpression) {
-//     extractTerm(singleTermExpression.getTerm());
-// }
-//
-// void DepthFirstExtractor::extractSubtractTermsExpression(
-//     Expression subtractTermsExpression) {
-//     extractExpression(subtractTermsExpression.getExpression());
-//     extractTerm(subtractTermsExpression.getTerm());
-// }
-//
-// void DepthFirstExtractor::extractSumTermsExpression(Expression
-// sumTermsExpression) {
-//     extractExpression(sumTermsExpression.getExpression());
-//     extractTerm(sumTermsExpression.getTerm());
-// }
-//
-// void DepthFirstExtractor::extractTerm(Term term) {
-//     switch (term.getTermType()) {
-//     case TermType::SINGLE_FACTOR:
-//         extractSingleFactorTerm(term);
-//     case TermType::MULTIPLY_TERM_BY_FACTOR:
-//     case TermType::DIVIDE_TERM_BY_FACTOR:
-//     case TermType::MODULO_TERM_BY_FACTOR:
-//         extractMultiFactorTerm(term);
-//     default:
-//         throw runtime_error("Invalid TermType.");
-//     }
-// }
-//
-// void DepthFirstExtractor::extractSingleFactorTerm(Term singleFactorTerm) {
-//     extractFactor(singleFactorTerm.getFactor());
-// }
-//
-// void DepthFirstExtractor::extractMultiFactorTerm(Term multiFactorTerm) {
-//     extractFactor(multiFactorTerm.getFactor());
-//     extractTerm(multiFactorTerm.getTerm());
-// }
-//
-// void DepthFirstExtractor::extractFactor(Factor factor) {
-//     switch (factor.getFactorType()) {
-//     case FactorType::EXPRESSION:
-//         extractExpression(factor);
-//     case FactorType::VARIABLE:
-//         extractVariable(factor);
-//     case FactorType::CONSTANT:
-//         extractConstantValue(factor);
-//     default:
-//         throw runtime_error("Invalid FactorType.");
-//     }
-// }
-//

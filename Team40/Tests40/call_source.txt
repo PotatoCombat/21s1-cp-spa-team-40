@@ -1,0 +1,34 @@
+procedure A {
+    x = 10;
+    x = 7 + 1;
+}
+procedure B {
+    x = 10;
+    x = 7 + 1;
+    call C;
+}
+procedure C {
+    x = 10;
+    x = 7 + 1;
+    call D;
+    call E;
+    call F;
+    call G;
+}
+procedure D {
+    call G;
+}
+procedure E {
+    call G;
+    call F;
+    call H;
+}
+procedure F {
+    a = 1;
+}
+procedure G {
+    b = 1;
+}
+procedure H {
+    c = 1;
+}

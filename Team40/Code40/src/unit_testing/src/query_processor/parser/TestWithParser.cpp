@@ -10,6 +10,7 @@ TEST_CASE("WithParser: parse with clause") {
     ReferenceAttribute aI = ReferenceAttribute::INTEGER;
     ReferenceAttribute aN = ReferenceAttribute::NAME;
     Reference D_PROG_LINE(DesignEntityType::PROG_LINE, syn, "n", aI);
+    Reference D_PROG_LINE_C(DesignEntityType::STMT, syn, "n", aI);
     Reference D_STMT(DesignEntityType::STMT, syn, "s", aI);
     Reference D_VARIABLE(DesignEntityType::VARIABLE, syn, "v", aN);
     Reference D_READ_INT(DesignEntityType::READ, syn, "r", aI);
@@ -22,14 +23,14 @@ TEST_CASE("WithParser: parse with clause") {
 
     SECTION("PASS: prog_line = constant") {
         WithPair pair = make_pair("n", "10");
-        Clause expected = Clause(ClauseType::WITH, D_PROG_LINE, C_STMT);
+        Clause expected = Clause(ClauseType::WITH, D_PROG_LINE_C, C_STMT);
         Clause *actual = p.parse(pair);
 
         REQUIRE(actual->equals(expected));
         delete actual;
 
         pair = make_pair("10", "n");
-        expected = Clause(ClauseType::WITH, C_STMT, D_PROG_LINE);
+        expected = Clause(ClauseType::WITH, C_STMT, D_PROG_LINE_C);
         actual = p.parse(pair);
         REQUIRE(actual->equals(expected));
         delete actual;

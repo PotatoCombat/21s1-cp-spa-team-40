@@ -41,28 +41,4 @@ public:
 
     // ConstantValue
     void extractConstantValue(ConstantValue *constantValue);
-
-    // Condition
-    //    void extractCondition(Condition condition);
-    //    void extractSingleCondition(Condition singleCondition);
-    //    void extractNotCondition(Condition notCondition);
-    //    void extractBinaryCondition(Condition binaryCondition);
-
-    // Relation
-    //    void extractRelation(Relation relation);
-
-    // Expression
-    //    void extractExpression(Expression expression);
-    //    void extractSingleTermExpression(Expression singleTermExpression);
-    //    void extractSubtractTermsExpression(Expression
-    //    subtractTermsExpression); void extractSumTermsExpression(Expression
-    //    sumTermsExpression);
-
-    // Term
-    //    void extractTerm(Term term);
-    //    void extractSingleFactorTerm(Term singleFactorTerm);
-    //    void extractMultiFactorTerm(Term multiFactorTerm);
-
-    // Factor
-    //    void extractFactor(Factor factor);
 };
