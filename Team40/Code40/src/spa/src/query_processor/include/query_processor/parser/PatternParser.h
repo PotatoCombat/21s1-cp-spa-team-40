@@ -27,10 +27,6 @@ private:
     bool isWildcardPattern(vector<PatToken> pattern);
     bool isQuotedPattern(vector<PatToken> pattern);
     bool isUnderscoreQuotedPattern(vector<PatToken> pattern);
-    bool isOperator(string token);
-    bool isLBracket(string token);
-    bool isRBracket(string token);
-    int countOccurences(vector<string> vec, string token);
 
     Reference *r1 = nullptr;
     Reference *r2 = nullptr;

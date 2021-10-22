@@ -23,9 +23,6 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
         DesignEntityType deType = deHelper.valueToDesType(x.first);
         ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
-        if (!ParserUtil::isValidName(syn)) {
-            throw SyntaxError("QP-ERROR: invalid name");
-        }
         auto it =
             find_if(declList.begin(), declList.end(),
                     [&syn](Reference *ref) { return ref->getValue() == syn; });

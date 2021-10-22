@@ -40,6 +40,9 @@ void QueryTokenizer::tokenizeDeclarations(string input,
         // add tuples to the vector
         vector<string> syns = tokenizeCommaSeparatedValues(synonyms);
         for (auto s : syns) {
+            if (!ParserUtil::isValidName(s)) {
+                throw SyntaxError("QP-ERROR: invalid name");
+            }
             decls.push_back(make_pair(type, s));
         }
 
@@ -281,8 +284,8 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     // go through the commas
     while (commaPos != string::npos) {
         string token = trim(input.substr(nextPos, commaPos - nextPos));
-        if (isQuotedString(token) || hasNoWhitespace(token) ||
-            isWildcard(token)) {
+        if (ParserUtil::isQuoted(token) || hasNoWhitespace(token) ||
+            ParserUtil::isWildcard(token)) {
             token = removeWhitespaceWithinQuotes(token);
             arguments.push_back(token);
             nextPos = commaPos + 1;
@@ -311,6 +314,9 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
             token = "_";
         } else {
             token = getTokenBeforeX(input, UNDERSCORE, tokenPos, nextPos);
+            if (!ParserUtil::isQuoted(token)) {
+                throw SyntaxError("QP-ERROR: pattern underscore not followed by quotes");
+            }
             token = "_" + removeWhitespaceWithinQuotes(token) + "_";
             // check for R_BRACKET
             nextPos = getPosAfterRBracket(input, nextPos);
@@ -386,7 +392,7 @@ vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
     }
 
     if (patArgs.size() != 1) {
-        throw SyntaxError("QP-ERROR: Pattern should have just 1 element");
+        throw SyntaxError("QP-ERROR: assign should have one pattern argument");
     }
 
     string pattern = patArgs.at(0);
@@ -415,7 +421,49 @@ vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
         tokens.push_back(token);
     }
 
-    return tokens;
+    return validateTokens(tokens);
+}
+
+vector<PatToken> QueryTokenizer::validateTokens(vector<PatToken> tokens) {
+    vector<PatToken> validatedTokens;
+    int bracketCount = 0;
+    bool isWord = true;
+
+    for (auto t : tokens) {
+        if (ParserUtil::isWildcard(t) || ParserUtil::isQuote(t)) {
+            validatedTokens.push_back(t);
+            continue;
+        }
+        if (isWord) {
+            if (isLBracket(t)) {
+                isWord = true;
+                bracketCount += 1;
+                validatedTokens.push_back(t);
+            } else if (ParserUtil::isValidName(t) || ParserUtil::isInteger(t)) {
+                isWord = false;
+                validatedTokens.push_back(t);
+            } else {
+                throw SyntaxError("invalid pattern string");
+            }
+        } else {
+            if (isOperator(t)) {
+                isWord = true;
+                validatedTokens.push_back(t);
+            } else if (isRBracket(t)) {
+                isWord = false;
+                bracketCount -= 1;
+                validatedTokens.push_back(t);
+            } else {
+                throw SyntaxError("invalid pattern string");
+            }
+        }
+    }
+
+    if (bracketCount != 0 || isWord == true) {
+        throw SyntaxError("invalid pattern string");
+    }
+
+    return validatedTokens;
 }
 
 /********************* helper functions *********************/
@@ -563,17 +611,15 @@ vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
     return syns;
 }
 
-bool QueryTokenizer::isWildcard(string input) { return input == "_"; }
-
-bool QueryTokenizer::isQuotedString(string input) {
-    if (count(input.begin(), input.end(), QUOTE) == 2 && input[0] == QUOTE &&
-        input[input.size() - 1] == QUOTE) {
-        return true;
-    }
-    return false;
-}
-
 bool QueryTokenizer::hasNoWhitespace(string input) {
     size_t pos = findNextWhitespace(input, 0);
     return pos == string::npos;
 }
+
+bool QueryTokenizer::isOperator(string token) {
+    return OPERATOR_SET.find(token) != string::npos;
+}
+
+bool QueryTokenizer::isLBracket(string token) { return token == "("; }
+
+bool QueryTokenizer::isRBracket(string token) { return token == ")"; }
