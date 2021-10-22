@@ -1,0 +1,73 @@
+procedure proc1 {
+1    z = a + b - c;
+2    if (a / c >= d) then {
+3        d = w + x * y;
+4        while(w + y == z ) {
+5            call proc2;
+6            z = b + c / d;
+7            d = w + y;
+        }
+8        d = x - y / z;
+9        call proc3;
+    } else {
+10        z = a + a * a;
+11        while(a != b - d) {
+12            d = w * w + w;
+13            call proc4;
+14            z = b * c;
+        }
+15        z = d / d - d;
+    }
+16    call proc5;
+17    d = z - z / z;
+}
+
+procedure proc2 {
+18    call proc3;
+19    w = b + c;
+20    while (a != b - d) {
+21        a = x * y;
+22        if (c / b < d) then {
+23            call proc4;
+24            w = b - d;
+25            d = w / x;
+        } else {
+26            a = x / z;
+27            call proc5;
+28            z = a - b;
+        }
+29        w = c * d;
+    }
+30    call proc3;
+31    a = y + z;
+}
+
+procedure proc3 {
+32    call proc4;
+33    x = a / c;
+34    while(z != w + x * y) {
+35        b = w - y;
+36        c = x * v;
+37        call proc5;
+    }
+38    x = a + d;
+}
+
+procedure proc4 {
+39    b = w * z;
+40    if ( d == a - b / c) then {
+41        x = c - d;
+42        y = b + d;
+43        call proc5;
+    } else {
+44        b = y / z; 
+45        c = w - z;
+    }
+46    call proc5;
+47    y = a * b;
+}
+
+procedure proc5 {
+48    c = w + x;
+49    y = a / d;
+}
