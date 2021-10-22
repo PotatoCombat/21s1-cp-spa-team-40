@@ -2,6 +2,9 @@
 
 void WithParser::clear() {
     this->declList.clear();
+    delete this->r1, this->r2;
+    this->r1 = nullptr;
+    this->r2 = nullptr;
     this->ref1 = "";
     this->ref2 = "";
 }
@@ -18,12 +21,11 @@ Clause *WithParser::parseWt(WithPair withPair) {
     // the two refs must be of the same type (both strings or both integers)
     // synonym must be of type prog_line
 
-    Reference *r1 = parseReference(ref1);
-    Reference *r2 = parseReference(ref2);
+    r1 = parseReference(ref1);
+    r2 = parseReference(ref2);
     if (r1->getAttr() == r2->getAttr()) {
         return new Clause(ClauseType::WITH, *r1, *r2);
     } else {
-        delete r1, r2;
         throw ValidityError("invalid with clause");
     }
 }

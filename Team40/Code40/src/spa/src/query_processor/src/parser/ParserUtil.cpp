@@ -8,7 +8,7 @@ ReferenceType ParserUtil::checkRefType(std::string val) {
     } else if (isQuoted(val)) {
         return ReferenceType::CONSTANT;
     }
-    throw ValidityError("undeclared synonym");
+    throw ValidityError("invalid value");
 }
 
 bool ParserUtil::isWildcard(std::string val) { return val == "_"; }

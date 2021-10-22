@@ -20,7 +20,7 @@ DesignEntityTypeHelper::DesignEntityTypeHelper() {
         {"while", DesignEntityType::WHILE},
         {"if", DesignEntityType::IF},
         {"call", DesignEntityType::CALL},
-        {"prog_line", DesignEntityType::PROG_LINE} // TODO: replace all prog_lines with STMT in the future?
+        {"prog_line", DesignEntityType::PROG_LINE}
     };
     typeToIsStmtMap = {
         {DesignEntityType::STMT, true},

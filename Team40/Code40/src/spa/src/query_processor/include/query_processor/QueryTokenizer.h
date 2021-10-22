@@ -10,6 +10,7 @@
 
 #include "query_processor/exception/SyntaxError.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
+#include "query_processor/parser/ParserUtil.h"
 
 using namespace std;
 
@@ -35,10 +36,12 @@ private:
     size_t tokenizePatternClause(string input, size_t startPos,
                                  PatTuple &clause);
     size_t tokenizeWithClause(string input, size_t startPos, WithPair &clause);
+    vector<PatToken> validateTokens(vector<PatToken> tokens);
 
-    bool isQuotedString(string input);
-    bool isWildcard(string input);
     bool hasNoWhitespace(string input);
+    bool isOperator(string token);
+    bool isLBracket(string token);
+    bool isRBracket(string token);
     string trim(string input);
     string trimL(string input);
     string trimR(string input);
@@ -62,6 +65,7 @@ private:
     inline static const string KEYWORD_WITH = "with";
     inline static const string KEYWORD_BOOLEAN = "BOOLEAN";
     inline static const string WHITESPACE_SET = " \n\t\r";
+    inline static const string OPERATOR_SET = "+-*/%";
     inline static const string PATTERN_DELIMITER_SET = "()+-*/%_\"";
 
     inline static const char SEMICOLON = ';';
