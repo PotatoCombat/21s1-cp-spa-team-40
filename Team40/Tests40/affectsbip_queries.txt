@@ -1,0 +1,150 @@
+1 - is affects relationship is present (boolean return)
+
+Select BOOLEAN such that AffectsBip(_, _) 
+TRUE
+5000
+2 - any assignment affects given assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip(_, 118)
+TRUE
+5000
+3 - given assignment affects any assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip(6, _)
+TRUE
+5000
+4 - given synonyms are from the same procedure (boolean return)
+
+Select BOOLEAN such that AffectsBip(88, 89)
+TRUE
+5000
+5 - given assignment affects another given assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip(119, 120)
+TRUE
+5000
+6 - all assignments affected by the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that AffectsBip(46,a) 
+none
+5000
+7 - all assignment affecting the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that AffectsBip(a, 66)
+none
+5000
+8 - all assignment affected by the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that AffectsBip(72,n) 
+none
+5000
+9 - all assignment affecting the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that AffectsBip(n,88) 
+none
+5000
+10 - all assignments affecting some statement (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that AffectsBip(a1, a2)
+none
+5000
+11 - all assignments affecting some statement that affects itself (assign declaration, tuple with 2 variables return)
+assign a1, a2;
+Select <a1, a2> such that AffectsBip(a1, a2) and AffectsBip(a2, a1)
+none
+5000
+12 - all assignments affecting some statement that affects another statement (prog_line declaration, tuple with 3 variables return)
+prog_line n1, n2, n3;
+Select <n1, n2, n3> such that AffectsBip(n1 ,n2) and AffectsBip(n2, n3) 
+none
+5000
+13 - all assignments affecting some statement that affects another statement that affects itself (prog_line declaration, tuple with 3 variables return)
+prog_line n1, n2, n3;
+Select <n1, n2, n3> such that AffectsBip(n1 ,n2) and AffectsBip(n2, n3) and AffectsBip(n3, a1)
+none
+5000
+14 - all assignments affecting some statement that affects another statement that... (assign declaration, tuple with 4 variables return)
+assign a1, a2, a3, a4;
+Select <a1, a2, a3, a4> such that AffectsBip(a1 ,a2) and AffectsBip(a2, a3) and AffectsBip(a3, a4) 
+none
+5000
+15 - all assignments affecting some statement that affects another statement that... (assign declaration, tuple with 10 variables return)
+assign a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
+Select <a1, a2, a3, a4, a5, a6, a7, a8, a9, a10> such that AffectsBip(a1 ,a2) and AffectsBip(a2, a3) and AffectsBip(a3, a4) and AffectsBip(a4, a5) and AffectsBip(a5, a6) and AffectsBip(a6, a7) and AffectsBip(a7, a8) and AffectsBip(a8, a9) and AffectsBip(a9, a10)    
+none
+5000
+16 - is affects* relationship is present (boolean return)
+
+Select BOOLEAN such that AffectsBip*(_, _) 
+TRUE
+5000
+17 - any assignment affects* given assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip*(_, 118)
+TRUE
+5000
+18 - given assignment affects* any assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip*(110, _)
+TRUE
+5000
+19 - given synonyms are from the same procedure (boolean return)
+
+Select BOOLEAN such that AffectsBip*(100, 102)
+TRUE
+5000
+20 - given assignment affects* another given assignment (boolean return)
+
+Select BOOLEAN such that AffectsBip*(6, 8)
+TRUE
+5000
+21 - all assignment affected* by the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that AffectsBip*(110, n) 
+none
+5000
+22 - all assignment affecting* the given assignment (prog_line declaration, single synonym return)
+prog_line n;
+Select n such that AffectsBip*(n, 118) 
+none
+5000
+23 - all assignments affected* by the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that AffectsBip*(89,a) 
+none
+5000
+24 - all assignment affecting* the given assignment (assign declaration, single synonym return)
+assign a;
+Select a such that AffectsBip*(a, 100)
+none
+5000
+25 - all assignments affecting* some statement (prog_line declaration, tuple with 2 variables return)
+prog_line n1,  n2;
+Select <n1, n2> such that AffectsBip*(n1 ,n2)
+none
+5000
+26 - all assignments affecting* some statement that affects* itself (prog_line declaration, tuple with 2 variables return)
+prog_line n1,  n2;
+Select <n1, n2> such that AffectsBip*(n1 ,n2) and AffectsBip*(n2 ,n1)
+none
+5000
+27 - all assignments affecting* some statement that affects* another statement (assign declaration, tuple with 2 variables return)
+assign a1,  a2, a3;
+Select <a1, a2, a3> such that AffectsBip*(a1 ,a2) and AffectsBip*(a2 ,a3)
+none
+5000
+28 - all assignments affecting* some statement that affects* another statement that affects* itself (assign declaration, tuple with 2 variables return)
+assign a1,  a2, a3;
+Select <a1, a2, a3> such that AffectsBip*(a1 ,a2) and AffectsBip*(a2 ,a3) and AffectsBip*(a3 ,a1)
+none
+5000
+29 - all assignments affecting* some statement that affects* another statement that... (prog_line declaration, tuple with 4 variables return)
+prog_line n1, n2, n3, n4;
+Select <n1, n2, n3, n4> such that AffectsBip*(n1 ,n2) and AffectsBip*(n2, n3) and AffectsBip*(n3, n4) 
+none
+5000
+30 - all assignments affecting* some statement that affects* another statement that... (prog_line declaration, tuple with 9 variables return)
+prog_line n1, n2, n3, n4, n5, n6, n7;
+Select <n1, n2, n3, n4, n5, n6, n7> such that AffectsBip*(n1 ,n2) and AffectsBip*(n2, n3) and AffectsBip*(n3, n4) and AffectsBip*(n4, n5) and AffectsBip*(n5, n6) and AffectsBip*(n6, n7)
+none
+5000
