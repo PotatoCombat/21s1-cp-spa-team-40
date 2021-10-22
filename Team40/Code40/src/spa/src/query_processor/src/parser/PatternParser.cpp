@@ -2,6 +2,9 @@
 
 void PatternParser::clear() {
     this->declList.clear();
+    delete this->r1, this->r2;
+    this->r1 = nullptr;
+    this->r2 = nullptr;
     this->ref1 = "";
     this->ref2 = "";
     this->tokens.clear();
@@ -17,58 +20,57 @@ Clause *PatternParser::parsePt(PatTuple patTuple) {
     this->ref2 = get<1>(patTuple);
     this->tokens = get<2>(patTuple);
 
-    Reference *stmt = getReferenceIfDeclared(this->ref1);
-    if (stmt == nullptr) {
+    r1 = getReferenceIfDeclared(this->ref1);
+    if (r1 == nullptr) {
         throw ValidityError("undeclared pattern synonym");
     }
+    r1 = r1->copy();
 
-    Reference *var = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
-    if (var == nullptr) {
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (r2 == nullptr) {
         throw ValidityError("invalid clause argument");
     }
-    stmt = stmt->copy();
 
-    if (isAssignPatternClause(stmt)) {
-        return parseAssign(stmt, var);
-    } else if (isWhilePatternClause(stmt)) {
-        return parseWhile(stmt, var);
-    } else if (isIfPatternClause(stmt)) {
-        return parseIf(stmt, var);
+    if (isAssignPatternClause()) {
+        return parseAssign();
+    } else if (isWhilePatternClause()) {
+        return parseWhile();
+    } else if (isIfPatternClause()) {
+        return parseIf();
     } else {
-        delete stmt, var;
         throw ValidityError("invalid pattern type");
     }
 }
 
-Clause *PatternParser::parseAssign(Reference *stmt, Reference *var) {
+Clause *PatternParser::parseAssign() {
     vector<string> tokens = this->tokens;
 
     if (isWildcardPattern(tokens)) {
-        return new Clause(*stmt, *var, vector<string>{}, true);
+        return new Clause(*r1, *r2, vector<string>{}, true);
     }
 
     bool isExactMatch = isExactPattern(tokens);
     tokens = parsePatternTokens(tokens);
-    return new Clause(*stmt, *var, tokens, isExactMatch);
+    return new Clause(*r1, *r2, tokens, isExactMatch);
 }
 
-Clause *PatternParser::parseWhile(Reference *stmt, Reference *var) {
+Clause *PatternParser::parseWhile() {
     vector<string> tokens = this->tokens;
 
     if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
-    return new Clause(ClauseType::PATTERN, *stmt, *var);
+    return new Clause(ClauseType::PATTERN, *r1, *r2);
 }
 
-Clause *PatternParser::parseIf(Reference *stmt, Reference *var) {
+Clause *PatternParser::parseIf() {
     vector<string> tokens = this->tokens;
 
     if (!ParserUtil::isWildcard(tokens.at(0)) ||
         !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
-    return new Clause(ClauseType::PATTERN, *stmt, *var);
+    return new Clause(ClauseType::PATTERN, *r1, *r2);
 }
 
 vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
@@ -112,18 +114,18 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
     return validatedTokens;
 }
 
-bool PatternParser::isAssignPatternClause(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::ASSIGN &&
+bool PatternParser::isAssignPatternClause() {
+    return r1->getDeType() == DesignEntityType::ASSIGN &&
            this->tokens.size() > 0;
 }
 
-bool PatternParser::isWhilePatternClause(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::WHILE &&
+bool PatternParser::isWhilePatternClause() {
+    return r1->getDeType() == DesignEntityType::WHILE &&
            this->tokens.size() == 1;
 }
 
-bool PatternParser::isIfPatternClause(Reference *identity) {
-    return identity->getDeType() == DesignEntityType::IF &&
+bool PatternParser::isIfPatternClause() {
+    return r1->getDeType() == DesignEntityType::IF &&
            this->tokens.size() == 2;
 }
 

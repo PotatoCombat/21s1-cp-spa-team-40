@@ -2,6 +2,9 @@
 
 void SuchThatParser::clear() {
     this->declList.clear();
+    delete this->r1, this->r2;
+    this->r1 = nullptr;
+    this->r2 = nullptr;
     this->type = "";
     this->ref1 = "";
     this->ref2 = "";
@@ -43,10 +46,9 @@ Clause *SuchThatParser::parseStmtStmt() {
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    Reference *r1 = parseStmtRef(this->ref1);
-    Reference *r2 = parseStmtRef(this->ref2);
+    r1 = parseStmtRef(this->ref1);
+    r2 = parseStmtRef(this->ref2);
     if (r1 == nullptr || r2 == nullptr) {
-        delete r1, r2;
         throw ValidityError("invalid clause argument");
     }
 
@@ -70,10 +72,9 @@ Clause *SuchThatParser::parseProcProc() {
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    Reference *r1 = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
-    Reference *r2 = parseEntRef(this->ref2, DesignEntityType::PROCEDURE);
+    r1 = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
+    r2 = parseEntRef(this->ref2, DesignEntityType::PROCEDURE);
     if (r1 == nullptr || r2 == nullptr) {
-        delete r1, r2;
         throw ValidityError("invalid clause argument");
     }
 
@@ -115,7 +116,6 @@ Clause *SuchThatParser::parseModifies() {
     // MODIFIES_P: quoted/synonym, quoted/synonym/wildcard
     ClauseType clsType;
 
-    Reference *r1;
     Reference *r1Stmt = parseStmtRef(this->ref1);
     Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
     if (r1Stmt == nullptr && r1Proc == nullptr) {
@@ -133,9 +133,8 @@ Clause *SuchThatParser::parseModifies() {
         clsType = ClauseType::MODIFIES_P;
     }
 
-    Reference *r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
     if (r2 == nullptr) {
-        delete r1;
         throw ValidityError("invalid clause argument");
     }
 
@@ -153,7 +152,6 @@ Clause *SuchThatParser::parseUses() {
     // USES_P: quoted/synonym, quoted/synonym/wildcard
     ClauseType clsType;
 
-    Reference *r1;
     Reference *r1Stmt = parseStmtRef(this->ref1);
     Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
     if (r1Stmt == nullptr && r1Proc == nullptr) {
@@ -171,9 +169,8 @@ Clause *SuchThatParser::parseUses() {
         clsType = ClauseType::USES_P;
     }
 
-    Reference *r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
     if (r2 == nullptr) {
-        delete r1;
         throw ValidityError("invalid clause argument");
     }
 

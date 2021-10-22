@@ -16,13 +16,13 @@ public:
 private:
     Clause *parsePt(PatTuple patTuple) override;
 
-    Clause *parseAssign(Reference *stmt, Reference *var);
-    Clause *parseWhile(Reference *stmt, Reference *var);
-    Clause *parseIf(Reference *stmt, Reference *var);
+    Clause *parseAssign();
+    Clause *parseWhile();
+    Clause *parseIf();
 
-    bool isAssignPatternClause(Reference *identity);
-    bool isWhilePatternClause(Reference *identity);
-    bool isIfPatternClause(Reference *identity);
+    bool isAssignPatternClause();
+    bool isWhilePatternClause();
+    bool isIfPatternClause();
     bool isExactPattern(vector<PatToken> pattern);
     bool isWildcardPattern(vector<PatToken> pattern);
     bool isQuotedPattern(vector<PatToken> pattern);
@@ -32,6 +32,8 @@ private:
     bool isRBracket(string token);
     int countOccurences(vector<string> vec, string token);
 
+    Reference *r1 = nullptr;
+    Reference *r2 = nullptr;
     string ref1;
     string ref2;
     vector<string> tokens;

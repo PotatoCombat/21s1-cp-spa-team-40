@@ -20,6 +20,8 @@ private:
     Clause *parseModifies();
     Clause *parseUses();
 
+    Reference *r1 = nullptr;
+    Reference *r2 = nullptr;
     string type;
     string ref1;
     string ref2;
