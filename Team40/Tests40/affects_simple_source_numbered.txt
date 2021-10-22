@@ -27,16 +27,16 @@ procedure proc2 {
 20    read c;
 21    c = x - y;
 22    while((x <= y + z) || (a + b >= c)){
-23        call proc4;
+23        call proc5;
 24        a = y - z;
 25        if ((x + y < z) && (a > b + c)) then {
-26            call proc2;
+26            call proc4;
 27            y = a - c;
-          } else {
+        } else {
 28            call proc3;
 29            z = a - b;
-          }
-      }
+        }
+    }
 30    print x;
 31    print y;
 32    print z;
@@ -51,7 +51,6 @@ procedure proc3 {
 }
 
 procedure proc4 {
-
 38    x = a;
 39    y = b;
 40    c = x / y;
