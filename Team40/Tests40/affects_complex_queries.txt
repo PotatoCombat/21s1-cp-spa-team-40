@@ -60,7 +60,7 @@ Select <n1, n2, n3> such that Affects(n1 ,n2) and Affects(n2, n3)
 5000
 13 - all assignments affecting some statement that affects another statement that affects itself (prog_line declaration, tuple with 3 variables return)
 prog_line n1, n2, n3;
-Select <n1, n2, n3> such that Affects(n1 ,n2) and Affects(n2, n3) and Affects(n3, a1)
+Select <n1, n2, n3> such that Affects(n1 ,n2) and Affects(n2, n3) and Affects(n3, n1)
 none
 5000
 14 - all assignments affecting some statement that affects another statement that... (assign declaration, tuple with 4 variables return)
