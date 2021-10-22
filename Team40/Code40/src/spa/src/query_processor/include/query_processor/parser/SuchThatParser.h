@@ -17,6 +17,8 @@ private:
     Clause *parseStmtStmt();
     Clause *parseProcProc();
     Clause *parseXEnt();
+    Clause *parseModifies();
+    Clause *parseUses();
 
     string type;
     string ref1;
