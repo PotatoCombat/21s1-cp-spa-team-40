@@ -26,6 +26,13 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
         if (!ParserUtil::isValidName(syn)) {
             throw SyntaxError("QP-ERROR: invalid name");
         }
+        auto it =
+            find_if(declList.begin(), declList.end(),
+                    [&syn](Reference *ref) { return ref->getValue() == syn; });
+
+        if (it != declList.end()) {
+            throw ValidityError("QP-ERROR: synonym has been declared");
+        }
         ReferenceAttribute attr = deHelper.typeToDefaultAttr(deType);
         Reference *ref = new Reference(deType, refType, syn, attr);
         declList.push_back(ref);

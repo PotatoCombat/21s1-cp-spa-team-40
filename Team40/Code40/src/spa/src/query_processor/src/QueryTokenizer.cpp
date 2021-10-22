@@ -380,7 +380,8 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
 
 vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
     if (all_of(patArgs.begin(), patArgs.end(),
-               [](string x) { return x == "_"; })) {
+               [](string x) { return x == "_"; }) &&
+        (patArgs.size() == 1 || patArgs.size() == 2)) {
         return patArgs;
     }
 
