@@ -43,6 +43,10 @@ Clause *SuchThatParser::parseStmtStmt() {
 
     Reference *r1 = parseStmtRef(this->ref1);
     Reference *r2 = parseStmtRef(this->ref2);
+    if (r1 == nullptr || r2 == nullptr) {
+        delete r1, r2;
+        throw ValidityError("invalid clause argument");
+    }
 
     return new Clause(clsType, *r1, *r2);
 }
@@ -60,40 +64,13 @@ Clause *SuchThatParser::parseProcProc() {
         throw ValidityError("invalid clause argument");
     }
 
-    Reference *r1 = getReferenceIfDeclared(this->ref1);
-    Reference *r2 = getReferenceIfDeclared(this->ref2);
-
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    if (r1 != nullptr) {
-        if (!deHelper.isProcedure(r1->getDeType())) {
-            throw ValidityError("invalid clause argument");
-        }
-        r1 = r1->copy();
-    } else {
-        DesignEntityType deType = DesignEntityType::PROCEDURE;
-        ReferenceType refT = ParserUtil::checkRefType(this->ref1);
-        ReferenceAttribute attr = ReferenceAttribute::NAME;
-        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
-            this->ref1 = ref1.substr(1, ref1.size() - 2);
-        }
-        r1 = new Reference(deType, refT, this->ref1, attr);
-    }
-
-    if (r2 != nullptr) {
-        if (!deHelper.isProcedure(r2->getDeType())) {
-            delete r1;
-            throw ValidityError("invalid clause argument");
-        }
-        r2 = r2->copy();
-    } else {
-        DesignEntityType deType = DesignEntityType::PROCEDURE;
-        ReferenceType refT = ParserUtil::checkRefType(this->ref2);
-        ReferenceAttribute attr = ReferenceAttribute::NAME;
-        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
-            this->ref2 = ref2.substr(1, ref2.size() - 2);
-        }
-        r2 = new Reference(deType, refT, this->ref2, attr);
+    Reference *r1 = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
+    Reference *r2 = parseEntRef(this->ref2, DesignEntityType::PROCEDURE);
+    if (r1 == nullptr || r2 == nullptr) {
+        delete r1, r2;
+        throw ValidityError("invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -158,6 +135,10 @@ Clause *SuchThatParser::parseXEnt() {
 
     // second argument must always be a variable
     Reference *r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (r2 == nullptr) {
+        delete r1, r2;
+        throw ValidityError("invalid clause argument");
+    }
 
     if (isStmtEnt) {
         return new Clause(clsHelper.valueToClsType(this->type), *r1, *r2);

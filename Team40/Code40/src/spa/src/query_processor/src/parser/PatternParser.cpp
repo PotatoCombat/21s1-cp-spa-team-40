@@ -17,61 +17,58 @@ Clause *PatternParser::parsePt(PatTuple patTuple) {
     this->ref2 = get<1>(patTuple);
     this->tokens = get<2>(patTuple);
 
-    Reference *identity = getReferenceIfDeclared(this->ref1);
-
-    if (identity == nullptr) {
+    Reference *stmt = getReferenceIfDeclared(this->ref1);
+    if (stmt == nullptr) {
         throw ValidityError("undeclared pattern synonym");
     }
 
-    identity = identity->copy();
+    Reference *var = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (var == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
+    stmt = stmt->copy();
 
-    if (isAssignPatternClause(identity)) {
-        return parseAssign(identity);
-    } else if (isWhilePatternClause(identity)) {
-        return parseWhile(identity);
-    } else if (isIfPatternClause(identity)) {
-        return parseIf(identity);
+    if (isAssignPatternClause(stmt)) {
+        return parseAssign(stmt, var);
+    } else if (isWhilePatternClause(stmt)) {
+        return parseWhile(stmt, var);
+    } else if (isIfPatternClause(stmt)) {
+        return parseIf(stmt, var);
     } else {
-        delete identity;
+        delete stmt, var;
         throw ValidityError("invalid pattern type");
     }
 }
 
-Clause *PatternParser::parseAssign(Reference *identity) {
-    string var = this->ref2;
+Clause *PatternParser::parseAssign(Reference *stmt, Reference *var) {
     vector<string> tokens = this->tokens;
-    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (isWildcardPattern(tokens)) {
-        return new Clause(*identity, *ref, vector<string>{}, true);
+        return new Clause(*stmt, *var, vector<string>{}, true);
     }
 
     bool isExactMatch = isExactPattern(tokens);
     tokens = parsePatternTokens(tokens);
-    return new Clause(*identity, *ref, tokens, isExactMatch);
+    return new Clause(*stmt, *var, tokens, isExactMatch);
 }
 
-Clause *PatternParser::parseWhile(Reference *identity) {
-    string var = this->ref2;
+Clause *PatternParser::parseWhile(Reference *stmt, Reference *var) {
     vector<string> tokens = this->tokens;
-    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (!ParserUtil::isWildcard(tokens.at(0))) {
         throw ValidityError("while clause 2nd argument should be _");
     }
-    return new Clause(ClauseType::PATTERN, *identity, *ref);
+    return new Clause(ClauseType::PATTERN, *stmt, *var);
 }
 
-Clause *PatternParser::parseIf(Reference *identity) {
-    string var = this->ref2;
+Clause *PatternParser::parseIf(Reference *stmt, Reference *var) {
     vector<string> tokens = this->tokens;
-    Reference *ref = parseEntRef(var, DesignEntityType::VARIABLE);
 
     if (!ParserUtil::isWildcard(tokens.at(0)) ||
         !ParserUtil::isWildcard(tokens.at(1))) {
         throw ValidityError("if clause 2nd & 3rd arguments should be _");
     }
-    return new Clause(ClauseType::PATTERN, *identity, *ref);
+    return new Clause(ClauseType::PATTERN, *stmt, *var);
 }
 
 vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {

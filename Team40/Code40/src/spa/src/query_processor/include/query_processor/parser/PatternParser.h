@@ -16,9 +16,9 @@ public:
 private:
     Clause *parsePt(PatTuple patTuple) override;
 
-    Clause *parseAssign(Reference *identity);
-    Clause *parseWhile(Reference *identity);
-    Clause *parseIf(Reference *identity);
+    Clause *parseAssign(Reference *stmt, Reference *var);
+    Clause *parseWhile(Reference *stmt, Reference *var);
+    Clause *parseIf(Reference *stmt, Reference *var);
 
     bool isAssignPatternClause(Reference *identity);
     bool isWhilePatternClause(Reference *identity);

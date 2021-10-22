@@ -36,23 +36,23 @@ Reference *ClauseParser::getReferenceIfDeclared(string syn) {
 }
 
 /**
- * Parses a stmt string into a `Reference` object.
+ * Parses a `stmtRef` string into a `Reference` object.
  * This includes: stmt, assign, if, while, read, print, call, prog_line.
- * @param syn The name synonym.
- * @return Reference object.
+ * @param syn The stmtRef.
+ * @return Reference object, otherwise nullptr.
  */
 Reference *ClauseParser::parseStmtRef(string syn) {
     // syn:  SYNONYM | INTEGER | WILDCARD
 
     if (ParserUtil::isQuoted(syn)) {
-        throw ValidityError("invalid clause argument");
+        return nullptr;
     }
 
     Reference *r = getReferenceIfDeclared(syn);
     if (r != nullptr) {
         DesignEntityType deType = r->getDeType();
         if (!deHelper.isStatement(deType)) {
-            throw ValidityError("invalid clause argument");
+            return nullptr;
         }
         if (deType == DesignEntityType::PROG_LINE) {
             deType = DesignEntityType::STMT;
@@ -68,20 +68,20 @@ Reference *ClauseParser::parseStmtRef(string syn) {
 
 /**
  * Parses a `entRef` string into a `Reference` object.
- * @param syn The variable synonym.
- * @return Reference object.
+ * @param syn The entRef.
+ * @return Reference object, otherwise nullptr.
  */
 Reference *ClauseParser::parseEntRef(string syn, DesignEntityType type) {
     // syn:  SYNONYM | QUOTED | WILDCARD
 
     if (ParserUtil::isInteger(syn)) {
-        throw ValidityError("invalid clause argument");
+        return nullptr;
     }
 
     Reference *r = getReferenceIfDeclared(syn);
     if (r != nullptr) {
         if (r->getDeType() != type) {
-            throw ValidityError("invalid clause argument");
+            return nullptr;
         }
         return r->copy();
     }
