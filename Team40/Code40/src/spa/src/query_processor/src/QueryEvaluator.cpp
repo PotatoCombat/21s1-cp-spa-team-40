@@ -111,6 +111,11 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &withHandler;
     }
 
+    if (clause->getType() == ClauseType::AFFECTS) {
+        AffectsHandler affectsHandler(clause, pkb);
+        clauseHandler = &affectsHandler;
+    }
+
     return clauseHandler->eval();
 }
 

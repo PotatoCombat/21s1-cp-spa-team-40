@@ -34,6 +34,7 @@
 #include "query_processor/relationship_handler/UsesProcHandler.h"
 #include "query_processor/relationship_handler/UsesStmtHandler.h"
 #include "query_processor/relationship_handler/WithHandler.h"
+#include "query_processor/relationship_handler/AffectsHandler.h"
 
 using namespace std;
 
