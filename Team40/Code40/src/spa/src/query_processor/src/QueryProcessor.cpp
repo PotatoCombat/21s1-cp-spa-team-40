@@ -18,6 +18,9 @@ void QueryProcessor::processQuery(string query, list<string> &results) {
         return;
     }
 
-    vector<string> e = evaluator.evaluateQuery(q);
+    Query optimized;
+    QueryOptimizer::optimize(q, optimized);
+
+    vector<string> e = evaluator.evaluateQuery(optimized);
     copy(e.begin(), e.end(), back_inserter(results));
 }
