@@ -25,6 +25,11 @@ set<DesignEntityType> ClauseHandler::ALL_DES_SET{
     DesignEntityType::WHILE,   DesignEntityType::PROCEDURE,
     DesignEntityType::VARIABLE};
 
+set<DesignEntityType> ClauseHandler::ASSIGN_STMT_DES_SET {
+    DesignEntityType::STMT,
+    DesignEntityType::ASSIGN,
+};
+
 set<ReferenceType> ClauseHandler::ALL_VALID_REF {
     ReferenceType::CONSTANT, ReferenceType::SYNONYM, ReferenceType::WILDCARD
 };
