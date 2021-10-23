@@ -160,8 +160,6 @@ void DepthFirstExtractor::extractLastLeafStatements(
     if (lastStatement->getStatementType() == StatementType::IF) {
         extractLastLeafStatements(lastStatement->getThenStmtLst(), result);
         extractLastLeafStatements(lastStatement->getElseStmtLst(), result);
-    } else if (lastStatement->getStatementType() == StatementType::WHILE) {
-        extractLastLeafStatements(lastStatement->getThenStmtLst(), result);
     } else {
         result.push_back(lastStatement);
     }
