@@ -116,6 +116,11 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &affectsHandler;
     }
 
+    if (clause->getType() == ClauseType::AFFECTS_T) {
+        AffectsStarHandler affectsStarHandler(clause, pkb);
+        clauseHandler = &affectsStarHandler;
+    }
+
     return clauseHandler->eval();
 }
 
