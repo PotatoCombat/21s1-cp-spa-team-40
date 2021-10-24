@@ -148,13 +148,15 @@ set<ProgLineIndex> AffectsStarHandler::getAffectingStmts(ProgLineIndex line2) {
                             results.insert(i);
                             continue;
                         }
-                        case StatementType::IF:
-                            case StatementType::WHILE:
-                                break;
-                        default:
-                            if (pkb->stmtModifies(i, usedVar)) {
-                                continue;
-                            }
+                        break;
+                    case StatementType::IF:
+                    case StatementType::WHILE:
+                        break;
+                    default:
+                        if (pkb->stmtModifies(i, usedVar)) {
+                            continue;
+                        }
+                        break;
                 }
                 open.push(i);
             }
@@ -200,13 +202,14 @@ set<ProgLineIndex> AffectsStarHandler::getAffectedStmts(ProgLineIndex line1) {
                         continue;
                     }
                     break;
-                    case StatementType::IF:
-                        case StatementType::WHILE:
-                            break;
-                    default:
-                        if (pkb->stmtModifies(i, modifiedVar)) {
-                            continue;
-                        }
+                case StatementType::IF:
+                case StatementType::WHILE:
+                    break;
+                default:
+                    if (pkb->stmtModifies(i, modifiedVar)) {
+                        continue;
+                    }
+                    break;
             }
             open.push(i);
         }

@@ -43,6 +43,7 @@ set<string> AffectsHandler::getR1ClauseR2(string r2) {
                             results.insert(to_string(i));
                             continue;
                         }
+                        break;
                     case StatementType::IF:
                     case StatementType::WHILE:
                         break;
@@ -50,6 +51,7 @@ set<string> AffectsHandler::getR1ClauseR2(string r2) {
                         if (pkb->stmtModifies(i, usedVar)) {
                             continue;
                         }
+                        break;
                 }
                 open.push(i);
             }
@@ -104,6 +106,7 @@ set<string> AffectsHandler::getR2ClausedR1(string r1) {
                     if (pkb->stmtModifies(i, modifiedVar)) {
                         continue;
                     }
+                    break;
             }
             open.push(i);
         }
