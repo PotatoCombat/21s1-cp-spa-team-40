@@ -27,5 +27,3 @@ private:
     /// Stores s such that NextBip(s, stmt).
     map<ProgLineIndex, set<ProgLineIndex>> parentMap;
 };
-}
-;

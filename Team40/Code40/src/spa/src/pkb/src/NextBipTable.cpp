@@ -29,7 +29,7 @@ set<ProgLineIndex> NextBipTable::getNextBipLines(ProgLineIndex line) {
     return searchForChildSet->second;
 }
 
-set<ProgLineIndex> NextBipTable::getPreviousLines(ProgLineIndex line) {
+set<ProgLineIndex> NextBipTable::getPreviousBipLines(ProgLineIndex line) {
     auto searchForParentSet = parentMap.find(line);
     if (searchForParentSet == parentMap.end()) {
         return {};
