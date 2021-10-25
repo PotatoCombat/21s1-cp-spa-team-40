@@ -21,6 +21,22 @@ private:
 
     void assertIndex(INDEX idx);
 
+    /*
+     * Calculates all the combination result of the group that contains the
+     * input index if the group hasn't been evaluated yet
+     */
+    void appendGroupResult(set<INDEX> &visited,
+                           vector<vector<string>> &existingCombinations,
+                           INDEX idx);
+
+    void constructNewCombinations(vector<vector<string>> &newCombinations,
+                                  vector<vector<string>> &existingCombinations,
+                                  set<INDEX> &visitedInGroup, INDEX idx);
+
+    bool canAppendValue(VALUE value, INDEX idx,
+                        vector<string> &combination,
+                        set<INDEX> &visistedInGroup);
+
 public:
     void clear();
 
