@@ -3,10 +3,12 @@
 
 vector<Line> ifProgramLines = {Line(0, {"procedure", "sumDigits", "{"}), 
                              Line(1, {"if", "(", "num1", ">", "num2", ")", "then", "{"}), 
-                             Line(1, {"}"}), 
-                             Line(1, {"else", "{"}), 
-                             Line(1, {"}"}), 
-                             Line(1, {"}"})};
+                             Line(2, {"max", "=", "num1", ";"}),
+                             Line(2, {"}"}), 
+                             Line(2, {"else", "{"}), 
+                             Line(3, {"max", "=", "num2", ";"}),
+                             Line(3, {"}"}), 
+                             Line(3, {"}"})};
 
 TEST_CASE("IfStatementParser: parseIfStatement") {
     int INDEX = TestParserUtils::INDEX;
@@ -14,6 +16,10 @@ TEST_CASE("IfStatementParser: parseIfStatement") {
                                           INDEX, ifProgramLines).parseIfStatement(INDEX);
     INDEX = 1;
     auto testStmt = TestParserUtils::createIfStmt(INDEX, "num1 > num2");
+    auto testChild1Stmt = TestParserUtils::createAssignStmt(INDEX + 1, "max", "num1");
+    TestParserUtils::addThenStmt(testStmt, testChild1Stmt);
+    auto testChild2Stmt = TestParserUtils::createAssignStmt(INDEX + 2, "max", "num2");
+    TestParserUtils::addElseStmt(testStmt, testChild2Stmt);
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }

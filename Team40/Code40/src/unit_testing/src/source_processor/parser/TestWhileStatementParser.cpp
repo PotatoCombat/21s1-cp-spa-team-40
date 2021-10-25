@@ -3,8 +3,9 @@
 
 vector<Line> whileProgramLines = {Line(0, {"procedure", "sumDigits", "{"}), 
                              Line(1, {"while", "(", "number", ">", "0", ")", "{"}), 
-                             Line(1, {"}"}), 
-                             Line(1, {"}"})};
+                             Line(2, {"number", "=", "number", "-", "1", ";"}),
+                             Line(2, {"}"}), 
+                             Line(2, {"}"})};
 
 TEST_CASE("WhileStatementParser: parseWhileStatement") {
     int INDEX = TestParserUtils::INDEX;
@@ -12,6 +13,8 @@ TEST_CASE("WhileStatementParser: parseWhileStatement") {
                                             whileProgramLines).parseWhileStatement(INDEX);
     INDEX = 1;
     auto testStmt = TestParserUtils::createWhileStmt(INDEX, "number > 0");
+    auto testChild1Stmt = TestParserUtils::createAssignStmt(INDEX + 1, "number", "number - 1");
+    TestParserUtils::addThenStmt(testStmt, testChild1Stmt);
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }
