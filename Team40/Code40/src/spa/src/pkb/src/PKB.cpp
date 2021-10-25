@@ -73,6 +73,10 @@ void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
     nextTable.insertNext(previousStmt, nextStmt);
 }
 
+void PKB::insertNextBip(Statement *previousStmt, Statement *nextStmt) {
+    nextBipTable.insertNextBip(previousStmt, nextStmt);
+}
+
 void PKB::insertPatternAssign(Statement *stmt) {
     patternTable.insertAssignPattern(stmt);
 }
@@ -108,7 +112,8 @@ StatementType PKB::getStmtType(StmtIndex stmt) {
 VarName PKB::getPrintVariable(StmtIndex printStmt) {
     auto stmt = statementTable.getStmt(printStmt);
     if (stmt->getStatementType() != StatementType::PRINT) {
-        throw runtime_error("This statement number does not refer to a print statement.");
+        throw runtime_error(
+            "This statement number does not refer to a print statement.");
     }
     return stmt->getVariable()->getName();
 }
@@ -116,7 +121,8 @@ VarName PKB::getPrintVariable(StmtIndex printStmt) {
 VarName PKB::getReadVariable(StmtIndex readStmt) {
     auto stmt = statementTable.getStmt(readStmt);
     if (stmt->getStatementType() != StatementType::READ) {
-        throw runtime_error("This statement number does not refer to a read statement.");
+        throw runtime_error(
+            "This statement number does not refer to a read statement.");
     }
     return stmt->getVariable()->getName();
 }
@@ -124,7 +130,8 @@ VarName PKB::getReadVariable(StmtIndex readStmt) {
 ProcName PKB::getCallProcedure(StmtIndex callStmt) {
     auto stmt = statementTable.getStmt(callStmt);
     if (stmt->getStatementType() != StatementType::CALL) {
-        throw runtime_error("This statement number does not refer to a call statement.");
+        throw runtime_error(
+            "This statement number does not refer to a call statement.");
     }
     return stmt->getProcName();
 }
@@ -273,13 +280,29 @@ bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
     return nextTable.next(previousLine, nextLine);
 }
 
+// NextBip =====================================================================
+
+set<StmtIndex> PKB::getNextBipLines(ProgLineIndex line) {
+    return nextBipTable.getNextBipLines(line);
+}
+
+set<StmtIndex> PKB::getPreviousBipLines(ProgLineIndex line) {
+    return nextBipTable.getPreviousBipLines(line);
+}
+
+bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
+    return nextBipTable.nextBip(previousLine, nextLine);
+}
+
 // Pattern =====================================================================
 
-set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var, ExpressionList pattern) {
+set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var,
+                                                 ExpressionList pattern) {
     return patternTable.getPartialAssignPatternStmts(var, pattern);
 }
 
-set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var, ExpressionList pattern) {
+set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var,
+                                               ExpressionList pattern) {
     return patternTable.getExactAssignPatternStmts(var, pattern);
 }
 
@@ -291,11 +314,13 @@ set<StmtIndex> PKB::getWhilePatternStmts(VarName var) {
     return conditionTable.getWhilePatternStmts(var);
 }
 
-bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
+bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var,
+                               ExpressionList pattern) {
     return patternTable.partialAssignPattern(stmtIndex, var, pattern);
 }
 
-bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var, ExpressionList pattern) {
+bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var,
+                             ExpressionList pattern) {
     return patternTable.exactAssignPattern(stmtIndex, var, pattern);
 }
 
