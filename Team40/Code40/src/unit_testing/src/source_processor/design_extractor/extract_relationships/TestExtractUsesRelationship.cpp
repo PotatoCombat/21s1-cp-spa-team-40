@@ -1,3 +1,4 @@
+#include "../TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
@@ -129,7 +130,8 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
+    addConditionalExpression(&whileStatement);
+
     whileStatement.addThenStmt(&printStatement);
     printStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
@@ -153,9 +155,6 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
     // Check that Uses(p1, v)
     REQUIRE(TestExtractUsesRelationship::pkb
                 .getVarsUsedByStmt(whileStatement.getIndex())
-                .size() == 1);
-    REQUIRE(TestExtractUsesRelationship::pkb
-                .getVarsUsedByStmt(whileStatement.getIndex())
                 .count(variable.getName()));
 }
 
@@ -171,8 +170,8 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    whileStatement.setVariable(&variable);
-    whileStatement.addExpressionVar(&variable);
+    addConditionalExpression(&whileStatement);
+
     whileStatement.addThenStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
     printStatement.setVariable(&variable);
@@ -217,15 +216,9 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     // Check that Uses(whileStatement, variable)
     REQUIRE(TestExtractUsesRelationship::pkb
                 .getVarsUsedByStmt(whileStatement.getIndex())
-                .size() == 1);
-    REQUIRE(TestExtractUsesRelationship::pkb
-                .getVarsUsedByStmt(whileStatement.getIndex())
                 .count(variable.getName()));
 
     // Check that Uses(procedure1, variable)
-    REQUIRE(
-        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
-            .size() == 1);
     REQUIRE(
         TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
             .count(variable.getName()));
@@ -243,8 +236,8 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    ifStatement.setVariable(&variable);
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
+
     ifStatement.addThenStmt(&callStatement);
     ifStatement.addElseStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
@@ -292,15 +285,9 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     // Check that Uses(whileStatement, variable)
     REQUIRE(TestExtractUsesRelationship::pkb
                 .getVarsUsedByStmt(ifStatement.getIndex())
-                .size() == 1);
-    REQUIRE(TestExtractUsesRelationship::pkb
-                .getVarsUsedByStmt(ifStatement.getIndex())
                 .count(variable.getName()));
 
     // Check that Uses(procedure1, variable)
-    REQUIRE(
-        TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
-            .size() == 1);
     REQUIRE(
         TestExtractUsesRelationship::pkb.getVarsUsedByProc(procedure1.getName())
             .count(variable.getName()));

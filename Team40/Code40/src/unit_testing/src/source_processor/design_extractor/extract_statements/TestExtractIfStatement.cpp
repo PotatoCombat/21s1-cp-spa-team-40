@@ -1,11 +1,7 @@
+#include "../TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
-
-/**
- * TODO: Refactor tests once we fix validation for cond_expr
- * https://github.com/nus-cs3203/21s1-cp-spa-team-40/issues/148
- */
 
 struct TestExtractIfStatement {
     static PKB pkb;
@@ -33,10 +29,11 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     Statement elseStatement(3, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
+    addConditionalExpression(&ifStatement);
+
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenStatement);
     ifStatement.addElseStmt(&elseStatement);
-    ifStatement.addExpressionVar(&variable);
     thenStatement.setVariable(&variable);
     elseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);
@@ -80,14 +77,15 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     Statement elseStatement(5, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
+    addConditionalExpression(&ifStatement);
+    addConditionalExpression(&thenIfStatement);
+
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseStatement);
-    ifStatement.addExpressionVar(&variable);
     elseStatement.setVariable(&variable);
     thenIfStatement.addThenStmt(&thenIfThenStatement);
     thenIfStatement.addElseStmt(&thenIfElseStatement);
-    thenIfStatement.addExpressionVar(&variable);
     thenIfThenStatement.setVariable(&variable);
     thenIfElseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);
@@ -141,7 +139,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
     Statement elseStatement3(7, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -229,7 +227,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
     Statement afterIfStatement(8, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -316,9 +314,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
     Statement afterIfStatement(16, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
-    thenIfStatement.addExpressionVar(&variable);
-    elseIfStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
+    addConditionalExpression(&thenIfStatement);
+    addConditionalExpression(&elseIfStatement);
 
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseIfStatement);

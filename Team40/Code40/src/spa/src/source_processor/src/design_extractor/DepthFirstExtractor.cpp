@@ -137,12 +137,12 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
 
     // Set all last non-while, non-if (a.k.a. leaf) statements in the THEN/ELSE
     // statement lists as previous statements
-    vector<Statement *> lastLeafStatements;
-    extractLastLeafStatements(ifStatement->getThenStmtLst(),
-                              lastLeafStatements);
-    extractLastLeafStatements(ifStatement->getElseStmtLst(),
-                              lastLeafStatements);
-    for (Statement *lastLeafStatement : lastLeafStatements) {
+    vector<Statement *> lastExecutedStatements;
+    extractLastExecutedStatement(ifStatement->getThenStmtLst(),
+                                 lastExecutedStatements);
+    extractLastExecutedStatement(ifStatement->getElseStmtLst(),
+                                 lastExecutedStatements);
+    for (Statement *lastLeafStatement : lastExecutedStatements) {
         ExtractionContext::getInstance().setPreviousStatement(
             lastLeafStatement);
     }
@@ -151,17 +151,14 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
 }
 
 /**
- * Recursively extracts the last non-while, non-if (a.k.a. leaf) statements in
- * a statement list.
+ * Recursively extracts the last executed statement in a statement list
  */
-void DepthFirstExtractor::extractLastLeafStatements(
+void DepthFirstExtractor::extractLastExecutedStatement(
     vector<Statement *> statementList, vector<Statement *> &result) {
     Statement *lastStatement = statementList.back();
     if (lastStatement->getStatementType() == StatementType::IF) {
-        extractLastLeafStatements(lastStatement->getThenStmtLst(), result);
-        extractLastLeafStatements(lastStatement->getElseStmtLst(), result);
-    } else if (lastStatement->getStatementType() == StatementType::WHILE) {
-        extractLastLeafStatements(lastStatement->getThenStmtLst(), result);
+        extractLastExecutedStatement(lastStatement->getThenStmtLst(), result);
+        extractLastExecutedStatement(lastStatement->getElseStmtLst(), result);
     } else {
         result.push_back(lastStatement);
     }
@@ -212,10 +209,10 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
 
     // Handle Next(w, s) where stmt s are all the last non-while, non-if (a.k.a.
     // leaf) statements in the THEN statement list belonging to while w
-    vector<Statement *> lastLeafStatements;
-    extractLastLeafStatements(whileStatement->getThenStmtLst(),
-                              lastLeafStatements);
-    for (Statement *lastLeafStatement : lastLeafStatements) {
+    vector<Statement *> lastExecutedStatements;
+    extractLastExecutedStatement(whileStatement->getThenStmtLst(),
+                                 lastExecutedStatements);
+    for (Statement *lastLeafStatement : lastExecutedStatements) {
         pkb->insertNext(lastLeafStatement, whileStatement);
     }
     ExtractionContext::getInstance().clearPreviousStatements();
