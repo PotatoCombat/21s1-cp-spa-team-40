@@ -473,7 +473,8 @@ TEST_CASE("SuchThatParser: prog_line is converted to stmt") {
         Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "n",
                   ReferenceAttribute::INTEGER);
 
-    p.initReferences(vector<Reference *>{&PROG_LINE});
+    vector<Reference *> references{&PROG_LINE};
+    p.initReferences(references);
 
     SECTION("Next(n, n)") {
         Clause *expected = new Clause(ClauseType::NEXT, PROG_LINE_CONVERTED,
