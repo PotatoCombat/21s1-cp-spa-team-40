@@ -12,8 +12,8 @@ private:
     PKB *pkb;
 
     // Utility
-    void extractLastLeafStatements(vector<Statement *> statementList,
-                                   vector<Statement *> &result);
+    void extractLastExecutedStatement(vector<Statement *> statementList,
+                                      vector<Statement *> &result);
 
 public:
     // Constructor
