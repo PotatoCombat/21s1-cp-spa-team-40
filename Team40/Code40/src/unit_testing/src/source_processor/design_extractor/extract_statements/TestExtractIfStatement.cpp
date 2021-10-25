@@ -2,15 +2,12 @@
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 
-/**
- * TODO: Refactor tests once we fix validation for cond_expr
- * https://github.com/nus-cs3203/21s1-cp-spa-team-40/issues/148
- */
-
 struct TestExtractIfStatement {
     static PKB pkb;
     static ProcName PROC_NAME;
     static VarName VAR_NAME;
+    static ConstName CONST_NAME;
+    static vector<string> COND_EXPR;
 
 public:
     static void reset() {
@@ -22,6 +19,19 @@ public:
 PKB TestExtractIfStatement::pkb = PKB();
 ProcName TestExtractIfStatement::PROC_NAME = "PROC";
 VarName TestExtractIfStatement::VAR_NAME = "VAR";
+VarName TestExtractIfStatement::CONST_NAME = "0";
+vector<string> TestExtractIfStatement::COND_EXPR =
+    vector<string>{TestExtractIfStatement::VAR_NAME, ">", "0"};
+
+void addConditionalExpression(Statement *ifStatement) {
+
+    Variable variable(TestExtractIfStatement::VAR_NAME);
+    ConstantValue constantValue(TestExtractIfStatement::CONST_NAME);
+
+    ifStatement->setExpressionLst(TestExtractIfStatement::COND_EXPR);
+    ifStatement->addExpressionVar(&variable);
+    ifStatement->addExpressionConst(&constantValue);
+}
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     TestExtractIfStatement::reset();
@@ -33,10 +43,11 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     Statement elseStatement(3, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
+    addConditionalExpression(&ifStatement);
+
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenStatement);
     ifStatement.addElseStmt(&elseStatement);
-    ifStatement.addExpressionVar(&variable);
     thenStatement.setVariable(&variable);
     elseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);
@@ -80,14 +91,15 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     Statement elseStatement(5, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.setProcName(procedure.getName());
+    addConditionalExpression(&ifStatement);
+    addConditionalExpression(&thenIfStatement);
+
+        ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseStatement);
-    ifStatement.addExpressionVar(&variable);
     elseStatement.setVariable(&variable);
     thenIfStatement.addThenStmt(&thenIfThenStatement);
     thenIfStatement.addElseStmt(&thenIfElseStatement);
-    thenIfStatement.addExpressionVar(&variable);
     thenIfThenStatement.setVariable(&variable);
     thenIfElseStatement.setVariable(&variable);
     procedure.addToStmtLst(&ifStatement);
@@ -141,7 +153,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
     Statement elseStatement3(7, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -229,7 +241,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
     Statement afterIfStatement(8, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -316,9 +328,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
     Statement afterIfStatement(16, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    ifStatement.addExpressionVar(&variable);
-    thenIfStatement.addExpressionVar(&variable);
-    elseIfStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
+    addConditionalExpression(&thenIfStatement);
+    addConditionalExpression(&elseIfStatement);
 
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseIfStatement);
