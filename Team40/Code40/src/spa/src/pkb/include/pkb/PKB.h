@@ -1,19 +1,20 @@
 #pragma once
 
+#include "CallsStarTable.h"
+#include "CallsTable.h"
+#include "ConditionTable.h"
 #include "EntityTable.h"
 #include "FollowsStarTable.h"
 #include "FollowsTable.h"
 #include "Iterator.h"
 #include "ModifiesTable.h"
+#include "NextBipTable.h"
+#include "NextTable.h"
 #include "ParentStarTable.h"
 #include "ParentTable.h"
 #include "PatternTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
-#include "NextTable.h"
-#include "CallsTable.h"
-#include "CallsStarTable.h"
-#include "ConditionTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -81,8 +82,7 @@ public:
      * @param preceding stmt1.
      * @param following stmt2.
      */
-    virtual void insertFollows(Statement *preceding,
-                               Statement *following);
+    virtual void insertFollows(Statement *preceding, Statement *following);
 
     /**
      * Stores the relationship Parent(stmt1, stmt2),
@@ -134,6 +134,13 @@ public:
      * @param next stmt2.
      */
     virtual void insertNext(Statement *previous, Statement *next);
+
+    /**
+     * Stores the relationship NextBip(stmt1, stmt2).
+     * @param previous stmt1.
+     * @param next stmt2.
+     */
+    virtual void insertNextBip(Statement *previous, Statement *next);
 
     /**
      * Stores the pattern a(var, exprList), where a is an ASSIGN statement.
@@ -450,6 +457,29 @@ public:
      */
     virtual bool next(ProgLineIndex previous, ProgLineIndex next);
 
+    // Next ==================================================================
+
+    /**
+     * Selects s such that NextBip(line, s).
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<StmtIndex> getNextBipLines(ProgLineIndex line);
+
+    /**
+     * Selects s such that NextBip(s, line).
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<StmtIndex> getPreviousBipLines(ProgLineIndex line);
+
+    /**
+     * Selects BOOLEAN such that NextBip(line1, line2).
+     * @param previous line1.
+     * @param next line2.
+     */
+    virtual bool nextBip(ProgLineIndex previous, ProgLineIndex next);
+
     // Pattern =================================================================
 
     /**
@@ -484,7 +514,8 @@ public:
     virtual set<StmtIndex> getWhilePatternStmts(VarName var);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN statement.
+     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * statement.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
@@ -493,8 +524,8 @@ public:
                                       ExpressionList pattern);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN statement,
-     * and the pattern requires an exact match.
+     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * statement, and the pattern requires an exact match.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
@@ -512,7 +543,8 @@ public:
     virtual bool ifPattern(StmtIndex stmt, VarName var);
 
     /**
-     * Selects BOOLEAN such that while(var, _), where while is a WHILE statement.
+     * Selects BOOLEAN such that while(var, _), where while is a WHILE
+     * statement.
      * @param stmt statement index of the WHILE statement.
      * @param var var.
      */
@@ -533,6 +565,7 @@ private:
     CallsTable callsTable;
     CallsStarTable callsStarTable;
     NextTable nextTable;
+    NextBipTable nextBipTable;
     PatternTable patternTable;
     ConditionTable conditionTable;
 };
