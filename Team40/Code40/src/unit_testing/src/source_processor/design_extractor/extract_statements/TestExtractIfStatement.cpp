@@ -1,4 +1,4 @@
-#include "TestUtil.h"
+#include "../TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"

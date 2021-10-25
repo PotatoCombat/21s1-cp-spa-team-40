@@ -1,3 +1,4 @@
+#include "../TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
@@ -133,7 +134,8 @@ TEST_CASE(
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
+    addConditionalExpression(&whileStatement);
+
     whileStatement.addThenStmt(&readStatement);
     readStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
@@ -175,8 +177,8 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    whileStatement.setVariable(&variable);
-    whileStatement.addExpressionVar(&variable);
+    addConditionalExpression(&whileStatement);
+
     whileStatement.addThenStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
     readStatement.setVariable(&variable);
@@ -247,8 +249,8 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    ifStatement.setVariable(&variable);
-    ifStatement.addExpressionVar(&variable);
+    addConditionalExpression(&ifStatement);
+
     ifStatement.addThenStmt(&callStatement);
     ifStatement.addElseStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
