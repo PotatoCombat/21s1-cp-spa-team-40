@@ -1,3 +1,4 @@
+#include "TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
@@ -6,8 +7,6 @@ struct TestExtractIfStatement {
     static PKB pkb;
     static ProcName PROC_NAME;
     static VarName VAR_NAME;
-    static ConstName CONST_NAME;
-    static vector<string> COND_EXPR;
 
 public:
     static void reset() {
@@ -19,19 +18,6 @@ public:
 PKB TestExtractIfStatement::pkb = PKB();
 ProcName TestExtractIfStatement::PROC_NAME = "PROC";
 VarName TestExtractIfStatement::VAR_NAME = "VAR";
-VarName TestExtractIfStatement::CONST_NAME = "0";
-vector<string> TestExtractIfStatement::COND_EXPR =
-    vector<string>{TestExtractIfStatement::VAR_NAME, ">", "0"};
-
-void addConditionalExpression(Statement *ifStatement) {
-
-    Variable variable(TestExtractIfStatement::VAR_NAME);
-    ConstantValue constantValue(TestExtractIfStatement::CONST_NAME);
-
-    ifStatement->setExpressionLst(TestExtractIfStatement::COND_EXPR);
-    ifStatement->addExpressionVar(&variable);
-    ifStatement->addExpressionConst(&constantValue);
-}
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     TestExtractIfStatement::reset();
@@ -94,7 +80,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     addConditionalExpression(&ifStatement);
     addConditionalExpression(&thenIfStatement);
 
-        ifStatement.setProcName(procedure.getName());
+    ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseStatement);
     elseStatement.setVariable(&variable);
