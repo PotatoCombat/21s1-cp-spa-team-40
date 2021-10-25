@@ -457,7 +457,7 @@ public:
      */
     virtual bool next(ProgLineIndex previous, ProgLineIndex next);
 
-    // Next ==================================================================
+    // NextBip ===============================================================
 
     /**
      * Selects s such that NextBip(line, s).
