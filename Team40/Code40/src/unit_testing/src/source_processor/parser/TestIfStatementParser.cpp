@@ -17,9 +17,9 @@ TEST_CASE("IfStatementParser: parseIfStatement") {
     INDEX = 1;
     auto testStmt = TestParserUtils::createIfStmt(INDEX, "num1 > num2");
     auto testChild1Stmt = TestParserUtils::createAssignStmt(INDEX + 1, "max", "num1");
-    TestParserUtils::addThenStmt(testStmt, testChild1Stmt);
+    testStmt.addThenStmt(&testChild1Stmt);
     auto testChild2Stmt = TestParserUtils::createAssignStmt(INDEX + 2, "max", "num2");
-    TestParserUtils::addElseStmt(testStmt, testChild2Stmt);
+    testStmt.addElseStmt(&testChild2Stmt);
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }

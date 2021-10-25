@@ -13,8 +13,8 @@ TEST_CASE("WhileStatementParser: parseWhileStatement") {
                                             whileProgramLines).parseWhileStatement(INDEX);
     INDEX = 1;
     auto testStmt = TestParserUtils::createWhileStmt(INDEX, "number > 0");
-    auto testChild1Stmt = TestParserUtils::createAssignStmt(INDEX + 1, "number", "number - 1");
-    TestParserUtils::addThenStmt(testStmt, testChild1Stmt);
+    auto testChildStmt = TestParserUtils::createAssignStmt(INDEX + 1, "number", "number - 1");
+    testStmt.addThenStmt(&testChildStmt);
     REQUIRE(*actualStmt == testStmt);
     delete actualStmt;
 }

@@ -122,12 +122,4 @@ public:
             stmt.addExpressionConst(expressionConst);
         }
     }
-
-    inline static void addThenStmt(Statement& parent, Statement& child) {
-        parent.addThenStmt(&child);
-    }
-
-    inline static void addElseStmt(Statement &parent, Statement &child) {
-        parent.addElseStmt(&child);
-    }
 };
