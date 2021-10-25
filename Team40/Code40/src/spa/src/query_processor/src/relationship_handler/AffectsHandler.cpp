@@ -131,6 +131,10 @@ bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
     // Should only have one var
     VarName modifiedVar = *pkb->getVarsModifiedByStmt(line1).begin();
 
+    if (!pkb->stmtUses(line2, modifiedVar)) {
+        return false;
+    }
+
     open.push(line1);
 
     while (!open.empty()) {
@@ -140,15 +144,22 @@ bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
         // Explore neighbours
         for (ProgLineIndex i : pkb->getNextLines(curr)) {
             if (i == line2) {
-                return pkb->stmtUses(i, modifiedVar);
+                return true;
             }
 
             if (visited.find(i) != visited.end()) {
                 continue;
             }
 
-            if (pkb->stmtModifies(i, modifiedVar)) {
-                continue;
+            switch (pkb->getStmtType(i)) {
+                case StatementType::IF:
+                case StatementType::WHILE:
+                    break;
+                default:
+                    if (pkb->stmtModifies(i, modifiedVar)) {
+                        continue;
+                    }
+                    break;
             }
 
             visited.insert(i); // Mark current as visited
