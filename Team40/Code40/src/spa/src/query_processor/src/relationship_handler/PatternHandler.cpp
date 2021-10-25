@@ -1,103 +1,72 @@
 #include "query_processor/relationship_handler/PatternHandler.h"
 
-Result PatternHandler::eval() {
-    Result result;
+PatternHandler::PatternHandler(Clause *clause, PKB *pkb)
+    : ClauseHandler(clause, pkb, ClauseType::PATTERN) {
+    // not used, has it own validate function
+    validDesType1 = &ClauseHandler::STMT_DES_SET;
+    validDesType2 = &ClauseHandler::STMT_DES_SET;
+    validRefType1 = &ClauseHandler::ALL_VALID_REF;
+    validRefType2 = &ClauseHandler::ALL_VALID_REF;
+}
 
-    validate();
-
-    Reference *stmtRef = patternClause->getFirstReference();
-    Reference *varRef = patternClause->getSecondReference();
-    vector<string> pattern = patternClause->getPattern();
-
-    set<int> (PatternHandler::*getPatternStmts)(string, vector<string>);
-    bool (PatternHandler::*hasPattern)(int, string, vector<string>);
-    StatementType stmtType;
-
-    switch (stmtRef->getDeType()) {
-        case DesignEntityType::ASSIGN:
-            if (patternClause->isExactMatch()) {
-                getPatternStmts = &PatternHandler::getExactAssignPatternStmts;
-                hasPattern = &PatternHandler::exactAssignPattern;
-            } else {
-                getPatternStmts = &PatternHandler::getPartialAssignPatternStmts;
-                hasPattern = &PatternHandler::partialAssignPattern;
-            }
-            stmtType = StatementType::ASSIGN;
-            break;
-        case DesignEntityType::IF:
-            getPatternStmts = &PatternHandler::getIfPatternStmts;
-            hasPattern = &PatternHandler::ifPattern;
-            stmtType = StatementType::IF;
-            break;
-        case DesignEntityType::WHILE:
-            getPatternStmts = &PatternHandler::getWhilePatternStmts;
-            hasPattern = &PatternHandler::whilePattern;
-            stmtType = StatementType::WHILE;
-            break;
-        default:
-            throw ClauseHandlerError("PatternHandler: unknown pattern clause type!");
-    }
-
-    // SYNONYM CONST
-    if (varRef->getRefType() == ReferenceType::CONSTANT) {
-        map<VALUE, VALUE_SET> stmtResults;
-        set<int> stmts =
-            (this->*getPatternStmts)(varRef->getValue(), pattern);
-        for (auto stmt : stmts) {
-            stmtResults[to_string(stmt)] = VALUE_SET{};
+void PatternHandler::getFunctions(GetPatternStmtsFunc &getPatternStmts,
+                                  HasPatternFunc &hasPattern) {
+    switch (clause->getFirstReference()->getDeType()) {
+    case DesignEntityType::ASSIGN:
+        if (clause->isExactMatch()) {
+            getPatternStmts = &PatternHandler::getExactAssignPatternStmts;
+            hasPattern = &PatternHandler::exactAssignPattern;
+        } else {
+            getPatternStmts = &PatternHandler::getPartialAssignPatternStmts;
+            hasPattern = &PatternHandler::partialAssignPattern;
         }
-        result.setResultList1(stmtRef, stmtResults);
-        return result;
+        break;
+    case DesignEntityType::IF:
+        getPatternStmts = &PatternHandler::getIfPatternStmts;
+        hasPattern = &PatternHandler::ifPattern;
+        break;
+    case DesignEntityType::WHILE:
+        getPatternStmts = &PatternHandler::getWhilePatternStmts;
+        hasPattern = &PatternHandler::whilePattern;
+        break;
+    default:
+        throw ClauseHandlerError(
+            "PatternHandler: unknown pattern clause type!");
     }
+}
 
-    // SYNONYM SYNONYM, SYNONYM WILDCARD
-    map<VALUE, VALUE_SET> stmtResults;
-    map<VALUE, VALUE_SET> varResults;
-    vector<int> assigns = pkb->getAllStmts(stmtType).asVector();
-    vector<string> vars = pkb->getAllVars().asVector();
-
-    for (int assign : assigns) {
-        VALUE_SET related;
-        bool valid = false;
-        for (string var : vars) {
-            if ((this->*hasPattern)(assign, var, pattern)) {
-                valid = true;
-                related.insert(var);
-            }
-        }
-        if (valid) {
-            stmtResults[to_string(assign)] = related;
-        }
+set<string> PatternHandler::getR1ClauseR2(string r2) {
+    set<string> res;
+    GetPatternStmtsFunc getPatternStmts;
+    HasPatternFunc hasPattern;
+    getFunctions(getPatternStmts, hasPattern);
+    for (int i : (this->*getPatternStmts)(r2, clause->getPattern())) {
+        res.insert(to_string(i));
     }
-    
+    return res;
+}
+
+set<string> PatternHandler::getR2ClausedR1(string r1) {
+    set<string> result;
+    set<string> vars = getAll(pkb, *clause->getSecondReference());
     for (string var : vars) {
-        VALUE_SET related;
-        bool valid = false;
-        for (int assign : assigns) {
-            if ((this->*hasPattern)(assign, var, pattern)) {
-                valid = true;
-                if (stmtRef->getRefType() == ReferenceType::SYNONYM) {
-                    related.insert(to_string(assign));
-                }
-            }
-        }
-        if (valid) {
-            varResults[var] = related;
+        if (isR1ClauseR2(r1, var)) {
+            result.insert(var);
         }
     }
-
-    result.setResultList1(stmtRef, stmtResults);
-
-    if (varRef->getRefType() != ReferenceType::WILDCARD) {
-        result.setResultList2(varRef, varResults);
-    }
-
     return result;
 }
 
+bool PatternHandler::isR1ClauseR2(string r1, string r2) {
+    GetPatternStmtsFunc getPatternStmts;
+    HasPatternFunc hasPattern;
+    getFunctions(getPatternStmts, hasPattern);
+    return (this->*hasPattern)(stoi(r1), r2, clause->getPattern());
+}
+
 void PatternHandler::validate() {
-    Reference *stmt = patternClause->getFirstReference();
-    Reference *var = patternClause->getSecondReference();
+    Reference *stmt = clause->getFirstReference();
+    Reference *var = clause->getSecondReference();
     set<DesignEntityType> validDesTypes = {DesignEntityType::ASSIGN,
                                            DesignEntityType::WHILE,
                                            DesignEntityType::IF};
