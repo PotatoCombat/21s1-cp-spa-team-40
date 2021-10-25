@@ -88,10 +88,11 @@ Result ClauseHandler::evalWcWc() {
     Reference *ref1 = clause->getFirstReference();
     set<string> res1s = getAll(pkb, *ref1);
     for (auto res1 : res1s) {
-        if (getR2ClausedR1(res1).size() > 0) {
-            result.setValid(true);
-            return result;
+        if (getR2ClausedR1(res1).empty()) {
+            continue;
         }
+        result.setValid(true);
+        return result;
     }
     result.setValid(false);
     return result;
@@ -126,9 +127,10 @@ Result ClauseHandler::evalSynConst() {
     map<VALUE, VALUE_SET> firstStmtResults;
     set<string> res1s = getR1ClauseR2(val2);
     for (string res1 : res1s) {
-        if (isType(res1, ref1->getDeType())) {
-            firstStmtResults[res1] = VALUE_SET{};
+        if (!isType(res1, ref1->getDeType())) {
+            continue;
         }
+        firstStmtResults[res1] = VALUE_SET{};
     }
     result.setResultList1(ref1, firstStmtResults);
     return result;
@@ -141,9 +143,10 @@ Result ClauseHandler::evalConstSyn() {
     map<VALUE, VALUE_SET> secondStmtResults;
     set<string> res2s = getR2ClausedR1(val1);
     for (auto res2 : res2s) {
-        if (isType(res2, ref2->getDeType())) {
-            secondStmtResults[res2] = VALUE_SET{};
+        if (!isType(res2, ref2->getDeType())) {
+            continue;
         }
+        secondStmtResults[res2] = VALUE_SET{};
     }
     result.setResultList2(ref2, secondStmtResults);
     return result;
@@ -164,9 +167,10 @@ Result ClauseHandler::evalNotConstNotConst() {
         map<VALUE, VALUE_SET> resultList;
         set<string> res1s = getAll(pkb, *ref1);
         for (auto res1 : res1s) {
-            if (isR1ClauseR2(res1, res1)) {
-                resultList[res1] = VALUE_SET{};
+            if (!isR1ClauseR2(res1, res1)) {
+                continue;
             }
+            resultList[res1] = VALUE_SET{};
         }
         result.setResultList1(ref1, resultList);
         result.setResultList2(ref2, resultList);
@@ -183,10 +187,11 @@ Result ClauseHandler::evalNotConstNotConst() {
             VALUE_SET related;
             bool valid = false;
             for (auto res2 : res2s) {
-                if (isType(res2, ref2->getDeType())) {
-                    valid = true;
-                    related.insert(res2);
+                if (!isType(res2, ref2->getDeType())) {
+                    continue;
                 }
+                valid = true;
+                related.insert(res2);
             }
             if (valid) {
                 firstStmtResults[res1] = related;
@@ -206,10 +211,11 @@ Result ClauseHandler::evalNotConstNotConst() {
             VALUE_SET related;
             bool valid = false;
             for (string res1 : res1s) {
-                if (isType(res1, ref1->getDeType())) {
-                    valid = true;
-                    related.insert(res1);
+                if (!isType(res1, ref1->getDeType())) {
+                    continue;
                 }
+                valid = true;
+                related.insert(res1);
             }
             if (valid) {
                 secondStmtResults[res2] = related;
