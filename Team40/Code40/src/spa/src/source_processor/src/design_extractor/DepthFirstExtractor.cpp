@@ -159,8 +159,6 @@ void DepthFirstExtractor::extractLastExecutedStatement(
     if (lastStatement->getStatementType() == StatementType::IF) {
         extractLastExecutedStatement(lastStatement->getThenStmtLst(), result);
         extractLastExecutedStatement(lastStatement->getElseStmtLst(), result);
-    } else if (lastStatement->getStatementType() == StatementType::WHILE) {
-        extractLastExecutedStatement(lastStatement->getThenStmtLst(), result);
     } else {
         result.push_back(lastStatement);
     }
