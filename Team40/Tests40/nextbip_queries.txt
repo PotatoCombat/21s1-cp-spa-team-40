@@ -1,0 +1,455 @@
+1 - everything NextBip of end of while loop
+stmt s;
+Select s such that Next(6, s)
+3
+5000
+2 - NextBip of condition of if statement
+stmt s;
+Select s such that NextBip(7, s)
+8, 9
+5000
+3 - NextBip of condition of while loop
+stmt s;
+Select s such that NextBip(3, s)
+4, 7
+5000
+4 - NextBip of else of if statement
+stmt s;
+Select s such that NextBip(9, s)
+10
+5000
+5 - NextBip of then of if statement
+stmt s;
+Select s such that NextBip(8, s)
+10
+5000
+6 - NextBip of statement list within while loop
+stmt s;
+Select s such that NextBip(4, s)
+5
+5000
+7 - NextBip of statement list within if statement
+stmt s;
+Select s such that NextBip(16, s)
+17
+5000
+8 - boolean with two wild cards
+
+Select BOOLEAN such that NextBip(_, _)
+TRUE
+5000
+9 - reflexivity with while statement
+stmt s;
+Select s such that NextBip(s, s)
+
+5000
+10 - reflexivity with any other statement (invalid)
+assign s;
+Select s such that NextBip(s, s)
+
+5000
+11 - NextBip of a call statement (NextBip statement, not across procs)
+stmt s;
+Select s such that NextBip(5, s)
+6
+5000
+12 - all statements that come NextBip of something
+stmt s;
+Select s such that NextBip(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+13 - all statements that have something NextBip
+stmt s;
+Select s such that NextBip(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20
+5000
+14 - everything NextBip of an assign statement
+assign a; stmt s;
+Select s such that NextBip(a, s)
+2, 3, 5, 10, 11, 12, 13, 17, 19
+5000
+15 - everything NextBip of end of proc
+stmt s;
+Select s such that NextBip(18, s)
+
+5000
+16 - everything NextBip of a generic while loop
+while w; stmt s;
+Select s such that NextBip(w, s)
+4, 7, 14, 18, 20
+5000
+17 - everything NextBip of a generic if statement
+if i; stmt s;
+Select s such that NextBip(i, s)
+8, 9, 15, 16
+5000
+18 - everything NextBip of an assign statement
+assign a; stmt s;
+Select s such that NextBip(11, s)
+12
+5000
+19 - everything NextBip of a call statement
+call c; stmt s;
+Select s such that NextBip(c, s)
+6
+5000
+20 - boolean with true condition
+
+Select BOOLEAN such that NextBip(13, 18)
+TRUE
+5000
+21 - boolean with false condition
+
+Select BOOLEAN such that NextBip(5, 19)
+FALSE
+5000
+22 - checking for a specific condition
+stmt s;
+Select s such that NextBip(6, 3)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+23 - statement that comes before statement after a while loop
+stmt s;
+Select s such that NextBip(s, 7)
+3
+5000
+24 - statement that comes before statement after an if statement
+stmt s;
+Select s such that NextBip(s, 18)
+13
+5000
+25 - everything NextBip* of end of while loop
+stmt s;
+Select s such that NextBip*(6, s)
+7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 4, 5, 6
+5000
+26 - NextBip* of condition of if statement
+stmt s;
+Select s such that NextBip*(7, s)
+8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+27 - NextBip* of condition of while loop
+stmt s;
+Select s such that NextBip*(3, s)
+4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 3
+5000
+28 - NextBip* of else of if statement
+stmt s;
+Select s such that NextBip*(9, s)
+10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+29 - NextBip* of then of if statement
+stmt s;
+Select s such that NextBip*(8, s)
+10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+30 - NextBip* of statement list within while loop
+stmt s;
+Select s such that NextBip*(4, s)
+3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+31 - NextBip* of statement list within if statement
+stmt s;
+Select s such that NextBip*(16, s)
+17, 18, 13, 14, 15, 16
+5000
+32 - boolean with two wild cards
+
+Select BOOLEAN such that NextBip*(_, _)
+TRUE
+5000
+33 - reflexivity with while statement
+stmt s;
+Select s such that NextBip*(s, s)
+3, 4, 5, 6, 13, 14, 15, 16, 17, 19, 20
+5000
+34 - reflexivity with any other statement
+assign s;
+Select s such that NextBip*(s, s)
+4, 6, 15, 16, 17, 20
+5000
+35 - NextBip* of a call statement (NextBip* statement, not across procs)
+stmt s;
+Select s such that NextBip*(5, s)
+6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 4, 5
+5000
+36 - all statements that come NextBip* of something
+stmt s;
+Select s such that NextBip*(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+37 - all statements that have something NextBip*
+stmt s;
+Select s such that NextBip*(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20
+5000
+38 - everything NextBip* of an assign statement
+assign a; stmt s;
+Select s such that NextBip*(a, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+39 - everything NextBip* of end of proc
+stmt s;
+Select s such that NextBip*(18, s)
+
+5000
+40 - everything NextBip* of a generic while loop
+while w; stmt s;
+Select s such that NextBip*(w, s)
+3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+41 - everything NextBip* of a generic if statement
+if i; stmt s;
+Select s such that NextBip*(i, s)
+8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+5000
+42 - everything NextBip* of an assign statement
+assign a; stmt s;
+Select s such that NextBip*(11, s)
+12, 13, 14, 15, 16, 17, 18
+5000
+43 - everything NextBip* of a call statement
+call c; stmt s;
+Select s such that NextBip*(c, s)
+6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 4, 5
+5000
+44 - boolean with true condition
+
+Select BOOLEAN such that NextBip*(13, 18)
+TRUE
+5000
+45 - boolean with false condition
+
+Select BOOLEAN such that NextBip*(19, 11)
+FALSE
+5000
+46 - checking for a specific condition
+stmt s;
+Select s such that NextBip*(6, 3)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+5000
+47 - statement that comes before statement after a while loop
+stmt s;
+Select s such that NextBip*(s, 7)
+1, 2, 3, 4, 5, 6
+5000
+48 - statement that comes before statement after an if statement
+stmt s;
+Select s such that NextBip*(s, 18)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+49 - Get all prog lines
+prog_line n;
+Select n such that NextBip(_,_)
+1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+50 - NextBip(x, _) for call
+call c;
+Select c such that NextBip(c,_)
+5
+5000
+51 - NextBip(x, _) for read
+read r;
+Select r such that NextBip(r,_)
+
+5000
+52 - NextBip(x, _) for print
+print p;
+Select p such that NextBip(p,_)
+
+5000
+53 - NextBip(x, _) for while
+while w;
+Select w such that NextBip(w,_)
+13,19,3
+5000
+54 - NextBip(x, _) for if
+if ifs;
+Select ifs such that NextBip(ifs,_)
+14,7
+5000
+55 - NextBip(x, _) for assign
+assign a;
+Select a such that NextBip(a,_)
+1,10,11,12,15,16,17,2,20,4,6,8,9
+5000
+56 - NextBip(x, _) for stmt
+stmt s;
+Select s such that NextBip(s,_)
+1,10,11,12,13,14,15,16,17,19,2,20,3,4,5,6,7,8,9
+5000
+57 - NextBip(x, _) for prog_line
+prog_line n;
+Select n such that NextBip(n,_)
+1,10,11,12,13,14,15,16,17,19,2,20,3,4,5,6,7,8,9
+5000
+58 - NextBip(_, x) for call
+call c;
+Select c such that NextBip(_,c)
+5
+5000
+59 - NextBip(_, x) for read
+read r;
+Select r such that NextBip(_,r)
+
+5000
+60 - NextBip(_, x) for print
+print p;
+Select p such that NextBip(_,p)
+
+5000
+61 - _,s for while
+while w;
+Select w such that NextBip(w,_)
+13,19,3
+5000
+62 - NextBip(_, x) for if
+if ifs;
+Select ifs such that NextBip(_,ifs)
+14,7
+5000
+63 - NextBip(_, x) for assign
+assign a;
+Select a such that NextBip(_,a)
+10,11,12,15,16,17,18,2,20,4,6,8,9
+5000
+64 - NextBip(_, x) for stmt
+stmt s;
+Select s such that NextBip(_,s)
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+65 - NextBip(_, x) for progline
+prog_line n;
+Select n such that NextBip(_,n)
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+66 - NextBip(x1, x2) for call
+call c1,c2;
+Select c1 such that NextBip(c1,c2)
+
+5000
+67 - NextBip(x1, x2) for call
+call c1,c2;
+Select c2 such that NextBip(c1,c2)
+
+5000
+68 - NextBip(x1, x2) for read
+read r1,r2;
+Select r1 such that NextBip(r1,r2)
+
+5000
+69 - NextBip(x1, x2) for read
+read r1,r2;
+Select r2 such that NextBip(r1,r2)
+
+5000
+70 - NextBip(x1, x2) for print
+print p1,p2;
+Select p1 such that NextBip(p1,p2)
+
+5000
+71 - NextBip(x1, x2) for print
+print p1,p2;
+Select p1 such that NextBip(p1,p2)
+
+5000
+72 - NextBip(x1, x2) for while
+while w1,w2;
+Select w1 such that NextBip(w1,w2)
+
+5000
+73 - NextBip(x1, x2) for while
+while w1,w2;
+Select w2 such that NextBip(w1,w2)
+
+5000
+74 - NextBip(x1, x2) for if
+if ifs1,ifs2;
+Select ifs1 such that NextBip(ifs1,ifs2)
+
+5000
+75 - NextBip(x1, x2) for if
+if ifs1,ifs2;
+Select ifs2 such that NextBip(ifs1,ifs2)
+
+5000
+76 - NextBip(x1, x2) for assign
+assign a1,a2;
+Select a1 such that NextBip(a1,a2)
+1,10,11,16,8,9
+5000
+77 - NextBip(x1, x2) for assign
+assign a1,a2;
+Select a2 such that NextBip(a1,a2)
+10,11,12,17,2
+5000
+78 - NextBip(x1, x2) for stmt
+stmt s1,s2;
+Select s1 such that NextBip(s1,s2)
+1,10,11,12,13,14,15,16,17,19,2,20,3,4,5,6,7,8,9
+5000
+79 - NextBip(x1, x2) for stmt
+stmt s1,s2;
+Select s2 such that NextBip(s1,s2)
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+80 - NextBip(x1, x2) for prog_line
+prog_line n1,n2;
+Select n1 such that NextBip(n1,n2)
+1,10,11,12,13,14,15,16,17,19,2,20,3,4,5,6,7,8,9
+5000
+81 - NextBip(x1, x2) for prog_line
+prog_line n1,n2;
+Select n2 such that NextBip(n1,n2)
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9
+5000
+82 - prog_line
+prog_line n;
+Select n
+10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,1
+5000
+83 - NextBip tuple
+stmt s1, s2;
+Select <s1, s2> such that NextBip(s1, s2)
+
+5000
+84 - NextBip* tuple
+prog_line p1, p2;
+Select <p1, p2> such that NextBip*(p1, p2)
+
+5000
+85 - normal next between number
+
+Select BOOLEAN such that NextBip(5, 19)
+TRUE
+5000
+86 - call and proc between number
+
+Select BOOLEAN such that NextBip(21, 22)
+TRUE
+5000
+87 - call and proc between number
+
+Select BOOLEAN such that NextBip(21, 22)
+TRUE
+5000
+88 - call and proc between number
+
+Select BOOLEAN such that NextBip(22, 25)
+TRUE
+5000
+89 - call and proc between number
+
+Select BOOLEAN such that NextBip(26, 23)
+TRUE
+5000
+90 - call and proc between number
+
+Select BOOLEAN such that NextBip(24, 6)
+TRUE
+5000
+91 - call and proc between number
+stmt s;
+Select s such that NextBip(18, s)
+
+5000

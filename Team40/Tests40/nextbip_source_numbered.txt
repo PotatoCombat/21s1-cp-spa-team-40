@@ -1,0 +1,44 @@
+procedure A {
+    x = x + 1;              (1)
+    y = y + 5;              (2)
+    while (a >= 10) {       (3)
+        x = x + 5;          (4)
+        call B;             (5)
+        c = a;              (6)
+    }
+    if (a >= b) then {      (7)
+        x = x * 5;          (8)
+    } else {
+        y = y + 10;         (9)
+    }
+    a = b;                  (10)
+    b = c + 10;             (11)
+    c = c * 10;             (12)
+    while (x > 4) {         (13)
+        if (x > 2) then {   (14)
+            a = 44;         (15)
+        } else {
+            a = 4;          (16)
+            b = s;          (17)
+        }
+    }
+    a = 4 + 1;              (18)
+}
+
+procedure B {
+    while (x >= 1) {        (19)
+        x = x + 1;          (20)
+    }
+    call C;                 (21)
+}
+
+procedure C {
+    call D;                 (22)
+    a = a + 1;              (23)
+    b = c;                  (24)
+}
+
+procedure D {
+    x = x + 1;              (25)
+    y = 4;                  (26)
+}
