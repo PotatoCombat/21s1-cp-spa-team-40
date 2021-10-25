@@ -8,7 +8,9 @@ procedure A {
     }
     if (a >= b) then {
         x = x * 5;
+        call C;
     } else {
+        call D;
         y = y + 10;
     }
     a = b;
