@@ -16,6 +16,8 @@ private:
 
     Reference *parseReference(string ref);
 
+    Reference *r1 = nullptr;
+    Reference *r2 = nullptr;
     string ref1;
     string ref2;
 };

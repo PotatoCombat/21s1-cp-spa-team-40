@@ -2,6 +2,9 @@
 
 void SuchThatParser::clear() {
     this->declList.clear();
+    delete this->r1, this->r2;
+    this->r1 = nullptr;
+    this->r2 = nullptr;
     this->type = "";
     this->ref1 = "";
     this->ref2 = "";
@@ -30,6 +33,8 @@ Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
 /**
  * Parses a clause that takes in (stmt, stmt) as parameters.
  * This includes: Follows(*)/Parent(*)/Next(*)/Affects(*).
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseStmtStmt() {
     // number/synonym/wildcard, number/synonym/wildcard
@@ -41,8 +46,11 @@ Clause *SuchThatParser::parseStmtStmt() {
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    Reference *r1 = parseStmt(this->ref1);
-    Reference *r2 = parseStmt(this->ref2);
+    r1 = parseStmtRef(this->ref1);
+    r2 = parseStmtRef(this->ref2);
+    if (r1 == nullptr || r2 == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
 
     return new Clause(clsType, *r1, *r2);
 }
@@ -50,6 +58,8 @@ Clause *SuchThatParser::parseStmtStmt() {
 /**
  * Parses a clause that takes in (procedure, procedure) as parameters.
  * This includes: Calls(*).
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseProcProc() {
     // quoted/synonym/wildcard, quoted/synonym/wildcard
@@ -60,40 +70,12 @@ Clause *SuchThatParser::parseProcProc() {
         throw ValidityError("invalid clause argument");
     }
 
-    Reference *r1 = getReferenceIfDeclared(this->ref1);
-    Reference *r2 = getReferenceIfDeclared(this->ref2);
-
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
-    if (r1 != nullptr) {
-        if (!deHelper.isProcedure(r1->getDeType())) {
-            throw ValidityError("invalid clause argument");
-        }
-        r1 = r1->copy();
-    } else {
-        DesignEntityType deType = DesignEntityType::PROCEDURE;
-        ReferenceType refT = ParserUtil::checkRefType(this->ref1);
-        ReferenceAttribute attr = ReferenceAttribute::NAME;
-        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
-            this->ref1 = ref1.substr(1, ref1.size() - 2);
-        }
-        r1 = new Reference(deType, refT, this->ref1, attr);
-    }
-
-    if (r2 != nullptr) {
-        if (!deHelper.isProcedure(r2->getDeType())) {
-            delete r1;
-            throw ValidityError("invalid clause argument");
-        }
-        r2 = r2->copy();
-    } else {
-        DesignEntityType deType = DesignEntityType::PROCEDURE;
-        ReferenceType refT = ParserUtil::checkRefType(this->ref2);
-        ReferenceAttribute attr = ReferenceAttribute::NAME;
-        if (refT == ReferenceType::CONSTANT) { // remove quotes if constant
-            this->ref2 = ref2.substr(1, ref2.size() - 2);
-        }
-        r2 = new Reference(deType, refT, this->ref2, attr);
+    r1 = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
+    r2 = parseEntRef(this->ref2, DesignEntityType::PROCEDURE);
+    if (r1 == nullptr || r2 == nullptr) {
+        throw ValidityError("invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -102,11 +84,10 @@ Clause *SuchThatParser::parseProcProc() {
 /**
  * Parses a clause that takes in (X, ent) as parameters.
  * This includes: Modifies/Uses (both P and S versions).
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseXEnt() {
-    // MODIFIES_S/USES_S: number/synonym, quoted/synonym/wildcard
-    // MODIFIES_P/USES_P: quoted/synonym, quoted/synonym/wildcard
-
     if (ParserUtil::isWildcard(this->ref1)) {
         throw ValidityError("first argument cannot be wildcard");
     }
@@ -115,52 +96,83 @@ Clause *SuchThatParser::parseXEnt() {
         throw ValidityError("second argument cannot be integer");
     }
 
-    Reference *r1 = getReferenceIfDeclared(this->ref1);
-
-    // a StmtEnt is ModifiesS/UsesS
-    // a EntEnt is ModifiesP/UsesP
-    bool isStmtEnt = true; // false for EntEnt
-
-    if (r1 != nullptr) {
-        DesignEntityType deType = r1->getDeType();
-        ReferenceType refType = r1->getRefType();
-        ReferenceAttribute attr = r1->getAttr();
-        if (deHelper.isStatement(deType)) {
-            isStmtEnt = true;
-        } else if (deHelper.isProcedure(deType)) {
-            isStmtEnt = false;
-        } else {
-            throw ValidityError("invalid clause argument");
-        }
-        if (deType == DesignEntityType::PROG_LINE) {
-            deType = DesignEntityType::STMT;
-        }
-        r1 = new Reference(deType, refType, this->ref1, attr);
+    if (type == "Modifies") {
+        return parseModifies();
+    } else if (type == "Uses") {
+        return parseUses();
     } else {
-        // first argument is not declared, must be either integer or quoted
-        DesignEntityType deType;
-        ReferenceAttribute attr;
-        if (ParserUtil::isInteger(this->ref1)) {
-            isStmtEnt = true;
-            deType = DesignEntityType::STMT;
-            attr = ReferenceAttribute::INTEGER;
-        } else if (ParserUtil::isQuoted(this->ref1)) {
-            isStmtEnt = false;
-            deType = DesignEntityType::PROCEDURE;
-            attr = ReferenceAttribute::NAME;
-            this->ref1 = ref1.substr(1, ref1.size() - 2); // remove quotes
-        } else {
+        throw ValidityError("invalid clause type");
+    }
+}
+
+/**
+ * Parses a Modifies clause that takes in (X, end) as parameters.
+ * This includes: ModifiesP and ModifiesS.
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
+ */
+Clause *SuchThatParser::parseModifies() {
+    // MODIFIES_S: number/synonym, quoted/synonym/wildcard
+    // MODIFIES_P: quoted/synonym, quoted/synonym/wildcard
+    ClauseType clsType;
+
+    Reference *r1Stmt = parseStmtRef(this->ref1);
+    Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
+    if (r1Stmt == nullptr && r1Proc == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
+    if (r1Stmt != nullptr) {
+        if (r1Stmt->getDeType() == DesignEntityType::PRINT) {
+            delete r1Stmt;
             throw ValidityError("invalid clause argument");
         }
-        ReferenceType refT = ReferenceType::CONSTANT;
-        r1 = new Reference(deType, refT, this->ref1, attr);
+        r1 = r1Stmt;
+        clsType = ClauseType::MODIFIES_S;
+    } else {
+        r1 = r1Proc;
+        clsType = ClauseType::MODIFIES_P;
     }
 
-    // second argument must always be a variable
-    Reference *r2 = parseVariable(this->ref2);
-
-    if (isStmtEnt) {
-        return new Clause(clsHelper.valueToClsType(this->type), *r1, *r2);
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (r2 == nullptr) {
+        throw ValidityError("invalid clause argument");
     }
-    return new Clause(clsHelper.valueToClsType(this->type + "*"), *r1, *r2);
+
+    return new Clause(clsType, *r1, *r2);
+}
+
+/**
+ * Parses a Uses clause that takes in (X, end) as parameters.
+ * This includes: UsesP and UsesS.
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
+ */
+Clause *SuchThatParser::parseUses() {
+    // USES_S: number/synonym, quoted/synonym/wildcard
+    // USES_P: quoted/synonym, quoted/synonym/wildcard
+    ClauseType clsType;
+
+    Reference *r1Stmt = parseStmtRef(this->ref1);
+    Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
+    if (r1Stmt == nullptr && r1Proc == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
+    if (r1Stmt != nullptr) {
+        if (r1Stmt->getDeType() == DesignEntityType::READ) {
+            delete r1Stmt;
+            throw ValidityError("invalid clause argument");
+        }
+        r1 = r1Stmt;
+        clsType = ClauseType::USES_S;
+    } else {
+        r1 = r1Proc;
+        clsType = ClauseType::USES_P;
+    }
+
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (r2 == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
+
+    return new Clause(clsType, *r1, *r2);
 }

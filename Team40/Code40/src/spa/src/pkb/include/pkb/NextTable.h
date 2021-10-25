@@ -22,9 +22,9 @@ public:
     bool next(ProgLineIndex line1, ProgLineIndex line2);
 
 private:
-    /// Stores s such that Follows(stmt, s).
+    /// Stores s such that Next(stmt, s).
     map<ProgLineIndex, set<ProgLineIndex>> childMap;
 
-    /// Stores s such that Follows(s, stmt).
+    /// Stores s such that Next(s, stmt).
     map<ProgLineIndex, set<ProgLineIndex>> parentMap;
 };

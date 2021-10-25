@@ -8,6 +8,7 @@
 #include <string>
 
 #include "QueryEvaluator.h"
+#include "QueryOptimizer.h"
 #include "QueryPreprocessor.h"
 
 using namespace std;
