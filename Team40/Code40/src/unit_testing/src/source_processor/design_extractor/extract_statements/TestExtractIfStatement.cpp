@@ -29,7 +29,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
     Statement elseStatement(3, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
 
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenStatement);
@@ -77,8 +77,8 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     Statement elseStatement(5, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
-    addConditionalExpression(&thenIfStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&thenIfStatement);
 
     ifStatement.setProcName(procedure.getName());
     ifStatement.addThenStmt(&thenIfStatement);
@@ -139,7 +139,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
     Statement elseStatement3(7, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -227,7 +227,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
     Statement afterIfStatement(8, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&thenStatement1);
     ifStatement.addThenStmt(&thenStatement2);
@@ -314,9 +314,9 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
     Statement afterIfStatement(16, StatementType::READ);
     Variable variable(TestExtractIfStatement::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
-    addConditionalExpression(&thenIfStatement);
-    addConditionalExpression(&elseIfStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&thenIfStatement);
+    TestUtil::addConditionalExpression(&elseIfStatement);
 
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseIfStatement);

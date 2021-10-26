@@ -34,7 +34,7 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts a simple "
     Statement thenStatement(2, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenStatement);
@@ -73,8 +73,8 @@ TEST_CASE(
     Statement thenWhileThenStatement(3, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
-    addConditionalExpression(&thenWhileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&thenWhileStatement);
 
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenWhileStatement);
@@ -128,7 +128,7 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
     Statement thenStatement3(4, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
@@ -180,7 +180,7 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Next relationship.") {
     Statement afterWhileStatement(5, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
@@ -254,8 +254,8 @@ TEST_CASE(
 
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
-    addConditionalExpression(&thenIfStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&thenIfStatement);
 
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
