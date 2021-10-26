@@ -88,10 +88,11 @@ Result ClauseHandler::evalWcWc() {
     Reference *ref1 = clause->getFirstReference();
     set<string> res1s = getAll(pkb, *ref1);
     for (auto res1 : res1s) {
-        if (getR2ClausedR1(res1).size() > 0) {
-            result.setValid(true);
-            return result;
+        if (getR2ClausedR1(res1).empty()) {
+            continue;
         }
+        result.setValid(true);
+        return result;
     }
     result.setValid(false);
     return result;
@@ -126,9 +127,10 @@ Result ClauseHandler::evalSynConst() {
     map<VALUE, VALUE_SET> firstStmtResults;
     set<string> res1s = getR1ClauseR2(val2);
     for (string res1 : res1s) {
-        if (isType(res1, ref1->getDeType())) {
-            firstStmtResults[res1] = VALUE_SET{};
+        if (!isType(res1, ref1->getDeType())) {
+            continue;
         }
+        firstStmtResults[res1] = VALUE_SET{};
     }
     result.setResultList1(ref1, firstStmtResults);
     return result;
@@ -141,9 +143,10 @@ Result ClauseHandler::evalConstSyn() {
     map<VALUE, VALUE_SET> secondStmtResults;
     set<string> res2s = getR2ClausedR1(val1);
     for (auto res2 : res2s) {
-        if (isType(res2, ref2->getDeType())) {
-            secondStmtResults[res2] = VALUE_SET{};
+        if (!isType(res2, ref2->getDeType())) {
+            continue;
         }
+        secondStmtResults[res2] = VALUE_SET{};
     }
     result.setResultList2(ref2, secondStmtResults);
     return result;
@@ -161,65 +164,71 @@ Result ClauseHandler::evalNotConstNotConst() {
     // same synonym
     if (refType1 == ReferenceType::SYNONYM &&
         refType2 == ReferenceType::SYNONYM && val1 == val2) {
-        map<VALUE, VALUE_SET> resultList;
-        set<string> res1s = getAll(pkb, *ref1);
-        for (auto res1 : res1s) {
-            if (isR1ClauseR2(res1, res1)) {
-                resultList[res1] = VALUE_SET{};
-            }
-        }
-        result.setResultList1(ref1, resultList);
-        result.setResultList2(ref2, resultList);
-        return result;
+        return evalSameSyn();
     }
 
     // if first arg is SYNONYM
-    if (refType1 != ReferenceType::WILDCARD) {
-        map<VALUE, VALUE_SET> firstStmtResults;
-        set<string> res1s = getAll(pkb, *ref1);
-
-        for (string res1 : res1s) {
-            set<string> res2s = getR2ClausedR1(res1);
-            VALUE_SET related;
-            bool valid = false;
-            for (auto res2 : res2s) {
-                if (isType(res2, ref2->getDeType())) {
-                    valid = true;
-                    related.insert(res2);
-                }
-            }
-            if (valid) {
-                firstStmtResults[res1] = related;
-            }
-        }
-
-        result.setResultList1(ref1, firstStmtResults);
+    if (refType1 == ReferenceType::SYNONYM) {
+        setResultListForOneRef(result, ref1, ref2, true);
     }
 
     // if second arg is SYNONYM
-    if (refType2 != ReferenceType::WILDCARD) {
-        map<VALUE, VALUE_SET> secondStmtResults;
-        set<string> res2s = getAll(pkb, *ref2);
-
-        for (string res2 : res2s) {
-            set<string> res1s = getR1ClauseR2(res2);
-            VALUE_SET related;
-            bool valid = false;
-            for (string res1 : res1s) {
-                if (isType(res1, ref1->getDeType())) {
-                    valid = true;
-                    related.insert(res1);
-                }
-            }
-            if (valid) {
-                secondStmtResults[res2] = related;
-            }
-        }
-
-        result.setResultList2(ref2, secondStmtResults);
+    if (refType2 == ReferenceType::SYNONYM) {
+        setResultListForOneRef(result, ref2, ref1, false);
     }
 
     return result;
+}
+
+Result ClauseHandler::evalSameSyn() {
+    Result result;
+    map<VALUE, VALUE_SET> resultList;
+    Reference *ref = clause->getFirstReference();
+    set<string> res1s = getAll(pkb, *ref);
+    for (auto res1 : res1s) {
+        if (!isR1ClauseR2(res1, res1)) {
+            continue;
+        }
+        resultList[res1] = VALUE_SET{};
+    }
+    result.setResultList1(ref, resultList);
+    result.setResultList2(ref, resultList);
+    return result;
+}
+
+void ClauseHandler::setResultListForOneRef(Result &result, Reference *thisRef,
+                                            Reference *otherRef,
+                                            bool isFirstRef) {
+    set<string> (ClauseHandler::*getOtherRefValues)(string);
+    void (Result::*setThisResultList)(Reference *, map<VALUE, VALUE_SET>);
+    if (isFirstRef) {
+        getOtherRefValues = &ClauseHandler::getR2ClausedR1;
+        setThisResultList = &Result::setResultList1;
+    } else {
+        getOtherRefValues = &ClauseHandler::getR1ClauseR2;
+        setThisResultList = &Result::setResultList2;
+    }
+
+    map<VALUE, VALUE_SET> thisStmtResults;
+    set<string> thisVals = getAll(pkb, *thisRef);
+
+    for (string thisVal : thisVals) {
+        set<string> otherVals = (this->*getOtherRefValues)(thisVal);
+        VALUE_SET related;
+        bool valid = false;
+        for (string otherVal : otherVals) {
+            if (!isType(otherVal, otherRef->getDeType())) {
+                continue;
+            }
+            valid = true;
+            related.insert(otherVal);
+        }
+        if (valid) {
+            thisStmtResults[thisVal] = related;
+        }
+    }
+
+    (result.*setThisResultList)(thisRef, thisStmtResults);
 }
 
 void ClauseHandler::validate() {

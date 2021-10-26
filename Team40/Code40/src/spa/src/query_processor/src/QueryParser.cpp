@@ -15,7 +15,7 @@ void QueryParser::clearDeclarations() {
 }
 
 /**
- * Parse declared synonyms and store them inside parser.
+ * Parses declared synonyms and store them inside parser.
  * @param declPairs Pairs of declarations as <type, synonym>.
  */
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
@@ -41,7 +41,7 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
 }
 
 /**
- * Parse return reference by checking if it is in the declaration list.
+ * Parses return reference by checking if it is in the declaration list.
  * @param ref Return reference to parse.
  * @param &found Whether the reference is found.
  * @return Reference object, otherwise nullptr.
@@ -75,7 +75,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
 }
 
 /**
- * Parse a `such that` clause.
+ * Parses a `such that` clause.
  * @param clsTuple Tuple as <type, ref1, ref2>.
  * @return Clause object.
  */
@@ -84,7 +84,7 @@ Clause *QueryParser::parseSuchThatClause(ClsTuple clsTuple) {
 }
 
 /**
- * Parse a `pattern` clause.
+ * Parses a `pattern` clause.
  * @param patTuple as <stmt, var, vector<token>>.
  * @return Clause object.
  */
@@ -93,7 +93,7 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
 }
 
 /**
- * Parse a `with` clause.
+ * Parses a `with` clause.
  * @param withPair as <ref, ref>.
  * @return Clause object.
  */

@@ -2,6 +2,7 @@
 
 void QueryOptimizer::optimize(Query& before, Query& after) {
     int INVALID_IDX = -1;
+    int NUMBER_OF_CLS_IN_ONE_CLS = 1;
     vector<Clause *> unsortedClauses = before.getClauses();
     vector<Reference *> refs = before.getReferences();
 
@@ -47,17 +48,17 @@ void QueryOptimizer::optimize(Query& before, Query& after) {
 
         if (groupIdx == INVALID_IDX) {
             groupIdx = totalGroup;
-            groupSizes.push_back({groupIdx, 1});
+            groupSizes.push_back({groupIdx, NUMBER_OF_CLS_IN_ONE_CLS});
             totalGroup++;
         } else {
             if (idx1 != INVALID_IDX && idx2 != INVALID_IDX) {
                 pair<int, int> &g1 = groupSizes[idx1];
                 pair<int, int> &g2 = groupSizes[idx2];
                 if (idx1 != groupIdx) {
-                    g2.second += g1.second + 1;
+                    g2.second += g1.second + NUMBER_OF_CLS_IN_ONE_CLS;
                     g1.second = 0;
                 } else if (idx2 != groupIdx) {
-                    g1.second += g2.second + 1;
+                    g1.second += g2.second + NUMBER_OF_CLS_IN_ONE_CLS;
                     g2.second = 0;
                 } else { // g1 = g2 = groupIdx
                     g1.second++;
