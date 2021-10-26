@@ -24,10 +24,6 @@ using namespace std;
 
 class PKB {
 public:
-    typedef EntityTable<Procedure, ProcName> ProcedureTable;
-    typedef EntityTable<Variable, VarName> VarTable;
-    typedef EntityTable<ConstantValue, ConstName> ConstTable;
-
     /**
      * Returns the procedure with the given procedure name.
      * @param procName name of the procedure
@@ -551,9 +547,9 @@ public:
     virtual bool whilePattern(StmtIndex stmtIndex, VarName var);
 
 private:
-    ProcedureTable procTable;
-    VarTable varTable;
-    ConstTable constTable;
+    EntityTable<Procedure, ProcName> procTable;
+    EntityTable<Variable, VarName> varTable;
+    EntityTable<ConstantValue, ConstName> constTable;
     StatementTable statementTable;
 
     FollowsTable followsTable;
