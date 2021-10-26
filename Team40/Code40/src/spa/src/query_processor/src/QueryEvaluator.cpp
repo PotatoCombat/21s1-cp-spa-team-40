@@ -39,12 +39,12 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 }
 
 Result QueryEvaluator::getTempResult(Clause* clause) {
+    ClauseHandler *clauseHandler;
+
     if (clause->getType() == ClauseType::PATTERN) {
         PatternHandler patternHandler(clause, pkb);
-        return patternHandler.eval();
+        clauseHandler = &patternHandler;
     }
-
-    ClauseHandler *clauseHandler;
 
     if (clause->getType() == ClauseType::FOLLOWS) {
         FollowsHandler followsHandler(clause, pkb);

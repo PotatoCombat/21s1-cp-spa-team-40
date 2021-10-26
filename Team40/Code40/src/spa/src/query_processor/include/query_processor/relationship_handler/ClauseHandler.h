@@ -48,6 +48,9 @@ protected:
     Result evalSynConst();
     Result evalConstSyn();
     Result evalNotConstNotConst();
+    
+    Result evalSameSyn();
+    void setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef, bool isFirstRef);
 
 public:
     // evaluates the clause and writes the answer to the result object
