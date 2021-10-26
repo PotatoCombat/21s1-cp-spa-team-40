@@ -4,8 +4,6 @@
 #include "CallsTable.h"
 #include "ConditionTable.h"
 #include "EntityTable.h"
-#include "FollowsStarTable.h"
-#include "FollowsTable.h"
 #include "Iterator.h"
 #include "ModifiesTable.h"
 #include "NextBipTable.h"
@@ -13,6 +11,7 @@
 #include "ParentStarTable.h"
 #include "ParentTable.h"
 #include "PatternTable.h"
+#include "RelationshipTable.h"
 #include "StatementTable.h"
 #include "UsesTable.h"
 #include "common/model/ConstantValue.h"
@@ -217,42 +216,42 @@ public:
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getFollowingStmt(StmtIndex stmt);
+    virtual StmtIndex getFollowingStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows*(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getFollowingStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows(s, stmt).
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
+    virtual StmtIndex getPrecedingStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows*(s, stmt).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getPrecedingStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Follows(stmt1, stmt2).
      * @param preceding stmt1.
      * @param following stmt2.
      */
-    virtual bool follows(StmtIndex preceding, StmtIndex following);
+    virtual bool follows(const StmtIndex &preceding, const StmtIndex &following);
 
     /**
      * Selects BOOLEAN such that Follows*(stmt1, stmt2).
      * @param preceding stmt1.
      * @param following stmt2.
      */
-    virtual bool followsStar(StmtIndex preceding, StmtIndex following);
+    virtual bool followsStar(const StmtIndex &preceding, const StmtIndex &following);
 
     // Parent ==================================================================
 
@@ -552,8 +551,8 @@ private:
     EntityTable<ConstantValue, ConstName> constTable;
     StatementTable statementTable;
 
-    FollowsTable followsTable;
-    FollowsStarTable followsStarTable;
+    RelationshipTable<StmtIndex, StmtIndex> followsTable;
+    RelationshipTable<StmtIndex, StmtIndex> followsStarTable;
     ParentTable parentTable;
     ParentStarTable parentStarTable;
     ModifiesTable modifiesTable;

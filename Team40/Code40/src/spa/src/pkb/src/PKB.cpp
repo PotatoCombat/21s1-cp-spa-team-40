@@ -38,9 +38,10 @@ StmtIndex PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
-    followsTable.insertFollows(precedingStmt, followingStmt);
-    followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
+void PKB::insertFollows(Statement *preceding, Statement *following) {
+    followsTable.insertRelationship(preceding->getIndex(), following->getIndex());
+    followsStarTable.insertRelationship(preceding->getIndex(), following->getIndex());
+    followsStarTable.updateTransitivity(preceding->getIndex(), following->getIndex());
 }
 
 void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
@@ -138,28 +139,28 @@ ProcName PKB::getCallProcedure(StmtIndex callStmt) {
 
 // Follows =====================================================================
 
-StmtIndex PKB::getFollowingStmt(StmtIndex stmt) {
-    return followsTable.getFollowingStmt(stmt);
+StmtIndex PKB::getFollowingStmt(const StmtIndex &stmt) {
+    return followsTable.getFirstRHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getFollowingStarStmts(StmtIndex stmt) {
-    return followsStarTable.getFollowingStarStmts(stmt);
+set<StmtIndex> PKB::getFollowingStarStmts(const StmtIndex &stmt) {
+    return followsStarTable.getRHSRelationships(stmt);
 }
 
-StmtIndex PKB::getPrecedingStmt(StmtIndex stmt) {
-    return followsTable.getPrecedingStmt(stmt);
+StmtIndex PKB::getPrecedingStmt(const StmtIndex &stmt) {
+    return followsTable.getFirstLHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getPrecedingStarStmts(StmtIndex stmt) {
-    return followsStarTable.getPrecedingStarStmts(stmt);
+set<StmtIndex> PKB::getPrecedingStarStmts(const StmtIndex &stmt) {
+    return followsStarTable.getLHSRelationships(stmt);
 }
 
-bool PKB::follows(StmtIndex precedingStmt, StmtIndex followingStmt) {
-    return followsTable.follows(precedingStmt, followingStmt);
+bool PKB::follows(const StmtIndex &preceding, const StmtIndex &following) {
+    return followsTable.isRelationship(preceding, following);
 }
 
-bool PKB::followsStar(StmtIndex precedingStmt, StmtIndex followingStmt) {
-    return followsStarTable.followsStar(precedingStmt, followingStmt);
+bool PKB::followsStar(const StmtIndex &preceding, const StmtIndex &following) {
+    return followsStarTable.isRelationship(preceding, following);
 }
 
 // Parent ======================================================================
