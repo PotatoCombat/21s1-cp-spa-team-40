@@ -253,6 +253,8 @@ size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
     token2 = removeWhitespaceWithinQuotes(token2);
     token3 = removeWhitespaceWithinQuotes(token3);
 
+    validateClauseArg(token2);
+    validateClauseArg(token3);
     clause = make_tuple(token1, token2, token3);
     return nextPos;
 }
@@ -315,7 +317,8 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
         } else {
             token = getTokenBeforeX(input, UNDERSCORE, tokenPos, nextPos);
             if (!ParserUtil::isQuoted(token)) {
-                throw SyntaxError("QP-ERROR: pattern underscore not followed by quotes");
+                throw SyntaxError(
+                    "QP-ERROR: pattern underscore not followed by quotes");
             }
             token = "_" + removeWhitespaceWithinQuotes(token) + "_";
             // check for R_BRACKET
@@ -324,13 +327,15 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     } else {
         token = getTokenBeforeX(input, R_BRACKET, tokenPos, nextPos);
     }
-
     arguments.push_back(token);
 
     var = arguments.at(0);
+    validateClauseArg(var);
+
     for (size_t i = 1; i < arguments.size(); ++i) {
         tokens.push_back(arguments.at(i));
     }
+
     clause = make_tuple(ident, var, tokens);
     return nextPos;
 }
@@ -380,6 +385,8 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
         token2 = removeWhitespaceAroundPeriod(token2);
     }
 
+    validateClauseArg(token1);
+    validateClauseArg(token2);
     clause = make_pair(token1, token2);
     return nextPos;
 }
@@ -421,38 +428,33 @@ vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
         tokens.push_back(token);
     }
 
-    return validateTokens(tokens);
+    validateTokens(tokens);
+    return tokens;
 }
 
-vector<PatToken> QueryTokenizer::validateTokens(vector<PatToken> tokens) {
-    vector<PatToken> validatedTokens;
+void QueryTokenizer::validateTokens(vector<PatToken> tokens) {
     int bracketCount = 0;
     bool isWord = true;
 
     for (auto t : tokens) {
         if (ParserUtil::isWildcard(t) || ParserUtil::isQuote(t)) {
-            validatedTokens.push_back(t);
             continue;
         }
         if (isWord) {
             if (isLBracket(t)) {
                 isWord = true;
                 bracketCount += 1;
-                validatedTokens.push_back(t);
             } else if (ParserUtil::isValidName(t) || ParserUtil::isInteger(t)) {
                 isWord = false;
-                validatedTokens.push_back(t);
             } else {
                 throw SyntaxError("invalid pattern string");
             }
         } else {
             if (isOperator(t)) {
                 isWord = true;
-                validatedTokens.push_back(t);
             } else if (isRBracket(t)) {
                 isWord = false;
                 bracketCount -= 1;
-                validatedTokens.push_back(t);
             } else {
                 throw SyntaxError("invalid pattern string");
             }
@@ -462,11 +464,106 @@ vector<PatToken> QueryTokenizer::validateTokens(vector<PatToken> tokens) {
     if (bracketCount != 0 || isWord == true) {
         throw SyntaxError("invalid pattern string");
     }
-
-    return validatedTokens;
 }
 
-/********************* helper functions *********************/
+/****************** tokenization helper functions ******************/
+
+/**
+ * Tokenizes the comma separated values.
+ * Used by both tuple tokenization and synonym declaration.
+ * @param input Comma separated values.
+ * @return Vector of synonym strings.
+ */
+vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
+    vector<string> syns;
+    string remaining = input;
+
+    size_t nextCommaPos = remaining.find(COMMA);
+    while (nextCommaPos != string::npos) {
+        string s = trimR(remaining.substr(0, nextCommaPos));
+        syns.push_back(s);
+
+        remaining = trimL(remaining.substr(nextCommaPos + 1));
+        nextCommaPos = remaining.find(COMMA);
+    }
+
+    // last synonym with no comma behind
+    if (remaining.empty()) {
+        throw SyntaxError("QP-ERROR: no items in supposed CSV");
+    }
+    syns.push_back(remaining);
+    return syns;
+}
+
+/**
+ * Given a quoted string, removes the whitespace within the quotes.
+ * E.g. "    someprocedure     " => "someprocedure".
+ * E.g. "    some procedure    " => "some procedure".
+ * E.g. someprocedure            => someprocedure.
+ * @param input The quoted string.
+ * @return The quoted string with whitespace removed.
+ */
+string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
+    if (count(input.begin(), input.end(), QUOTE) > 0) {
+        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
+            string trimmed = trimQuotes(input);
+            return "\"" + trimmed + "\"";
+        } else {
+            throw SyntaxError("QP-ERROR: misplaced quotes");
+        }
+    }
+    return input;
+}
+
+/**
+ * Given a string with period, removes whitespace around the period.
+ * E.g. x.y   => x.y.
+ * E.g. x . y => x.y.
+ * E.g. x     => x.
+ * @param input The quoted string.
+ * @return The quoted string with whitespace removed.
+ */
+string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
+    size_t periodPos = input.find(PERIOD);
+    if (periodPos != string::npos) {
+        string token1 = trim(input.substr(0, periodPos));
+        string token2 = trim(input.substr(periodPos + 1));
+        return token1 + "." + token2;
+    }
+    return input;
+}
+
+/****************** validation functions ******************/
+
+void QueryTokenizer::validateClauseArg(string input) {
+    if (ParserUtil::isQuoted(input)) {
+        validateQuoted(input);
+    } else if (ParserUtil::isAttrRef(input)) {
+        validateAttrRef(input);
+    }
+}
+
+void QueryTokenizer::validateAttrRef(string input) {
+    AttrRef ref = ParserUtil::splitAttrRef(input);
+
+    if (!ParserUtil::isValidName(ref.first)) {
+        throw SyntaxError("QP-ERROR: invalid attribute reference");
+    }
+
+    if (ref.second != "value" && ref.second != "stmt#" &&
+        ref.second != "varName" && ref.second != "procName") {
+        throw SyntaxError("QP-ERROR: invalid attribute reference");
+    }
+}
+
+void QueryTokenizer::validateQuoted(string input) {
+    string trimmed = trimQuotes(input);
+    if (trimmed.empty() || !ParserUtil::isValidName(trimmed)) {
+        throw SyntaxError("QP-ERROR: invalid quoted string");
+    }
+}
+
+/****************** lower level helper functions *******************/
 
 /**
  * Removes whitespace from the front and back of a given string.
@@ -508,6 +605,15 @@ string QueryTokenizer::trimR(string input) {
     return "";
 }
 
+/**
+ * Removes quotes and whitespace from the front and back of a given string.
+ * @param input The input string.
+ * @return The trimmed string, or empty string if there is no string to trim.
+ */
+string QueryTokenizer::trimQuotes(string input) {
+    return trim(input.substr(1, input.size() - 2));
+}
+
 size_t QueryTokenizer::findNextWhitespace(string input, size_t pos) {
     return input.find_first_of(WHITESPACE_SET, pos);
 }
@@ -545,70 +651,6 @@ size_t QueryTokenizer::getPosAfterRBracket(string input, size_t startPos) {
         return tokenPos + 1;
     }
     throw SyntaxError("QP-ERROR: missing right bracket");
-}
-
-/**
- * Given a quoted string, removes the whitespace within the quotes.
- * E.g. "    someprocedure     " => "someprocedure".
- * E.g. "    some procedure    " => "some procedure".
- * E.g. someprocedure            => someprocedure.
- * @param input The quoted string.
- * @return The quoted string with whitespace removed.
- */
-string QueryTokenizer::removeWhitespaceWithinQuotes(string input) {
-    if (count(input.begin(), input.end(), QUOTE) > 0) {
-        if (input[0] == QUOTE && input[input.size() - 1] == QUOTE) {
-            string trimmed = trim(input.substr(1, input.size() - 2));
-            return "\"" + trimmed + "\"";
-        } else {
-            throw SyntaxError("QP-ERROR: misplaced quotes");
-        }
-    }
-    return input;
-}
-
-/**
- * Given a string with period, removes whitespace around the period.
- * E.g. x.y   => x.y.
- * E.g. x . y => x.y.
- * E.g. x     => x.
- * @param input The quoted string.
- * @return The quoted string with whitespace removed.
- */
-string QueryTokenizer::removeWhitespaceAroundPeriod(string input) {
-    size_t periodPos = input.find(PERIOD);
-    if (periodPos != string::npos) {
-        string token1 = trim(input.substr(0, periodPos));
-        string token2 = trim(input.substr(periodPos + 1));
-        return token1 + "." + token2;
-    }
-    return input;
-}
-
-/**
- * Tokenizes the comma separated values.
- * Used by both tuple tokenization and synonym declaration.
- * @param input Comma separated values.
- * @return Vector of synonym strings.
- */
-vector<string> QueryTokenizer::tokenizeCommaSeparatedValues(string input) {
-    vector<string> syns;
-    string remaining = input;
-
-    size_t nextCommaPos = remaining.find(COMMA);
-    while (nextCommaPos != string::npos) {
-        string s = trimR(remaining.substr(0, nextCommaPos));
-        syns.push_back(s);
-
-        remaining = trimL(remaining.substr(nextCommaPos + 1));
-        nextCommaPos = remaining.find(COMMA);
-    }
-
-    // last synonym with no comma behind
-    if (!remaining.empty()) {
-        syns.push_back(remaining);
-    }
-    return syns;
 }
 
 bool QueryTokenizer::hasNoWhitespace(string input) {

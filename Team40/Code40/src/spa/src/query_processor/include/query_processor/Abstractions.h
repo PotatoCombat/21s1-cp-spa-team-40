@@ -20,3 +20,5 @@ typedef tuple<PatIdent, PatVar, vector<PatToken>> PatTuple;
 
 typedef string WithArg;
 typedef pair<WithArg, WithArg> WithPair;
+
+typedef pair<string, string> AttrRef;

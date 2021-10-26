@@ -36,24 +36,30 @@ private:
     size_t tokenizePatternClause(string input, size_t startPos,
                                  PatTuple &clause);
     size_t tokenizeWithClause(string input, size_t startPos, WithPair &clause);
-    vector<PatToken> validateTokens(vector<PatToken> tokens);
 
-    bool hasNoWhitespace(string input);
-    bool isOperator(string token);
-    bool isLBracket(string token);
-    bool isRBracket(string token);
+    vector<string> tokenizeCommaSeparatedValues(string input);
+    string removeWhitespaceWithinQuotes(string input);
+    string removeWhitespaceAroundPeriod(string input);
+
+    void validateTokens(vector<PatToken> tokens);
+    void validateClauseArg(string input);
+    void validateQuoted(string input);
+    void validateAttrRef(string input);
+
     string trim(string input);
     string trimL(string input);
     string trimR(string input);
+    string trimQuotes(string input);
     size_t findNextWhitespace(string input, size_t pos);
     size_t findNextToken(string input, size_t pos);
     size_t findPatternDelimiter(string input, size_t pos);
     string getTokenBeforeX(string input, char x, size_t startPos,
                            size_t &nextPos);
     size_t getPosAfterRBracket(string input, size_t startPos);
-    string removeWhitespaceWithinQuotes(string input);
-    string removeWhitespaceAroundPeriod(string input);
-    vector<string> tokenizeCommaSeparatedValues(string input);
+    bool hasNoWhitespace(string input);
+    bool isOperator(string token);
+    bool isLBracket(string token);
+    bool isRBracket(string token);
 
     DesignEntityTypeHelper deHelper = DesignEntityTypeHelper();
 
