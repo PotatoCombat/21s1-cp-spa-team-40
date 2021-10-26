@@ -28,6 +28,7 @@ protected:
     static set<DesignEntityType> PROCEDURE_DES_SET;
     static set<DesignEntityType> VARIABLE_DES_SET;
     static set<DesignEntityType> ALL_DES_SET;
+    static set<DesignEntityType> ASSIGN_STMT_DES_SET;
 
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;

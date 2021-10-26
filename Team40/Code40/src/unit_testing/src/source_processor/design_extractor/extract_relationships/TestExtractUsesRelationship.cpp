@@ -130,7 +130,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&printStatement);
     printStatement.setVariable(&variable);
@@ -170,7 +170,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
@@ -236,7 +236,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractUsesRelationship::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&callStatement);
     ifStatement.addElseStmt(&callStatement);

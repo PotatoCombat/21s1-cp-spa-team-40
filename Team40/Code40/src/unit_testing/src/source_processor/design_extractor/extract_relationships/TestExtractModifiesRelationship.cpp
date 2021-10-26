@@ -134,7 +134,7 @@ TEST_CASE(
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&readStatement);
     readStatement.setVariable(&variable);
@@ -177,7 +177,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&callStatement);
     callStatement.setProcName(procedure2.getName());
@@ -249,7 +249,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    addConditionalExpression(&ifStatement);
+    TestUtil::addConditionalExpression(&ifStatement);
 
     ifStatement.addThenStmt(&callStatement);
     ifStatement.addElseStmt(&callStatement);
