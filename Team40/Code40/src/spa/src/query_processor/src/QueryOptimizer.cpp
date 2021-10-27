@@ -27,6 +27,9 @@ void QueryOptimizer::optimize(Query& before, Query& after) {
     populateNewQueryObject(sortedClauses, before, after);
 }
 
+/* Groups the clauses into groups
+ * @return a list of <group idx, group size>
+ */
 vector<pair<int, int>>
 QueryOptimizer::formGroups(vector<Clause *> &unsortedClauses,
                            map<string, int> &refToGroup) {
@@ -49,6 +52,9 @@ QueryOptimizer::formGroups(vector<Clause *> &unsortedClauses,
     return groupSizes;
 }
 
+/* Updates group size of the 2 groups connected by cls
+ * @return a vector of 3 elements: idx1, idx2 and newGroupIdx
+ */
 vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
                                      vector<pair<int, int>> &groupSizes,
                                      map<string, int> &refToGroup) {
@@ -110,6 +116,9 @@ vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
     return {idx1, idx2, newGroupIdx};
 }
 
+/* Merges 2 groups with idx1 and idx2 that are connected by cls into
+ * a new group with newGroupIdx
+ */
 void QueryOptimizer::mergeTwoGroups(int newGroupIdx, int idx1, int idx2,
                                     Clause *cls, map<string, int> &refToGroup) {
     Reference *ref1 = cls->getFirstReference();

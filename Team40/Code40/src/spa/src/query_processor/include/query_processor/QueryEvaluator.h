@@ -66,27 +66,14 @@ private:
 
     void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
-    /* Removes the links from the intermediate result
-    * if they do not appear in the result table
-    * @param iRes: the intermediate result
-    * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of otherIdx
-    */
     void removeLinkIRes(map<VALUE, VALUE_SET> &iRes,
                            int thisIdx, int otherIdx);
 
-    /* Removes the links from the result table
-     * if they do not appear in the intermediate result
-     * @param iRes: the intermediate result
-     * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of
-     * otherIdx
-     */
     void removeLinkResultTable(map<VALUE, VALUE_SET> &iRes, int thisIdx,
                                int otherIdx);
 
     void addIResToResultTable(map<VALUE, VALUE_SET> &iRes, int thisIdx, int otherIdx);
 
-    /* Removes the values from thisIdx that have no link to any value of otherIdx
-    */
     void removeValuesWithNoLink(int thisIdx, int otherIdx);
 
     int getRefIndex(Reference *ref);

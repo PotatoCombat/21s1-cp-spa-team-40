@@ -278,6 +278,11 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
     removeValuesWithNoLink(ref2Idx, ref1Idx);
 }
 
+/* Removes the links from the intermediate result
+ * if they do not appear in the result table
+ * @param iRes: the intermediate result
+ * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of otherIdx
+ */
 void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
                                     int otherIdx) {
     for (auto it = iRes.begin(); it != iRes.end();) {
@@ -300,6 +305,12 @@ void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
     }
 }
 
+/* Removes the links from the result table
+ * if they do not appear in the intermediate result
+ * @param iRes: the intermediate result
+ * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of
+ * otherIdx
+ */
 void QueryEvaluator::removeLinkResultTable(map<VALUE, VALUE_SET> &iRes,
                                            int thisIdx, int otherIdx) {
     vector<string> existingValues = resultTable.getValues(thisIdx);
@@ -328,6 +339,9 @@ void QueryEvaluator::addIResToResultTable(map<VALUE, VALUE_SET>& iRes, int thisI
     }
 }
 
+/* Removes the values from thisIdx that have no link to any value of otherIdx
+ * @param thisIdx, otherIdx
+ */
 void QueryEvaluator::removeValuesWithNoLink(int thisIdx, int otherIdx) {
     for (string refValue : resultTable.getValues(thisIdx)) {
         if (!resultTable.hasPointerToIdx(thisIdx, refValue, otherIdx)) {
