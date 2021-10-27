@@ -30,8 +30,8 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
         {ClauseType::NEXT, DesignEntityType::STMT},
         {ClauseType::NEXT_T, DesignEntityType::STMT},
-        {ClauseType::AFFECTS, DesignEntityType::STMT},
-        {ClauseType::AFFECTS_T, DesignEntityType::STMT}
+        {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
+        {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}
     };
     deTypeMap2 = {
         {ClauseType::FOLLOWS, DesignEntityType::STMT},
@@ -46,8 +46,8 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
         {ClauseType::NEXT, DesignEntityType::STMT},
         {ClauseType::NEXT_T, DesignEntityType::STMT},
-        {ClauseType::AFFECTS, DesignEntityType::STMT},
-        {ClauseType::AFFECTS_T, DesignEntityType::STMT}
+        {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
+        {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}
     };
 }
 

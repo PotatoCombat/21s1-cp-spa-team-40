@@ -16,9 +16,12 @@ private:
 
     Clause *parseStmtStmt();
     Clause *parseProcProc();
+    Clause *parseAffects();
     Clause *parseXEnt();
     Clause *parseModifies();
     Clause *parseUses();
+
+    Reference *parseAssignRef(string syn);
 
     Reference *r1 = nullptr;
     Reference *r2 = nullptr;
