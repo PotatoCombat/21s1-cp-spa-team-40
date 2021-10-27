@@ -14,17 +14,17 @@ void StatementTable::insert(Statement *stmt) {
 }
 
 Statement *StatementTable::getStmt(const StmtIndex &index) {
-    if (index > size) {
+    if (index > size || index <= 0) {
         return nullptr;
     }
-    return statements.at(index - 1);
+    return statements.at(index);
 }
 
 StatementType StatementTable::getStmtType(const StmtIndex &index) {
-    if (index > size) {
+    if (index > size || index <= 0) {
         return StatementType::UNKNOWN;
     }
-    return statements.at(index - 1)->getStatementType();
+    return statements.at(index)->getStatementType();
 }
 
 Iterator<StmtIndex> StatementTable::getIndices() { return {indices}; }
