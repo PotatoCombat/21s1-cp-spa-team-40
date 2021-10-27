@@ -11,12 +11,12 @@ void QueryOptimizer::optimize(Query& before, Query& after) {
     }
     
     // form groups
-    vector<GRP_IDX_GRP_SIZE> groups = formGroups(unsortedClauses, refToGroup);
+    vector<GRP_IDX_SIZE> groups = formGroups(unsortedClauses, refToGroup);
 
 
     // sort groups by ascending group size
     sort(groups.begin(), groups.end(), 
-        [](const GRP_IDX_GRP_SIZE &a, const GRP_IDX_GRP_SIZE &b) {
+        [](const GRP_IDX_SIZE &a, const GRP_IDX_SIZE &b) {
             return a.second < b.second; 
         });
 
@@ -30,10 +30,10 @@ void QueryOptimizer::optimize(Query& before, Query& after) {
 /* Groups the clauses into groups
  * @return a list of <group idx, group size>
  */
-vector<GRP_IDX_GRP_SIZE>
+vector<GRP_IDX_SIZE>
 QueryOptimizer::formGroups(vector<Clause *> &unsortedClauses,
                            map<string, int> &refToGroup) {
-    vector<GRP_IDX_GRP_SIZE> groups;
+    vector<GRP_IDX_SIZE> groups;
 
     for (Clause *cls : unsortedClauses) {
         vector<int> indexes = updateGroupSize(cls, groups, refToGroup);
@@ -56,7 +56,7 @@ QueryOptimizer::formGroups(vector<Clause *> &unsortedClauses,
  * @return a vector of 3 elements: idx1, idx2 and newGroupIdx
  */
 vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
-                                     vector<GRP_IDX_GRP_SIZE> &groups,
+                                     vector<GRP_IDX_SIZE> &groups,
                                      map<string, int> &refToGroup) {
     int ONE_CLS = 1;
 
@@ -100,8 +100,8 @@ vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
     }
 
     if (idx1 != INVALID_IDX && idx2 != INVALID_IDX) {
-        GRP_IDX_GRP_SIZE &g1 = groups[idx1]; // group1
-        GRP_IDX_GRP_SIZE &g2 = groups[idx2]; // group2
+        GRP_IDX_SIZE &g1 = groups[idx1]; // group1
+        GRP_IDX_SIZE &g2 = groups[idx2]; // group2
         if (idx1 != newGroupIdx) {             // merge into group2
             g2.second += g1.second + ONE_CLS;
             g1.second = 0;
@@ -150,7 +150,7 @@ void QueryOptimizer::mergeTwoGroups(int newGroupIdx, int idx1, int idx2,
 
 vector<Clause *>
 QueryOptimizer::reorderClause(vector<Clause *> &unsortedClauses,
-                              vector<GRP_IDX_GRP_SIZE> &groups,
+                              vector<GRP_IDX_SIZE> &groups,
                               map<string, int> &refToGroup) {
     vector<Clause *> sortedClauses;
 

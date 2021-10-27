@@ -13,7 +13,7 @@
 
 using namespace std;
 
-typedef pair<int, int> GRP_IDX_GRP_SIZE;
+typedef pair<int, int> GRP_IDX_SIZE;
 
 class QueryOptimizer {
 private:
@@ -23,14 +23,14 @@ private:
                                              map<string, int> &refToGroup);
 
     static vector<int> updateGroupSize(Clause *cls,
-                                       vector<GRP_IDX_GRP_SIZE> &groups,
+                                       vector<GRP_IDX_SIZE> &groups,
                                        map<string, int> &refToGroup);
 
     static void mergeTwoGroups(int newGroupIdx, int idx1, int idx2, Clause *cls,
                                map<string, int> &refToGroup);
 
     static vector<Clause *> reorderClause(vector<Clause *> &unsortedClauses,
-                                          vector<GRP_IDX_GRP_SIZE> &groups,
+                                          vector<GRP_IDX_SIZE> &groups,
                                           map<string, int> &refToGroup);
     
     static void populateNewQueryObject(vector<Clause *> sortedClauses, Query &before, Query &after);
