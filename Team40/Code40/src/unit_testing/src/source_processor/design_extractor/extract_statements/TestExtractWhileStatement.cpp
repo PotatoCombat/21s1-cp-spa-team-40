@@ -1,3 +1,4 @@
+#include "../TestUtil.h"
 #include "catch.hpp"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
@@ -23,8 +24,8 @@ PKB TestExtractWhileStatement::pkb = PKB();
 ProcName TestExtractWhileStatement::PROC_NAME = "PROC";
 VarName TestExtractWhileStatement::VAR_NAME = "VAR";
 
-TEST_CASE(
-    "TestExtractWhileStatement: Correctly extracts a simple WhileStatement") {
+TEST_CASE("TestExtractWhileStatement: Correctly extracts a simple "
+          "WhileStatement") {
     TestExtractWhileStatement::reset();
 
     Program program;
@@ -33,9 +34,10 @@ TEST_CASE(
     Statement thenStatement(2, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
+    TestUtil::addConditionalExpression(&whileStatement);
+
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenStatement);
-    whileStatement.addExpressionVar(&variable);
     thenStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
     program.addToProcLst(&procedure);
@@ -71,11 +73,12 @@ TEST_CASE(
     Statement thenWhileThenStatement(3, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
+    TestUtil::addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&thenWhileStatement);
+
     whileStatement.setProcName(procedure.getName());
     whileStatement.addThenStmt(&thenWhileStatement);
-    whileStatement.addExpressionVar(&variable);
     thenWhileStatement.addThenStmt(&thenWhileThenStatement);
-    thenWhileStatement.addExpressionVar(&variable);
     thenWhileThenStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
     program.addToProcLst(&procedure);
@@ -125,7 +128,8 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
     Statement thenStatement3(4, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
+    TestUtil::addConditionalExpression(&whileStatement);
+
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
     whileStatement.addThenStmt(&thenStatement3);
@@ -176,7 +180,7 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Next relationship.") {
     Statement afterWhileStatement(5, StatementType::READ);
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
+    TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);
@@ -250,8 +254,8 @@ TEST_CASE(
 
     Variable variable(TestExtractWhileStatement::VAR_NAME);
 
-    whileStatement.addExpressionVar(&variable);
-    thenIfStatement.addExpressionVar(&variable);
+    TestUtil::addConditionalExpression(&whileStatement);
+    TestUtil::addConditionalExpression(&thenIfStatement);
 
     whileStatement.addThenStmt(&thenStatement1);
     whileStatement.addThenStmt(&thenStatement2);

@@ -28,6 +28,7 @@ protected:
     static set<DesignEntityType> PROCEDURE_DES_SET;
     static set<DesignEntityType> VARIABLE_DES_SET;
     static set<DesignEntityType> ALL_DES_SET;
+    static set<DesignEntityType> ASSIGN_STMT_DES_SET;
 
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
@@ -48,6 +49,9 @@ protected:
     Result evalSynConst();
     Result evalConstSyn();
     Result evalNotConstNotConst();
+    
+    Result evalSameSyn();
+    void setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef, bool isFirstRef);
 
 public:
     // evaluates the clause and writes the answer to the result object

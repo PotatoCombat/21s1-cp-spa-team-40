@@ -115,12 +115,12 @@ Select a pattern a(_, _" x + 1"_)
 5000
 24 - Finding a partial match
 assign a;
-Select a pattern a(b, _" y + z * t"_)
+Select a pattern a("b", _" y + z * t"_)
 
 5000
 25 - Finding a partial match
 assign a;
-Select a pattern a(b, _"x * y + z * t"_)
+Select a pattern a("b", _"x * y + z * t"_)
 
 5000
 26 - Finding a partial match
@@ -135,7 +135,7 @@ Select a pattern a("z", _"   ((a)    * (b))"_)
 5000
 28 - Finding a partial match
 assign a;
-Select a pattern a(y, _"   (((((z + x))))"_)
+Select a pattern a("y", _"   (((((z + x))))"_)
 
 5000
 29 - Finding a partial match

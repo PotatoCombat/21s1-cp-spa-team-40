@@ -192,34 +192,4 @@ TEST_CASE("PatternParser: parse pattern string into tokens") {
         tokens = p.parsePatternTokens(P_COMPLEX_2);
         REQUIRE(tokens == T_COMPLEX_2);
     }
-
-    SECTION("FAIL: mismatching brackets") {
-        vector<string> P_BRACKETS_1{"(", "(", "y", ")"};
-        vector<string> P_BRACKETS_2{"(", "y", ")", ")"};
-        vector<string> P_BRACKETS_3{"(", "(", "y", ")", ")", "("};
-
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_1), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_2), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_3), ValidityError);
-    }
-
-    SECTION("FAIL: invalid operator location") {
-        vector<string> P_BRACKETS_1{"x", "+", "y", "-"};
-        vector<string> P_BRACKETS_2{"x", "+", "-", "y"};
-        vector<string> P_BRACKETS_3{"+", "x"};
-        vector<string> P_BRACKETS_4{"+"};
-
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_1), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_2), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_3), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_4), ValidityError);
-    }
-
-    SECTION("FAIL: invalid name/integer") {
-        vector<string> P_BRACKETS_1{"x y"};
-        vector<string> P_BRACKETS_2{"1234d"};
-
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_1), ValidityError);
-        REQUIRE_THROWS_AS(p.parsePatternTokens(P_BRACKETS_2), ValidityError);
-    }
 }

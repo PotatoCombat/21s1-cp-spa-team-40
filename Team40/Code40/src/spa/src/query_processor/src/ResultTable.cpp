@@ -177,6 +177,63 @@ bool ResultTable::hasVal(INDEX idx, VALUE val) {
     return table[idx].find(val) != table[idx].end();
 }
 
+bool ResultTable::canAppendValue(VALUE value, INDEX idx,
+                                 vector<string> &combination,
+                                 set<INDEX> &visitedInGroup) {
+    for (INDEX vIdx : visitedInGroup) {
+        if (hasPointerToIdx(idx, value, vIdx) &&
+            !hasLinkBetweenValues(idx, value, vIdx, combination[vIdx])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void ResultTable::constructNewCombinations(vector<vector<string>> &newCombinations,
+                                           vector<vector<string>> &existingCombinations, 
+                                           set<INDEX> &visitedInGroup, INDEX idx) {
+    for (vector<string> combination : existingCombinations) {
+        for (string value : getValues(idx)) {
+            if (!canAppendValue(value, idx, combination, visitedInGroup)) {
+                continue;
+            }
+
+            // if has link to values of all visited indexes
+            vector<string> temp = combination;
+            temp[idx] = value;
+            newCombinations.push_back(temp);
+        }
+    }
+}
+
+void ResultTable::appendGroupResult(set<INDEX> &visited,
+                                    vector<vector<string>> &existingCombinations,
+                                    INDEX idx) {
+    vector<INDEX> toBeEval;
+    set<INDEX> visitedInGroup; // so that don't need to check all visited idx
+    toBeEval.push_back(idx);
+    while (!toBeEval.empty()) {
+        INDEX currIdx = toBeEval.back();
+        toBeEval.pop_back();
+        if (visited.find(currIdx) !=
+            visited.end()) { // if visited already then continue
+            continue;
+        }
+
+        vector<vector<string>> newCombinations;
+        constructNewCombinations(newCombinations, existingCombinations,
+                                 visitedInGroup, currIdx);
+
+        for (auto otherIndex : getLinkedIndexes(currIdx)) {
+            toBeEval.push_back(otherIndex);
+        }
+
+        existingCombinations = newCombinations;
+        visited.insert(currIdx);
+        visitedInGroup.insert(currIdx);
+    }
+}
+
 vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     string EMPTY = "";
     set<INDEX> visited;
@@ -185,49 +242,7 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     
     // evaluate each groups
     for (INDEX idx : indexes) {
-        // 1st idx is the idx to be eval, 
-        // 2nd idx is the index that calls this index
-
-        vector<INDEX> toBeEval;
-        set<INDEX> visitedInGroup; // so that don't need to check all visited idx
-        toBeEval.push_back(idx);
-        while (!toBeEval.empty()) {
-            INDEX currIdx = toBeEval.back();
-            toBeEval.pop_back();
-            vector<vector<string>> newRes;
-            if (visited.find(currIdx) != visited.end()) { // if visited already then continue
-                continue;
-            }
-
-            for (vector<string> v : combinations) {
-                bool linkAdded = false;
-                for (string value : getValues(currIdx)) {
-                    bool valid = true;
-                    for (INDEX vIdx : visitedInGroup) {
-                        if (hasPointerToIdx(currIdx, value, vIdx) &&
-                            !hasLinkBetweenValues(currIdx, value, vIdx, v[vIdx])) {
-                            valid = false;
-                            break;
-                        }
-                    }
-
-                    // if has link to values of all visited indexes
-                    if (valid) {
-                        vector<string> temp = v;
-                        temp[currIdx] = value;
-                        newRes.push_back(temp);
-                    }
-                }
-            }
-
-            for (auto otherIndex : getLinkedIndexes(currIdx)) {
-                toBeEval.push_back(otherIndex);
-            }
-
-            combinations = newRes;
-            visited.insert(currIdx);
-            visitedInGroup.insert(currIdx);
-        }
+        appendGroupResult(visited, combinations, idx);
     }
 
     // generate result

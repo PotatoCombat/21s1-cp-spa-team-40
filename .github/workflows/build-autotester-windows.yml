@@ -52,6 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         test-files:
+          - { source: Sample_source, queries: Sample_queries, output: out } 
           - { source: Source1, queries: Queries1, output: out1 } 
           - { source: Source2, queries: Queries2, output: out2 } 
           - { source: Source3, queries: Queries3, output: out3 } 

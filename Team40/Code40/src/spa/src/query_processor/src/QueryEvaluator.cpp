@@ -39,12 +39,12 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
 }
 
 Result QueryEvaluator::getTempResult(Clause* clause) {
+    ClauseHandler *clauseHandler;
+
     if (clause->getType() == ClauseType::PATTERN) {
         PatternHandler patternHandler(clause, pkb);
-        return patternHandler.eval();
+        clauseHandler = &patternHandler;
     }
-
-    ClauseHandler *clauseHandler;
 
     if (clause->getType() == ClauseType::FOLLOWS) {
         FollowsHandler followsHandler(clause, pkb);
@@ -109,6 +109,16 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
     if (clause->getType() == ClauseType::WITH) {
         WithHandler withHandler(clause, pkb);
         clauseHandler = &withHandler;
+    }
+
+    if (clause->getType() == ClauseType::AFFECTS) {
+        AffectsHandler affectsHandler(clause, pkb);
+        clauseHandler = &affectsHandler;
+    }
+
+    if (clause->getType() == ClauseType::AFFECTS_T) {
+        AffectsStarHandler affectsStarHandler(clause, pkb);
+        clauseHandler = &affectsStarHandler;
     }
 
     return clauseHandler->eval();
