@@ -1,0 +1,263 @@
+procedure proc1 {
+    read w;
+    read x;
+    read y;
+    read z;
+    call proc2;
+    w = b + c - d;
+    if (w < x + y * z) then {
+        a = x + y * z;
+        while(a > b - c / d) {
+            call proc3;
+            w = a * b / c;
+            if (w + x <= y * z) then {
+                a = w - x / y;
+                z = d;
+                call proc4;
+            } else {
+                w = a + a * a;
+                c = y;
+            }
+            call proc5;
+            a = z * z + z;
+        }
+        w = d / d - d;
+    } else {
+        call proc6;
+        a = w - w / w;
+        while(a - b >= c / d) {
+            x = a + c - d;
+            if (w + x * y == z) then {
+                call proc7;
+                b = w + y * z;
+                x = b;
+            } else {
+                x = a * b / d;
+                call proc8;
+                a = w;
+            }
+            b = w - x / z;
+        }
+        call proc9;
+        x = c + c * c;
+    }
+    b = y * y + y;
+    print a;
+    call proc2;
+    print b;
+    print c;
+    print d;
+}
+
+procedure proc2 {
+    read a;
+    read b;
+    read c;
+    call proc3;
+    read d;
+    x = b / b - b;
+    while (a - b / c != d) {
+        b = x - x / x;
+        call proc4;
+        if (w + x < y) then {
+            y = a + b - d;
+            while (a > b - c) {
+                c = w + x * z;
+                call proc5;
+                d = x - y;
+            }
+            y = a * c / d;
+        } else {
+            call proc6;
+            c = w - y / z;
+            while (w <= x * z) {
+                y = b + b * b;
+                z = a / c;
+                call proc7;
+            }
+            c = x * x + x;
+        }
+        y = c / c - c;
+        call proc8;
+    }
+    c = y - y / y;
+    print w;
+    print x;
+    call proc9;
+    print y;
+    print z;
+}
+
+procedure proc3 {
+    z = a + b - c;
+    if (a / c >= d) then {
+        d = w + x * y;
+        while(w + y == z ) {
+            call proc4;
+            z = b + c / d;
+            d = w + y;
+        }
+        d = x - y / z;
+        call proc5;
+    } else {
+        z = a + a * a;
+        while(a != b - d) {
+            d = w * w + w;
+            call proc6;
+            z = b * c;
+        }
+        z = d / d - d;
+    }
+    call proc7;
+    d = z - z / z;
+}
+
+procedure proc4 {
+    w = b + c;
+    while (a != b - d) {
+        a = x * y;
+        if (c / b < d) then {
+            w = b - d;
+            call proc8;
+            d = w / x;
+        } else {
+            a = x / z;
+            z = a - b;
+            call proc9;
+        }
+        w = c * d;
+    }
+    a = y + z;
+    call proc5;
+}
+
+procedure proc5 {
+    x = a / c;
+    call proc6;
+    while(z != w + x * y) {
+        b = w - y;
+        c = x * v;
+    }
+    call proc7;
+    x = a + d;
+}
+
+procedure proc6 {
+    call proc8;
+    b = w * z;
+    if ( d == a - b / c) then {
+        x = c - d;
+        y = b + d;
+        call proc9;
+    } else {
+        b = y / z; 
+        c = w - z;
+    }
+    call proc7;
+    y = a * b;
+}
+
+procedure proc7 {
+    call proc8;
+    c = w + x;
+    y = a / d;
+}
+
+procedure proc8 {
+    w = y - x * z * w;
+    if (d + c – b * a != 23) then {
+        a = c * b / d - a;
+        while (z – y * x / w == 11) {
+            call proc9;
+            x = y - w / z / x;
+            if (b >= a * 23 + d - c ) then {
+                b = c / a + d * b;
+                while (x <= w / 11 - z * y) {
+                    call proc9;
+                    y = x * w + z % y;
+                    z = y + w – x * z;
+                }
+                c = b / a – d / c ;
+                call proc9;
+            } else {
+                z = x * w – y + z;
+                while (b * a > 23 + d - c) {
+                    d = b / a * c % d;
+                    call proc9;
+                    d = c * a / b - d;
+                }
+                w = y / z + x / 1;
+            }
+            call proc9;
+            a = c * d – b * 13;
+        }
+        x = y / z – w % 4;
+    } else {
+        call proc9;
+        b = c * d + a / 16;
+        while (x / w < 11 - z * y) {
+            y = x / z + w + 7;
+            if (b * a + 23 == d - c) then {
+                call proc9;
+                c = b - d / a % 19;
+                while (x / w - 11 != z * y) {
+                    z = x * y / w - 10;
+                    w = z * y - x + 2;
+                    call proc9;
+                }
+                d = b - c * a + 22;
+            } else {
+                w = z - x + y % w;
+                call proc9;
+                while (b * a + 23 - d != c) {
+                    a = d / b * c / a;
+                    a = d - c + b % 14;
+                }
+                call proc9;
+                x = z + w / y + x;
+            }
+            b = d / a - c % b;
+        }
+        call proc9;
+        y = z + w * x - y;
+    }
+    c = d / a + b + c;
+}
+
+procedure proc9 {
+    w = x + y – z + w / 25;
+    while (d < c + b – a * 23) {
+        a = b - c * d % a;
+        if (z > y - x * w / 11) then {
+            x = w + y * z - x;
+            while (d + c <= b – a * 23) {
+                b = a - c / d + b;
+                if (z – y >= x * w / 11) then {
+                    y = w + x / z * y;
+                    x = z * y + w - 5;
+                } else {
+                    c = a * b + d – c;
+                    b = d + c / a + 17;
+                }
+                z = w - x + y / z;
+            }
+            d = a * b – c * d;
+        } else {
+            w = x * z / y – 0 % w;
+            while (d + c – b == a * 23) {
+                a = b + d – c + 12;
+                if (z – y * x != w / 11) then {
+                    x = w / z + y * 3;
+                    y = z - x / w * 8;
+                } else {
+                    b = a + d * c - 15;
+                    c = d + b * a - 20;
+                }
+                y = w / z – x / 6;
+            }
+            c = a + d / b * 18;
+        }
+        z = w / y * x % 9;
+    }
+    d = a - c + b / 21;
+}
