@@ -59,11 +59,11 @@ void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
 }
 
 void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
-    usesTable.insertProcUsingVar(proc, var);
+    usesProcTable.insertRelationship(proc->getName(), var->getName());
 }
 
 void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
-    usesTable.insertStmtUsingVar(stmt, var);
+    usesStmtTable.insertRelationship(stmt->getIndex(), var->getName());
 }
 
 void PKB::insertCalls(Procedure *proc, ProcName called) {
@@ -218,28 +218,28 @@ bool PKB::stmtModifies(const StmtIndex &stmt, const VarName &var) {
 
 // Uses ========================================================================
 
-set<ProcName> PKB::getProcsUsingVar(VarName var) {
-    return usesTable.getProcsUsingVar(var);
+set<ProcName> PKB::getProcsUsingVar(const VarName &var) {
+    return usesProcTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getStmtsUsingVar(VarName var) {
-    return usesTable.getStmtsUsingVar(var);
+set<StmtIndex> PKB::getStmtsUsingVar(const VarName &var) {
+    return usesStmtTable.getLHSRelationships(var);
 }
 
-set<VarName> PKB::getVarsUsedByProc(ProcName proc) {
-    return usesTable.getVarsUsedByProc(proc);
+set<VarName> PKB::getVarsUsedByProc(const ProcName &proc) {
+    return usesProcTable.getRHSRelationships(proc);
 }
 
-set<VarName> PKB::getVarsUsedByStmt(StmtIndex stmt) {
-    return usesTable.getVarsUsedByStmt(stmt);
+set<VarName> PKB::getVarsUsedByStmt(const StmtIndex &stmt) {
+    return usesStmtTable.getRHSRelationships(stmt);
 }
 
-bool PKB::procUses(ProcName proc, VarName var) {
-    return usesTable.procUses(proc, var);
+bool PKB::procUses(const ProcName &proc, const VarName &var) {
+    return usesProcTable.isRelationship(proc, var);
 }
 
-bool PKB::stmtUses(StmtIndex stmt, VarName var) {
-    return usesTable.stmtUses(stmt, var);
+bool PKB::stmtUses(const StmtIndex &stmt, const VarName &var) {
+    return usesStmtTable.isRelationship(stmt, var);
 }
 
 // Calls =======================================================================

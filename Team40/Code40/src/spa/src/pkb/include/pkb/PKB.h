@@ -10,7 +10,6 @@
 #include "PatternTable.h"
 #include "RelationshipTable.h"
 #include "StatementTable.h"
-#include "UsesTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -345,42 +344,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getProcsUsingVar(VarName var);
+    virtual set<ProcName> getProcsUsingVar(const VarName &var);
 
     /**
      * Selects s such that Uses(s, var), where s is a statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getStmtsUsingVar(VarName var);
+    virtual set<StmtIndex> getStmtsUsingVar(const VarName &var);
 
     /**
      * Selects v such that Uses(proc, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsUsedByProc(ProcName proc);
+    virtual set<VarName> getVarsUsedByProc(const ProcName &proc);
 
     /**
      * Selects v such that Uses(stmt, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsUsedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsUsedByStmt(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Uses(proc, var).
      * @param proc proc.
      * @param var var.
      */
-    virtual bool procUses(ProcName proc, VarName var);
+    virtual bool procUses(const ProcName &proc, const VarName &var);
 
     /**
      * Selects BOOLEAN such that Uses(stmt, var).
      * @param stmt stmt.
      * @param var var.
      */
-    virtual bool stmtUses(StmtIndex stmt, VarName var);
+    virtual bool stmtUses(const StmtIndex &stmt, const VarName &var);
 
     // Calls ==================================================================
 
@@ -554,7 +553,8 @@ private:
     RelationshipTable<StmtIndex, StmtIndex> parentStarTable;
     RelationshipTable<ProcName, VarName> modifiesProcTable;
     RelationshipTable<StmtIndex, VarName> modifiesStmtTable;
-    UsesTable usesTable;
+    RelationshipTable<ProcName, VarName> usesProcTable;
+    RelationshipTable<StmtIndex, VarName> usesStmtTable;
     CallsTable callsTable;
     CallsStarTable callsStarTable;
     NextTable nextTable;
