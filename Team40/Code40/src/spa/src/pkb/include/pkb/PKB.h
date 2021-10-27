@@ -5,7 +5,6 @@
 #include "ConditionTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
-#include "ModifiesTable.h"
 #include "NextBipTable.h"
 #include "NextTable.h"
 #include "PatternTable.h"
@@ -302,42 +301,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getProcsModifyingVar(VarName var);
+    virtual set<ProcName> getProcsModifyingVar(const VarName &var);
 
     /**
      * Selects s such that Modifies(s, var), where s is a statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getStmtsModifyingVar(VarName var);
+    virtual set<StmtIndex> getStmtsModifyingVar(const VarName &var);
 
     /**
      * Selects v such that Modifies(proc, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsModifiedByProc(ProcName proc);
+    virtual set<VarName> getVarsModifiedByProc(const ProcName &proc);
 
     /**
      * Selects v such that Modifies(stmt, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsModifiedByStmt(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Modifies(proc, var).
      * @param proc proc.
      * @param var var.
      */
-    virtual bool procModifies(ProcName proc, VarName var);
+    virtual bool procModifies(const ProcName &proc, const VarName &var);
 
     /**
      * Selects BOOLEAN such that Modifies(stmt, var).
      * @param stmt stmt.
      * @param var var.
      */
-    virtual bool stmtModifies(StmtIndex stmt, VarName var);
+    virtual bool stmtModifies(const StmtIndex &stmt, const VarName &var);
 
     // Uses ====================================================================
 
@@ -553,7 +552,8 @@ private:
     RelationshipTable<StmtIndex, StmtIndex> followsStarTable;
     RelationshipTable<StmtIndex, StmtIndex> parentTable;
     RelationshipTable<StmtIndex, StmtIndex> parentStarTable;
-    ModifiesTable modifiesTable;
+    RelationshipTable<ProcName, VarName> modifiesProcTable;
+    RelationshipTable<StmtIndex, VarName> modifiesStmtTable;
     UsesTable usesTable;
     CallsTable callsTable;
     CallsStarTable callsStarTable;

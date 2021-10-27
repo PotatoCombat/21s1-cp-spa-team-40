@@ -51,11 +51,11 @@ void PKB::insertParent(Statement *parent, Statement *child) {
 }
 
 void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
-    modifiesTable.insertProcModifyingVar(proc, var);
+    modifiesProcTable.insertRelationship(proc->getName(), var->getName());
 }
 
 void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
-    modifiesTable.insertStmtModifyingVar(stmt, var);
+    modifiesStmtTable.insertRelationship(stmt->getIndex(), var->getName());
 }
 
 void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
@@ -192,28 +192,28 @@ bool PKB::parentStar(const StmtIndex &parent, const StmtIndex &child) {
 
 // Modifies ====================================================================
 
-set<ProcName> PKB::getProcsModifyingVar(VarName var) {
-    return modifiesTable.getProcsModifyingVar(var);
+set<ProcName> PKB::getProcsModifyingVar(const VarName &var) {
+    return modifiesProcTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getStmtsModifyingVar(VarName var) {
-    return modifiesTable.getStmtsModifyingVar(var);
+set<StmtIndex> PKB::getStmtsModifyingVar(const VarName &var) {
+    return modifiesStmtTable.getLHSRelationships(var);
 }
 
-set<VarName> PKB::getVarsModifiedByProc(ProcName proc) {
-    return modifiesTable.getVarsModifiedByProc(proc);
+set<VarName> PKB::getVarsModifiedByProc(const ProcName &proc) {
+    return modifiesProcTable.getRHSRelationships(proc);
 }
 
-set<VarName> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
-    return modifiesTable.getVarsModifiedByStmt(stmt);
+set<VarName> PKB::getVarsModifiedByStmt(const StmtIndex &stmt) {
+    return modifiesStmtTable.getRHSRelationships(stmt);
 }
 
-bool PKB::procModifies(ProcName proc, VarName var) {
-    return modifiesTable.procModifies(proc, var);
+bool PKB::procModifies(const ProcName &proc, const VarName &var) {
+    return modifiesProcTable.isRelationship(proc, var);
 }
 
-bool PKB::stmtModifies(StmtIndex stmt, VarName var) {
-    return modifiesTable.stmtModifies(stmt, var);
+bool PKB::stmtModifies(const StmtIndex &stmt, const VarName &var) {
+    return modifiesStmtTable.isRelationship(stmt, var);
 }
 
 // Uses ========================================================================
