@@ -58,7 +58,7 @@ QueryOptimizer::formGroups(vector<Clause *> &unsortedClauses,
 vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
                                      vector<pair<int, int>> &groupSizes,
                                      map<string, int> &refToGroup) {
-    int NUMBER_OF_CLS_IN_ONE_CLS = 1;
+    int ONE_CLS = 1;
 
     Reference *ref1 = cls->getFirstReference();
     Reference *ref2 = cls->getSecondReference();
@@ -91,7 +91,7 @@ vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
 
     if (newGroupIdx == INVALID_IDX) {
         newGroupIdx = groupSizes.size();
-        groupSizes.push_back({newGroupIdx, NUMBER_OF_CLS_IN_ONE_CLS});
+        groupSizes.push_back({newGroupIdx, ONE_CLS});
         return {idx1, idx2, newGroupIdx};
     }
 
@@ -103,10 +103,10 @@ vector<int> QueryOptimizer::updateGroupSize(Clause *cls,
         pair<int, int> &g1 = groupSizes[idx1]; // group1
         pair<int, int> &g2 = groupSizes[idx2]; // group2
         if (idx1 != newGroupIdx) {             // merge into group2
-            g2.second += g1.second + NUMBER_OF_CLS_IN_ONE_CLS;
+            g2.second += g1.second + ONE_CLS;
             g1.second = 0;
         } else if (idx2 != newGroupIdx) { // merge into group1
-            g1.second += g2.second + NUMBER_OF_CLS_IN_ONE_CLS;
+            g1.second += g2.second + ONE_CLS;
             g2.second = 0;
         } else { // group1 and group2 are the same
             g1.second++;
