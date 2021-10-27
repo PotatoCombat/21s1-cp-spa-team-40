@@ -1,4 +1,5 @@
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "pkb/EntityTable.h"
@@ -7,65 +8,59 @@
 
 using namespace std;
 
-struct TestEntity {
+class TestEntity : public Entity<string> {
 public:
-    inline explicit TestEntity(string name) { this->name = name; }
+    explicit TestEntity(string name) : Entity<string>(move(name)) { };
 
-    inline string getName() { return name; }
+    bool operator<(const TestEntity &other) const {
+        return name < other.name;
+    }
 
-private:
-    string name;
+    bool operator==(const TestEntity &other) const {
+        return name == other.name;
+    }
 };
 
 struct TestEntityTable {
 public:
-    inline static vector<TestEntity> createItems() {
-        return vector<TestEntity>{
+    static vector<TestEntity> createItems() {
+        return {
             TestEntity("hello"),
             TestEntity("goodbye"),
-            TestEntity("sayonara")};
-    }
-
-    inline static EntityTable<TestEntity, string> createTable() {
-        EntityTable<TestEntity, string> table;
-        for (auto i : TestEntityTable::createItems()) {
-            table.insert(&i);
-        }
-        return table;
+            TestEntity("sayonara"),
+        };
     }
 };
 
-TEST_CASE("EntityTable: ctor") {
+TEST_CASE("EntityTable") {
     EntityTable<TestEntity, string> table;
+
+    // Check Size of empty table
     REQUIRE(table.getSize() == 0);
-}
 
-TEST_CASE("EntityTable: insert/getEntity") {
-    EntityTable<TestEntity, string> table;
-    TestEntity test("hello");
-    table.insert(&test);
+    vector<TestEntity> items = TestEntityTable::createItems();
 
-    REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getEntity("hello") == &test);
-}
+    // Insert one by one to get reference in items
+    table.insert(&items[0]);
+    table.insert(&items[1]);
+    table.insert(&items[2]);
 
-TEST_CASE("EntityTable: entity not stored in table") {
-    auto table = TestEntityTable::createTable();
+    // Check Size
+    REQUIRE(table.getSize() == items.size());
+
+    REQUIRE(*table.getEntity(items[0].getName()) == items[0]);
+    REQUIRE(*table.getEntity(items[1].getName()) == items[1]);
+    REQUIRE(*table.getEntity(items[2].getName()) == items[2]);
+
+    // Check NONE References
     REQUIRE(table.getEntity("bye") == nullptr);
-}
 
-TEST_CASE("EntityTable: getNames") {
-    auto table = TestEntityTable::createTable();
+    // Check Names
+    vector<string> names = table.getNames().asVector();
+    REQUIRE(items.size() == names.size());
 
-    vector<TestEntity> test = TestEntityTable::createItems();
-    vector<string> actual = table.getNames().asVector();
-
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i).getName() == actual.at(i));
-    }
-}
-
-TEST_CASE("EntityTable: getSize") {
-    auto table = TestEntityTable::createTable();
-    REQUIRE(table.getSize() == TestEntityTable::createItems().size());
+    // TODO: Will fix after replacing Iterator with set
+    REQUIRE(count(names.begin(), names.end(), items[0].getName()) == 1);
+    REQUIRE(count(names.begin(), names.end(), items[1].getName()) == 1);
+    REQUIRE(count(names.begin(), names.end(), items[2].getName()) == 1);
 }

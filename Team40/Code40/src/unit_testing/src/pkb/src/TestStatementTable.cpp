@@ -9,71 +9,44 @@ using namespace std;
 
 struct TestStatementTable {
 public:
-    static vector<Statement> createItems();
-    static vector<StmtIndex> createIndices();
-    static StatementTable createTable();
+    static vector<Statement> createItems() {
+        return {
+            Statement(1, StatementType::ASSIGN),
+            Statement(2, StatementType::READ),
+            Statement(3, StatementType::PRINT),
+            };
+    }
 };
 
-vector<Statement> TestStatementTable::createItems() {
-    return {
-        Statement(1, StatementType::ASSIGN),
-        Statement(2, StatementType::READ),
-        Statement(3, StatementType::PRINT),
-    };
-}
-
-vector<StmtIndex> TestStatementTable::createIndices() { return vector<int>{1, 2, 3}; }
-
-StatementTable TestStatementTable::createTable() {
+TEST_CASE("StatementTable") {
     StatementTable table;
 
-    auto items = TestStatementTable::createItems();
-    for (Statement i : items) {
-        table.insert(&i);
-    }
-    return table;
-}
-
-TEST_CASE("StatementTable: ctor") {
-    StatementTable table;
+    // Check Size of empty table
     REQUIRE(table.getSize() == 0);
-}
 
-TEST_CASE("StatementTable: insert/getStmt/getIndex") {
-    StatementTable table;
-    Statement test = Statement(1, StatementType::CALL);
-    table.insert(&test);
+    vector<Statement> items = TestStatementTable::createItems();
 
-    REQUIRE(table.getSize() == 1);
-    REQUIRE(table.getIndex(&test) == 1);
-    REQUIRE(table.getStmt(1) == &test);
-    REQUIRE(table.getStmt(1)->getIndex() == 1);
-    REQUIRE(table.getStmtType(1) == StatementType::CALL);
-}
+    // Insert one by one to get reference in items
+    table.insert(&items[0]);
+    table.insert(&items[1]);
+    table.insert(&items[2]);
 
-TEST_CASE("EntityTable: invalid Statement") {
-    auto table = TestStatementTable::createTable();
-    REQUIRE(table.getStmt(4) == NULL);
-}
+    // Check Size
+    REQUIRE(table.getSize() == items.size());
 
-TEST_CASE("EntityTable: invalid Index") {
-    auto table = TestStatementTable::createTable();
-    Statement test = Statement(4, StatementType::CALL);
-    REQUIRE(table.getIndex(&test) == InvalidIndex);
-}
+    REQUIRE(*table.getStmt(items[0].getIndex()) == items[0]);
+    REQUIRE(*table.getStmt(items[1].getIndex()) == items[1]);
+    REQUIRE(*table.getStmt(items[2].getIndex()) == items[2]);
 
-TEST_CASE("StatementTable: getIndices") {
-    auto table = TestStatementTable::createTable();
+    // Check NONE References
+    REQUIRE(table.getStmt(4) == nullptr);
 
-    vector<int> test = TestStatementTable::createIndices();
-    vector<int> actual = table.getIndices().asVector();
+    // Check Names
+    vector<StmtIndex> indices = table.getIndices().asVector();
+    REQUIRE(items.size() == indices.size());
 
-    for (int i = 0; i < actual.size(); i++) {
-        REQUIRE(test.at(i) == actual.at(i));
-    }
-}
-
-TEST_CASE("StatementTable: getSize") {
-    auto table = TestStatementTable::createTable();
-    REQUIRE(table.getSize() == TestStatementTable::createItems().size());
+    // TODO: Will fix after replacing Iterator with set
+    REQUIRE(count(indices.begin(), indices.end(), items[0].getIndex()) == 1);
+    REQUIRE(count(indices.begin(), indices.end(), items[1].getIndex()) == 1);
+    REQUIRE(count(indices.begin(), indices.end(), items[2].getIndex()) == 1);
 }
