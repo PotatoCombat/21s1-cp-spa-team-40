@@ -37,7 +37,7 @@ public:
      * Returns the statement with the given statement index.
      * @param stmtIndex statement index of the statement.
      */
-    virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
+    virtual Statement *getStmtByIndex(const StmtIndex &stmtIndex);
 
     // =========================================================================
     // Source Processor
@@ -61,7 +61,7 @@ public:
     /**
      * @param statement statement to insert into the PKB.
      */
-    virtual StmtIndex insertStmt(Statement *statement);
+    virtual void insertStmt(Statement *statement);
 
     /**
      * Stores the relationship Follows(stmt1, stmt2),
@@ -175,31 +175,31 @@ public:
      * Returns all statement indices of a given statement type in the program.
      * @param type statement type to find.
      */
-    virtual Iterator<StmtIndex> getAllStmts(StatementType type);
+    virtual Iterator<StmtIndex> getAllStmts(const StatementType &type);
 
     /**
      * Returns the statement type of the given statement index in the program.
      * @param stmt statement index to find.
      */
-    virtual StatementType getStmtType(StmtIndex stmt);
+    virtual StatementType getStmtType(const StmtIndex &stmt);
 
     /**
      * Returns the variable used in the given PRINT statement.
      * @param printStmt statement index of a PRINT statement.
      */
-    virtual VarName getPrintVariable(StmtIndex printStmt);
+    virtual VarName getPrintVariable(const StmtIndex &printStmt);
 
     /**
      * Returns the variable used in the given READ statement.
      * @param readStmt statement index of a READ statement.
      */
-    virtual VarName getReadVariable(StmtIndex readStmt);
+    virtual VarName getReadVariable(const StmtIndex &readStmt);
 
     /**
      * Returns the procedure used in the given CALL statement.
      * @param callStmt statement index of a CALL statement.
      */
-    virtual ProcName getCallProcedure(StmtIndex callStmt);
+    virtual ProcName getCallProcedure(const StmtIndex &callStmt);
 
     // Follows =================================================================
 
@@ -538,10 +538,11 @@ public:
     virtual bool whilePattern(const StmtIndex &stmtIndex, const VarName &var);
 
 private:
+    StatementTable statementTable;
+
     EntityTable<Procedure, ProcName> procTable;
     EntityTable<Variable, VarName> varTable;
     EntityTable<ConstantValue, ConstName> constTable;
-    StatementTable statementTable;
 
     RelationshipTable<StmtIndex, StmtIndex> followsTable;
     RelationshipTable<StmtIndex, StmtIndex> followsStarTable;

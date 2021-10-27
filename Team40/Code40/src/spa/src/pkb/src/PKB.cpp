@@ -16,7 +16,7 @@ ConstantValue *PKB::getConstByName(ConstName constName) {
     return constTable.getEntity(move(constName));
 }
 
-Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
+Statement *PKB::getStmtByIndex(const StmtIndex &stmtIndex) {
     return statementTable.getStmt(stmtIndex);
 }
 
@@ -34,7 +34,7 @@ void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
-StmtIndex PKB::insertStmt(Statement *statement) {
+void PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
@@ -129,15 +129,15 @@ Iterator<ConstName> PKB::getAllConsts() { return constTable.getNames(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
-Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
+Iterator<StmtIndex> PKB::getAllStmts(const StatementType &type) {
     return statementTable.getIndices(type);
 }
 
-StatementType PKB::getStmtType(StmtIndex stmt) {
+StatementType PKB::getStmtType(const StmtIndex &stmt) {
     return statementTable.getStmtType(stmt);
 }
 
-VarName PKB::getPrintVariable(StmtIndex printStmt) {
+VarName PKB::getPrintVariable(const StmtIndex &printStmt) {
     auto stmt = statementTable.getStmt(printStmt);
     if (stmt->getStatementType() != StatementType::PRINT) {
         throw runtime_error(
@@ -146,7 +146,7 @@ VarName PKB::getPrintVariable(StmtIndex printStmt) {
     return stmt->getVariable()->getName();
 }
 
-VarName PKB::getReadVariable(StmtIndex readStmt) {
+VarName PKB::getReadVariable(const StmtIndex &readStmt) {
     auto stmt = statementTable.getStmt(readStmt);
     if (stmt->getStatementType() != StatementType::READ) {
         throw runtime_error(
@@ -155,7 +155,7 @@ VarName PKB::getReadVariable(StmtIndex readStmt) {
     return stmt->getVariable()->getName();
 }
 
-ProcName PKB::getCallProcedure(StmtIndex callStmt) {
+ProcName PKB::getCallProcedure(const StmtIndex &callStmt) {
     auto stmt = statementTable.getStmt(callStmt);
     if (stmt->getStatementType() != StatementType::CALL) {
         throw runtime_error(
