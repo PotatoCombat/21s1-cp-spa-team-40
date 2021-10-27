@@ -1,15 +1,34 @@
 #include "common/model/Procedure.h"
 
-Procedure::Procedure(string name) : name(name), stmtLst({}) {}
+#include <utility>
+
+using namespace std;
+
+Procedure::Procedure(ProcName name) : Entity<ProcName>(move(name)) { }
 
 void Procedure::addToStmtLst(Statement *stmt) { this->stmtLst.push_back(stmt); }
 
-string Procedure::getName() { return this->name; };
+vector<Statement *> Procedure::getStmtLst() { return this->stmtLst; }
 
-vector<Statement *> Procedure::getStmtLst() { return this->stmtLst; };
+bool Procedure::operator<(const Procedure &other) const {
+    return name < other.name;
+}
 
 bool Procedure::operator==(const Procedure &other) const {
-    bool sameName = name == other.name;
-    bool sameStmtLst = stmtLst == other.stmtLst;
-    return sameName && sameStmtLst;
+    if (name != other.name) {
+        return false;
+    }
+
+    auto iter = stmtLst.begin();
+    auto otherIter = other.stmtLst.begin();
+
+    while (iter != stmtLst.end() && otherIter != stmtLst.end()) {
+        if (*iter != *otherIter) {
+            return false;
+        }
+        iter++;
+        otherIter++;
+    }
+
+    return iter == stmtLst.end() && otherIter == stmtLst.end();
 }

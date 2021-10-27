@@ -1,17 +1,14 @@
 #pragma once
-#include <string>
-#include "Factor.h"
+
+#include "Abstractions.h"
+#include "Entity.h"
+
 using namespace std;
 
-class Variable : public Factor {
+class Variable : public Entity<VarName> {
 public:
-    explicit Variable(string name);
-
-    string getName();
+    explicit Variable(VarName name);
 
     bool operator<(const Variable &other) const;
     bool operator==(const Variable &other) const;
-
-private:
-    string name;
 };
