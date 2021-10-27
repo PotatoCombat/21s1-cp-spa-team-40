@@ -1,9 +1,10 @@
 #pragma once
 
+#include "AssignPattern.h"
 #include "ConditionTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
-#include "PatternTable.h"
+#include "PostfixAdapter.h"
 #include "RelationshipTable.h"
 #include "StatementTable.h"
 #include "common/model/ConstantValue.h"
@@ -470,21 +471,21 @@ public:
     // Pattern =================================================================
 
     /**
-     * Selects a such that a(var, pattern), where a is an ASSIGN statement.
+     * Selects a such that a(var, exprList), where a is an ASSIGN statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPartialAssignPatternStmts(VarName var,
-                                                        ExpressionList pattern);
+    virtual set<StmtIndex> getPartialAssignPatternStmts(const VarName &var,
+                                                        const ExpressionList &exprList);
 
     /**
-     * Selects a such that a(var, pattern), where a is an ASSIGN statement,
+     * Selects a such that a(var, exprList), where a is an ASSIGN statement,
      * and the pattern requires an exact match.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
-                                                      ExpressionList pattern);
+    virtual set<StmtIndex> getExactAssignPatternStmts(const VarName &var,
+                                                      const ExpressionList &exprList);
 
     /**
      * Selects if such that if(var, _, _), where if is an IF statement.
@@ -501,24 +502,24 @@ public:
     virtual set<StmtIndex> getWhilePatternStmts(VarName var);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
      * statement.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
      */
-    virtual bool partialAssignPattern(StmtIndex stmt, VarName var,
-                                      ExpressionList pattern);
+    virtual bool partialAssignPattern(const StmtIndex &stmt, const VarName &var,
+                                      const ExpressionList &exprList);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
      * statement, and the pattern requires an exact match.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
      */
-    virtual bool exactAssignPattern(StmtIndex stmt, VarName var,
-                                    ExpressionList pattern);
+    virtual bool exactAssignPattern(const StmtIndex &stmt, const VarName &var,
+                                    const ExpressionList &exprList);
 
     /// Selects BOOLEAN such that if(var, _, _), where if is an IF statement.
 
@@ -555,6 +556,9 @@ private:
     RelationshipTable<ProcName, ProcName> callsStarTable;
     RelationshipTable<ProgLineIndex, ProgLineIndex> nextTable;
     RelationshipTable<ProgLineIndex, ProgLineIndex> nextBipTable;
-    PatternTable patternTable;
+
+    RelationshipTable<StmtIndex, AssignPattern> partialAssignPatternTable;
+    RelationshipTable<StmtIndex, AssignPattern> exactAssignPatternTable;
+
     ConditionTable conditionTable;
 };

@@ -14,6 +14,8 @@ typedef int ProgLineIndex;
 constexpr int InvalidIndex = -1;
 
 typedef string Pattern;
+const string WILDCARD = "_";
+
 typedef vector<string> ExpressionList;
 
 template<class T> struct Comparator {

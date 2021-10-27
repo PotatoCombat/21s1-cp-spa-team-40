@@ -81,7 +81,28 @@ void PKB::insertNextBip(Statement *previous, Statement *next) {
 }
 
 void PKB::insertAssignPattern(Statement *stmt) {
-    patternTable.insertAssignPattern(stmt);
+    StmtIndex stmtIndex = stmt->getIndex();
+    VarName varName = stmt->getVariable()->getName();
+
+    PostfixAdapter postfix = PostfixAdapter(stmt->getExpressionLst());
+    set<string> partialPatterns = postfix.createPartialPatterns();
+    string exactPattern = postfix.createExactPattern();
+
+    for (auto &pattern : partialPatterns) {
+        partialAssignPatternTable.insertRelationship(
+                stmtIndex,AssignPattern { WILDCARD, pattern });
+        partialAssignPatternTable.insertRelationship(
+                stmtIndex,AssignPattern { varName, pattern });
+    }
+    partialAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, WILDCARD });
+
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { WILDCARD, exactPattern });
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, exactPattern });
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, WILDCARD });
 }
 
 void PKB::insertIfPattern(Statement *stmt) {
@@ -299,14 +320,20 @@ bool PKB::nextBip(const ProgLineIndex &previousLine, const ProgLineIndex &nextLi
 
 // Pattern =====================================================================
 
-set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var,
-                                                 ExpressionList pattern) {
-    return patternTable.getPartialAssignPatternStmts(var, pattern);
+set<StmtIndex> PKB::getPartialAssignPatternStmts(const VarName &var,
+                                                 const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return partialAssignPatternTable.getLHSRelationships(record);
 }
 
-set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var,
-                                               ExpressionList pattern) {
-    return patternTable.getExactAssignPatternStmts(var, pattern);
+set<StmtIndex> PKB::getExactAssignPatternStmts(const VarName &var,
+                                               const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return exactAssignPatternTable.getLHSRelationships(record);
 }
 
 set<StmtIndex> PKB::getIfPatternStmts(VarName var) {
@@ -317,14 +344,20 @@ set<StmtIndex> PKB::getWhilePatternStmts(VarName var) {
     return conditionTable.getWhilePatternStmts(var);
 }
 
-bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var,
-                               ExpressionList pattern) {
-    return patternTable.partialAssignPattern(stmtIndex, var, pattern);
+bool PKB::partialAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
+                               const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return partialAssignPatternTable.isRelationship(stmtIndex, record);
 }
 
-bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var,
-                             ExpressionList pattern) {
-    return patternTable.exactAssignPattern(stmtIndex, var, pattern);
+bool PKB::exactAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
+                             const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return exactAssignPatternTable.isRelationship(stmtIndex, record);
 }
 
 bool PKB::ifPattern(StmtIndex stmtIndex, VarName var) {
