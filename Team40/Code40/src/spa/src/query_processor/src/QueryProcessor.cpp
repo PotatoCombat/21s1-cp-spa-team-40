@@ -13,7 +13,7 @@ void QueryProcessor::processQuery(string query, list<string> &results) {
         if (!successful) {
             return;
         }
-    } catch (ValidityError ve) {
+    } catch (ValidityError &ve) {
         results.push_back("FALSE");
         return;
     }
