@@ -106,11 +106,15 @@ void PKB::insertAssignPattern(Statement *stmt) {
 }
 
 void PKB::insertIfPattern(Statement *stmt) {
-    conditionTable.insertIfPattern(stmt);
+    for (auto &var : stmt->getExpressionVars()) {
+        ifPatternTable.insertRelationship(stmt->getIndex(), var->getName());
+    }
 }
 
 void PKB::insertWhilePattern(Statement *stmt) {
-    conditionTable.insertWhilePattern(stmt);
+    for (auto &var : stmt->getExpressionVars()) {
+        whilePatternTable.insertRelationship(stmt->getIndex(), var->getName());
+    }
 }
 
 // =============================================================================
@@ -336,12 +340,12 @@ set<StmtIndex> PKB::getExactAssignPatternStmts(const VarName &var,
     return exactAssignPatternTable.getLHSRelationships(record);
 }
 
-set<StmtIndex> PKB::getIfPatternStmts(VarName var) {
-    return conditionTable.getIfPatternStmts(var);
+set<StmtIndex> PKB::getIfPatternStmts(const VarName &var) {
+    return ifPatternTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getWhilePatternStmts(VarName var) {
-    return conditionTable.getWhilePatternStmts(var);
+set<StmtIndex> PKB::getWhilePatternStmts(const VarName &var) {
+    return whilePatternTable.getLHSRelationships(var);
 }
 
 bool PKB::partialAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
@@ -360,10 +364,10 @@ bool PKB::exactAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
     return exactAssignPatternTable.isRelationship(stmtIndex, record);
 }
 
-bool PKB::ifPattern(StmtIndex stmtIndex, VarName var) {
-    return conditionTable.ifPattern(stmtIndex, var);
+bool PKB::ifPattern(const StmtIndex &stmtIndex, const VarName &var) {
+    return ifPatternTable.isRelationship(stmtIndex, var);
 }
 
-bool PKB::whilePattern(StmtIndex stmtIndex, VarName var) {
-    return conditionTable.whilePattern(stmtIndex, var);
+bool PKB::whilePattern(const StmtIndex &stmtIndex, const VarName &var) {
+    return whilePatternTable.isRelationship(stmtIndex, var);
 }

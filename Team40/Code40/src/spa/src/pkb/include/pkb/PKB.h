@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AssignPattern.h"
-#include "ConditionTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
 #include "PostfixAdapter.h"
@@ -492,14 +491,14 @@ public:
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getIfPatternStmts(VarName var);
+    virtual set<StmtIndex> getIfPatternStmts(const VarName &var);
 
     /**
      * Selects while such that while(var, _), where while is a WHILE statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getWhilePatternStmts(VarName var);
+    virtual set<StmtIndex> getWhilePatternStmts(const VarName &var);
 
     /**
      * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
@@ -528,7 +527,7 @@ public:
      * @param stmt statement index of the IF statement.
      * @param var var.
      */
-    virtual bool ifPattern(StmtIndex stmt, VarName var);
+    virtual bool ifPattern(const StmtIndex &stmtIndex, const VarName &var);
 
     /**
      * Selects BOOLEAN such that while(var, _), where while is a WHILE
@@ -536,7 +535,7 @@ public:
      * @param stmt statement index of the WHILE statement.
      * @param var var.
      */
-    virtual bool whilePattern(StmtIndex stmtIndex, VarName var);
+    virtual bool whilePattern(const StmtIndex &stmtIndex, const VarName &var);
 
 private:
     EntityTable<Procedure, ProcName> procTable;
@@ -560,5 +559,9 @@ private:
     RelationshipTable<StmtIndex, AssignPattern> partialAssignPatternTable;
     RelationshipTable<StmtIndex, AssignPattern> exactAssignPatternTable;
 
-    ConditionTable conditionTable;
+    typedef VarName IfPattern;
+    typedef VarName WhilePattern;
+
+    RelationshipTable<StmtIndex, IfPattern> ifPatternTable;
+    RelationshipTable<StmtIndex, WhilePattern> whilePatternTable;
 };
