@@ -1,3 +1,4 @@
+#include "TestUtils.h"
 #include "TestPKBUtils.h"
 
 #include "pkb/PostfixAdapter.h"
@@ -8,19 +9,19 @@ using namespace std;
 
 TEST_CASE("PostfixAdapter: postfix partial patterns algorithm") {
     auto postfix = PostfixAdapter(TestPKBUtils::INFIX_1);
-    REQUIRE(TestPKBUtils::equalSets(
+    REQUIRE(TestUtils::equalSets(
             postfix.createPartialPatterns(), TestPKBUtils::PARTIAL_1));
 
     postfix = PostfixAdapter(TestPKBUtils::INFIX_2);
-    REQUIRE(TestPKBUtils::equalSets(
+    REQUIRE(TestUtils::equalSets(
             postfix.createPartialPatterns(), TestPKBUtils::PARTIAL_2));
 
     postfix = PostfixAdapter(TestPKBUtils::INFIX_3);
-    REQUIRE(TestPKBUtils::equalSets(
+    REQUIRE(TestUtils::equalSets(
             postfix.createPartialPatterns(), TestPKBUtils::PARTIAL_3));
 
     postfix = PostfixAdapter(TestPKBUtils::INFIX_4);
-    REQUIRE(TestPKBUtils::equalSets(
+    REQUIRE(TestUtils::equalSets(
             postfix.createPartialPatterns(), TestPKBUtils::PARTIAL_4));
 }
 

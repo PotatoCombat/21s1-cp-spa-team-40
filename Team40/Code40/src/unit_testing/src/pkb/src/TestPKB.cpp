@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 
+#include "TestUtils.h"
 #include "TestPKBUtils.h"
 
 #include "pkb/PKB.h"
@@ -200,7 +201,7 @@ TEST_CASE("Can handle transitive Follows") {
 TEST_CASE("PKB: partialAssignPattern (with insertAssignPattern)") {
     PKB pkb;
 
-    Statement stmt = TestPKBUtils::createAssignStmt(
+    Statement stmt = TestUtils::createAssignStmt(
             2, "x", TestPKBUtils::EXPRESSION_2);
 
     pkb.insertStmt(&stmt);
@@ -210,7 +211,7 @@ TEST_CASE("PKB: partialAssignPattern (with insertAssignPattern)") {
     VarName varName = stmt.getVariable()->getId();
 
     for (auto &query : TestPKBUtils::QUERIES_2) {
-        auto exprList = TestPKBUtils::tokenizePattern(query);
+        auto exprList = TestUtils::tokenizePattern(query);
         REQUIRE(pkb.partialAssignPattern(stmtIndex, WILDCARD, exprList));
         REQUIRE(pkb.partialAssignPattern(stmtIndex, varName, exprList));
     }
@@ -220,7 +221,7 @@ TEST_CASE("PKB: partialAssignPattern (with insertAssignPattern)") {
 TEST_CASE("PKB: exactAssignPattern (with insertAssignPattern)") {
     PKB pkb;
 
-    Statement stmt = TestPKBUtils::createAssignStmt(
+    Statement stmt = TestUtils::createAssignStmt(
             1, "small", TestPKBUtils::EXPRESSION_1);
 
     pkb.insertStmt(&stmt);
@@ -237,7 +238,7 @@ TEST_CASE("PKB: exactAssignPattern (with insertAssignPattern)") {
 TEST_CASE("PKB: getPartialAssignPatternStmts (with insertAssignPattern)") {
     PKB pkb;
 
-    Statement stmt = TestPKBUtils::createAssignStmt(
+    Statement stmt = TestUtils::createAssignStmt(
             1, "x", TestPKBUtils::EXPRESSION_2);
 
     pkb.insertStmt(&stmt);
@@ -249,7 +250,7 @@ TEST_CASE("PKB: getPartialAssignPatternStmts (with insertAssignPattern)") {
     set<StmtIndex> stmts;
 
     for (auto &query : TestPKBUtils::QUERIES_2) {
-        auto exprList = TestPKBUtils::tokenizePattern(query);
+        auto exprList = TestUtils::tokenizePattern(query);
 
         stmts = pkb.getPartialAssignPatternStmts(WILDCARD, exprList);
         REQUIRE(stmts.size() == 1);
@@ -268,7 +269,7 @@ TEST_CASE("PKB: getPartialAssignPatternStmts (with insertAssignPattern)") {
 TEST_CASE("PKB: getExactAssignPatternStmts (with insertAssignPattern)") {
     PKB pkb;
 
-    Statement stmt = TestPKBUtils::createAssignStmt(
+    Statement stmt = TestUtils::createAssignStmt(
             1, "x", TestPKBUtils::EXPRESSION_2);
 
     pkb.insertStmt(&stmt);
