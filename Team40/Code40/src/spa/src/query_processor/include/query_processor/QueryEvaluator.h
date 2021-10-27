@@ -66,6 +66,10 @@ private:
 
     void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
+    // IRes: intermediate result
+    void removeLinkIRes(map<VALUE, VALUE_SET> &iRes,
+                           int thisIdx, int otherIdx);
+
     int getRefIndex(Reference *ref);
 
     // Decides if the program can exit early

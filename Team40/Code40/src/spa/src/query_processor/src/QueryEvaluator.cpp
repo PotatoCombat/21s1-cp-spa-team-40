@@ -265,41 +265,10 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
 
     res1 = result.getResultList1();
     res2 = result.getResultList2();
+
     // remove links in the intermediate res
-    for (auto it = res1.begin(); it != res1.end();) {
-        string sourceVal = it->first;
-        VALUE_SET vals = it->second;
-        bool erased = false;
-        for (string targetVal : vals) {
-            if (!resultTable.hasLinkBetweenValues(ref1Idx, sourceVal, ref2Idx, targetVal)) {
-                res1[sourceVal].erase(targetVal);
-                if (res1[sourceVal].size() == 0) {
-                    it = res1.erase(it);
-                    erased = true;
-                }
-            }
-        }
-        if (!erased) {
-            ++it;
-        }
-    }
-    for (auto it = res2.begin(); it != res2.end();) {
-        string sourceVal = it->first;
-        VALUE_SET vals = it->second;
-        bool erased = false;
-        for (string targetVal : vals) {
-            if (!resultTable.hasLinkBetweenValues(ref2Idx, sourceVal, ref1Idx, targetVal)) {
-                res2[sourceVal].erase(targetVal);
-                if (res2[sourceVal].size() == 0) {
-                    it = res2.erase(it);
-                    erased = true;
-                }
-            }
-        }
-        if (!erased) {
-            ++it;
-        }
-    }
+    removeLinkIRes(res1, ref1Idx, ref2Idx);
+    removeLinkIRes(res2, ref2Idx, ref1Idx);
 
     // remove links in the result table
     vector<string> existingValues = resultTable.getValues(ref1Idx);
@@ -338,6 +307,28 @@ void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
     for (string refValue : resultTable.getValues(ref2Idx)) {
         if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
             resultTable.removeValue(ref2Idx, refValue);
+        }
+    }
+}
+
+void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
+                                    int otherIdx) {
+    for (auto it = iRes.begin(); it != iRes.end();) {
+        string sourceVal = it->first;
+        VALUE_SET vals = it->second;
+        bool erased = false;
+        for (string targetVal : vals) {
+            if (!resultTable.hasLinkBetweenValues(thisIdx, sourceVal, otherIdx,
+                                                  targetVal)) {
+                iRes[sourceVal].erase(targetVal);
+                if (iRes[sourceVal].size() == 0) {
+                    it = iRes.erase(it);
+                    erased = true;
+                }
+            }
+        }
+        if (!erased) {
+            ++it;
         }
     }
 }
