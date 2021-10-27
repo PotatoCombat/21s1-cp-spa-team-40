@@ -80,7 +80,7 @@ void PKB::insertNextBip(Statement *previous, Statement *next) {
     nextTable.insertRelationship(previous->getIndex(), next->getIndex());
 }
 
-void PKB::insertPatternAssign(Statement *stmt) {
+void PKB::insertAssignPattern(Statement *stmt) {
     patternTable.insertAssignPattern(stmt);
 }
 

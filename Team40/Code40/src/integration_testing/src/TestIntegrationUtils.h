@@ -194,12 +194,12 @@ public:
         pkb.insertFollows(stmts[9], stmts[10]);
         pkb.insertFollows(stmts[12], stmts[13]);
 
-        pkb.insertPatternAssign(stmts[2]);
-        pkb.insertPatternAssign(stmts[3]);
-        pkb.insertPatternAssign(stmts[5]);
-        pkb.insertPatternAssign(stmts[6]);
-        pkb.insertPatternAssign(stmts[7]);
-        pkb.insertPatternAssign(stmts[12]);
+        pkb.insertAssignPattern(stmts[2]);
+        pkb.insertAssignPattern(stmts[3]);
+        pkb.insertAssignPattern(stmts[5]);
+        pkb.insertAssignPattern(stmts[6]);
+        pkb.insertAssignPattern(stmts[7]);
+        pkb.insertAssignPattern(stmts[12]);
 
         pkb.insertIfPattern(stmts[8]);
         pkb.insertIfPattern(stmts[14]);

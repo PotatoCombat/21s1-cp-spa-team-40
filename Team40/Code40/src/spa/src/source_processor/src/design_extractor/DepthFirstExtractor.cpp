@@ -66,7 +66,7 @@ void DepthFirstExtractor::extractStatement(Statement *statement) {
 }
 
 void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
-    pkb->insertPatternAssign(assignStatement);
+    pkb->insertAssignPattern(assignStatement);
 
     // Handle LHS
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);

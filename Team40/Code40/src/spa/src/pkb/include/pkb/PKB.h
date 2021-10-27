@@ -133,7 +133,7 @@ public:
      * Stores the pattern a(var, exprList), where a is an ASSIGN statement.
      * @param stmt ASSIGN statement a.
      */
-    virtual void insertPatternAssign(Statement *stmt);
+    virtual void insertAssignPattern(Statement *stmt);
 
     /**
      * Stores the pattern if(var, exprList), where if is an IF statement.
