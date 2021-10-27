@@ -44,9 +44,10 @@ void PKB::insertFollows(Statement *preceding, Statement *following) {
     followsStarTable.updateTransitivity(preceding->getIndex(), following->getIndex());
 }
 
-void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
-    parentTable.insertParent(parentStmt, childStmt);
-    parentStarTable.insertParentStar(parentStmt, childStmt);
+void PKB::insertParent(Statement *parent, Statement *child) {
+    parentTable.insertRelationship(parent->getIndex(), child->getIndex());
+    parentStarTable.insertRelationship(parent->getIndex(), child->getIndex());
+    parentStarTable.updateTransitivity(parent->getIndex(), child->getIndex());
 }
 
 void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
@@ -165,28 +166,28 @@ bool PKB::followsStar(const StmtIndex &preceding, const StmtIndex &following) {
 
 // Parent ======================================================================
 
-StmtIndex PKB::getParentStmt(StmtIndex stmt) {
-    return parentTable.getParentStmt(stmt);
+StmtIndex PKB::getParentStmt(const StmtIndex &stmt) {
+    return parentTable.getFirstLHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getParentStarStmts(StmtIndex stmt) {
-    return parentStarTable.getParentStarStmts(stmt);
+set<StmtIndex> PKB::getParentStarStmts(const StmtIndex &stmt) {
+    return parentStarTable.getLHSRelationships(stmt);
 }
 
-set<StmtIndex> PKB::getChildStmts(StmtIndex stmt) {
-    return parentTable.getChildStmts(stmt);
+set<StmtIndex> PKB::getChildStmts(const StmtIndex &stmt) {
+    return parentTable.getRHSRelationships(stmt);
 }
 
-set<StmtIndex> PKB::getChildStarStmts(StmtIndex stmt) {
-    return parentStarTable.getChildStarStmts(stmt);
+set<StmtIndex> PKB::getChildStarStmts(const StmtIndex &stmt) {
+    return parentStarTable.getRHSRelationships(stmt);
 }
 
-bool PKB::parent(StmtIndex parentStmt, StmtIndex childStmt) {
-    return parentTable.parent(parentStmt, childStmt);
+bool PKB::parent(const StmtIndex &parent, const StmtIndex &child) {
+    return parentTable.isRelationship(parent, child);
 }
 
-bool PKB::parentStar(StmtIndex parentStmt, StmtIndex childStmt) {
-    return parentStarTable.parentStar(parentStmt, childStmt);
+bool PKB::parentStar(const StmtIndex &parent, const StmtIndex &child) {
+    return parentStarTable.isRelationship(parent, child);
 }
 
 // Modifies ====================================================================

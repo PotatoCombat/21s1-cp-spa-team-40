@@ -8,8 +8,6 @@
 #include "ModifiesTable.h"
 #include "NextBipTable.h"
 #include "NextTable.h"
-#include "ParentStarTable.h"
-#include "ParentTable.h"
 #include "PatternTable.h"
 #include "RelationshipTable.h"
 #include "StatementTable.h"
@@ -260,42 +258,42 @@ public:
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getParentStmt(StmtIndex stmt);
+    virtual StmtIndex getParentStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent*(s, stmt).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getParentStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getChildStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getChildStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent*(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getChildStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getChildStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Parent(stmt1, stmt2).
      * @param parent stmt1.
      * @param child stmt2.
      */
-    virtual bool parent(StmtIndex parent, StmtIndex child);
+    virtual bool parent(const StmtIndex &parent, const StmtIndex &child);
 
     /**
      * Selects BOOLEAN such that Parent*(stmt1, stmt2).
      * @param parent stmt1.
      * @param child stmt2.
      */
-    virtual bool parentStar(StmtIndex parentStmt, StmtIndex childStmt);
+    virtual bool parentStar(const StmtIndex &parent, const StmtIndex &child);
 
     // Modifies ================================================================
 
@@ -553,8 +551,8 @@ private:
 
     RelationshipTable<StmtIndex, StmtIndex> followsTable;
     RelationshipTable<StmtIndex, StmtIndex> followsStarTable;
-    ParentTable parentTable;
-    ParentStarTable parentStarTable;
+    RelationshipTable<StmtIndex, StmtIndex> parentTable;
+    RelationshipTable<StmtIndex, StmtIndex> parentStarTable;
     ModifiesTable modifiesTable;
     UsesTable usesTable;
     CallsTable callsTable;
