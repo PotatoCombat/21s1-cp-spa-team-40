@@ -259,56 +259,23 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
 
 void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
     // ref1Idx, ref2Idx should not be INVALID_INDEX
-    map<VALUE, VALUE_SET> res1;
-    map<VALUE, VALUE_SET> res2;
-    vector<pair<int, string>> toRemove;
-
-    res1 = result.getResultList1();
-    res2 = result.getResultList2();
+    map<VALUE, VALUE_SET> res1 = result.getResultList1();
+    map<VALUE, VALUE_SET> res2 = result.getResultList2();
 
     // remove links in the intermediate res
     removeLinkIRes(res1, ref1Idx, ref2Idx);
     removeLinkIRes(res2, ref2Idx, ref1Idx);
 
     // remove links in the result table
-    vector<string> existingValues = resultTable.getValues(ref1Idx);
-    for (string sourceVal : resultTable.getValues(ref1Idx)) {
-        VALUE_SET vals =
-            resultTable.getPointersToIdx(ref1Idx, sourceVal, ref2Idx);
-        for (string targetVal : vals) {
-            bool hasLink = true;
-            if (res1.find(sourceVal) == res1.end()) {
-                hasLink = false;
-            } else if (res1[sourceVal].find(targetVal) ==
-                       res1[sourceVal].end()) {
-                hasLink = false;
-            }
-            if (!hasLink) {
-                resultTable.removeLink(ref1Idx, sourceVal, ref2Idx, targetVal);
-            }
-        }
-    }
+    removeLinkResultTable(res1, ref1Idx, ref2Idx);
+
     // add all
-    for (auto &valueToVals : res1) {
-        resultTable.addValueWithLink(ref1Idx, valueToVals.first, ref2Idx,
-                                     valueToVals.second);
-    }
-    for (auto &valueToVals : res2) {
-        resultTable.addValueWithLink(ref2Idx, valueToVals.first, ref1Idx,
-                                     valueToVals.second);
-    }
+    addIResToResultTable(res1, ref1Idx, ref2Idx);
+    addIResToResultTable(res2, ref2Idx, ref1Idx);
 
     // remove those with no link in the resultTable
-    for (string refValue : resultTable.getValues(ref1Idx)) {
-        if (!resultTable.hasPointerToIdx(ref1Idx, refValue, ref2Idx)) {
-            resultTable.removeValue(ref1Idx, refValue);
-        }
-    }
-    for (string refValue : resultTable.getValues(ref2Idx)) {
-        if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
-            resultTable.removeValue(ref2Idx, refValue);
-        }
-    }
+    removeValuesWithNoLink(ref1Idx, ref2Idx);
+    removeValuesWithNoLink(ref2Idx, ref1Idx);
 }
 
 void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
@@ -329,6 +296,42 @@ void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
         }
         if (!erased) {
             ++it;
+        }
+    }
+}
+
+void QueryEvaluator::removeLinkResultTable(map<VALUE, VALUE_SET> &iRes,
+                                           int thisIdx, int otherIdx) {
+    vector<string> existingValues = resultTable.getValues(thisIdx);
+    for (string sourceVal : resultTable.getValues(thisIdx)) {
+        VALUE_SET vals =
+            resultTable.getPointersToIdx(thisIdx, sourceVal, otherIdx);
+        for (string targetVal : vals) {
+            bool hasLink = true;
+            if (iRes.find(sourceVal) == iRes.end()) {
+                hasLink = false;
+            } else if (iRes[sourceVal].find(targetVal) ==
+                       iRes[sourceVal].end()) {
+                hasLink = false;
+            }
+            if (!hasLink) {
+                resultTable.removeLink(thisIdx, sourceVal, otherIdx, targetVal);
+            }
+        }
+    }
+}
+
+void QueryEvaluator::addIResToResultTable(map<VALUE, VALUE_SET>& iRes, int thisIdx, int otherIdx) {
+    for (auto &valueToVals : iRes) {
+        resultTable.addValueWithLink(thisIdx, valueToVals.first, otherIdx,
+                                     valueToVals.second);
+    }
+}
+
+void QueryEvaluator::removeValuesWithNoLink(int thisIdx, int otherIdx) {
+    for (string refValue : resultTable.getValues(thisIdx)) {
+        if (!resultTable.hasPointerToIdx(thisIdx, refValue, otherIdx)) {
+            resultTable.removeValue(thisIdx, refValue);
         }
     }
 }
