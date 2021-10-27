@@ -55,5 +55,11 @@ TEST_CASE("QueryParser: isValidName") {
 
         invalid = "print 11111;";
         REQUIRE(!ParserUtil::isValidName(invalid));
+
+        invalid = " ";
+        REQUIRE(!ParserUtil::isValidName(invalid));
+
+        invalid = "";
+        REQUIRE(!ParserUtil::isValidName(invalid));
     }
 }

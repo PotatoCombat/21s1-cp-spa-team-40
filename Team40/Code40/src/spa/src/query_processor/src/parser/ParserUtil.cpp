@@ -20,8 +20,9 @@ bool ParserUtil::isInteger(std::string val) {
 }
 
 bool ParserUtil::isQuoted(std::string val) {
+    const int CORRECT_QUOTE_COUNT = 2;
     int c = count(val.begin(), val.end(), '"');
-    if (c != 2) {
+    if (c != CORRECT_QUOTE_COUNT) {
         return false;
     }
 
@@ -41,7 +42,7 @@ bool ParserUtil::isQuoted(std::string val) {
  * @return True if valid, otherwise false.
  */
 bool ParserUtil::isValidName(std::string val) {
-    if (isalpha(val[0])) {
+    if (!val.empty() && isalpha(val[0])) {
         auto it = find_if_not(begin(val), end(val), isalnum);
         if (it == val.end()) {
             return true;
@@ -56,8 +57,9 @@ bool ParserUtil::isValidName(std::string val) {
  * @return true if attrRef, otherwise false.
  */
 bool ParserUtil::isAttrRef(std::string val) {
+    const int CORRECT_PERIOD_COUNT = 1;
     int c = count(val.begin(), val.end(), '.');
-    return c == 1;
+    return c == CORRECT_PERIOD_COUNT;
 }
 
 /**

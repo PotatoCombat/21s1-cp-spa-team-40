@@ -408,8 +408,22 @@ TEST_CASE("QueryPreprocessor: Select BOOLEAN") {
     QueryPreprocessor qp;
     Query q;
 
-    qp.preprocessQuery(SELECT_BOOLEAN, q);
-
+    REQUIRE(qp.preprocessQuery(SELECT_BOOLEAN, q));
     REQUIRE(q.getReturnReferences().empty());
     REQUIRE(q.getClauses().empty());
+}
+
+TEST_CASE("QueryPreprocessor: Invalid query syntax") {
+    const string QUERY = "stmt s; Select s such that";
+    const string QUERY1 = "stmt s; Select s with \"\" = \"a\"";
+    const string QUERY2 = "stmt s; Select BOOLEAN with \"\" = \"a\"";
+    const string QUERY3 = "stmt s; Select <> such that Next*(s, s)";
+
+    QueryPreprocessor qp;
+    Query q;
+
+    REQUIRE_FALSE(qp.preprocessQuery(QUERY, q));
+    REQUIRE_FALSE(qp.preprocessQuery(QUERY1, q));
+    REQUIRE_FALSE(qp.preprocessQuery(QUERY2, q));
+    REQUIRE_FALSE(qp.preprocessQuery(QUERY3, q));
 }
