@@ -22,7 +22,7 @@ bool Procedure::operator==(const Procedure &other) const {
     auto iter = stmtLst.begin();
     auto otherIter = other.stmtLst.begin();
 
-    while (iter != stmtLst.end() && otherIter != stmtLst.end()) {
+    while (iter != stmtLst.end() && otherIter != other.stmtLst.end()) {
         if (*iter != *otherIter) {
             return false;
         }
@@ -30,5 +30,5 @@ bool Procedure::operator==(const Procedure &other) const {
         otherIter++;
     }
 
-    return iter == stmtLst.end() && otherIter == stmtLst.end();
+    return iter == stmtLst.end() && otherIter == other.stmtLst.end();
 }
