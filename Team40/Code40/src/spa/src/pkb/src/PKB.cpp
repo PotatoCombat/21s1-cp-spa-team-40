@@ -1,19 +1,17 @@
 #include "pkb/PKB.h"
 
-#include <utility>
-
 using namespace std;
 
-Procedure *PKB::getProcByName(ProcName procName) {
-    return procTable.getEntity(move(procName));
+Procedure *PKB::getProcByName(const ProcName &procName) {
+    return procTable.getEntity(procName);
 }
 
-Variable *PKB::getVarByName(VarName varName) {
-    return varTable.getEntity(move(varName));
+Variable *PKB::getVarByName(const VarName &varName) {
+    return varTable.getEntity(varName);
 }
 
-ConstantValue *PKB::getConstByName(ConstName constName) {
-    return constTable.getEntity(move(constName));
+ConstantValue *PKB::getConstByName(const ConstName &constName) {
+    return constTable.getEntity(constName);
 }
 
 Statement *PKB::getStmtByIndex(const StmtIndex &stmtIndex) {

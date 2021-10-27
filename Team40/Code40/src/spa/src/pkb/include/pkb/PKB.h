@@ -19,19 +19,19 @@ public:
      * Returns the procedure with the given procedure name.
      * @param procName name of the procedure
      */
-    virtual Procedure *getProcByName(ProcName procName);
+    virtual Procedure *getProcByName(const ProcName &procName);
 
     /**
      * Returns the variable with the given variable name.
      * @param varName name of the variable
      */
-    virtual Variable *getVarByName(VarName varName);
+    virtual Variable *getVarByName(const VarName &varName);
 
     /**
      * Returns the constant value with the given constant name \param .
      * @param constName name of the constant value
      */
-    virtual ConstantValue *getConstByName(ConstName constName);
+    virtual ConstantValue *getConstByName(const ConstName &constName);
 
     /**
      * Returns the statement with the given statement index.
