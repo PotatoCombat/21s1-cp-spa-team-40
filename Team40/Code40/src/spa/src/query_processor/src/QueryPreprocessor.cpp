@@ -58,12 +58,12 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         this->clear();
         return true;
 
-    } catch (SyntaxError se) {
+    } catch (SyntaxError &se) {
         // cout << e.what();
         this->clear();
         return false;
 
-    } catch (ValidityError ve) {
+    } catch (ValidityError &ve) {
         // cout << e.what();
         if (returnBoolean) {
             this->clear();

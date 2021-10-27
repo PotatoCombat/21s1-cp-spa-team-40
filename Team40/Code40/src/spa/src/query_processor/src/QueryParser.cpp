@@ -15,7 +15,7 @@ void QueryParser::clearDeclarations() {
 }
 
 /**
- * Parses declared synonyms and store them inside parser.
+ * Parses declared synonyms and stores them inside parser.
  * @param declPairs Pairs of declarations as <type, synonym>.
  */
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
