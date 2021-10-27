@@ -13,6 +13,8 @@
 
 using namespace std;
 
+typedef pair<int, int> GRP_IDX_GRP_SIZE;
+
 class QueryOptimizer {
 private:
     static const int INVALID_IDX = -1;
@@ -21,14 +23,14 @@ private:
                                              map<string, int> &refToGroup);
 
     static vector<int> updateGroupSize(Clause *cls,
-                                       vector<pair<int, int>> &groupSizes,
+                                       vector<GRP_IDX_GRP_SIZE> &groups,
                                        map<string, int> &refToGroup);
 
     static void mergeTwoGroups(int newGroupIdx, int idx1, int idx2, Clause *cls,
                                map<string, int> &refToGroup);
 
     static vector<Clause *> reorderClause(vector<Clause *> &unsortedClauses,
-                                          vector<pair<int, int>> &groupSizes,
+                                          vector<GRP_IDX_GRP_SIZE> &groups,
                                           map<string, int> &refToGroup);
     
     static void populateNewQueryObject(vector<Clause *> sortedClauses, Query &before, Query &after);
