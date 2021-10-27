@@ -3,8 +3,6 @@
 #include "ConditionTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
-#include "NextBipTable.h"
-#include "NextTable.h"
 #include "PatternTable.h"
 #include "RelationshipTable.h"
 #include "StatementTable.h"
@@ -430,21 +428,21 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getNextLines(ProgLineIndex line);
+    virtual set<StmtIndex> getNextLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that Next(s, line).
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPreviousLines(ProgLineIndex line);
+    virtual set<StmtIndex> getPreviousLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that Next(line1, line2).
      * @param previous line1.
      * @param next line2.
      */
-    virtual bool next(ProgLineIndex previous, ProgLineIndex next);
+    virtual bool next(const ProgLineIndex &previous, const ProgLineIndex &next);
 
     // NextBip ===============================================================
 
@@ -453,21 +451,21 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getNextBipLines(ProgLineIndex line);
+    virtual set<StmtIndex> getNextBipLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that NextBip(s, line).
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPreviousBipLines(ProgLineIndex line);
+    virtual set<StmtIndex> getPreviousBipLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that NextBip(line1, line2).
      * @param previous line1.
      * @param next line2.
      */
-    virtual bool nextBip(ProgLineIndex previous, ProgLineIndex next);
+    virtual bool nextBip(const ProgLineIndex &previous, const ProgLineIndex &next);
 
     // Pattern =================================================================
 
@@ -555,8 +553,8 @@ private:
     RelationshipTable<StmtIndex, VarName> usesStmtTable;
     RelationshipTable<ProcName, ProcName> callsTable;
     RelationshipTable<ProcName, ProcName> callsStarTable;
-    NextTable nextTable;
-    NextBipTable nextBipTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> nextTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> nextBipTable;
     PatternTable patternTable;
     ConditionTable conditionTable;
 };

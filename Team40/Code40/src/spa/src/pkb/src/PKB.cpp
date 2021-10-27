@@ -72,12 +72,12 @@ void PKB::insertCalls(Procedure *proc, const ProcName &called) {
     callsStarTable.updateTransitivity(proc->getName(), called);
 }
 
-void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
-    nextTable.insertNext(previousStmt, nextStmt);
+void PKB::insertNext(Statement *previous, Statement *next) {
+    nextTable.insertRelationship(previous->getIndex(), next->getIndex());
 }
 
-void PKB::insertNextBip(Statement *previousStmt, Statement *nextStmt) {
-    nextBipTable.insertNextBip(previousStmt, nextStmt);
+void PKB::insertNextBip(Statement *previous, Statement *next) {
+    nextTable.insertRelationship(previous->getIndex(), next->getIndex());
 }
 
 void PKB::insertPatternAssign(Statement *stmt) {
@@ -271,30 +271,30 @@ bool PKB::callsStar(const ProcName &caller, const ProcName &called) {
 
 // Next ========================================================================
 
-set<StmtIndex> PKB::getNextLines(ProgLineIndex line) {
-    return nextTable.getNextLines(line);
+set<StmtIndex> PKB::getNextLines(const ProgLineIndex &line) {
+    return nextTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getPreviousLines(ProgLineIndex line) {
-    return nextTable.getPreviousLines(line);
+set<StmtIndex> PKB::getPreviousLines(const ProgLineIndex &line) {
+    return nextTable.getLHSRelationships(line);
 }
 
-bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
-    return nextTable.next(previousLine, nextLine);
+bool PKB::next(const ProgLineIndex &previousLine, const ProgLineIndex &nextLine) {
+    return nextTable.isRelationship(previousLine, nextLine);
 }
 
 // NextBip =====================================================================
 
-set<StmtIndex> PKB::getNextBipLines(ProgLineIndex line) {
-    return nextBipTable.getNextBipLines(line);
+set<StmtIndex> PKB::getNextBipLines(const ProgLineIndex &line) {
+    return nextBipTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getPreviousBipLines(ProgLineIndex line) {
-    return nextBipTable.getPreviousBipLines(line);
+set<StmtIndex> PKB::getPreviousBipLines(const ProgLineIndex &line) {
+    return nextBipTable.getLHSRelationships(line);
 }
 
-bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
-    return nextBipTable.nextBip(previousLine, nextLine);
+bool PKB::nextBip(const ProgLineIndex &previousLine, const ProgLineIndex &nextLine) {
+    return nextBipTable.isRelationship(previousLine, nextLine);
 }
 
 // Pattern =====================================================================
