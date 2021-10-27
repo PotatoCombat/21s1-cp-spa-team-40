@@ -677,8 +677,8 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
 
         wit.clear();
-        input = "with \" something else \" = \" a \"";
-        expected = vector<WithPair>{make_pair("\"something else\"", "\"a\"")};
+        input = "with \" something3lse \" = \" a \"";
+        expected = vector<WithPair>{make_pair("\"something3lse\"", "\"a\"")};
         tokenizer.tokenizeClauses(input, rel, pat, wit);
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
@@ -837,5 +837,49 @@ TEST_CASE("QueryTokenizer: tokenizePattern") {
 
         REQUIRE_THROWS_AS(tokenizer.tokenizePattern(P_EMPTY_1), SyntaxError);
         REQUIRE_THROWS_AS(tokenizer.tokenizePattern(P_EMPTY_2), SyntaxError);
+    }
+}
+
+TEST_CASE("QueryTokenizer: syntax error checking") {
+    QueryTokenizer tokenizer;
+    string remaining = "";
+    vector<ClsTuple> rel;
+    vector<PatTuple> pat;
+    vector<WithPair> wit;
+
+    SECTION("FAIL: empty tuple") {
+        string q = "Select <>";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeReturnSynonyms(q, remaining),
+                          SyntaxError);
+    }
+
+    SECTION("FAIL: empty with arguments") {
+        string q = "with \" \" = n";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "with n = \" \"";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "with n = .";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "with . = n";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+    }
+
+    SECTION("FAIL: empty quoted strings in such that clauses") {
+        string q = "such that Modifies(\"  \", \" y \")";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "such that Modifies(\" x \", \"  \")";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+    }
+
+    SECTION("FAIL: empty quoted strings in pattern clauses") {
+        string q = "pattern a(\"  \", _)";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
     }
 }
