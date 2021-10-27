@@ -10,7 +10,7 @@ void WithParser::clear() {
 }
 
 /**
- * Parse a WithPair into a Clause object.
+ * Parses a WithPair into a Clause object.
  * @param withPair Pair of <ref, ref>.
  * @return Clause object of type WITH.
  */
