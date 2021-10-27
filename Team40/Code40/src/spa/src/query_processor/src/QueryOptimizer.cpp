@@ -13,7 +13,6 @@ void QueryOptimizer::optimize(Query& before, Query& after) {
     // form groups
     vector<GRP_IDX_SIZE> groups = formGroups(unsortedClauses, refToGroup);
 
-
     // sort groups by ascending group size
     sort(groups.begin(), groups.end(), 
         [](const GRP_IDX_SIZE &a, const GRP_IDX_SIZE &b) {
