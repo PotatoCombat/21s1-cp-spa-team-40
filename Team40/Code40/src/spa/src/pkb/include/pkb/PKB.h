@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CallsStarTable.h"
-#include "CallsTable.h"
 #include "ConditionTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
@@ -117,7 +115,7 @@ public:
      * @param proc where proc1 == proc.procName.
      * @param called proc2.
      */
-    virtual void insertCalls(Procedure *proc, ProcName called);
+    virtual void insertCalls(Procedure *proc, const ProcName &called);
 
     /**
      * Stores the relationship Next(stmt1, stmt2).
@@ -388,42 +386,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCalledProcs(ProcName caller);
+    virtual set<ProcName> getCalledProcs(const ProcName &caller);
 
     /**
      * Selects p such that Calls*(caller, p).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCalledStarProcs(ProcName caller);
+    virtual set<ProcName> getCalledStarProcs(const ProcName &caller);
 
     /**
      * Selects p such that Calls(p, called).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCallerProcs(ProcName called);
+    virtual set<ProcName> getCallerProcs(const ProcName &called);
 
     /**
      * Selects p such that Calls*(p, called).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCallerStarProcs(ProcName called);
+    virtual set<ProcName> getCallerStarProcs(const ProcName &called);
 
     /**
      * Selects BOOLEAN such that Calls(p1, p2).
      * @param caller p1.
      * @param called p2.
      */
-    virtual bool calls(ProcName caller, ProcName called);
+    virtual bool calls(const ProcName &caller, const ProcName &called);
 
     /**
      * Selects BOOLEAN such that Calls*(p1, p2).
      * @param caller p1.
      * @param called p2.
      */
-    virtual bool callsStar(ProcName caller, ProcName called);
+    virtual bool callsStar(const ProcName &caller, const ProcName &called);
 
     // Next ==================================================================
 
@@ -555,8 +553,8 @@ private:
     RelationshipTable<StmtIndex, VarName> modifiesStmtTable;
     RelationshipTable<ProcName, VarName> usesProcTable;
     RelationshipTable<StmtIndex, VarName> usesStmtTable;
-    CallsTable callsTable;
-    CallsStarTable callsStarTable;
+    RelationshipTable<ProcName, ProcName> callsTable;
+    RelationshipTable<ProcName, ProcName> callsStarTable;
     NextTable nextTable;
     NextBipTable nextBipTable;
     PatternTable patternTable;

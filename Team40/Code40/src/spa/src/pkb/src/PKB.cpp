@@ -66,9 +66,10 @@ void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
     usesStmtTable.insertRelationship(stmt->getIndex(), var->getName());
 }
 
-void PKB::insertCalls(Procedure *proc, ProcName called) {
-    callsTable.insertCalls(proc, called);
-    callsStarTable.insertCallsStar(proc, called);
+void PKB::insertCalls(Procedure *proc, const ProcName &called) {
+    callsTable.insertRelationship(proc->getName(), called);
+    callsStarTable.insertRelationship(proc->getName(), called);
+    callsStarTable.updateTransitivity(proc->getName(), called);
 }
 
 void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
@@ -244,28 +245,28 @@ bool PKB::stmtUses(const StmtIndex &stmt, const VarName &var) {
 
 // Calls =======================================================================
 
-set<ProcName> PKB::getCalledProcs(ProcName caller) {
-    return callsTable.getCalledProcs(caller);
+set<ProcName> PKB::getCalledProcs(const ProcName &caller) {
+    return callsTable.getRHSRelationships(caller);
 }
 
-set<ProcName> PKB::getCalledStarProcs(ProcName caller) {
-    return callsStarTable.getCalledStarProcs(caller);
+set<ProcName> PKB::getCalledStarProcs(const ProcName &caller) {
+    return callsStarTable.getRHSRelationships(caller);
 }
 
-set<ProcName> PKB::getCallerProcs(ProcName called) {
-    return callsTable.getCallerProcs(called);
+set<ProcName> PKB::getCallerProcs(const ProcName &called) {
+    return callsTable.getLHSRelationships(called);
 }
 
-set<ProcName> PKB::getCallerStarProcs(ProcName called) {
-    return callsStarTable.getCallerStarProcs(called);
+set<ProcName> PKB::getCallerStarProcs(const ProcName &called) {
+    return callsStarTable.getLHSRelationships(called);
 }
 
-bool PKB::calls(ProcName caller, ProcName called) {
-    return callsTable.calls(caller, called);
+bool PKB::calls(const ProcName &caller, const ProcName &called) {
+    return callsTable.isRelationship(caller, called);
 }
 
-bool PKB::callsStar(ProcName caller, ProcName called) {
-    return callsStarTable.callsStar(caller, called);
+bool PKB::callsStar(const ProcName &caller, const ProcName &called) {
+    return callsStarTable.isRelationship(caller, called);
 }
 
 // Next ========================================================================
