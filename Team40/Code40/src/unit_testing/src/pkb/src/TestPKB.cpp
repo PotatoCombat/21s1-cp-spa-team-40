@@ -65,7 +65,7 @@ TEST_CASE("PKB: insertVar/getAllVars") {
 
     REQUIRE(actual.size() == vars.size());
     for (auto &v : vars) {
-        REQUIRE(matches.count(v.getName()) == 1);
+        REQUIRE(matches.count(v.getId()) == 1);
     }
 }
 
@@ -82,7 +82,7 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
 
     REQUIRE(actual.size() == constants.size());
     for (auto &c : constants) {
-        REQUIRE(matches.count(c.getName()) == 1);
+        REQUIRE(matches.count(c.getId()) == 1);
     }
 }
 
@@ -99,7 +99,7 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
 
     REQUIRE(actual.size() == procs.size());
     for (auto &p : procs) {
-        REQUIRE(matches.count(p.getName()) == 1);
+        REQUIRE(matches.count(p.getId()) == 1);
     }
 }
 
@@ -116,7 +116,7 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
 
     REQUIRE(actual.size() == stmts.size());
     for (auto &s : stmts) {
-        REQUIRE(matches.count(s.getIndex()) == 1);
+        REQUIRE(matches.count(s.getId()) == 1);
     }
 }
 

@@ -37,50 +37,50 @@ void PKB::insertStmt(Statement *statement) {
 }
 
 void PKB::insertFollows(Statement *preceding, Statement *following) {
-    followsTable.insertRelationship(preceding->getIndex(), following->getIndex());
-    followsStarTable.insertRelationship(preceding->getIndex(), following->getIndex());
-    followsStarTable.updateTransitivity(preceding->getIndex(), following->getIndex());
+    followsTable.insertRelationship(preceding->getId(), following->getId());
+    followsStarTable.insertRelationship(preceding->getId(), following->getId());
+    followsStarTable.updateTransitivity(preceding->getId(), following->getId());
 }
 
 void PKB::insertParent(Statement *parent, Statement *child) {
-    parentTable.insertRelationship(parent->getIndex(), child->getIndex());
-    parentStarTable.insertRelationship(parent->getIndex(), child->getIndex());
-    parentStarTable.updateTransitivity(parent->getIndex(), child->getIndex());
+    parentTable.insertRelationship(parent->getId(), child->getId());
+    parentStarTable.insertRelationship(parent->getId(), child->getId());
+    parentStarTable.updateTransitivity(parent->getId(), child->getId());
 }
 
 void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
-    modifiesProcTable.insertRelationship(proc->getName(), var->getName());
+    modifiesProcTable.insertRelationship(proc->getId(), var->getId());
 }
 
 void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
-    modifiesStmtTable.insertRelationship(stmt->getIndex(), var->getName());
+    modifiesStmtTable.insertRelationship(stmt->getId(), var->getId());
 }
 
 void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
-    usesProcTable.insertRelationship(proc->getName(), var->getName());
+    usesProcTable.insertRelationship(proc->getId(), var->getId());
 }
 
 void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
-    usesStmtTable.insertRelationship(stmt->getIndex(), var->getName());
+    usesStmtTable.insertRelationship(stmt->getId(), var->getId());
 }
 
 void PKB::insertCalls(Procedure *proc, const ProcName &called) {
-    callsTable.insertRelationship(proc->getName(), called);
-    callsStarTable.insertRelationship(proc->getName(), called);
-    callsStarTable.updateTransitivity(proc->getName(), called);
+    callsTable.insertRelationship(proc->getId(), called);
+    callsStarTable.insertRelationship(proc->getId(), called);
+    callsStarTable.updateTransitivity(proc->getId(), called);
 }
 
 void PKB::insertNext(Statement *previous, Statement *next) {
-    nextTable.insertRelationship(previous->getIndex(), next->getIndex());
+    nextTable.insertRelationship(previous->getId(), next->getId());
 }
 
 void PKB::insertNextBip(Statement *previous, Statement *next) {
-    nextTable.insertRelationship(previous->getIndex(), next->getIndex());
+    nextTable.insertRelationship(previous->getId(), next->getId());
 }
 
 void PKB::insertAssignPattern(Statement *stmt) {
-    StmtIndex stmtIndex = stmt->getIndex();
-    VarName varName = stmt->getVariable()->getName();
+    StmtIndex stmtIndex = stmt->getId();
+    VarName varName = stmt->getVariable()->getId();
 
     PostfixAdapter postfix = PostfixAdapter(stmt->getExpressionLst());
     set<string> partialPatterns = postfix.createPartialPatterns();
@@ -105,13 +105,13 @@ void PKB::insertAssignPattern(Statement *stmt) {
 
 void PKB::insertIfPattern(Statement *stmt) {
     for (auto &var : stmt->getExpressionVars()) {
-        ifPatternTable.insertRelationship(stmt->getIndex(), var->getName());
+        ifPatternTable.insertRelationship(stmt->getId(), var->getId());
     }
 }
 
 void PKB::insertWhilePattern(Statement *stmt) {
     for (auto &var : stmt->getExpressionVars()) {
-        whilePatternTable.insertRelationship(stmt->getIndex(), var->getName());
+        whilePatternTable.insertRelationship(stmt->getId(), var->getId());
     }
 }
 
@@ -119,11 +119,11 @@ void PKB::insertWhilePattern(Statement *stmt) {
 // Query Processor
 // =============================================================================
 
-Iterator<ProcName> PKB::getAllProcs() { return procTable.getNames(); }
+Iterator<ProcName> PKB::getAllProcs() { return procTable.getIds(); }
 
-Iterator<VarName> PKB::getAllVars() { return varTable.getNames(); }
+Iterator<VarName> PKB::getAllVars() { return varTable.getIds(); }
 
-Iterator<ConstName> PKB::getAllConsts() { return constTable.getNames(); }
+Iterator<ConstName> PKB::getAllConsts() { return constTable.getIds(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
@@ -141,7 +141,7 @@ VarName PKB::getPrintVariable(const StmtIndex &printStmt) {
         throw runtime_error(
             "This statement number does not refer to a print statement.");
     }
-    return stmt->getVariable()->getName();
+    return stmt->getVariable()->getId();
 }
 
 VarName PKB::getReadVariable(const StmtIndex &readStmt) {
@@ -150,7 +150,7 @@ VarName PKB::getReadVariable(const StmtIndex &readStmt) {
         throw runtime_error(
             "This statement number does not refer to a read statement.");
     }
-    return stmt->getVariable()->getName();
+    return stmt->getVariable()->getId();
 }
 
 ProcName PKB::getCallProcedure(const StmtIndex &callStmt) {

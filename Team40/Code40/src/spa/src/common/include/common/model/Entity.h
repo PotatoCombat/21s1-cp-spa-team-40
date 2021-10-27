@@ -2,15 +2,15 @@
 
 using namespace std;
 
-template <typename Name>
+template <typename Id>
 class Entity {
 public:
-    Name getName() {
-        return name;
+    Id getId() {
+        return id;
     }
 
 protected:
-    Name name;
+    Id id;
 
-    explicit Entity(Name name) : name(name) { };
+    explicit Entity(Id id) : id(id) { };
 };

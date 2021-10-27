@@ -11,7 +11,7 @@ void DepthFirstExtractor::extract(Program *program) {
 
 void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
-    if (pkb->getProcByName(procedure->getName()) != nullptr) {
+    if (pkb->getProcByName(procedure->getId()) != nullptr) {
         throw runtime_error("Encountered a Procedure with a duplicate name.");
     };
     pkb->insertProc(procedure);
@@ -96,7 +96,7 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
         throw runtime_error("Current procedure not set.");
     }
     ExtractionContext::getInstance().registerProcDependency(
-        currentProcedure.value()->getName(), calledProcName);
+        currentProcedure.value()->getId(), calledProcName);
     ExtractionContext::getInstance().setPreviousStatement(callStatement);
 }
 
@@ -107,7 +107,7 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     auto variables = ifStatement->getExpressionVars();
     auto constantValues = ifStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
-        throw runtime_error(to_string(ifStatement->getIndex()) +
+        throw runtime_error(to_string(ifStatement->getId()) +
                             ": IfStatement is missing cond_expr.");
     }
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
@@ -187,7 +187,7 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     auto variables = whileStatement->getExpressionVars();
     auto constantValues = whileStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
-        throw runtime_error(to_string(whileStatement->getIndex()) +
+        throw runtime_error(to_string(whileStatement->getId()) +
                             ": WhileStatement is missing cond_expr.");
     }
     ExtractionContext::getInstance().setUsingStatement(whileStatement);

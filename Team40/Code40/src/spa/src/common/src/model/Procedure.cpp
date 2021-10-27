@@ -11,11 +11,11 @@ void Procedure::addToStmtLst(Statement *stmt) { this->stmtLst.push_back(stmt); }
 vector<Statement *> Procedure::getStmtLst() { return this->stmtLst; }
 
 bool Procedure::operator<(const Procedure &other) const {
-    return name < other.name;
+    return id < other.id;
 }
 
 bool Procedure::operator==(const Procedure &other) const {
-    if (name != other.name) {
+    if (id != other.id) {
         return false;
     }
 

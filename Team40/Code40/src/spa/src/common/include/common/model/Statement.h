@@ -11,11 +11,10 @@
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
-class Statement {
+class Statement : public Entity<StmtIndex> {
 public:
-    Statement(int index, StatementType statementType);
+    Statement(StmtIndex index, StatementType statementType);
 
-    int getIndex();
     StatementType getStatementType();
 
     Variable *getVariable();
@@ -41,7 +40,6 @@ public:
     bool operator==(const Statement &other) const;
 
 private:
-    int index;
     StatementType statementType;
 
     optional<Variable *> variable;

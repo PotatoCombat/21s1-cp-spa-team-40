@@ -7,7 +7,7 @@ void BreadthFirstExtractor::extract(Program *program) {
 
     unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
-        procMap[procedure->getName()] = procedure;
+        procMap[procedure->getId()] = procedure;
     }
     vector<ProcName> sortedProcNames =
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
@@ -77,7 +77,7 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     ProcName calleeName = callStatement->getProcName();
     if (pkb->getProcByName(calleeName) == nullptr) {
         throw runtime_error("Trying to call a non-existent procedure at line " +
-                            to_string(callStatement->getIndex()));
+                            to_string(callStatement->getId()));
     }
 
     // Extract Calls(proc, proc) relationship
@@ -92,7 +92,7 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         pkb->insertStmtModifyingVar(callStatement, modifiedVar);
         // If Modifies(stmt, var) then Modifies(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
-             pkb->getParentStarStmts(callStatement->getIndex())) {
+             pkb->getParentStarStmts(callStatement->getId())) {
             pkb->insertStmtModifyingVar(
                 pkb->getStmtByIndex(parentStarStatement), modifiedVar);
         }
@@ -107,7 +107,7 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         pkb->insertStmtUsingVar(callStatement, usedVar);
         // If Uses(stmt, var) then Uses(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
-             pkb->getParentStarStmts(callStatement->getIndex())) {
+             pkb->getParentStarStmts(callStatement->getId())) {
             pkb->insertStmtUsingVar(pkb->getStmtByIndex(parentStarStatement),
                                     usedVar);
         }

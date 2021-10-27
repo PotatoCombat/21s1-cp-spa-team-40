@@ -11,9 +11,9 @@
 
 using namespace std;
 
-template <typename T, typename Name>
+template <typename T, typename Id>
 class EntityTable {
-    static_assert(is_convertible<T, Entity<Name>>::value,
+    static_assert(is_convertible<T, Entity<Id>>::value,
             "Cannot use table with an invalid entity type");
 
 public:
@@ -23,8 +23,8 @@ public:
      */
     virtual void insert(T *entity) {
         size++;
-        names.insert(entity->getName());
-        nameToEntities[entity->getName()] = entity;
+        ids.insert(entity->getId());
+        idToEntities[entity->getId()] = entity;
     }
 
     /**
@@ -33,9 +33,9 @@ public:
      * @returns the statement with the given index,
      *          or InvalidEntity if none exist.
      */
-    virtual T *getEntity(const Name &name) {
-        auto key = nameToEntities.find(name);
-        if (key == nameToEntities.end()) {
+    virtual T *getEntity(const Id &id) {
+        auto key = idToEntities.find(id);
+        if (key == idToEntities.end()) {
             return nullptr;
         }
         return key->second;
@@ -44,7 +44,7 @@ public:
     /**
      * Returns a list of entity names in the table.
      */
-    virtual Iterator<Name> getNames() { return Iterator<Name>(names); }
+    virtual Iterator<Id> getIds() { return Iterator<Id>(ids); }
 
     /**
      * Returns the number of entities stored in the table.
@@ -53,6 +53,6 @@ public:
 
 private:
     size_t size = 0;
-    set<Name> names;
-    map<Name, T *> nameToEntities;
+    set<Id> ids;
+    map<Id, T *> idToEntities;
 };

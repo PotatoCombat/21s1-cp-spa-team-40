@@ -9,8 +9,8 @@ void StatementTable::insert(Statement *stmt) {
     }
     size++;
     statements.push_back(stmt);
-    indices.push_back(stmt->getIndex());
-    indicesByType[stmt->getStatementType()].push_back(stmt->getIndex());
+    indices.push_back(stmt->getId());
+    indicesByType[stmt->getStatementType()].push_back(stmt->getId());
 }
 
 Statement *StatementTable::getStmt(const StmtIndex &index) {

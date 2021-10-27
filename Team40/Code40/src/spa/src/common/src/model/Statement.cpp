@@ -1,13 +1,12 @@
 #include "common/model/Statement.h"
 
-Statement::Statement(int index, StatementType statementType) {
-    this->index = index;
+Statement::Statement(StmtIndex index, StatementType statementType)
+    : Entity<StmtIndex>(index) {
+
     this->statementType = statementType;
     this->expressionVars = {};
     this->expressionConsts = {};
 }
-
-int Statement::getIndex() { return index; }
 
 StatementType Statement::getStatementType() { return statementType; }
 
@@ -83,7 +82,7 @@ void Statement::addElseStmt(Statement *stmt) {
 }
 
 bool Statement::operator==(const Statement &other) const {
-    bool sameIndex = index == other.index;
+    bool sameIndex = id == other.id;
     bool sameType = statementType == other.statementType;
 
     bool sameVar = variable.has_value() == other.variable.has_value();

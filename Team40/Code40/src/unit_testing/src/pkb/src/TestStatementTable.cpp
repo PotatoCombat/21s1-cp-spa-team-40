@@ -34,9 +34,9 @@ TEST_CASE("StatementTable") {
     // Check Size
     REQUIRE(table.getSize() == items.size());
 
-    REQUIRE(*table.getStmt(items[0].getIndex()) == items[0]);
-    REQUIRE(*table.getStmt(items[1].getIndex()) == items[1]);
-    REQUIRE(*table.getStmt(items[2].getIndex()) == items[2]);
+    REQUIRE(*table.getStmt(items[0].getId()) == items[0]);
+    REQUIRE(*table.getStmt(items[1].getId()) == items[1]);
+    REQUIRE(*table.getStmt(items[2].getId()) == items[2]);
 
     // Check NONE References
     REQUIRE(table.getStmt(4) == nullptr);
@@ -46,7 +46,7 @@ TEST_CASE("StatementTable") {
     REQUIRE(items.size() == indices.size());
 
     // TODO: Will fix after replacing Iterator with set
-    REQUIRE(count(indices.begin(), indices.end(), items[0].getIndex()) == 1);
-    REQUIRE(count(indices.begin(), indices.end(), items[1].getIndex()) == 1);
-    REQUIRE(count(indices.begin(), indices.end(), items[2].getIndex()) == 1);
+    REQUIRE(count(indices.begin(), indices.end(), items[0].getId()) == 1);
+    REQUIRE(count(indices.begin(), indices.end(), items[1].getId()) == 1);
+    REQUIRE(count(indices.begin(), indices.end(), items[2].getId()) == 1);
 }

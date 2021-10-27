@@ -13,11 +13,11 @@ public:
     explicit TestEntity(string name) : Entity<string>(move(name)) { };
 
     bool operator<(const TestEntity &other) const {
-        return name < other.name;
+        return id < other.id;
     }
 
     bool operator==(const TestEntity &other) const {
-        return name == other.name;
+        return id == other.id;
     }
 };
 
@@ -48,19 +48,19 @@ TEST_CASE("EntityTable") {
     // Check Size
     REQUIRE(table.getSize() == items.size());
 
-    REQUIRE(*table.getEntity(items[0].getName()) == items[0]);
-    REQUIRE(*table.getEntity(items[1].getName()) == items[1]);
-    REQUIRE(*table.getEntity(items[2].getName()) == items[2]);
+    REQUIRE(*table.getEntity(items[0].getId()) == items[0]);
+    REQUIRE(*table.getEntity(items[1].getId()) == items[1]);
+    REQUIRE(*table.getEntity(items[2].getId()) == items[2]);
 
     // Check NONE References
     REQUIRE(table.getEntity("bye") == nullptr);
 
     // Check Names
-    vector<string> names = table.getNames().asVector();
+    vector<string> names = table.getIds().asVector();
     REQUIRE(items.size() == names.size());
 
     // TODO: Will fix after replacing Iterator with set
-    REQUIRE(count(names.begin(), names.end(), items[0].getName()) == 1);
-    REQUIRE(count(names.begin(), names.end(), items[1].getName()) == 1);
-    REQUIRE(count(names.begin(), names.end(), items[2].getName()) == 1);
+    REQUIRE(count(names.begin(), names.end(), items[0].getId()) == 1);
+    REQUIRE(count(names.begin(), names.end(), items[1].getId()) == 1);
+    REQUIRE(count(names.begin(), names.end(), items[2].getId()) == 1);
 }
