@@ -37,7 +37,7 @@ Reference *WithParser::parseReference(string ref) {
     bool isAttrRef = ParserUtil::isAttrRef(ref);
 
     if (isAttrRef) {
-        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        AttrRef attrRef = ParserUtil::splitAttrRef(ref);
         syn = attrRef.first;
         attrStr = attrRef.second;
     }

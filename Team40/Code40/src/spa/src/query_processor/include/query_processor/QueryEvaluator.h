@@ -66,13 +66,23 @@ private:
 
     void combineTwoSyn(Result result, int ref1Idx, int ref2Idx);
 
+    void removeLinkIRes(map<VALUE, VALUE_SET> &iRes,
+                           int thisIdx, int otherIdx);
+
+    void removeLinkResultTable(map<VALUE, VALUE_SET> &iRes, int thisIdx,
+                               int otherIdx);
+
+    void addIResToResultTable(map<VALUE, VALUE_SET> &iRes, int thisIdx, int otherIdx);
+
+    void removeValuesWithNoLink(int thisIdx, int otherIdx);
+
     int getRefIndex(Reference *ref);
 
     // Decides if the program can exit early
     // based on the state of the current resultTable at idx1 and idx2
     bool canExitEarly(int idx1, int idx2);
 
-    // Convert return results based on the return ref's attribute
+    // Converts return results based on the return ref's attribute
     vector<vector<string>> handleAttr(vector<vector<string>> input);
 
 public:
