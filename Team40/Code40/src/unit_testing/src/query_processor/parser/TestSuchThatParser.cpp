@@ -8,6 +8,7 @@ struct TestSuchThatParser {
     static Reference DECLARED_ASSIGN;
     static Reference DECLARED_VARIABLE;
     static Reference DECLARED_PROCEDURE;
+    static Reference DECLARED_PROG_LINE;
     static Reference WILDCARD_STMT;
     static Reference WILDCARD_VARIABLE;
     static Reference WILDCARD_PROCEDURE;
@@ -31,6 +32,8 @@ Reference TestSuchThatParser::DECLARED_VARIABLE = Reference(
     DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "foodVariable");
 Reference TestSuchThatParser::DECLARED_PROCEDURE =
     Reference(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM, "PROCEDURE");
+Reference TestSuchThatParser::DECLARED_PROG_LINE =
+    Reference(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM, "n");
 Reference TestSuchThatParser::WILDCARD_STMT =
     Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
 Reference TestSuchThatParser::WILDCARD_VARIABLE =
@@ -47,7 +50,8 @@ Reference TestSuchThatParser::CONSTANT_PROCEDURE = Reference(
     DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "procedur3");
 
 vector<Reference *> TestSuchThatParser::DECLARATIONS = {
-    &DECLARED_STMT, &DECLARED_ASSIGN, &DECLARED_VARIABLE, &DECLARED_PROCEDURE};
+    &DECLARED_STMT, &DECLARED_ASSIGN, &DECLARED_VARIABLE, &DECLARED_PROCEDURE,
+    &DECLARED_PROG_LINE};
 
 Clause *TestSuchThatParser::createParent(Reference r1, Reference r2) {
     return new Clause(ClauseType::PARENT, r1, r2);
@@ -581,6 +585,18 @@ TEST_CASE("SuchThatParser: parse affects clause - valid arguments") {
             TestSuchThatParser::DECLARED_ASSIGN,
             TestSuchThatParser::DECLARED_ASSIGN);
         ClsTuple tup = make_tuple("Affects", "a", "a");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(expected->equals(*actual));
+        delete expected, actual;
+    }
+
+    SECTION("test prog_line/prog_line") {
+        Reference resultProgLine =
+            Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "n");
+        Clause *expected =
+            TestSuchThatParser::createAffects(resultProgLine, resultProgLine);
+        ClsTuple tup = make_tuple("Affects", "n", "n");
         Clause *actual = p.parse(tup);
 
         REQUIRE(expected->equals(*actual));
