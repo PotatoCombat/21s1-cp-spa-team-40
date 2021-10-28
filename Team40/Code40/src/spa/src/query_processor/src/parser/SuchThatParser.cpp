@@ -213,18 +213,27 @@ Clause *SuchThatParser::parseUses() {
 
 Reference *SuchThatParser::parseAssignRef(string syn) {
     // syn:  ASSIGN | INTEGER | WILDCARD
-
-    Reference *ref = parseStmtRef(syn);
-
-    if (ref == nullptr) {
+    if (ParserUtil::isQuoted(syn)) {
         return nullptr;
     }
 
-    if (ref->getRefType() == ReferenceType::SYNONYM &&
-        ref->getDeType() != DesignEntityType::ASSIGN) {
-        delete ref;
-        return nullptr;
+    Reference *r = getReferenceIfDeclared(syn);
+    if (r != nullptr) {
+        DesignEntityType deType = r->getDeType();
+        if (deType != DesignEntityType::ASSIGN &&
+            deType != DesignEntityType::PROG_LINE && 
+            deType != DesignEntityType::STMT) {
+            return nullptr;
+        }
+
+        if (deType == DesignEntityType::PROG_LINE) {
+            deType = DesignEntityType::STMT;
+        }
+        return new Reference(deType, r->getRefType(), syn, r->getAttr());
     }
 
-    return ref;
+    DesignEntityType deType = DesignEntityType::STMT;
+    ReferenceType refType = ParserUtil::checkRefType(syn);
+    ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+    return new Reference(deType, refType, syn, attr);
 }
