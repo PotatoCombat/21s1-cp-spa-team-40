@@ -453,3 +453,18 @@ stmt s;
 Select s such that NextBip(18, s)
 
 5000
+92 - next before proc
+stmt s;
+Select s such that NextBip(s, 24)
+
+5000
+93 - next before proc
+stmt s;
+Select s such that NextBip(s, 21)
+
+5000
+93 - next before proc
+stmt s;
+Select s such that NextBip(s, 27)
+
+5000
