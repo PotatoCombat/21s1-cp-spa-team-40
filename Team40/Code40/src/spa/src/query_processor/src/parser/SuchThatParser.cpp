@@ -221,7 +221,8 @@ Reference *SuchThatParser::parseAssignRef(string syn) {
     if (r != nullptr) {
         DesignEntityType deType = r->getDeType();
         if (deType != DesignEntityType::ASSIGN &&
-            deType != DesignEntityType::PROG_LINE) {
+            deType != DesignEntityType::PROG_LINE && 
+            deType != DesignEntityType::STMT) {
             return nullptr;
         }
 
