@@ -26,7 +26,7 @@ protected:
     ClauseType validClauseType;
 
     // change this to false if don't want to use cache
-    bool useCache = false;
+    bool useCache = true;
     ResultCache *cache;
 
     static set<DesignEntityType> STMT_DES_SET;
