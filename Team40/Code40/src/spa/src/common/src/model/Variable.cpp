@@ -4,12 +4,8 @@
 
 using namespace std;
 
-Variable::Variable(VarName name) : Entity<VarName>(move(name)) { }
+Variable::Variable(VarName name) : Entity<VarName>(move(name)) {}
 
-bool Variable::operator<(const Variable &other) const {
-    return id < other.id;
-}
+bool Variable::operator<(const Variable &other) const { return id < other.id; }
 
-bool Variable::operator==(const Variable &other) const {
-    return id == other.id;
-}
+bool Variable::operator==(const Variable &other) const { return id == other.id; }

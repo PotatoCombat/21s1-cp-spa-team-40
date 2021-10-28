@@ -13,7 +13,7 @@ class ExpressionParser {
 public:
     ExpressionParser(vector<string> exprLst, Statement *stmt);
 
-    vector<string> exprLst; 
+    vector<string> exprLst;
     Statement *stmt;
     stack<string> brackets; // for bracket matching
 
