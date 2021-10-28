@@ -195,10 +195,9 @@ bool ExpressionParser::isArtihmeticOperator(string input) {
 }
 
 bool ExpressionParser::isComparisonOperator(string input) {
-    return input == Tokens::SYMBOL_GREATER_THAN ||
-           input == Tokens::SYMBOL_GREATER_THAN_OR_EQUALS_TO || input == Tokens::SYMBOL_LESS_THAN ||
-           input == Tokens::SYMBOL_LESS_THAN_OR_EQUALS_TO || input == Tokens::SYMBOL_EQUALS ||
-           input == Tokens::SYMBOL_NOT_EQUALS;
+    return input == Tokens::SYMBOL_GREATER_THAN || input == Tokens::SYMBOL_GREATER_THAN_OR_EQUALS_TO || 
+           input == Tokens::SYMBOL_LESS_THAN || input == Tokens::SYMBOL_LESS_THAN_OR_EQUALS_TO || 
+           input == Tokens::SYMBOL_EQUALS || input == Tokens::SYMBOL_NOT_EQUALS;
 }
 
 bool ExpressionParser::isLogicalOperator(string input) {
