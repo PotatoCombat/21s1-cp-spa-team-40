@@ -1,7 +1,8 @@
 #include "query_processor/relationship_handler/ModifiesProcHandler.h"
 
-ModifiesProcHandler::ModifiesProcHandler(Clause *clause, PKB *pkb)
-    : ClauseHandler(clause, pkb, ClauseType::MODIFIES_P) {
+ModifiesProcHandler::ModifiesProcHandler(Clause *clause, PKB *pkb,
+                                         ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::MODIFIES_P) {
     validDesType1 = &ClauseHandler::PROCEDURE_DES_SET;
     validDesType2 = &ClauseHandler::VARIABLE_DES_SET;
     validRefType1 = &ClauseHandler::NO_WILDCARD_REF;

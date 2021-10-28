@@ -1,6 +1,7 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
 #include "query_processor/Result.h"
+#include "query_processor/ResultCache.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
@@ -12,10 +13,12 @@ using namespace std;
 struct TestFollowsStarHandler {
     static PKBStub pkbStub;
     static PKBStub2 pkbStubNoFollows;
+    static ResultCache cache;
 };
 
 PKBStub TestFollowsStarHandler::pkbStub = PKBStub();
 PKBStub2 TestFollowsStarHandler::pkbStubNoFollows = PKBStub2();
+ResultCache TestFollowsStarHandler::cache = ResultCache();
 
 TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source has follows") {
     Result expectedResult;
@@ -25,10 +28,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source has follows") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source does not have "
@@ -40,10 +46,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD WILDCARD - source does not have "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStubNoFollows);
+                               &TestFollowsStarHandler::pkbStubNoFollows,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - CONSTANT CONSTANT - relation holds") {
@@ -54,10 +63,13 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT CONSTANT - relation holds") {
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -69,10 +81,13 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "5");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - has stmt following "
@@ -84,10 +99,13 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - has stmt following "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - no stmt following "
@@ -99,10 +117,13 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT WILDCARD - no stmt following "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - has stmt preceding "
@@ -114,10 +135,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - has stmt preceding "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding "
@@ -129,10 +153,13 @@ TEST_CASE("FollowsStarHandler: eval - WILDCARD CONSTANT - no stmt preceding "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
@@ -141,7 +168,8 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "12");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -153,6 +181,8 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM CONSTANT - returns non-empty "
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -161,7 +191,8 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -170,6 +201,8 @@ TEST_CASE(
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
@@ -178,7 +211,8 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -188,6 +222,8 @@ TEST_CASE("FollowsStarHandler: eval - CONSTANT SYNONYM - returns non-empty "
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -196,7 +232,8 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -205,6 +242,8 @@ TEST_CASE(
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }
 
 TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
@@ -213,7 +252,8 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Clause followsStarClause(ClauseType::FOLLOWS_T, stmt1, stmt2);
     FollowsStarHandler handler(&followsStarClause,
-                               &TestFollowsStarHandler::pkbStub);
+                               &TestFollowsStarHandler::pkbStub,
+                               &TestFollowsStarHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -239,4 +279,6 @@ TEST_CASE("FollowsStarHandler: eval - SYNONYM SYNONYM - returns non-empty "
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsStarHandler::cache.clear();
 }

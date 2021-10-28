@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/ParentHandler.h"
 
-ParentHandler::ParentHandler(Clause* clause, PKB* pkb)
-    : ClauseHandler(clause, pkb, ClauseType::PARENT) {
+ParentHandler::ParentHandler(Clause *clause, PKB *pkb, ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::PARENT) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;

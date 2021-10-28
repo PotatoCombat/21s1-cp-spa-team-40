@@ -16,26 +16,39 @@ class ResultCache {
 private:
     static const int nClauseTypes = 16;
 
-    vector<bool> hasCacheList;
+    vector<VALUE_SET> fullyCachedR1s;
+    vector<VALUE_SET> fullyCachedR2s;
 
     vector<VALUES_MAP> mapR1ToR2s;
     vector<VALUES_MAP> mapR2ToR1s;
 
-    void cache(Result res, int idx);
-    bool hasCache(int idx);
-    void setHasCache(int idx);
+    bool isFullyCached(string r, int idx, bool isR1);
+    void setFullyCached(string r, int idx, bool isR1);
+
+    void setFullyCachedAllValues(int idx);
+
+    void cache(string r1, string r2, int idx);
     VALUE_SET getR1Values(VALUE r2, int idx);
     VALUE_SET getR2Values(VALUE r1, int idx);
     bool isR1ClauseR2(VALUE r1, VALUE r2, int idx);
 
-    void assertNonEmptyCache(int idx);
+    void assertCache(int idx);
 
 public:
     explicit ResultCache();
 
-    void cache(Result res, ClauseType clsType);
-    bool hasCache(ClauseType clsType);
+    bool isR1FullyCached(string r1, ClauseType clsType);
+    bool isR2FullyCached(string r2, ClauseType clsType);
+
+    void setR1FullyCached(string r1, ClauseType clsType);
+    void setR2FullyCached(string r1, ClauseType clsType);
+
+    void setFullyCachedAllValues(ClauseType clsType);
+
+    void cache(string r1, string r2, ClauseType clsType);
     VALUE_SET getR1Values(VALUE r2, ClauseType clsType);
     VALUE_SET getR2Values(VALUE r1, ClauseType clsType);
     bool isR1ClauseR2(VALUE r1, VALUE r2, ClauseType clsType);
+
+    void clear();
 };

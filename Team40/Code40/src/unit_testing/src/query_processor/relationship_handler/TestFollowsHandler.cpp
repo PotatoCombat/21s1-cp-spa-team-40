@@ -1,6 +1,7 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
 #include "query_processor/Result.h"
+#include "query_processor/ResultCache.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
@@ -12,10 +13,12 @@ using namespace std;
 struct TestFollowsHandler {
     static PKBStub pkbStub;
     static PKBStub2 pkbStubNoFollows;
+    static ResultCache cache;
 };
 
 PKBStub TestFollowsHandler::pkbStub = PKBStub();
 PKBStub2 TestFollowsHandler::pkbStubNoFollows = PKBStub2();
+ResultCache TestFollowsHandler::cache = ResultCache();
 
 TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source has follows") {
     Result expectedResult;
@@ -24,10 +27,12 @@ TEST_CASE("FollowsHandler: eval - WILDCARD WILDCARD - source has follows") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub, &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -39,10 +44,13 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
-                           &TestFollowsHandler::pkbStubNoFollows);
+                           &TestFollowsHandler::pkbStubNoFollows,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB does not return -1") {
@@ -52,10 +60,13 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB does not return -1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB returns -1") {
@@ -65,10 +76,13 @@ TEST_CASE("FollowsHandler: eval - CONSTANT CONSTANT - PKB returns -1") {
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "3");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -79,10 +93,13 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE("FollowsHandler: eval - CONSTANT WILDCARD - no stmt following "
@@ -93,10 +110,13 @@ TEST_CASE("FollowsHandler: eval - CONSTANT WILDCARD - no stmt following "
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -107,10 +127,13 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE("FollowsHandler: eval - WILDCARD CONSTANT - no stmt preceding "
@@ -121,10 +144,13 @@ TEST_CASE("FollowsHandler: eval - WILDCARD CONSTANT - no stmt preceding "
     Reference stmt1(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -132,7 +158,8 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -141,6 +168,8 @@ TEST_CASE(
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -148,7 +177,8 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -157,6 +187,8 @@ TEST_CASE(
     expectedResult.setResultList1(&stmt1, expectedList1);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -164,7 +196,8 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "6");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -173,6 +206,8 @@ TEST_CASE(
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -180,7 +215,8 @@ TEST_CASE(
     Reference stmt1(DesignEntityType::STMT, ReferenceType::CONSTANT, "7");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -189,6 +225,8 @@ TEST_CASE(
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE(
@@ -197,7 +235,8 @@ TEST_CASE(
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "S");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
     FollowsHandler handler(&followsClause,
-                           &TestFollowsHandler::pkbStubNoFollows);
+                           &TestFollowsHandler::pkbStubNoFollows,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -208,6 +247,8 @@ TEST_CASE(
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }
 
 TEST_CASE("FollowsHandler: eval - SYNONYM SYNONYM - returns non-empty "
@@ -215,7 +256,8 @@ TEST_CASE("FollowsHandler: eval - SYNONYM SYNONYM - returns non-empty "
     Reference stmt1(DesignEntityType::STMT, ReferenceType::SYNONYM, "s1");
     Reference stmt2(DesignEntityType::STMT, ReferenceType::SYNONYM, "s2");
     Clause followsClause(ClauseType::FOLLOWS, stmt1, stmt2);
-    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub);
+    FollowsHandler handler(&followsClause, &TestFollowsHandler::pkbStub,
+                           &TestFollowsHandler::cache);
     Result actualResult = handler.eval();
 
     Result expectedResult;
@@ -232,4 +274,6 @@ TEST_CASE("FollowsHandler: eval - SYNONYM SYNONYM - returns non-empty "
     expectedResult.setResultList2(&stmt2, expectedList2);
 
     REQUIRE(expectedResult.equals(actualResult));
+
+    TestFollowsHandler::cache.clear();
 }

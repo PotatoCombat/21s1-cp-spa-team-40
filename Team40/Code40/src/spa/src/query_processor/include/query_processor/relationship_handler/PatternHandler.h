@@ -49,5 +49,5 @@ private:
         HasPatternFunc &hasPattern);
 
 public:
-    PatternHandler(Clause *patternClause, PKB *pkb);
+    PatternHandler(Clause *patternClause, PKB *pkb, ResultCache *cache);
 };

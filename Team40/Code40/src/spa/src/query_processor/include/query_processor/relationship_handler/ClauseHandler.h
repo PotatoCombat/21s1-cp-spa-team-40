@@ -10,6 +10,7 @@
 #include "pkb/PKB.h"
 
 #include "query_processor/Result.h"
+#include "query_processor/ResultCache.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
@@ -24,6 +25,10 @@ protected:
     set<ReferenceType> *validRefType2;
     ClauseType validClauseType;
 
+    // change this to false if don't want to use cache
+    bool useCache = false;
+    ResultCache *cache;
+
     static set<DesignEntityType> STMT_DES_SET;
     static set<DesignEntityType> PROCEDURE_DES_SET;
     static set<DesignEntityType> VARIABLE_DES_SET;
@@ -33,7 +38,11 @@ protected:
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
 
-    ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType);
+    ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache, ClauseType validClauseType);
+
+    set<string> getR1ClauseR2Wrapper(string r2);
+    set<string> getR2ClausedR1Wrapper(string r1);
+    bool isR1ClauseR2Wrapper(string r1, string r2);
 
     virtual set<string> getR1ClauseR2(string r2) = 0;
     virtual set<string> getR2ClausedR1(string r1) = 0;

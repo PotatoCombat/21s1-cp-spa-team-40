@@ -38,9 +38,9 @@ set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{
     ReferenceType::CONSTANT, ReferenceType::SYNONYM
 };
 
-ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb,
+ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache,
                              ClauseType validClauseType)
-    : clause(clause), pkb(pkb), validClauseType(validClauseType) {}
+    : clause(clause), pkb(pkb), cache(cache), validClauseType(validClauseType) {}
 
 Result ClauseHandler::eval() {
     ReferenceType refType1 = clause->getFirstReference()->getRefType();
@@ -85,7 +85,7 @@ Result ClauseHandler::eval() {
     }
 
     // NEITHER IS CONSTANT
-    return evalNotConstNotConst();  
+    return evalNotConstNotConst();
 }
 
 Result ClauseHandler::evalWcWc() {
@@ -93,7 +93,7 @@ Result ClauseHandler::evalWcWc() {
     Reference *ref1 = clause->getFirstReference();
     set<string> res1s = getAll(pkb, *ref1);
     for (auto res1 : res1s) {
-        if (getR2ClausedR1(res1).empty()) {
+        if (getR2ClausedR1Wrapper(res1).empty()) {
             continue;
         }
         result.setValid(true);
@@ -107,21 +107,21 @@ Result ClauseHandler::evalConstConst() {
     Result result;
     string val1 = clause->getFirstReference()->getValue();
     string val2 = clause->getSecondReference()->getValue();
-    result.setValid(isR1ClauseR2(val1, val2));
+    result.setValid(isR1ClauseR2Wrapper(val1, val2));
     return result;
 }
 
 Result ClauseHandler::evalConstWc() {
     Result result;
     string val1 = clause->getFirstReference()->getValue();
-    result.setValid(!getR2ClausedR1(val1).empty());
+    result.setValid(!getR2ClausedR1Wrapper(val1).empty());
     return result;
 }
 
 Result ClauseHandler::evalWcConst() {
     Result result;
     string val2 = clause->getSecondReference()->getValue();
-    result.setValid(!getR1ClauseR2(val2).empty());
+    result.setValid(!getR1ClauseR2Wrapper(val2).empty());
     return result;
 }
 
@@ -130,7 +130,7 @@ Result ClauseHandler::evalSynConst() {
     Reference *ref1 = clause->getFirstReference();
     string val2 = clause->getSecondReference()->getValue();
     map<VALUE, VALUE_SET> firstStmtResults;
-    set<string> res1s = getR1ClauseR2(val2);
+    set<string> res1s = getR1ClauseR2Wrapper(val2);
     for (string res1 : res1s) {
         if (!isType(res1, ref1->getDeType())) {
             continue;
@@ -146,7 +146,7 @@ Result ClauseHandler::evalConstSyn() {
     Reference *ref2 = clause->getSecondReference();
     string val1 = clause->getFirstReference()->getValue();
     map<VALUE, VALUE_SET> secondStmtResults;
-    set<string> res2s = getR2ClausedR1(val1);
+    set<string> res2s = getR2ClausedR1Wrapper(val1);
     for (auto res2 : res2s) {
         if (!isType(res2, ref2->getDeType())) {
             continue;
@@ -182,6 +182,7 @@ Result ClauseHandler::evalNotConstNotConst() {
         setResultListForOneRef(result, ref2, ref1, false);
     }
 
+    cache->setFullyCachedAllValues(clause->getType());
     return result;
 }
 
@@ -191,7 +192,7 @@ Result ClauseHandler::evalSameSyn() {
     Reference *ref = clause->getFirstReference();
     set<string> res1s = getAll(pkb, *ref);
     for (auto res1 : res1s) {
-        if (!isR1ClauseR2(res1, res1)) {
+        if (!isR1ClauseR2Wrapper(res1, res1)) {
             continue;
         }
         resultList[res1] = VALUE_SET{};
@@ -207,10 +208,10 @@ void ClauseHandler::setResultListForOneRef(Result &result, Reference *thisRef,
     set<string> (ClauseHandler::*getOtherRefValues)(string);
     void (Result::*setThisResultList)(Reference *, map<VALUE, VALUE_SET>);
     if (isFirstRef) {
-        getOtherRefValues = &ClauseHandler::getR2ClausedR1;
+        getOtherRefValues = &ClauseHandler::getR2ClausedR1Wrapper;
         setThisResultList = &Result::setResultList1;
     } else {
-        getOtherRefValues = &ClauseHandler::getR1ClauseR2;
+        getOtherRefValues = &ClauseHandler::getR1ClauseR2Wrapper;
         setThisResultList = &Result::setResultList2;
     }
 
@@ -303,4 +304,45 @@ bool ClauseHandler::isType(string val, DesignEntityType type) {
 
     StatementType stmtType = pkb->getStmtType(stoi(val));
     return DesignEntityTypeHelper::isDesTypeStmtType(type, stmtType);
+}
+
+set<string> ClauseHandler::getR1ClauseR2Wrapper(string r2) {
+    ClauseType clsType = clause->getType();
+    if (useCache && cache->isR2FullyCached(r2, clsType)) {
+        return cache->getR1Values(r2, clsType);
+    }
+
+    set<string> res = getR1ClauseR2(r2);
+    for (auto r1 : res) {
+        cache->cache(r1, r2, clsType);
+    }
+    cache->setR2FullyCached(r2, clsType);
+    return res;
+}
+
+set<string> ClauseHandler::getR2ClausedR1Wrapper(string r1) {
+    ClauseType clsType = clause->getType();
+    if (useCache && cache->isR1FullyCached(r1, clsType)) {
+        return cache->getR2Values(r1, clsType);
+    }
+
+    set<string> res = getR2ClausedR1(r1);
+    for (auto r2 : res) {
+        cache->cache(r1, r2, clsType);
+    }
+    cache->setR1FullyCached(r1, clsType);
+    return res;
+}
+
+bool ClauseHandler::isR1ClauseR2Wrapper(string r1, string r2) {
+    ClauseType clsType = clause->getType();
+    if (useCache && cache->isR1FullyCached(r1, clsType)) {
+        return cache->isR1ClauseR2(r1, r2, clsType);
+    }
+    bool valid = isR1ClauseR2(r1, r2);
+    if (valid) {
+        cache->cache(r1, r2, clsType);
+    }
+
+    return valid;
 }
