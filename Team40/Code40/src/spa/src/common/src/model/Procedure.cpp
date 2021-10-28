@@ -4,15 +4,15 @@
 
 using namespace std;
 
-Procedure::Procedure(ProcName name) : Entity<ProcName>(move(name)) { }
+Procedure::Procedure() : Entity<ProcName>(move("")) {}
+
+Procedure::Procedure(ProcName name) : Entity<ProcName>(move(name)) {}
 
 void Procedure::addToStmtLst(Statement *stmt) { this->stmtLst.push_back(stmt); }
 
 vector<Statement *> Procedure::getStmtLst() { return this->stmtLst; }
 
-bool Procedure::operator<(const Procedure &other) const {
-    return id < other.id;
-}
+bool Procedure::operator<(const Procedure &other) const { return id < other.id; }
 
 bool Procedure::operator==(const Procedure &other) const {
     if (id != other.id) {

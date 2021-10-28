@@ -1,8 +1,12 @@
 #include "common/model/Statement.h"
 
-Statement::Statement(StmtIndex index, StatementType statementType)
-    : Entity<StmtIndex>(index) {
+Statement::Statement() : Entity<StmtIndex>(0) {
+    this->statementType = StatementType::UNKNOWN;
+    this->expressionVars = {};
+    this->expressionConsts = {};
+}
 
+Statement::Statement(StmtIndex index, StatementType statementType) : Entity<StmtIndex>(index) {
     this->statementType = statementType;
     this->expressionVars = {};
     this->expressionConsts = {};

@@ -10,10 +10,6 @@ protected:
     vector<string> content;
     int index;
     static int dummyProgramIndex;
-    // T t;
-    // Entity<class T> entity;
-    // Statement *stmt;
-    // Procedure *proc;
     explicit EntityParser(vector<string> content, int index) : content(content), index(index){};
     bool isValidName(string input) {
         // NAME: LETTER (LETTER | DIGIT)*
@@ -27,9 +23,5 @@ protected:
     }
 
 public:
-    T *parseEntity(int &programIndex = dummyProgramIndex);
-    // virtual Procedure *parseProcedure();
-    // virtual Statement *parseStatement();
-    // virtual Statement *parseParentStatement(optional<int> &programIndex);
-    // virtual void parseChildStatements(optional<int> &programIndex);
+    virtual T *parseEntity() { return new T(); };
 };
