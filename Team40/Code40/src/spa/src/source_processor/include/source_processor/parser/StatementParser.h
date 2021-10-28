@@ -10,7 +10,7 @@
 #include "source_processor/parser/WhileStatementParser.h"
 using namespace std;
 
-class StatementParser : public EntityParser {
+class StatementParser : public EntityParser<Statement> {
 private:
     Statement *stmt;
     vector<Line> programLines;

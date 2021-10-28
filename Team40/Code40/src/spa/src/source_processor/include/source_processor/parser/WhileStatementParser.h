@@ -4,7 +4,7 @@
 #include "source_processor/parser/Line.h"
 using namespace std;
 
-class WhileStatementParser : public EntityParser {
+class WhileStatementParser : public EntityParser<Statement> {
 private:
     Statement *stmt;
     vector<Line> programLines;

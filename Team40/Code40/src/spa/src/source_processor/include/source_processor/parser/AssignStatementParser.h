@@ -3,7 +3,7 @@
 #include "source_processor/parser/EntityParser.h"
 using namespace std;
 
-class AssignStatementParser : public EntityParser {
+class AssignStatementParser : public EntityParser<Statement> {
 private:
     Statement *stmt;
 
