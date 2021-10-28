@@ -23,5 +23,5 @@ protected:
     }
 
 public:
-    virtual T *parseEntity() { return new T(); };
+    virtual T *parseEntity(int &programIndex = dummyProgramIndex) { return new T(); };
 };
