@@ -2,19 +2,19 @@
 #include <algorithm>
 
 ExpressionParser::ExpressionParser(vector<string> exprLst, Statement *stmt)
-    : exprLst(exprLst), stmt(stmt) {};
+    : exprLst(exprLst), stmt(stmt){};
 
-vector<string> ExpressionParser::parseExpression() { 
+vector<string> ExpressionParser::parseExpression() {
     checkValidExpression();
     bool oprtrFlag = false; // if false, must be variable/constant. if true, must be operator
     for (int i = 0; i < exprLst.size(); i++) {
         string curr = exprLst[i];
         if (isInteger(curr) && !oprtrFlag) {
-            auto constant = new ConstantValue(curr);
+            ConstantValue *constant = new ConstantValue(curr);
             stmt->addExpressionConst(constant);
             oprtrFlag = true; // next token must be an operator
         } else if (isName(curr) && !oprtrFlag) {
-            auto variable = new Variable(curr);
+            Variable *variable = new Variable(curr);
             stmt->addExpressionVar(variable);
             oprtrFlag = true; // next token must be an operator
         } else if (isRoundBracket(curr)) {
@@ -46,8 +46,8 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
         if (!isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid expression: invalid operator in if statement");
         }
-    } 
-    if(isLogicalOperator(curr)) {
+    }
+    if (isLogicalOperator(curr)) {
         if (index == exprLst.size() - 1) {
             throw invalid_argument("invalid expression: ( must appear after logical operator");
         } else if (exprLst[index + 1] != "(") {
@@ -75,61 +75,68 @@ void ExpressionParser::checkValidBracket(string curr, int index) {
             throw invalid_argument("invalid expression: brackets do not match");
         }
     }
-    int start = index; int end = index;
+    int start = index;
+    int end = index;
     while (exprLst[start] == curr) {
-        start--; 
-        if (start < 0) break;
+        start--;
+        if (start < 0)
+            break;
     }
     while (exprLst[end] == curr) {
-        end++; 
-        if (end >= exprLst.size()) break;
+        end++;
+        if (end >= exprLst.size())
+            break;
     }
-    start++; end--;
-    if (curr == "(") checkValidOpenBracket(start, end);
-    else if (curr == ")") checkValidCloseBracket(start, end);
+    start++;
+    end--;
+    if (curr == "(")
+        checkValidOpenBracket(start, end);
+    else if (curr == ")")
+        checkValidCloseBracket(start, end);
 }
 
 void ExpressionParser::checkValidOpenBracket(int start, int end) {
-    if (start == 0 && end == exprLst.size()-1) {
+    if (start == 0 && end == exprLst.size() - 1) {
         return;
     } else if (start == 0) {
-        string next = exprLst[end+1];
+        string next = exprLst[end + 1];
         if (!(isInteger(next) || isName(next) || next == "!")) {
             throw invalid_argument("invalid expression: factor or ! must appear after (");
         }
-    } else if (end == exprLst.size()-1) {
+    } else if (end == exprLst.size() - 1) {
         throw invalid_argument("invalid expression: factor or ! must appear after (");
     } else {
-        string prev = exprLst[start-1];
-        string next = exprLst[end+1];
-        if (!(isOperator(prev) &&
-              (isInteger(next) || isName(next) || next == "!"))) {
-            throw invalid_argument("invalid expression: factor or ! must appear after ( and operator must appear before (");
+        string prev = exprLst[start - 1];
+        string next = exprLst[end + 1];
+        if (!(isOperator(prev) && (isInteger(next) || isName(next) || next == "!"))) {
+            throw invalid_argument("invalid expression: factor or ! must appear after ( and "
+                                   "operator must appear before (");
         }
     }
 }
 
 void ExpressionParser::checkValidCloseBracket(int start, int end) {
-    if (start == 0 && end == exprLst.size()-1) {
+    if (start == 0 && end == exprLst.size() - 1) {
         return;
     } else if (start == 0) {
         throw invalid_argument("invalid expression: factor or ! must appear before )");
-    } else if (end == exprLst.size()-1) {
-        string prev = exprLst[start-1];
+    } else if (end == exprLst.size() - 1) {
+        string prev = exprLst[start - 1];
         if (!(isInteger(prev) || isName(prev))) {
             throw invalid_argument("invalid expression: factor or ! must appear before )");
         }
     } else {
-        string prev = exprLst[start-1];
-        string next = exprLst[end+1];
+        string prev = exprLst[start - 1];
+        string next = exprLst[end + 1];
         if (!(isOperator(next) && (isInteger(prev) || isName(prev)))) {
-            throw invalid_argument("invalid expression: factor or ! must appear before ) and operator must appear after )");
+            throw invalid_argument("invalid expression: factor or ! must appear before ) and "
+                                   "operator must appear after )");
         }
     }
 }
 
 void ExpressionParser::checkValidExpression() {
-    if (exprLst.empty()){
+    if (exprLst.empty()) {
         throw invalid_argument("invalid expression: no arguments");
     }
     // conditions and expressions should not end with an operator
@@ -166,9 +173,7 @@ bool ExpressionParser::isName(string input) {
 
 bool ExpressionParser::isRoundBracket(string input) { return input == "(" || input == ")"; }
 
-bool ExpressionParser::isValidAssignOperator(string input) {
-    return (isArtihmeticOperator(input));
-}
+bool ExpressionParser::isValidAssignOperator(string input) { return (isArtihmeticOperator(input)); }
 
 bool ExpressionParser::isValidConditionalOperator(string input) {
     return (isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input));

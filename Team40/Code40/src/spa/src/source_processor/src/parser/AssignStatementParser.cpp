@@ -16,7 +16,7 @@ Statement *AssignStatementParser::parseEntity() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    auto variable = new Variable(var_name);
+    Variable *variable = new Variable(var_name);
     stmt->setVariable(variable);
 
     vector<string>::iterator endItr = find(content.begin(), content.end(), ";");

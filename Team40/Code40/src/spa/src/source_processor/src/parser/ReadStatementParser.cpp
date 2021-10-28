@@ -22,7 +22,7 @@ Statement *ReadStatementParser::parseEntity() {
     if (*next(next(readItr)) != ";") {
         throw invalid_argument("invalid read statement");
     }
-    auto var = new Variable(var_name);
+    Variable *var = new Variable(var_name);
     stmt->setVariable(var);
     return stmt;
 }

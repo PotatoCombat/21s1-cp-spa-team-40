@@ -19,6 +19,6 @@ Procedure *ProcedureParser::parseEntity() {
     if (*next(next(procItr)) != "{") {
         throw invalid_argument("invalid procedure");
     }
-    auto procedure = new Procedure(proc_name);
+    Procedure *procedure = new Procedure(proc_name);
     return procedure;
 }

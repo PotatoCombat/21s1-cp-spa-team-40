@@ -22,7 +22,7 @@ Statement *PrintStatementParser::parseEntity() {
     if (*next(next(printItr)) != ";") {
         throw invalid_argument("invalid print statement");
     }
-    auto variable = new Variable(var_name);
+    Variable *variable = new Variable(var_name);
     stmt->setVariable(variable);
     return stmt;
 }
