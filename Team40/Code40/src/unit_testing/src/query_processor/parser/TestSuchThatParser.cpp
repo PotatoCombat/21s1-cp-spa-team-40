@@ -593,7 +593,7 @@ TEST_CASE("SuchThatParser: parse affects clause - valid arguments") {
 
     SECTION("test prog_line/prog_line") {
         Reference resultProgLine =
-            Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "n");
+            Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "n");
         Clause *expected =
             TestSuchThatParser::createAffects(resultProgLine, resultProgLine);
         ClsTuple tup = make_tuple("Affects", "n", "n");

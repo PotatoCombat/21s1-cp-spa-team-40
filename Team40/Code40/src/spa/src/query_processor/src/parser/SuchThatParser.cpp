@@ -220,12 +220,13 @@ Reference *SuchThatParser::parseAssignRef(string syn) {
     Reference *r = getReferenceIfDeclared(syn);
     if (r != nullptr) {
         DesignEntityType deType = r->getDeType();
-        if (deType == DesignEntityType::PROG_LINE) {
-            deType = DesignEntityType::ASSIGN;
+        if (deType != DesignEntityType::ASSIGN &&
+            deType != DesignEntityType::PROG_LINE) {
+            return nullptr;
         }
 
-        if (deType != DesignEntityType::ASSIGN) {
-            return nullptr;
+        if (deType == DesignEntityType::PROG_LINE) {
+            deType = DesignEntityType::STMT;
         }
         return new Reference(deType, r->getRefType(), syn, r->getAttr());
     }
