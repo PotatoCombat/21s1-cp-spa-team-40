@@ -2,11 +2,11 @@
 #include <algorithm>
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
+    : EntityParser(content, index) {
     stmt = new Statement(index, StatementType::READ);
 };
 
-Statement *ReadStatementParser::parseReadStatement() {
+Statement *ReadStatementParser::parseEntity() {
     vector<string>::iterator readItr = find(content.begin(), content.end(), "read");
     if (next(readItr) == content.end()) {
         throw invalid_argument("invalid read statement");
@@ -25,14 +25,4 @@ Statement *ReadStatementParser::parseReadStatement() {
     auto var = new Variable(var_name);
     stmt->setVariable(var);
     return stmt;
-}
-
-bool ReadStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

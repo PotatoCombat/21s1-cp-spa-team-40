@@ -1,30 +1,29 @@
 #include "source_processor/parser/StatementParser.h"
 #include <algorithm>
 
-StatementParser::StatementParser(vector<string> content, int index,
-                                 vector<Line> programLines, int &programIndex)
-    : content(content), index(index), programLines(programLines),
-      programIndex(programIndex) {}
+StatementParser::StatementParser(vector<string> content, int index, vector<Line> programLines,
+                                 int &programIndex)
+    : EntityParser(content, index), programLines(programLines), programIndex(programIndex) {}
 
-Statement *StatementParser::parseStatement() {
+Statement *StatementParser::parseEntity() {
     if (isAssignStmt()) {
         AssignStatementParser assignParser(content, index);
-        return assignParser.parseAssignStatement();
+        return assignParser.parseEntity();
     } else if (isReadStmt()) {
         ReadStatementParser readParser(content, index);
-        return readParser.parseReadStatement();
+        return readParser.parseEntity();
     } else if (isPrintStmt()) {
         PrintStatementParser printParser(content, index);
-        return printParser.parsePrintStatement();
+        return printParser.parseEntity();
     } else if (isCallStmt()) {
         CallStatementParser callParser(content, index);
-        return callParser.parseCallStatement();
+        return callParser.parseEntity();
     } else if (isWhileStmt()) {
         WhileStatementParser whileParser(content, index, programLines);
-        return whileParser.parseWhileStatement(programIndex);
+        return whileParser.parseEntity(programIndex);
     } else if (isIfStmt()) {
         IfStatementParser ifParser(content, index, programLines);
-        return ifParser.parseIfStatement(programIndex);
+        return ifParser.parseEntity(programIndex);
     } else {
         throw invalid_argument("invalid statement type");
     }

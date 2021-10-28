@@ -6,11 +6,11 @@
 
 WhileStatementParser::WhileStatementParser(vector<string> content, int index,
                                            vector<Line> programLines)
-    : content(content), index(index), programLines(programLines) {
+    : EntityParser(content, index), programLines(programLines) {
     stmt = new Statement(index, StatementType::WHILE);
 };
 
-Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
+Statement *WhileStatementParser::parseEntity(int &programIndex) {
     vector<string>::iterator whileItr = find(content.begin(), content.end(), "while");
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
@@ -25,7 +25,7 @@ Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
     if (next(next(whileItr)) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
-    ExpressionParser exprParser(vector<string> (next(next(whileItr)), prev(endItr)), stmt);
+    ExpressionParser exprParser(vector<string>(next(next(whileItr)), prev(endItr)), stmt);
     vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
     parseChildStatements(programIndex);
@@ -48,7 +48,7 @@ void WhileStatementParser::parseChildStatements(int &programIndex) {
         Parser parser;
         if (parser.isStmt(currContent)) {
             StatementParser stmtParser(currContent, currIndex, programLines, i);
-            auto nestedStmt = stmtParser.parseStatement();
+            Statement *nestedStmt = stmtParser.parseEntity();
             stmt->addThenStmt(nestedStmt);
         }
     }

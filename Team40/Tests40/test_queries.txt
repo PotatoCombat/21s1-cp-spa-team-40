@@ -1,0 +1,70 @@
+1 - Affects
+assign a1, a2;
+Select <a1, a2> such that Affects(a1, a2)
+none
+5000
+2 - Affects*
+assign a1, a2;
+Select <a1, a2> such that Affects*(a1, a2)
+none
+5000
+3 - Next
+prog_line pl1, pl2;
+Select <pl1, pl2> such that Next(pl1, pl2)
+none
+5000
+4 - Next*
+prog_line pl1, pl2;
+Select <pl1, pl2> such that Next*(pl1, pl2)
+none
+5000
+5 - Calls
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2)
+none
+5000
+6 - Calls*
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1, p2)
+none
+5000
+7 - Follows
+stmt s1, s2;
+Select <s1, s2> such that Follows(s1, s2)
+none
+5000
+8 - Follows*
+stmt s1, s2;
+Select <s1, s2> such that Follows*(s1, s2)
+none
+5000
+9 - Parent
+stmt s1, s2;
+Select <s1, s2> such that Parent(s1, s2)
+none
+5000
+10 - Parent*
+stmt s1, s2;
+Select <s1, s2> such that Parent*(s1, s2)
+none
+5000
+11 - Uses (stmt)
+stmt s; variable v;
+Select <s, v> such that Uses(s, v)
+none
+5000
+12 - Uses (proc)
+procedure p; variable v;
+Select <p, v> such that Uses(p, v)
+none
+5000
+13 - Modifies (stmt)
+stmt s; variable v;
+Select <s, v> such that Modifies(s, v)
+none
+5000
+14 - Modifies (proc)
+procedure p; variable v;
+Select <p, v> such that Modifies(p, v)
+none
+5000

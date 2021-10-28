@@ -2,11 +2,11 @@
 #include <algorithm>
 
 CallStatementParser::CallStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
+    : EntityParser(content, index) {
     stmt = new Statement(index, StatementType::CALL);
 };
 
-Statement *CallStatementParser::parseCallStatement() {
+Statement *CallStatementParser::parseEntity() {
     vector<string>::iterator callItr = find(content.begin(), content.end(), "call");
     if (next(callItr) == content.end()) {
         throw invalid_argument("invalid call statement");
@@ -24,14 +24,4 @@ Statement *CallStatementParser::parseCallStatement() {
     }
     stmt->setProcName(proc_name);
     return stmt;
-}
-
-bool CallStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

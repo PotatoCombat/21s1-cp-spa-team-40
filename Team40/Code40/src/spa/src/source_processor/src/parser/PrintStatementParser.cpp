@@ -2,11 +2,11 @@
 #include <algorithm>
 
 PrintStatementParser::PrintStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
+    : EntityParser(content, index) {
     stmt = new Statement(index, StatementType::PRINT);
 };
 
-Statement *PrintStatementParser::parsePrintStatement() {
+Statement *PrintStatementParser::parseEntity() {
     vector<string>::iterator printItr = find(content.begin(), content.end(), "print");
     if (next(printItr) == content.end()) {
         throw invalid_argument("invalid print statement");
@@ -25,14 +25,4 @@ Statement *PrintStatementParser::parsePrintStatement() {
     auto variable = new Variable(var_name);
     stmt->setVariable(variable);
     return stmt;
-}
-
-bool PrintStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }

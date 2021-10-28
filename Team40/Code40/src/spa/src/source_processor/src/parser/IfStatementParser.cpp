@@ -4,11 +4,11 @@
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index, vector<Line> programLines)
-    : content(content), index(index), programLines(programLines) {
+    : EntityParser(content, index), programLines(programLines) {
     stmt = new Statement(index, StatementType::IF);
 };
 
-Statement *IfStatementParser::parseIfStatement(int &programIndex) {
+Statement *IfStatementParser::parseEntity(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
     vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
     if (endItr == content.end())
@@ -24,7 +24,7 @@ Statement *IfStatementParser::parseIfStatement(int &programIndex) {
     if (next(next(ifItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
     }
-    ExpressionParser exprParser(vector<string> (next(next(ifItr)), prev(prev(endItr))), stmt);
+    ExpressionParser exprParser(vector<string>(next(next(ifItr)), prev(prev(endItr))), stmt);
     vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
     parseChildStatements(programIndex);
@@ -55,7 +55,7 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
         Parser parser;
         if (parser.isStmt(currContent)) {
             StatementParser stmtParser(currContent, currIndex, programLines, i);
-            auto nestedStmt = stmtParser.parseStatement();
+            Statement *nestedStmt = stmtParser.parseEntity();
             if (terminator == 0) {
                 stmt->addThenStmt(nestedStmt);
             } else if (terminator == 1) {

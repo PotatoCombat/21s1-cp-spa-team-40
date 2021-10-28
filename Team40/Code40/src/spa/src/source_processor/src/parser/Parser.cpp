@@ -16,11 +16,11 @@ Program Parser::parseProgram(vector<Line> programLines) {
             }
             checkAndAddValidProcedure(currProc, program);
             ProcedureParser procParser(currContent);
-            currProc = procParser.parseProcedure();
+            currProc = procParser.parseEntity();
 
         } else if (isStmt(currContent)) {
             StatementParser stmtParser(currContent, currIndex, programLines, i);
-            Statement *stmt = stmtParser.parseStatement();
+            Statement *stmt = stmtParser.parseEntity();
             currProc->addToStmtLst(stmt);
         }
     }

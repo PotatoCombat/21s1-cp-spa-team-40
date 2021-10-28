@@ -3,11 +3,11 @@
 #include <algorithm>
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
+    : EntityParser(content, index) {
     stmt = new Statement(index, StatementType::ASSIGN);
 };
 
-Statement *AssignStatementParser::parseAssignStatement() {
+Statement *AssignStatementParser::parseEntity() {
     vector<string>::iterator assignItr = find(content.begin(), content.end(), "=");
     if (assignItr == content.begin()) {
         throw invalid_argument("invalid assign statement");
@@ -29,14 +29,4 @@ Statement *AssignStatementParser::parseAssignStatement() {
     vector<string> exprLst = exprParser.parseExpression();
     stmt->setExpressionLst(exprLst);
     return stmt;
-}
-
-bool AssignStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }
