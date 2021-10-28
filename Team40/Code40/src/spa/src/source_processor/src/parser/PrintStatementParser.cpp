@@ -7,7 +7,7 @@ PrintStatementParser::PrintStatementParser(vector<string> content, int index)
 };
 
 Statement *PrintStatementParser::parseEntity() {
-    vector<string>::iterator printItr = find(content.begin(), content.end(), "print");
+    vector<string>::iterator printItr = find(content.begin(), content.end(), Tokens::KEYWORD_PRINT);
     if (next(printItr) == content.end()) {
         throw invalid_argument("invalid print statement");
     }
@@ -15,11 +15,11 @@ Statement *PrintStatementParser::parseEntity() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    // print: 'print' var_name';'
+    // print: 'print' var_nameTokens::CHAR_SEMICOLON
     if (next(next(printItr)) == content.end()) {
         throw invalid_argument("invalid print statement");
     }
-    if (*next(next(printItr)) != ";") {
+    if (*next(next(printItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid print statement");
     }
     Variable *variable = new Variable(var_name);

@@ -1,4 +1,5 @@
 #include "source_processor/parser/ExpressionParser.h"
+#include "source_processor/parser/Tokens.h"
 #include <algorithm>
 
 ExpressionParser::ExpressionParser(vector<string> exprLst, Statement *stmt)
@@ -19,7 +20,7 @@ vector<string> ExpressionParser::parseExpression() {
             oprtrFlag = true; // next token must be an operator
         } else if (isRoundBracket(curr)) {
             checkValidBracket(curr, i);
-        } else if ((isOperator(curr) && oprtrFlag) || (curr == "!")) {
+        } else if ((isOperator(curr) && oprtrFlag) || (curr == Tokens::SYMBOL_NOT)) {
             checkValidOperator(curr, i);
             oprtrFlag = false; // next token must be a variable/constant
         } else {
@@ -50,13 +51,13 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
     if (isLogicalOperator(curr)) {
         if (index == exprLst.size() - 1) {
             throw invalid_argument("invalid expression: ( must appear after logical operator");
-        } else if (exprLst[index + 1] != "(") {
+        } else if (exprLst[index + 1] != Tokens::SYMBOL_OPEN_BRACKET) {
             throw invalid_argument("invalid expression: ( must appear after logical operator");
         }
-        if (curr != "!") {
+        if (curr != Tokens::SYMBOL_NOT) {
             if (index == 0) {
                 throw invalid_argument("invalid expression: ) must appear before logical operator");
-            } else if (exprLst[index - 1] != ")") {
+            } else if (exprLst[index - 1] != Tokens::SYMBOL_CLOSE_BRACKET) {
                 throw invalid_argument("invalid expression: ) must appear before logical operator");
             }
         }
@@ -64,12 +65,12 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
 }
 
 void ExpressionParser::checkValidBracket(string curr, int index) {
-    if (curr == "(") {
+    if (curr == Tokens::SYMBOL_OPEN_BRACKET) {
         brackets.push(curr);
-    } else if (curr == ")") {
+    } else if (curr == Tokens::SYMBOL_CLOSE_BRACKET) {
         if (brackets.empty()) {
             throw invalid_argument("invalid expression: brackets do not match");
-        } else if (brackets.top() == "(") {
+        } else if (brackets.top() == Tokens::SYMBOL_OPEN_BRACKET) {
             brackets.pop();
         } else {
             throw invalid_argument("invalid expression: brackets do not match");
@@ -89,9 +90,9 @@ void ExpressionParser::checkValidBracket(string curr, int index) {
     }
     start++;
     end--;
-    if (curr == "(")
+    if (curr == Tokens::SYMBOL_OPEN_BRACKET)
         checkValidOpenBracket(start, end);
-    else if (curr == ")")
+    else if (curr == Tokens::SYMBOL_CLOSE_BRACKET)
         checkValidCloseBracket(start, end);
 }
 
@@ -100,7 +101,7 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
         return;
     } else if (start == 0) {
         string next = exprLst[end + 1];
-        if (!(isInteger(next) || isName(next) || next == "!")) {
+        if (!(isInteger(next) || isName(next) || next == Tokens::SYMBOL_NOT)) {
             throw invalid_argument("invalid expression: factor or ! must appear after (");
         }
     } else if (end == exprLst.size() - 1) {
@@ -108,7 +109,8 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
     } else {
         string prev = exprLst[start - 1];
         string next = exprLst[end + 1];
-        if (!(isOperator(prev) && (isInteger(next) || isName(next) || next == "!"))) {
+        if (!(isOperator(prev) &&
+              (isInteger(next) || isName(next) || next == Tokens::SYMBOL_NOT))) {
             throw invalid_argument("invalid expression: factor or ! must appear after ( and "
                                    "operator must appear before (");
         }
@@ -146,7 +148,8 @@ void ExpressionParser::checkValidExpression() {
     StatementType type = stmt->getStatementType();
     // condition should have at least one operator
     if (type == StatementType::IF || type == StatementType::WHILE) {
-        if ((exprLst.size() < 3) || ((exprLst.size() < 2) && (exprLst[0] != "!"))) {
+        if ((exprLst.size() < MIN_COND_LEN_WITH_AND_OR) ||
+            ((exprLst.size() < MIN_COND_LEN_WITH_NOT) && (exprLst[0] != Tokens::SYMBOL_NOT))) {
             throw invalid_argument("invalid expression: conditions need at least one operator");
         }
     }
@@ -171,7 +174,9 @@ bool ExpressionParser::isName(string input) {
     return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
 }
 
-bool ExpressionParser::isRoundBracket(string input) { return input == "(" || input == ")"; }
+bool ExpressionParser::isRoundBracket(string input) {
+    return input == Tokens::SYMBOL_OPEN_BRACKET || input == Tokens::SYMBOL_CLOSE_BRACKET;
+}
 
 bool ExpressionParser::isValidAssignOperator(string input) { return (isArtihmeticOperator(input)); }
 
@@ -184,14 +189,18 @@ bool ExpressionParser::isOperator(string input) {
 }
 
 bool ExpressionParser::isArtihmeticOperator(string input) {
-    return input == "+" || input == "-" || input == "*" || input == "/" || input == "%";
+    return input == Tokens::SYMBOL_PLUS || input == Tokens::SYMBOL_MINUS ||
+           input == Tokens::SYMBOL_MULTIPLY || input == Tokens::SYMBOL_DIVIDE ||
+           input == Tokens::SYMBOL_MODULO;
 }
 
 bool ExpressionParser::isComparisonOperator(string input) {
-    return input == ">" || input == ">=" || input == "<" || input == "<=" || input == "==" ||
-           input == "!=";
+    return input == Tokens::SYMBOL_GREATER_THAN ||
+           input == Tokens::SYMBOL_GREATER_THAN_OR_EQUALS_TO || input == Tokens::SYMBOL_LESS_THAN ||
+           input == Tokens::SYMBOL_LESS_THAN_OR_EQUALS_TO || input == Tokens::SYMBOL_EQUALS ||
+           input == Tokens::SYMBOL_NOT_EQUALS;
 }
 
 bool ExpressionParser::isLogicalOperator(string input) {
-    return input == "!" || input == "&&" || input == "||";
+    return input == Tokens::SYMBOL_NOT || input == Tokens::SYMBOL_AND || input == Tokens::SYMBOL_OR;
 }

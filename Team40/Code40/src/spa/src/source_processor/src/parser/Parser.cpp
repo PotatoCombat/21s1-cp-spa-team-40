@@ -8,9 +8,9 @@ Program Parser::parseProgram(vector<Line> programLines) {
         vector<string> currContent = programLines[i].getContent();
 
         if (isProc(currContent)) {
-            // ... stmtLst '}'
+            // ... stmtLst Tokens::CHAR_CLOSE_BRACE
             if (i > 0) {
-                if (programLines[i - 1].getContent()[0] != "}") {
+                if (programLines[i - 1].getContent()[0] != Tokens::SYMBOL_CLOSE_BRACE) {
                     throw invalid_argument("invalid program");
                 }
             }
@@ -31,15 +31,16 @@ Program Parser::parseProgram(vector<Line> programLines) {
 }
 
 bool Parser::isAssignStmt(vector<string> content) {
-    return find(content.begin(), content.end(), "=") != content.end();
+    return find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN) != content.end();
 }
 
 bool Parser::isProc(vector<string> content) {
-    return (content[0] == "procedure") && (!isAssignStmt(content));
+    return (content[0] == Tokens::KEYWORD_PROCEDURE) && (!isAssignStmt(content));
 }
 
 bool Parser::isStmt(vector<string> content) {
-    return ((!content.empty() && content[0] != "}" && content[0] != "else") ||
+    return ((!content.empty() && content[0] != Tokens::SYMBOL_CLOSE_BRACE &&
+             content[0] != Tokens::KEYWORD_ELSE) ||
             isAssignStmt(content));
 }
 

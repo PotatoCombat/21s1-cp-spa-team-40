@@ -7,7 +7,7 @@ CallStatementParser::CallStatementParser(vector<string> content, int index)
 };
 
 Statement *CallStatementParser::parseEntity() {
-    vector<string>::iterator callItr = find(content.begin(), content.end(), "call");
+    vector<string>::iterator callItr = find(content.begin(), content.end(), Tokens::KEYWORD_CALL);
     if (next(callItr) == content.end()) {
         throw invalid_argument("invalid call statement");
     }
@@ -15,11 +15,11 @@ Statement *CallStatementParser::parseEntity() {
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
-    // call: 'call' proc_name ';'
+    // call: 'call' proc_name Tokens::CHAR_SEMICOLON
     if (next(next(callItr)) == content.end()) {
         throw invalid_argument("invalid call statement");
     }
-    if (*next(next(callItr)) != ";") {
+    if (*next(next(callItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid call statement");
     }
     stmt->setProcName(proc_name);

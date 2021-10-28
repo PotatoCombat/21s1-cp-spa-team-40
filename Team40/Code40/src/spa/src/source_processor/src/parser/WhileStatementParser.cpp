@@ -11,15 +11,18 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
 };
 
 Statement *WhileStatementParser::parseEntity(int &programIndex) {
-    vector<string>::iterator whileItr = find(content.begin(), content.end(), "while");
-    vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
+    vector<string>::iterator whileItr = find(content.begin(), content.end(), Tokens::KEYWORD_WHILE);
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_OPEN_BRACE);
     if (endItr == content.end())
         throw invalid_argument("invalid while statement");
-    // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
+    // while: 'while' Tokens::CHAR_OPEN_BRACKET cond_expr Tokens::CHAR_CLOSE_BRACKET
+    // Tokens::CHAR_OPEN_BRACE stmtLst Tokens::CHAR_CLOSE_BRACE
     if (next(whileItr) == content.end() || prev(endItr) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
-    if (*next(whileItr) != "(" || *prev(endItr) != ")") {
+    if (*next(whileItr) != Tokens::SYMBOL_OPEN_BRACKET ||
+        *prev(endItr) != Tokens::SYMBOL_CLOSE_BRACKET) {
         throw invalid_argument("invalid while statement");
     }
     if (next(next(whileItr)) == content.end()) {
@@ -41,7 +44,7 @@ void WhileStatementParser::parseChildStatements(int &programIndex) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         programIndex = i;
-        if (currContent[0] == "}") {
+        if (currContent[0] == Tokens::SYMBOL_CLOSE_BRACE) {
             terminator++;
             break;
         }
@@ -52,7 +55,7 @@ void WhileStatementParser::parseChildStatements(int &programIndex) {
             stmt->addThenStmt(nestedStmt);
         }
     }
-    // ... stmtLst '}'
+    // ... stmtLst Tokens::CHAR_CLOSE_BRACE
     if (terminator != 1) {
         throw invalid_argument("invalid while statement");
     }

@@ -29,16 +29,16 @@ Statement *StatementParser::parseEntity() {
     }
 }
 
-bool StatementParser::isReadStmt() { return content.at(0) == "read"; }
+bool StatementParser::isReadStmt() { return content.at(0) == Tokens::KEYWORD_READ; }
 
-bool StatementParser::isPrintStmt() { return content.at(0) == "print"; }
+bool StatementParser::isPrintStmt() { return content.at(0) == Tokens::KEYWORD_PRINT; }
 
-bool StatementParser::isCallStmt() { return content.at(0) == "call"; }
+bool StatementParser::isCallStmt() { return content.at(0) == Tokens::KEYWORD_CALL; }
 
-bool StatementParser::isWhileStmt() { return content.at(0) == "while"; }
+bool StatementParser::isWhileStmt() { return content.at(0) == Tokens::KEYWORD_WHILE; }
 
-bool StatementParser::isIfStmt() { return content.at(0) == "if"; }
+bool StatementParser::isIfStmt() { return content.at(0) == Tokens::KEYWORD_IF; }
 
 bool StatementParser::isAssignStmt() {
-    return find(content.begin(), content.end(), "=") != content.end();
+    return find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN) != content.end();
 }

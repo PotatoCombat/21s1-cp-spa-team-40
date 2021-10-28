@@ -7,7 +7,8 @@ ReadStatementParser::ReadStatementParser(vector<string> content, int index)
 };
 
 Statement *ReadStatementParser::parseEntity() {
-    vector<string>::iterator readItr = find(content.begin(), content.end(), "read");
+    vector<string>::iterator readItr =
+        find(content.begin(), content.end(), Tokens::KEYWORD_READ);
     if (next(readItr) == content.end()) {
         throw invalid_argument("invalid read statement");
     }
@@ -15,11 +16,11 @@ Statement *ReadStatementParser::parseEntity() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    // read: 'read' var_name';'
+    // read: 'read' var_nameTokens::CHAR_SEMICOLON
     if (next(next(readItr)) == content.end()) {
         throw invalid_argument("invalid read statement");
     }
-    if (*next(next(readItr)) != ";") {
+    if (*next(next(readItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid read statement");
     }
     Variable *var = new Variable(var_name);

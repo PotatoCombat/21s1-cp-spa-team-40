@@ -8,7 +8,8 @@ AssignStatementParser::AssignStatementParser(vector<string> content, int index)
 };
 
 Statement *AssignStatementParser::parseEntity() {
-    vector<string>::iterator assignItr = find(content.begin(), content.end(), "=");
+    vector<string>::iterator assignItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN);
     if (assignItr == content.begin()) {
         throw invalid_argument("invalid assign statement");
     }
@@ -19,7 +20,8 @@ Statement *AssignStatementParser::parseEntity() {
     Variable *variable = new Variable(var_name);
     stmt->setVariable(variable);
 
-    vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_SEMICOLON);
     if (endItr == content.end())
         throw invalid_argument("invalid assign statement");
     if (next(assignItr) == content.end()) {

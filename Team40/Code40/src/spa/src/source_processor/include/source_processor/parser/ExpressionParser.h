@@ -17,6 +17,9 @@ public:
     Statement *stmt;
     stack<string> brackets; // for bracket matching
 
+    static const int MIN_COND_LEN_WITH_NOT = 2;
+    static const int MIN_COND_LEN_WITH_AND_OR = 3;
+
     vector<string> parseExpression();
     void checkValidOperator(string curr, int index);
     void checkValidBracket(string curr, int index);
