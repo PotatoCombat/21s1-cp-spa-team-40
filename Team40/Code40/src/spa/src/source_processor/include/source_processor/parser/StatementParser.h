@@ -2,7 +2,6 @@
 #include "common/model/Statement.h"
 #include "source_processor/parser/AssignStatementParser.h"
 #include "source_processor/parser/CallStatementParser.h"
-#include "source_processor/parser/EntityParser.h"
 #include "source_processor/parser/IfStatementParser.h"
 #include "source_processor/parser/Line.h"
 #include "source_processor/parser/PrintStatementParser.h"
