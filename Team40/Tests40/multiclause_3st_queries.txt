@@ -1,0 +1,5 @@
+1 - such that (follows, parent) synonym result (stmt)
+stmt s; variable v;
+Select s such that  Uses(s, v) and Modifies(s, v)
+none
+5000

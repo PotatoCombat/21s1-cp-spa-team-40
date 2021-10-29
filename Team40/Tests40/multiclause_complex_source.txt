@@ -136,7 +136,7 @@ procedure proc5 {
     call proc6;
     while(z != w + x * y) {
         b = w - y;
-        c = x * v;
+        c = x * z;
     }
     call proc7;
     x = a + d;
@@ -165,9 +165,9 @@ procedure proc7 {
 
 procedure proc8 {
     w = y - x * z * w;
-    if (d + c – b * a != 23) then {
+    if (d + c - b * a != 23) then {
         a = c * b / d - a;
-        while (z – y * x / w == 11) {
+        while (z - y * x / w == 11) {
             call proc9;
             x = y - w / z / x;
             if (b >= a * 23 + d - c ) then {
@@ -175,12 +175,12 @@ procedure proc8 {
                 while (x <= w / 11 - z * y) {
                     call proc9;
                     y = x * w + z % y;
-                    z = y + w – x * z;
+                    z = y + w - x * z;
                 }
-                c = b / a – d / c ;
+                c = b / a - d / c ;
                 call proc9;
             } else {
-                z = x * w – y + z;
+                z = x * w - y + z;
                 while (b * a > 23 + d - c) {
                     d = b / a * c % d;
                     call proc9;
@@ -189,9 +189,9 @@ procedure proc8 {
                 w = y / z + x / 1;
             }
             call proc9;
-            a = c * d – b * 13;
+            a = c * d - b * 13;
         }
-        x = y / z – w % 4;
+        x = y / z - w % 4;
     } else {
         call proc9;
         b = c * d + a / 16;
@@ -225,35 +225,35 @@ procedure proc8 {
 }
 
 procedure proc9 {
-    w = x + y – z + w / 25;
-    while (d < c + b – a * 23) {
+    w = x + y - z + w / 25;
+    while (d < c + b - a * 23) {
         a = b - c * d % a;
         if (z > y - x * w / 11) then {
             x = w + y * z - x;
-            while (d + c <= b – a * 23) {
+            while (d + c <= b - a * 23) {
                 b = a - c / d + b;
-                if (z – y >= x * w / 11) then {
+                if (z - y >= x * w / 11) then {
                     y = w + x / z * y;
                     x = z * y + w - 5;
                 } else {
-                    c = a * b + d – c;
+                    c = a * b + d - c;
                     b = d + c / a + 17;
                 }
                 z = w - x + y / z;
             }
-            d = a * b – c * d;
+            d = a * b - c * d;
         } else {
-            w = x * z / y – 0 % w;
-            while (d + c – b == a * 23) {
-                a = b + d – c + 12;
-                if (z – y * x != w / 11) then {
+            w = x * z / y - 0 % w;
+            while (d + c - b == a * 23) {
+                a = b + d - c + 12;
+                if (z - y * x != w / 11) then {
                     x = w / z + y * 3;
                     y = z - x / w * 8;
                 } else {
                     b = a + d * c - 15;
                     c = d + b * a - 20;
                 }
-                y = w / z – x / 6;
+                y = w / z - x / 6;
             }
             c = a + d / b * 18;
         }
