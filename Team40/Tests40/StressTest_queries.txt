@@ -1,0 +1,625 @@
+1 - 2 pattern 2 such that one common
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) and a2("y", _) such that Follows*(a3, 6) and Follows(p1, p2)
+
+5000
+2 - 2 pattern 2 such that one common written differently
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) pattern a2("y", _) such that Follows*(a3, 6) and Follows(p1, p2)
+
+5000
+3 - 2 pattern 2 such that one common written differently
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) pattern a2("y", _) such that Follows*(a3, 6) such that Follows(p1, p2)
+
+5000
+4 - 2 pattern 2 such that one common written differently invalid
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) and Follows(p1, p2) pattern a2("y", _) such that Follows*(a3, 6)
+
+5000
+5 - 2 pattern 2 such that one common invalid
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) such that Follows*(a3, 6) and Follows(p1, p2) and a2("y", _)
+
+5000
+6 - 2 pattern 2 such that two common
+assign a1, a2, a3; print p1, p2;
+Select a1 pattern a1("x", _) and a2("y", _) such that Follows*(a1, 6) and Follows(p1, p2)
+
+5000
+
+
+
+
+
+2 - 3 pattern one follows
+assign a1, a2; if ifs1, ifs2; while w1, w2;
+Select w1 such that Parent(w1, a1) pattern a1("x", _"5"_) pattern ifs1(_, _, _) such that Parent(w2, ifs2)
+
+5000
+
+
+
+
+
+3 - four clauses do not contain common and one of the clause has common with Select clause
+call c; while w; procedure p, p1; assign a; if ifs;
+Select c such that Calls(p, p1) and Next(c, w) pattern a(_, _) and ifs("x", _, _)
+69, 75, 92, 102, 126, 134, 139, 144, 149, 158, 174, 147, 155, 60
+5000
+4 -  four clauses do not contain common and do not have common with Select clause
+assign a, a1, a2; print pn, pn1; call c;
+Select c such that Follows(a2, 4) pattern a("x", _) and a1("add", _) such that Follows(pn, pn1)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+5 - four clauses do not contain common and do not have common with Select clause
+assign a, a1; if ifs, ifs1; while w, w1, w2;
+Select w2 such that Parent(w, a1) pattern a("x", "0") such that Follows(ifs1, w1) pattern ifs(_, _, _)
+18, 19, 24, 26, 36, 46, 47, 48, 49, 63, 64, 65, 73, 76, 82, 93, 94, 98, 99, 101, 103, 104, 105, 106, 107, 115, 122, 133, 137, 140, 143, 145, 150, 151, 152, 156, 173, 185
+5000
+6 - four clauses do not contain common and do not have common with Select clause
+call c; while w; procedure p, p1, p2; assign a; if ifs;
+Select p2 such that Calls(p, p1) and Next(c, w) pattern a(_, _) and ifs("x", _, _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+7 -  four clauses all four have one common and the Select clause is not common with any in all four clause
+assign a; if ifs; while w; read re;
+Select w pattern a("x", _) such that Parent(ifs, a) pattern a(_, "0") such that Follows(re, a)
+18, 19, 24, 26, 36, 46, 47, 48, 49, 63, 64, 65, 73, 76, 82, 93, 94, 98, 99, 101, 103, 104, 105, 106, 107, 115, 122, 133, 137, 140, 143, 145, 150, 151, 152, 156, 173, 185
+5000
+8 - four clauses all four have one common and the Select clause is not common with any in all four clause
+assign a, a1; if ifs; while w; variable v; call c; read re, re1;
+Select c such that Uses(a, v) pattern ifs(v, _, _) and a1(v, "x + 1") such that Uses(re, v)
+none
+5000
+9 - four clauses all four have one common and the Select clause is not common with any in all four clause
+procedure p; assign a; if ifs; variable v;
+Select p such that Next(a, ifs) pattern ifs("bracket", _, _) pattern ifs("div", _, _) such that Uses(ifs, v)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+10 - four clauses all four have one common that the Select clause is common to one of the clause but not this common of four clause
+assign a; if ifs; while w; read re;
+Select ifs pattern a("x", _) such that Parent*(ifs, a) pattern a(_, "0") such that Follows(re, a)
+31
+5000
+11 - four clauses all four have one common that the Select clause is common to one of the clause but not this common of four clause
+assign a, a1; if ifs; while w; variable v; call c; print re, re1;
+Select a such that Uses(re, v) such that Modifies(a, v) pattern ifs(v, _, _) and a1(v, "x + 1")
+11, 12, 16
+5000
+12 - four clauses all four have one common that the Select clause is common to one of the clause but not this common of four clause
+procedure p; assign a; if ifs; variable v;
+Select a such that Next(a, ifs) pattern ifs("bracket", _, _) pattern ifs("div", _, _) such that Uses(ifs, v)
+9
+5000
+13 - four clause all four have one common and Select also select this common
+assign a; if ifs; while w; read re;
+Select a pattern a("x", _) such that Parent*(ifs, a) pattern a(_, "0") such that Follows(re, a)
+34
+5000
+14 - four clause all four have one common and Select also select this common
+assign a, a1; if ifs; while w; variable v; call c; print re, re1;
+Select v such that Uses(re, v) such that Modifies(a, v) pattern ifs(v, _, _) and a1(v, "x + 1")
+output
+5000
+15 - four clause all four have one common and Select also select this common
+procedure p; assign a; if ifs; variable v;
+Select ifs such that Next(a, ifs) pattern ifs("bracket", _, _) pattern ifs("div", _, _) such that Uses(ifs, v)
+10
+5000
+16 - four clause three of the four clause have common and Select have no common with all four
+if ifs; while w, w1; procedure p; call c;
+Select p pattern ifs("x", _, _) and ifs("y", _, _) such that Parent(w, c) and Parent*(ifs, w1)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+17 - four clause three of the four clause have common and Select have no common with all four
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select p such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern ifs(_, _, _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+18 - four clause three of the four clause have common and Select have no common with all four
+procedure p, p1; call c; assign a;
+Select p1 such that Calls(p, "generalHelper") and Next(c, a) pattern a(_, _) and pattern a("x", _)
+none
+5000
+19 - four clause three of the four clause clause have common and Select clause select that common
+if ifs; while w, w1; procedure p; call c;
+Select ifs pattern ifs("x", _, _) and ifs("y", _, _) such that Parent(w, c) and Parent*(ifs, w1)
+10
+5000
+20 - four clause three of the four clause clause have common and Select clause select that common
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select ifs such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern ifs(_, _, _)
+15, 25, 71, 74, 142, 148, 153
+5000
+21 - four clause three of the four clause clause have common and Select clause select that common
+procedure p, p1; call c; assign a;
+Select a such that Calls(p, "generalHelper") and Next(c, a) pattern a(_, _"1 * 123"_) and a("j", _)
+164
+5000
+22 - four clause three of the four clause clause have common and Select have common with one other with these three but not that common
+if ifs; while w, w1; procedure p; call c;
+Select w1 pattern ifs("x", _, _) and ifs("y", _, _) such that Parent(w, c) and Parent*(ifs, w1)
+18, 19
+5000
+23 - four clause three of the four clause clause have common and Select have common with one other with these three but not that common
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select w such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern ifs(_, _, _)
+18, 26, 73, 76, 143, 150, 156
+5000
+24 - four clause three of the four clause clause have common and Select have common with one other with these three but not that common
+procedure p, p1; call c; assign a;
+Select c such that Calls(p, "generalHelper") and Next(c, a) pattern a(_, _"1 * 123"_) and a("j", _)
+163
+5000
+25 - four clause three of the four clause clause have common and Select have common with one other with the other clause
+if ifs; while w, w1; procedure p; call c;
+Select c pattern ifs("x", _, _) and ifs("y", _, _) such that Parent(w, c) and Parent*(ifs, w1)
+69, 95, 102, 134, 144, 158, 174
+5000
+26 - four clause three of the four clause clause have common and Select have common with one other with the other clause
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select a such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern ifs(_, _, _)
+12, 16, 34, 53, 96, 109, 116, 169, 180, 187
+5000
+27 - four clause three of the four clause clause have common and Select have common with one other with the other clause
+procedure p, p1; call c; assign a;
+Select p such that Calls(p, "generalHelper") and Next(c, a) pattern a(_, _"1 * 123"_) and a("j", _)
+loopTest, p193e20d, main
+5000
+28 - four clause there are two pair of common and Select have no common with all four
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select p such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern a("z", _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+29 - four clause there are two pair of common and Select have no common with all four
+assign a; if ifs, ifs1; print pn; procedure p;
+Select p such that Follows(a, ifs) such that Next(pn, ifs1) pattern a(_, _"x"_) and ifs1(_, _, _)
+none
+5000
+30 - four clause there are two pair of common and Select have no common with all four
+procedure p, p1; variable v; assign a; call c;
+Select c such that Calls*(p, p1) and Uses(p, v) pattern a("ddl", _) and a(_, _"ddl"_)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+31 - four clause there are two pair of common and Select is common to one of the common in the two pair
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select a such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern a("z", _)
+53
+5000
+32 - four clause there are two pair of common and Select is common to one of the common in the two pair
+assign a; if ifs, ifs1; print pn;
+Select pn such that Follows(a, ifs) such that Next(pn, ifs1) pattern a(_, _"a32j90d"_) and ifs1(_, _, _)
+30
+5000
+33 - four clause there are two pair of common and Select is common to one of the common in the two pair
+procedure p, p1; variable v; assign a; call c;
+Select p such that Calls*(p, p1) and Uses(p, v) pattern a("ddl", _) and a(_, _"ddl"_)
+loopTest, generalHelper, oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+34 - four clause there are two pair of common and Select is common to one other of the clause clause that is not the above clause
+if ifs; while w; procedure p; variable v; assign a; print pn;
+Select a such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w("z", _)
+none
+5000
+35 - four clause there are two pair of common and Select is common to one other of the clause clause that is not the above clause
+assign a; if ifs, ifs1; print pn;
+Select ifs1 such that Follows(a, ifs) such that Uses(ifs, "a") pattern a(_, _"a32j90d"_) and ifs1("x", _, _)
+10, 15, 85
+5000
+36 - four clause there are two pair of common and Select is common to one other in the pair
+procedure p, p1; variable v; assign a; call c;
+Select p1 such that Calls*(p, p1) and Uses(p, v) pattern a("ddl", _) and a(_, _"ddl"_)
+generalHelper, patternHelper, iterOne, p193e20d, oneCallHelper, deepWhileHelper, loopTest, simpleHelper, emptyHelper
+5000
+37 - four clause there are one pair of common and Select have no common with all four
+if ifs; procedure p; while w, w1; variable v; assign a; print pn;
+Select p such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w1("div", _)
+generalHelper, patternHelper, main, iterOne, p193e20d, oneCallHelper, deepWhileHelper, loopTest, simpleHelper, emptyHelper
+5000
+38 - four clause there are one pair of common and Select have no common with all four
+assign a; if ifs, ifs1; read re; call c;
+Select c such that Follows(a, re) such that Uses(ifs, "a") pattern a(_, _"a32j90d"_) and ifs1("x", _, _)
+none
+5000
+39 - four clause there are one pair of common and Select have no common with all four
+procedure p; while w; variable v; assign a; call c;
+Select c such that Calls*(p, "iterOne") and Uses(p, v) pattern w("ddl", _) and a(_, _"ddl"_)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+40 - four clause there are one pair of common and Select is common to the common
+if ifs; procedure p; while w, w1; variable v; assign a; print pn;
+Select ifs such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w1("div", _)
+15, 25, 71, 74, 142, 148, 153
+5000
+41 - four clause there are one pair of common and Select is common to the common
+assign a; if ifs, ifs1; read re; call c;
+Select a such that Follows(re, a) such that Uses(ifs, "a") pattern a(_, _"a32j90d"_) and ifs1("x", _, _)
+124
+5000
+42 - four clause there are one pair of common and Select is common to the common
+procedure p; while w; variable v; assign a; call c;
+Select p such that Calls*(p, "iterOne") and Uses(p, v) pattern w("ddl", _) and a(_, _"ddl"_)
+p193e20d, main, oneCallHelper, deepWhileHelper
+5000
+43 - four clause there are one pair of common and Select is common to some other variable in the clause with common variable
+if ifs; procedure p; while w, w1; variable v; assign a; print pn;
+Select w such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w1("div", _)
+18, 26, 73, 76, 143, 150, 156
+5000
+44 - four clause there are one pair of common and Select is common to some other variable in the clause with common variable
+assign a; if ifs, ifs1; read re; call c;
+Select re such that Follows(re, a) such that Uses(ifs, "a") pattern a(_, _"a32j90d"_) and ifs1("x", _, _)
+123
+5000
+45 - four clause there are one pair of common and Select is common to some other variable in the clause with common variable
+procedure p; while w; variable v; assign a; call c;
+Select v such that Calls*(p, "iterOne") and Uses(p, v) pattern w("ddl", _) and a(_, _"ddl"_)
+x, y, add, bracket, div, Test, z, minus, a, multi, output, ddl, b, c, d, cc, abc, ew09, wj923r, k, ufo, opnv12, a32j90d, u1f3o, q2a, cio12e, p3nc1l, e, f, h, i, g, j, o, p, q, r, C, A, B, print, iterOne, p193e20d, if, stmt, while, statement, proc, call, index, factor, empty
+5000
+46 - four clause there are one pair of common and Select is common to one other of the clause that is not the common clause
+if ifs; procedure p; while w, w1; variable v; assign a; print pn;
+Select w1 such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w1("div", _)
+18, 36, 49
+5000
+47 - four clause there are one pair of common and Select is common to one other of the clause that is not the common clause
+assign a; if ifs, ifs1; read re; call c;
+Select ifs such that Follows(re, a) such that Uses(ifs, "a32j90d") pattern a(_, _"a32j90d"_) and ifs1("x", _, _)
+125, 136, 141, 142
+5000
+48 - four clause there are one pair of common and Select is common to some other variable in the clause with common variable
+procedure p; while w; variable v; assign a; call c;
+Select w such that Calls*(p, "iterOne") and Uses(p, v) pattern w("ddl", _) and a(_, _"ddl"_)
+93, 94, 98, 99, 101, 103, 104, 105, 106, 107
+5000
+49 - four clause there are three pair of common and Select is common to some common variable in clause
+if ifs; procedure p; while w; variable v; assign a; print pn;
+Select w such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w(v, _)
+18, 73, 143
+5000
+50 - four clause there are three pair of common and Select is common to some common variable in clause
+assign a; if ifs, ifs1; read re; call c; variable v;
+Select ifs such Modifies(a, v) such that Uses(ifs, v) pattern a(_, _"a32j90d"_) and ifs("x", _, _)
+none
+5000
+51 - four clause there are three pair of common and Select is common to some common variable in clause
+procedure p; while w; variable v; assign a; call c;
+Select w such that Next(w, c) and Uses(a, v) pattern w(v, _) and a(v, _"ddl"_)
+94, 101
+5000
+52 - four clause there are three pair of common and Select is common to some uncommon variable in clause
+if ifs; procedure p; while w; variable v; assign a; print pn;
+Select a such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w(v, _)
+12, 16, 34, 53, 96, 109, 116, 169, 180, 187
+5000
+53 - four clause there are three pair of common and Select is common to some uncommon variable in clause
+assign a; if ifs, ifs1; read re; call c; variable v, v1;
+Select v1 such that Modifies(a, v) such that Uses(ifs, v) pattern a(v1, _"a32j90d"_) and ifs("u1f3o", _, _)
+a32j90d
+5000
+54 - four clause there are three pair of common and Select is common to some uncommon variable in clause
+procedure p; while w; variable v; assign a; call c;
+Select c such that Next(w, c) and Uses(a, v) pattern w(v, _) and a(v, _"ddl"_)
+95, 102
+5000
+55 - four clause there are three pair of common and Select is not common to any variable in clause
+if ifs; procedure p; while w; variable v; assign a; print pn; call c;
+Select c such that Parent(ifs, w) pattern ifs(v, _, _) such that Follows(a, pn) pattern w(v, _)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+56 - four clause there are three pair of common and Select is not common to any variable in clause
+assign a; if ifs, ifs1; read re; call c; variable v, v1;
+Select c such that Modifies(a, v) such that Uses(ifs, v) pattern a(v1, _"a32j90d"_) and ifs("u1f3o", _, _)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+57 - four clause there are three pair of common and Select is not common to any variable in clause
+procedure p; while w; variable v; assign a; call c;
+Select p such that Next(w, c) and Uses(a, v) pattern w(v, _) and a(v, _"ddl"_)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+58 - four clause there are of the form ab ab cd cd and select is common to some variable
+variable v, v1; assign a; while w;
+Select v such that Uses(a, v) and Modifies(a, v) pattern w(v1, _) and w(v1, _)
+div, z, x, ddl, c, d, a32j90d, p3nc1l, a, factor, index
+5000
+59 - four clause there are of the form ab ab cd cd and select is common to some variable
+variable v, v1; assign a, a1; while w; if ifs;
+Select v such that Uses(a, v) and Modifies(a, v) pattern a1(v1, _) and a1(v1, _)
+div, z, x, ddl, c, d, a32j90d, p3nc1l, a, factor, index
+5000
+60 - four clause there are of the form ab ab cd cd and select is common to some variable
+variable v, v1; assign a; while w; if ifs;
+Select ifs pattern a(v, _) and ifs(v1, _, _) such that Uses(a, v) and Modifies(ifs, v1)
+31, 38, 71, 56, 74, 85, 153, 125, 141, 142, 148
+5000
+61 - four clause there are of the form ab ab cd cd and select is not common to a b c d
+variable v, v1; assign a; while w; call c;
+Select c such that Uses(a, v) and Modifies(a, v) pattern w(v1, _) and w(v1, _)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+62 - four clause there are of the form ab ab cd cd and select is not common to a b c d
+variable v, v1; assign a, a1; while w; if ifs; procedure p;
+Select p such that Uses(a, v) and Modifies(a, v) pattern a1(v1, _) and a1(v1, _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+63 - four clause there are of the form ab ab cd cd and select is not common to a b c d
+variable v, v1; assign a; while w; if ifs; call c;
+Select c pattern a(v, _) and ifs(v1, _, _) such that Uses(a, v) and Modifies(ifs, v1)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+64 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is common to the variable in these two clause
+variable v, v1; assign a, a1; while w, w1; call c;
+Select v such that Uses(a, v) and Modifies(a, v) pattern w1(v1, _) and a1(v1, _)
+div, z, x, ddl, c, d, a32j90d, p3nc1l, a, factor, index
+5000
+65 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is common to the variable in these two clause
+variable v, v1, v2; assign a, a1, a2; while w; if ifs;
+Select v such that Uses(a, v) and Modifies(a, v) pattern a1(v1, _) and a2(v2, _)
+div, z, x, ddl, c, d, a32j90d, p3nc1l, a, factor, index
+5000
+67 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is common to the variable in the other clause
+variable v, v1; assign a, a1; while w, w1; call c;
+Select w1 such that Uses(a, v) and Modifies(a, v) pattern w1(v1, _) and a1(v1, _)
+18, 19, 24, 26, 36, 46, 47, 48, 49, 65, 73, 82, 93, 94, 98, 99, 101, 103, 104, 105, 106, 107, 115, 122, 140, 143, 145, 150, 151, 185
+5000
+68 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is common to the variable in the other clause
+variable v, v1, v2; assign a, a1, a2; while w; if ifs;
+Select a2 such that Uses(a, v) and Modifies(a, v) pattern a1(v1, _) and a2(v2, _"factor"_)
+186
+5000
+70 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is uncommon to the variable in any clause
+variable v, v1; assign a, a1; while w, w1; call c; procedure p;
+Select p such that Uses(a, v) and Modifies(a, v) pattern w1(v1, _) and a1(v1, _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+71 - four clause there are two pair of common in two clause(two clause both with ab and ab) and select is uncommon to the variable in any clause
+call c; variable v, v1, v2; assign a, a1, a2; while w; if ifs;
+Select c such that Uses(a, v) and Modifies(a, v) pattern a1(v1, _) and a2(v2, _"factor"_)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+72 - four clause is of form(ab ab ab ab) and select is common to a/b
+variable v; assign a;
+Select v such that Uses(a, v) and Modifies(a, v) pattern a(v, _) and a(v, _)
+div, z, x, ddl, c, d, a32j90d, p3nc1l, a, factor, index
+5000
+73 - four clause is of form(ab ab ab ab) and select is common to a/b
+variable v; assign a;
+Select a such that Uses(a, v) and Modifies(a, v) pattern a(v, _"ddl"_) and a(v, _"2"_)
+109, 113
+5000
+74 - four clause is of form(ab ab ab ab) and select is not common
+variable v; assign a; procedure p;
+Select p such that Uses(a, v) and Modifies(a, v) pattern a(v, _) and a(v, _)
+iterOne, loopTest, generalHelper, patternHelper, oneCallHelper, deepWhileHelper, p193e20d, main, simpleHelper, emptyHelper
+5000
+75 - four clause is of form(ab ab ab ab) and select is not common
+variable v; assign a; call c;
+Select c such that Uses(a, v) and Modifies(a, v) pattern a(v, _"ddl"_) and a(v, _"2"_)
+55, 60, 69, 70, 75, 80, 90, 92, 95, 102, 126, 128, 134, 135, 139, 144, 147, 149, 155, 158, 163, 166, 174, 175
+5000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1 - next* with other existing such that
+assign a; procedure p;
+Select p such that Next*(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+2 - next* with other existing patterns
+while w;
+Select w pattern w("ddl", _) such that Next*(138, 165)
+93, 94, 98, 99, 101, 103, 104, 105, 106, 107
+5000
+3 - next* with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select s such that Next*(90, _) pattern a(_, _"stmt"_) such that Follows(pn, re)
+none
+5000
+4 - next* with next*
+call c, c1; assign a;
+Select a such that Next*(a, c2) and Next*(c1, a)
+66, 67, 68, 96, 124, 127, 131, 132, 161, 162, 164, 169, 171, 172
+5000
+5 - affect with other existing such that
+assign a; procedure p;
+Select p such that Affects(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+6 - affect with other existing patterns
+while w; assign a;
+Select a pattern w("ddl", _) such that Affects(a, a)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+7 - affect with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Affects(119, _) pattern a(_, _"stmt"_) such that Follows(pn, re)
+51
+5000
+8 - affect with affect
+call c, c1; assign a;
+Select BOOLEAN such that Affects(a, c2) and Affects(c1, a)
+false
+5000
+9 - affectstar with other existing such that
+assign a; procedure p;
+Select p such that Affects*(3, 8) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+10 - affectstar with other existing patterns
+while w; assign a;
+Select a pattern w("ddl", _) such that Affects*(a, a)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+11 - affectstar with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Affects*(84, 83) pattern a(_, _"stmt"_) such that Follows(pn, re)
+51
+5000
+12 - affectstar with affectstar
+assign a, a1;
+Select BOOLEAN such that Affects*(a, a) and Affects*(a, a1)
+true
+5000
+13 - affectstar and nextstar with other existing such that
+assign a; procedure p;
+Select p such that Affects*(3, 8) and Next*(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+14 - affectstar and nextstar with other existing patterns
+while w; assign a;
+Select a such that Next*(138, 165) pattern w("ddl", _) such that Affects*(a, a)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+15 - affectstar and nextstar with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Next*(90, _) and Affects*(84, 83) pattern a(_, _"stmt"_) such that Follows(pn, re)
+none
+5000
+16 - affectstar and nextstar with affectstar and nextstar
+assign a, a1, a2; call c1, c2;
+Select a2 such that Affects*(a, a) and Affects*(a, a1) such that Next*(a2, c2) and Next*(c1, a2)
+66, 67, 68, 96, 124, 127, 131, 132, 161, 162, 164, 169, 171, 172
+5000
+17 - affect and nextstar with other existing such that
+assign a; procedure p;
+Select p such that Affects(a, a) and Next*(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+18 - affect and nextstar with other existing patterns
+while w; assign a;
+Select a such that Next*(138, 165) pattern w("ddl", _) such that Affects(a, a)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+19 - affect and nextstar with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Next*(90, _) and Affects(84, 83) pattern a(_, _"stmt"_) such that Follows(pn, re)
+none
+5000
+20 - affect and nextstar with affect and nextstar
+assign a, a1, a2; call c1, c2;
+Select a2 such that Affects(a, c2) and Affects(c1, a) such that Next*(a2, c2) and Next*(c1, a2)
+none
+5000
+21 - affect and affectstar with other existing such that
+assign a; procedure p;
+Select p such that Affects(a, a) and Affects*(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+22 - affect and affectstar with other existing patterns
+while w; assign a;
+Select a such that Affects*(84, 83) pattern w("ddl", _) such that Affects(a, a)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+23 - affect and affectstar with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Affects*(a, a) and Affects(84, 83) pattern a(_, _"stmt"_) such that Follows(pn, re)
+51
+5000
+24 - affect and affectstar with affect and affectstar
+assign a;
+Select BOOLEAN such that Affects(a, a) and Affects*(3, 8) such that Affects*(a, a) and Affects(84, 83)
+true
+5000
+25 - affect and affectstar and nextstar with other existing such that
+assign a; procedure p; stmt s;
+Select p such that Next*(s, a) and Affects(a, a) and Affects*(a, a) such that Calls(p, "iterOne")
+oneCallHelper, deepWhileHelper, p193e20d, main
+5000
+26 - affect and affectstar and nextstar with other existing patterns
+while w; assign a;
+Select a such that Affects*(84, 83) pattern w("ddl", _) such that Affects(a, a) and Next*(138, 165)
+37, 83, 96, 113, 116, 118, 119, 124, 161, 186, 187
+5000
+27 - affect and affectstar and nextstar with other existing such that and pattern
+stmt s; assign a; print pn; read re;
+Select pn such that Affects*(a, a) and Affects(84, 83) pattern a(_, _"stmt"_) such that Follows(pn, re) such that Next*(_, 80)
+51
+5000
+28 - affect and affectstar and nextstar with affect and affectstar
+assign a; call c;
+Select c such that Affects(a, a) and Affects*(3, 8) such that Affects*(a, a) and Affects(84, 83) and Next*(c, c) such that Next*(c, 121)
+95, 102
+5000
+
+
+
+
+
+
+
+ADD A WITH TO EVERYTHING BEFORE THIS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1 - 6 affects tuple
+variable v; assign a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12;
+Select < v  > such that Affects(a1, a2) such that Affects(a3, a4) such that Affects(a5, a6) such that Affects(a7, a8) such that Affects(a9, a10) such that Affects(a11, a12)
+
+5000
+2 - 6 affects*
+while w; assign a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12;
+Select w such that Affects*(a1, a2) such that Affects*(a3, a4) such that Affects*(a5, a6) such that Affects*(a7, a8) such that Affects*(a9, a10) such that Affects*(a11, a12)
+
+5000
+3 - 6 next*
+prog_line n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12;
+Select n12 such that Next*(n1, n2) such that Next*(n3, n4) such that Next*(n5, n6) such that Next*(n7, n8) such that Next*(n9, n10) such that Next*(n11, n12)
+
+5000
+4 - 6 affects* tuple
+while w; assign a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12;
+Select <w, a6> such that Affects*(a1, a2) such that Affects*(a3, a4) such that Affects*(a5, a6) such that Affects*(a7, a8) such that Affects*(a9, a10) such that Affects*(a11, a12)
+
+5000
+5 - 6 next* tuple
+prog_line n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12; variable v; procedure p;
+Select <v,p.procName> such that Next*(n1, n2) such that Next*(n3, n4) such that Next*(n5, n6) such that Next*(n7, n8) such that Next*(n9, n10) such that Next*(n11, n12)
+
+5000
+6 - 6 next* (s,s) tuple
+prog_line n1, n2; while w3; if ifs4; assign a5; call c6;
+Select <w3,ifs4,c6> such that Next*(n1, n1) such that Next*(n2, n2) such that Next*(w3, w3) such that Next*(ifs4, ifs4) such that Next*(a5, a5) such that Next*(c6, c6)
+
+5000
+8 - 3 modifies, 3 uses tuple
+variable v1, v2, v3; if ifs; while w; procedure p1, p2, p3;
+Select <w,v1> such that Uses(w,v1) and Uses(ifs, v1) and Uses( p1 , v1 ) such that Modifies(p2 ,v2) such that Modifies(p3 , v3) and Modifies(p1,        v1)
+
+5000
+9 - 3 parent, 3 follows tuple
+stmt s1, s2, s3; variable v1; if ifs; while w; procedure p1, p2, p3;
+Select <s1, s2 , ifs,w > such that Parent(s1,ifs) and Parent*(s2,ifs) and Parent*(s2,w) and Follows*(240,244) and Follows(s1,_) and Follows*(_,_)
+
+5000
+10 - 4 calls, 1 Uses, 1 Modifies tuple
+variable v1; call c1, c2; procedure p1, p2, p3;
+Select <c1,p3,v1,c2,c1> such that Modifies(" patternHelper",v1) such that Calls*(p1,_) and Calls(_,p2) and Calls*(p3,"longHelper") and Calls*("main","oneCallHelper") such that Uses("p ",v1)
+
+5000
