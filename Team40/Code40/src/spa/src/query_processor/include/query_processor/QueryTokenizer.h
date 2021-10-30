@@ -44,7 +44,9 @@ private:
     void validateTokens(vector<PatToken> tokens);
     void validateDeType(string input);
     void validateRsType(string input);
-    void validateClauseArg(string input);
+    void validateSuchThatArg(string input);
+    void validatePatternArg(string input);
+    void validateWithArg(string input);
     void validateQuoted(string input);
     void validateAttrRef(string input);
     void validateName(string input);
