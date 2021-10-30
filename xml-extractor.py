@@ -5,8 +5,10 @@ python3 xml-extractor.py affects_complex_source.txt affects_complex_queries.txt
 
 python3 xml-extractor.py multiclause_source.txt multiclause_2st1p_queries.txt
 """
+import subprocess
 import sys
 import os
+import platform
 
 import xml.etree.cElementTree as et
 
@@ -43,11 +45,33 @@ def concatenateTimings(subset):
 		output += ("%.2f + " % i)
 	return output[:-3]
 
+def printByCriteria(output):
+	whatToPrint = 0
+	if whatToPrint == 0: # default don't print anything
+		pass
+	elif whatToPrint == 1: # print everything
+		print(output)
+	elif whatToPrint == 2: # print errors
+		criteria = ["Evaluating query", "Missing:", "Additional:"]
+		toPrint = [1 for x in criteria if x in output]
+		if toPrint:
+			print(output)
 
 def run(source_path, queries_path, xml_path):
 	cmd = r"Team40\Code40\build_win\x86-Release\src\autotester\autotester.exe Team40\Tests40\{} Team40\Tests40\{} {}".format(source_path, queries_path, xml_path)
-	os.system(cmd)
-	print()
+	# os.system(cmd)
+	plat = platform.system()
+	if plat == "Windows":
+		result = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+		result = result.stdout
+		for i in result.split("\n"):
+			printByCriteria(i)
+	elif plat == "Darwin":
+		print("Please add in a command for Mac ^^")
+		exit(0)
+	else:
+		print("Your system is not supported (??)")
+		exit(0)
 
 if __name__ == "__main__":
 	args = sys.argv[1:]
@@ -60,6 +84,7 @@ if __name__ == "__main__":
 	maxs = []
 	
 	for i in range(n):
+		print("Timing run %d..." % (i+1))
 		run(source_path, queries_path, xml_path)
 		timings = extractTimings(xml_path)
 		avg = getAverage(timings)
@@ -69,6 +94,7 @@ if __name__ == "__main__":
 		max_val = getMax(timings)
 		maxs.append(max_val)
 	
+	print()
 	print(source_path)
 	print(queries_path)
 	print("    Average:  %.2f  (%s)" % (getAverage(avgs), concatenateTimings(avgs)))
