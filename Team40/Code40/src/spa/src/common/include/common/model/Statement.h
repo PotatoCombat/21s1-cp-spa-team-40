@@ -13,7 +13,7 @@ enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 
 class Statement : public Entity<StmtIndex> {
 public:
-    Statement(StmtIndex index, StatementType statementType);
+    explicit Statement(StmtIndex index, StatementType statementType);
 
     StatementType getStatementType();
 
