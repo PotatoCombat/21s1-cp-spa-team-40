@@ -375,7 +375,7 @@ procedure    procName {
         y = 44;
         print z;
     } else {
-        bigNum = 1098765432109876;
+        bigNum = 1;
     }
 }
 
