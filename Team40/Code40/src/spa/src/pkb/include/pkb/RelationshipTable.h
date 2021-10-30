@@ -41,8 +41,7 @@ public:
      */
     inline L getFirstLHSRelationship(const R &rhs, const L &invalidValue) {
         auto key = backwardFirstEntryMap.find(rhs);
-        if (key == backwardFirstEntryMap.end())
-        {
+        if (key == backwardFirstEntryMap.end()) {
             return invalidValue;
         }
         return key->second;
@@ -56,8 +55,7 @@ public:
      */
     inline R getFirstRHSRelationship(const L &lhs, const R &invalidValue) {
         auto key = forwardFirstEntryMap.find(lhs);
-        if (key == forwardFirstEntryMap.end())
-        {
+        if (key == forwardFirstEntryMap.end()) {
             return invalidValue;
         }
         return key->second;
@@ -68,8 +66,7 @@ public:
      */
     inline set<L> getLHSRelationships(const R &rhs) {
         auto key = backwardEntriesMap.find(rhs);
-        if (key == backwardEntriesMap.end())
-        {
+        if (key == backwardEntriesMap.end()) {
             return { };
         }
         return key->second;
@@ -80,8 +77,7 @@ public:
      */
     inline set<R> getRHSRelationships(const L &lhs) {
         auto key = forwardEntriesMap.find(lhs);
-        if (key == forwardEntriesMap.end())
-        {
+        if (key == forwardEntriesMap.end()) {
             return { };
         }
         return key->second;
@@ -92,8 +88,7 @@ public:
      */
     inline bool isRelationship(const L &lhs, const R &rhs) {
         auto key = backwardEntriesMap.find(rhs);
-        if (key == backwardEntriesMap.end())
-        {
+        if (key == backwardEntriesMap.end()) {
             return false;
         }
         auto values = key->second;
@@ -129,8 +124,7 @@ private:
         if (key == forwardEntriesMap.end()) {
             forwardFirstEntryMap[lhs] = rhs;
             forwardEntriesMap[lhs] = { rhs };
-        }
-        else {
+        } else {
             key->second.insert(rhs);
         }
     };
@@ -143,8 +137,7 @@ private:
         if (key == backwardEntriesMap.end()) {
             backwardFirstEntryMap[rhs] = lhs;
             backwardEntriesMap[rhs] = { lhs };
-        }
-        else {
+        } else {
             key->second.insert(lhs);
         }
     };
