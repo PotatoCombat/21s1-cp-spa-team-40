@@ -109,7 +109,8 @@ bool PatternParser::isExactPattern(vector<PatToken> pattern) {
 }
 
 bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
-    return pattern.size() == 1 && ParserUtil::isWildcard(pattern.at(0));
+    return pattern.size() == PATARG_SIZE_ONE &&
+           ParserUtil::isWildcard(pattern.at(0));
 }
 
 bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {
