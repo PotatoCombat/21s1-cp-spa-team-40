@@ -107,12 +107,14 @@ void PKB::insertIfPattern(Statement *stmt) {
     for (auto &var : stmt->getExpressionVars()) {
         ifPatternTable.insertRelationship(stmt->getId(), var->getId());
     }
+    ifPatternTable.insertRelationship(stmt->getId(), WILDCARD);
 }
 
 void PKB::insertWhilePattern(Statement *stmt) {
     for (auto &var : stmt->getExpressionVars()) {
         whilePatternTable.insertRelationship(stmt->getId(), var->getId());
     }
+    whilePatternTable.insertRelationship(stmt->getId(), WILDCARD);
 }
 
 // =============================================================================
