@@ -142,9 +142,9 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
                                  lastExecutedStatements);
     extractLastExecutedStatement(ifStatement->getElseStmtLst(),
                                  lastExecutedStatements);
-    for (Statement *lastLeafStatement : lastExecutedStatements) {
+    for (Statement *lastExecutedStatement : lastExecutedStatements) {
         ExtractionContext::getInstance().setPreviousStatement(
-            lastLeafStatement);
+            lastExecutedStatement);
     }
 
     ExtractionContext::getInstance().unsetParentStatement(ifStatement);
@@ -212,8 +212,8 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     vector<Statement *> lastExecutedStatements;
     extractLastExecutedStatement(whileStatement->getThenStmtLst(),
                                  lastExecutedStatements);
-    for (Statement *lastLeafStatement : lastExecutedStatements) {
-        pkb->insertNext(lastLeafStatement, whileStatement);
+    for (Statement *lastExecutedStatement : lastExecutedStatements) {
+        pkb->insertNext(lastExecutedStatement, whileStatement);
     }
     ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
