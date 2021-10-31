@@ -1,5 +1,6 @@
 #include "source_processor/design_extractor/ExtractionContext.h"
 #include <iterator>
+#include <utility>
 
 ExtractionContext &ExtractionContext::getInstance() {
     static ExtractionContext instance;
@@ -30,6 +31,37 @@ void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
         throw runtime_error("Trying to unset another procedure.");
     }
     currentProcedure = nullopt;
+}
+
+StmtIndex
+ExtractionContext::getFirstExecutedStatement(const ProcName &procName) {
+    if (procFirstExecutedStatements.find(procName) ==
+        procFirstExecutedStatements.end()) {
+        throw runtime_error("Trying to get a null value.");
+    }
+    return procFirstExecutedStatements[procName];
+}
+
+void ExtractionContext::setFirstExecutedStatement(const ProcName &procName,
+                                                  StmtIndex stmtIndex) {
+    if (procFirstExecutedStatements.count(procName)) {
+        throw runtime_error("Trying to unset another StmtIndex.");
+    }
+    procFirstExecutedStatements[procName] = stmtIndex;
+}
+
+set<StmtIndex>
+ExtractionContext::getLastExecutedStatements(const ProcName &procName) {
+    if (procLastExecutedStatements.find(procName) ==
+        procLastExecutedStatements.end()) {
+        throw runtime_error("Trying to get a null value.");
+    }
+    return procLastExecutedStatements[procName];
+}
+
+void ExtractionContext::setLastExecutedStatements(const ProcName &procName,
+                                                  set<StmtIndex> stmtIndices) {
+    procLastExecutedStatements[procName] = std::move(stmtIndices);
 }
 
 optional<Statement *> ExtractionContext::getModifyingStatement() {
@@ -215,4 +247,6 @@ void ExtractionContext::reset() {
     resetTransientContexts();
     procDependencyMap.clear();
     procIndegreesCounter.clear();
+    procFirstExecutedStatements.clear();
+    procLastExecutedStatements.clear();
 }
