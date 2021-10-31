@@ -9,6 +9,17 @@ private:
     vector<vector<Statement *>> statementLists;
     PKB *pkb;
 
+    // Utility
+    void extractTransitiveUsesRelationship(Statement *callStatement,
+                                           Procedure *currentProcedure,
+                                           ProcName calleeName);
+    void extractTransitiveModifiesRelationship(Statement *callStatement,
+                                               Procedure *currentProcedure,
+                                               ProcName calleeName);
+    void updateLastExecutableStatements(Statement *callStatement,
+                                        Procedure *currentProcedure,
+                                        ProcName calleeName);
+
 public:
     explicit BreadthFirstExtractor(PKB *pkb);
     // Program

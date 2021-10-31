@@ -1,5 +1,7 @@
 #include "source_processor/design_extractor/BreadthFirstExtractor.h"
 
+#include <utility>
+
 BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 
 void BreadthFirstExtractor::extract(Program *program) {
@@ -84,12 +86,24 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     // Extract Calls(proc, proc) relationship
     pkb->insertCalls(currentProcedure.value(), calleeName);
 
-    // Handle transitive Modifies
-    set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
-    for (VarName modifiedVarName : modifiedVarNames) {
+    extractTransitiveUsesRelationship(callStatement, currentProcedure.value(),
+                                      calleeName);
+    extractTransitiveModifiesRelationship(callStatement,
+                                          currentProcedure.value(), calleeName);
+    updateLastExecutableStatements(callStatement, currentProcedure.value(),
+                                   calleeName);
+}
+
+void BreadthFirstExtractor::extractTransitiveModifiesRelationship(
+    Statement *callStatement, Procedure *currentProcedure,
+    ProcName calleeName) {
+
+    set<VarName> modifiedVarNames =
+        pkb->getVarsModifiedByProc(std::move(calleeName));
+    for (const VarName &modifiedVarName : modifiedVarNames) {
         Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
         // If Modifies(calleeProc, var) then Modifies(callerProc, var)
-        pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
+        pkb->insertProcModifyingVar(currentProcedure, modifiedVar);
         pkb->insertStmtModifyingVar(callStatement, modifiedVar);
         // If Modifies(stmt, var) then Modifies(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
@@ -98,13 +112,17 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
                 pkb->getStmtByIndex(parentStarStatement), modifiedVar);
         }
     }
+}
 
-    // Handle transitive Uses(proc, var)
-    set<VarName> usedVarNames = pkb->getVarsUsedByProc(calleeName);
-    for (VarName usedVarName : usedVarNames) {
+void BreadthFirstExtractor::extractTransitiveUsesRelationship(
+    Statement *callStatement, Procedure *currentProcedure,
+    ProcName calleeName) {
+
+    set<VarName> usedVarNames = pkb->getVarsUsedByProc(std::move(calleeName));
+    for (const VarName &usedVarName : usedVarNames) {
         Variable *usedVar = pkb->getVarByName(usedVarName);
         // If Uses(calleeProc, var) then Uses(callerProc, var)
-        pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
+        pkb->insertProcUsingVar(currentProcedure, usedVar);
         pkb->insertStmtUsingVar(callStatement, usedVar);
         // If Uses(stmt, var) then Uses(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
@@ -113,12 +131,16 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
                                     usedVar);
         }
     }
+}
 
-    // TODO: Extract into method
+void BreadthFirstExtractor::updateLastExecutableStatements(
+    Statement *callStatement, Procedure *currentProcedure,
+    ProcName calleeName) {
+
     // If the call statement is the last-executable statement,
     // replace it with those of the called proc. Again, the correctness of this
     // subroutine we rely on the reverse topological order of procedures.
-    ProcName curProcName = currentProcedure.value()->getName();
+    ProcName curProcName = currentProcedure->getName();
     StmtIndex curStmtIndex = callStatement->getIndex();
     if (ExtractionContext::getInstance()
             .getLastExecutedStatements(curProcName)
