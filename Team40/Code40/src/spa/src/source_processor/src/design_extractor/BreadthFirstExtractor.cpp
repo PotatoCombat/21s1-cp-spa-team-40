@@ -114,22 +114,25 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
         }
     }
 
+    // TODO: Extract into method
     // If the call statement is the last-executable statement,
-    // replace it with those of the called proc
+    // replace it with those of the called proc. Again, the correctness of this
+    // subroutine we rely on the reverse topological order of procedures.
     ProcName curProcName = currentProcedure.value()->getName();
     StmtIndex curStmtIndex = callStatement->getIndex();
     if (ExtractionContext::getInstance()
             .getLastExecutedStatements(curProcName)
             .count(curStmtIndex)) {
-        ExtractionContext::getInstance()
-            .getLastExecutedStatements(curProcName)
-            .erase(curStmtIndex);
+        auto curProcLastExecutableStmts =
+            ExtractionContext::getInstance().getLastExecutedStatements(
+                curProcName);
         auto calleeLastExecutableStmts =
             ExtractionContext::getInstance().getLastExecutedStatements(
                 calleeName);
-        ExtractionContext::getInstance()
-            .getLastExecutedStatements(curProcName)
-            .insert(calleeLastExecutableStmts.begin(),
-                    calleeLastExecutableStmts.end());
+        curProcLastExecutableStmts.erase(curStmtIndex);
+        curProcLastExecutableStmts.insert(calleeLastExecutableStmts.begin(),
+                                          calleeLastExecutableStmts.end());
+        ExtractionContext::getInstance().setLastExecutedStatements(
+            curProcName, curProcLastExecutableStmts);
     }
 }
