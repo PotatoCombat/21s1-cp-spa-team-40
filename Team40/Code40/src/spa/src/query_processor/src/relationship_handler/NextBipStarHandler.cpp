@@ -49,7 +49,7 @@ set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
         toExplore.pop();
 
         // Explore neighbours
-        for (ProgLineIndex index : pkb->getNextLines(curIndex)) {
+        for (ProgLineIndex index : pkb->getNextBipLines(curIndex)) {
             // Only add neighbours that haven't been visited
             if (visited.find(index) == visited.end()) {
                 visited.insert(index); // Mark current as visited
@@ -81,7 +81,7 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
         toExplore.pop();
 
         // Explore neighbours
-        for (ProgLineIndex i : pkb->getNextLines(curIndex)) {
+        for (ProgLineIndex i : pkb->getNextBipLines(curIndex)) {
             if (i == rightIndex) {
                 return true;
             }
