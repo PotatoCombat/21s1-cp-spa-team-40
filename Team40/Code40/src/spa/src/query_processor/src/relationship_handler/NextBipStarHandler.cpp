@@ -9,10 +9,17 @@ NextBipStarHandler::NextBipStarHandler(Clause *clause, PKB *pkb)
 }
 
 set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
+    ExplorationFunction explorationFunction =
+        &NextBipStarHandler::getNextBipLines;
+    return breadthFirstSearch(explorationFunction, r2);
+}
+
+set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
+                                                   const string &r) {
     queue<ProgLineIndex> toExplore;
     unordered_set<ProgLineIndex> visited;
 
-    toExplore.push(stoi(r2));
+    toExplore.push(stoi(r));
 
     ProgLineIndex curIndex;
     while (!toExplore.empty()) {
@@ -20,7 +27,7 @@ set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
         toExplore.pop();
 
         // Explore neighbours
-        for (ProgLineIndex index : pkb->getPreviousBipLines(curIndex)) {
+        for (ProgLineIndex index : (this->*explore)(curIndex)) {
             // Only add neighbours that haven't been visited
             if (visited.find(index) == visited.end()) {
                 visited.insert(index); // Mark current as visited
@@ -38,32 +45,8 @@ set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
 }
 
 set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
-    queue<ProgLineIndex> toExplore;
-    unordered_set<ProgLineIndex> visited;
-
-    toExplore.push(stoi(r1));
-
-    ProgLineIndex curIndex;
-    while (!toExplore.empty()) {
-        curIndex = toExplore.front();
-        toExplore.pop();
-
-        // Explore neighbours
-        for (ProgLineIndex index : pkb->getNextBipLines(curIndex)) {
-            // Only add neighbours that haven't been visited
-            if (visited.find(index) == visited.end()) {
-                visited.insert(index); // Mark current as visited
-                toExplore.push(index);
-            }
-        }
-    }
-
-    set<string> res;
-    for (ProgLineIndex index : visited) {
-        res.insert(to_string(index));
-    }
-
-    return res;
+    ExplorationFunction explore = &NextBipStarHandler::getPreviousBipLines;
+    return breadthFirstSearch(explore, r1);
 }
 
 bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
@@ -95,4 +78,14 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
     }
 
     return false;
+}
+
+set<ProgLineIndex>
+NextBipStarHandler::getNextBipLines(ProgLineIndex progLineIndex) {
+    return pkb->getNextBipLines(progLineIndex);
+}
+
+set<ProgLineIndex>
+NextBipStarHandler::getPreviousBipLines(ProgLineIndex progLineIndex) {
+    return pkb->getPreviousBipLines(progLineIndex);
 }
