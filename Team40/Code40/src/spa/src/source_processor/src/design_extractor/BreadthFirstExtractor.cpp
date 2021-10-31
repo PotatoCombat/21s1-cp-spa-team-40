@@ -5,6 +5,7 @@ BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 void BreadthFirstExtractor::extract(Program *program) {
     ExtractionContext::getInstance().resetTransientContexts();
 
+    // Extract procedures in topologically reverse order of dependencies
     unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
         procMap[procedure->getName()] = procedure;
@@ -69,7 +70,7 @@ void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
 
 void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     optional<Procedure *> currentProcedure =
-        ExtractionContext::getInstance().getCurrentProcedure().value();
+        ExtractionContext::getInstance().getCurrentProcedure();
     if (!currentProcedure.has_value()) {
         throw runtime_error("Current procedure not set");
     }
@@ -111,5 +112,24 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
             pkb->insertStmtUsingVar(pkb->getStmtByIndex(parentStarStatement),
                                     usedVar);
         }
+    }
+
+    // If the call statement is the last-executable statement,
+    // replace it with those of the called proc
+    ProcName curProcName = currentProcedure.value()->getName();
+    StmtIndex curStmtIndex = callStatement->getIndex();
+    if (ExtractionContext::getInstance()
+            .getLastExecutedStatements(curProcName)
+            .count(curStmtIndex)) {
+        ExtractionContext::getInstance()
+            .getLastExecutedStatements(curProcName)
+            .erase(curStmtIndex);
+        auto calleeLastExecutableStmts =
+            ExtractionContext::getInstance().getLastExecutedStatements(
+                calleeName);
+        ExtractionContext::getInstance()
+            .getLastExecutedStatements(curProcName)
+            .insert(calleeLastExecutableStmts.begin(),
+                    calleeLastExecutableStmts.end());
     }
 }
