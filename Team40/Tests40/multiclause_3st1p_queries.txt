@@ -1,0 +1,230 @@
+1 - such that (follows, uses and modifies) tuple result assign declaration (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that Follows*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Modifies(a1, v) and Modifies(a2, v) pattern a1 (_, _) pattern a2 (_, _)
+138 140
+5000
+2 - such that (follows, uses and modifies) tuple result assign and while declaration (3)
+while w; assign a; variable v;
+Select <w, a> such that Follows*(w, a) and Uses(w, v) and Uses(a, v) and Modifies(w, v) and Modifies(a, v) pattern w (_, _) pattern a (_, _)
+130 134,147 166
+5000
+3 - such that (follows, uses and modifies) tuple result assign and if declaration (3)
+if ifs; assign a; variable v;
+Select <ifs, a> such that Follows*(ifs, a) and Uses(ifs, v) and Uses(a, v) and Modifies(ifs, v) and Modifies(a, v) pattern ifs (_, _, _) pattern a (_, _)
+123 167,149 164
+5000
+4 - such that (follows, uses and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Follows*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Calls*(p1, p2)  and Uses(p1, v) and Uses(p2, v) pattern a1 (_, _"a"_) pattern a2 (_, _"a"_)
+102 108,129 134,138 140,151 156,178 179,188 189,51 56
+5000
+5 - such that (follows, uses and calls) tuple result (3)
+while w; assign a; variable v; procedure p1, p2;
+Select <w, a> such that  Follows*(w, a) and Uses(w, v) and Uses(a, v) and Calls*(p1, p2)  and Uses(p1, v) and Uses(p2, v) pattern w ("w", _)
+125 144,130 134,147 166,152 156,59 63,75 79
+5000
+6 - such that (follows, uses and calls) tuple result (3)
+if ifs; assign a; variable v; procedure p1, p2;
+Select <ifs, a> such that  Follows*(ifs, a) and Uses(ifs, v) and Uses(a, v) and Calls*(p1, p2)  and Uses(p1, v) and Uses(p2, v) pattern ifs ("b", _, _)  
+111 118,123 167,128 143,149 164,92 99
+5000
+7 - such that (follows, uses and next) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Next*(a1, a2) pattern a1 ("x", _) pattern a2 ("x", _)
+102 108
+5000
+8 - such that (follows, uses and next) tuple result (3)
+while w; assign a; variable v;
+Select <w, a> such that  Follows*(w, a) and Uses(w, v) and Uses(a, v) and Next*(w, a) pattern w ("c", _)
+137 141,169 193,173 181,183 191,23 34,47 66,52 56,9 20
+5000
+9 - such that (follows, uses and next) tuple result (3)
+if ifs; assign a; variable v;
+Select <ifs, a> such that  Follows*(ifs, a) and Uses(ifs, v) and Uses(a, v) and Next*(ifs, a) pattern ifs ("y", _, _)
+12 19,171 192,175 180,185 190,25 32,50 64,7 35
+5000
+10 - such that (follows, uses and affects) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Affects*(a1, a2) pattern a1 (_, _"d"_) pattern a2 ("d", _)
+151 156
+5000
+11 - such that (follows, uses and affects) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Affects*(a1, a2) pattern a1 ("z", _) pattern a2 (_, _"z"_)
+136 141,153 154
+5000
+12 - such that (follows, modifies and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Calls*(p1, p2)  and Modifies(p1, v) and Modifies(p2, v) pattern a1 ("a", _"b"_) pattern a2 ("a", _"c"_)
+160 161
+5000
+13 - such that (follows, modifies and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Calls*(p1, p2)  and Modifies(p1, v) and Modifies(p2, v) pattern a1 ("z", _"y"_) pattern a2 ("z", _"x"_)
+none
+5000
+14 - such that (follows, modifies and next) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Next*(a1, a2) pattern a1 (_, _"d / b"_) pattern a2 (_, _"d - c"_)
+160 161
+5000
+15 - such that (follows, modifies and next) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Next*(a1, a2) pattern a1 (_, _"w + x"_) pattern a2 (_, _"w * y"_)
+none
+5000
+16 - such that (follows, modifies and affects) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a2, v) and Affects*(a1, a2) pattern a1 ("a", _"x / z"_) pattern a2 ("z", _"a - b"_)
+96 97
+5000
+17 - such that (follows, modifies and affects) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Follows*(a1, a2) and Modifies(a2, v) and Affects*(a1, a2) pattern a1 ("b", _"y * z"_) pattern a2 ("y", _"a + c"_)
+none
+5000
+18 - such that (follows, next and affects) tuple result (3)
+assign a1, a2;
+Select <a1, a2> such that  Follows*(a1, a2) and Next*(a1, a2) and Affects*(a1, a2) pattern a1 (_, _"d"_) pattern a2 ("d", _)
+151 156
+5000
+19 - such that (follows, next and affects) tuple result (3)
+assign a1, a2;
+Select <a1, a2> such that  Follows*(a1, a2) and Next*(a1, a2) and Affects*(a1, a2) pattern a1 (_, _"w"_) pattern a2 ("w", _)
+136 141,153 154
+5000
+20 - such that (parent, uses and modifies) tuple result (3)
+if ifs; assign a; variable v;
+Select <ifs, a> such that  Parent*(ifs, a) and Uses(ifs, v) and Uses(a, v) and Modifies(ifs, v) and Modifies(a, v) pattern ifs ("c", _, _) pattern a ("y", _)
+123 132,123 166,128 132
+5000
+21 - such that (parent, uses and modifies) tuple result (3)
+while w; assign a; variable v;
+Select <w, a> such that  Parent*(w, a) and Uses(w, v) and Uses(a, v) and Modifies(w, v) and Modifies(a, v) pattern w ("x", _) pattern a (_, _"b"_)
+125 129,125 134,125 138,125 140,147 160,147 164
+5000
+22 - such that (parent, uses and calls) tuple result (3)
+if ifs; while w; variable v; procedure p1, p2;
+Select <ifs, w> such that  Parent*(ifs, w) and Uses(ifs, v) and Uses(w, v) and Calls*(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern ifs ("z", _, _) pattern w ("a", _)
+171 173,171 183,7 23,7 9
+5000
+23 - such that (parent, uses and calls) tuple result (3)
+while w; if ifs; variable v; procedure p1, p2;
+Select <w, ifs> such that  Parent*(w, ifs) and Uses(w, v) and Uses(w, v) and Calls*(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern w ("a", _) pattern ifs ("z", _, _) 
+169 171,169 175,169 185,173 175,183 185,23 25,9 12
+5000
+24 - such that (parent, uses, next) tuple result (3)
+if ifs1, ifs2; variable v;
+Select <ifs1, ifs2> such that  Parent*(ifs1, ifs2) and Next*(ifs1, ifs2) and Uses(ifs1, v) and Uses(ifs2, v) pattern ifs1 (_, _, _) pattern ifs2 (_, _, _)
+123 128,123 149,171 175,171 185,7 12,7 25
+5000
+25 - such that (parent, uses, next) tuple result (3)
+while w1, w2; variable v;
+Select <w1, w2> such that  Parent*(w1, w2) and Next*(w1, w2) and Uses(w1, v) and Uses(w2, v) pattern w1 (_, _) pattern w2 (_, _)
+125 130,125 137,147 152,147 159,169 173,169 183,47 52,47 59
+5000
+26 - such that (parent, modifies and calls) tuple result (3)
+if ifs; assign a; variable v; procedure p1, p2;
+Select <ifs, a> such that  Parent*(ifs, a) and Modifies(ifs, v) and Modifies(a, v) and Calls*(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern ifs ("w", _, _) pattern a ("x",  _"y * z"_)
+171 172
+5000
+27 - such that (parent, modifies and calls) tuple result (3)
+while w; assign a; variable v; procedure p1, p2;
+Select <w, a> such that  Parent*(w, a) and Modifies(w, v) and Modifies(a, v) and Calls*(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern w ("a", _) pattern a ("b", _"c / d"_)
+169 174,173 174
+5000
+28 - such that (parent, modifies, next) tuple result (3)
+if ifs; while w; variable v;
+Select <ifs, w> such that  Parent*(ifs, w) and Next*(ifs, w) and Modifies(ifs, v) and Modifies(w, v) pattern ifs ("a", _, _) pattern w ("x", _)
+123 125,123 130,123 147,123 152,128 130,149 152
+5000
+29 - such that (parent, modifies, next) tuple result (3)
+while w; if ifs; variable v;
+Select <w, ifs> such that  Parent*(w, ifs) and Next*(w, ifs) and Modifies(w, v) and Modifies(ifs, v) pattern w ("w", _) pattern ifs ("b", _, _)
+125 128,147 149
+5000
+30 - such that (next, uses and modifies) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Next*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Modifies(a1, v) and Modifies(a2, v) pattern a1 ("c", _"d"_) pattern a2 ("c", _"d"_)
+134 134,134 167,178 178
+5000
+31 - such that (next, uses and modifies) tuple result (3)
+if ifs; assign a; variable v;
+Select <ifs, a> such that  Next*(ifs, a) and Uses(ifs, v) and Uses(a, v) and Modifies(ifs, v) and Modifies(a, v) pattern ifs ("y", _, _) pattern a ("y", _"y"_)
+171 176,175 176,185 176
+5000
+32 - such that (next, uses and modifies) tuple result (3)
+while w; assign a; variable v;
+Select <w, a> such that  Next*(w, a) and Uses(w, v) and Uses(a, v) and Modifies(w, v) and Modifies(a, v) pattern w ("z", _) pattern a ("z", _"z"_)
+125 133,125 136,130 133,130 136
+5000
+33 - such that (affects, uses and modifies) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Affects*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Modifies(a1, v) and Modifies(a2, v) pattern a1 ("a", _) pattern a2 (_, _"a"_)
+170 170 
+5000
+34 - such that (affects, uses and modifies) tuple result (3)
+assign a1, a2; variable v;
+Select <a1, a2> such that  Affects*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Modifies(a1, v) and Modifies(a2, v) pattern a1 ("w", _) pattern a2 (_, _"w"_)
+168 182,182 182 
+5000
+35 - such that (next, uses and calls) tuple result (3)
+if ifs; assign a; variable v; procedure p1, p2;
+Select <ifs, a> such that  Next(ifs, a) and Uses(ifs, v) and Uses(a, v) and Calls(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern ifs ("x", _, _) pattern a ("y", _"a + b"_)
+50 51
+5000
+36 - such that (next, uses and calls) tuple result (3)
+while w; assign a; variable v; procedure p1, p2;
+Select <w, a> such that  Next(w, a) and Uses(w, v) and Uses(a, v) and Calls(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern w ("b", _) pattern a ("c", _"x * z"_)
+52 53
+5000
+37 - such that (affects, uses and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Affects*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Calls*(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern a1 ("d", _"a * b"_) pattern a2 ("c", _"d / b"_)
+181 191
+5000
+38 - such that (affects, uses and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Affects*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Calls*(p1, p2) and Uses(p1, v) and Uses(p2, v) pattern a1 ("z", _"x * y"_) pattern a2 ("w", _"z * y"_)
+153 154
+5000
+39 - such that (uses, next and affects) tuple result (3)
+assign a1, a2; variable v; 
+Select <a1, a2> such that  Next*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Affects*(a1, a2) pattern a1 ("a", _"b"_) pattern a2 ("c", _"d"_)
+124 167,143 167,170 178,170 189,170 191,184 178,184 189,184 191
+5000
+40 - such that (uses, next and affects) tuple result (3)
+assign a1, a2; variable v; 
+Select <a1, a2> such that  Next*(a1, a2) and Uses(a1, v) and Uses(a2, v) and Affects*(a1, a2) pattern a1 ("w", _"x"_) pattern a2 ("y", _"z"_)
+168 176,168 187,168 190,182 176,182 187,182 190
+5000
+41 - such that (next, modifies and calls) tuple result (3)
+if ifs; assign a; variable v; procedure p1, p2;
+Select <ifs, a> such that  Next(ifs, a) and Modifies(ifs, v) and Modifies(a, v) and Calls(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern ifs ("w", _, _) pattern a (_, _"b"_)
+175 178,25 29,50 51
+5000
+42 - such that (next, modifies and calls) tuple result (3)
+while w; assign a; variable v; procedure p1, p2;
+Select <w, a> such that  Next(w, a) and Modifies(w, v) and Modifies(a, v) and Calls(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern w ("a", _) pattern a (_, _"x"_)
+137 141,47 48,52 53,90 91
+5000
+43 - such that (affects, modifies and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Affects*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Calls*(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern a1 ("y", _) pattern a2 (_, _"w / z"_)
+176 190,190 190
+5000
+44 - such that (affects, modifies and calls) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Affects*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Calls*(p1, p2) and Modifies(p1, v) and Modifies(p2, v) pattern a1 ("c", _) pattern a2 (_, _"a * b"_)
+178 178,189 178,191 178
+5000
+45 - such that (modifies, next and affects) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Next*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Affects*(a1, a2) pattern a1 ("z", _) pattern a2 (_, _"w - x"_)
+180 180,192 180
+5000
+46 - such that (modifies, next and affects) tuple result (3)
+assign a1, a2; variable v; procedure p1, p2;
+Select <a1, a2> such that  Next*(a1, a2) and Modifies(a1, v) and Modifies(a2, v) and Affects*(a1, a2) pattern a1 ("d", _) pattern a2 (_, _"a + d"_)
+none
+5000
