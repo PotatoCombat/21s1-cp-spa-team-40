@@ -15,9 +15,9 @@ private:
     void extractTransitiveModifiesRelationship(Statement *callStatement,
                                                Procedure *currentProcedure,
                                                ProcName calleeName);
-    void updateLastExecutableStatements(Statement *callStatement,
-                                        Procedure *currentProcedure,
-                                        ProcName calleeName);
+    static void expandLastExecutableCallStatements(Statement *callStatement,
+                                                   Procedure *currentProcedure,
+                                                   const ProcName &calleeName);
 
 public:
     explicit BreadthFirstExtractor(PKB *pkb);

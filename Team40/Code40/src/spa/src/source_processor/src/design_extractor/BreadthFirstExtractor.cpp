@@ -1,7 +1,5 @@
 #include "source_processor/design_extractor/BreadthFirstExtractor.h"
 
-#include <utility>
-
 BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 
 void BreadthFirstExtractor::extract(Program *program) {
@@ -90,8 +88,8 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
                                       calleeName);
     extractTransitiveModifiesRelationship(callStatement,
                                           currentProcedure.value(), calleeName);
-    updateLastExecutableStatements(callStatement, currentProcedure.value(),
-                                   calleeName);
+    expandLastExecutableCallStatements(callStatement, currentProcedure.value(),
+                                       calleeName);
 }
 
 void BreadthFirstExtractor::extractTransitiveModifiesRelationship(
@@ -133,13 +131,15 @@ void BreadthFirstExtractor::extractTransitiveUsesRelationship(
     }
 }
 
-void BreadthFirstExtractor::updateLastExecutableStatements(
+/**
+ * If a call statement is (one of) the last-executable statement found by the
+ * DepthFirstExtractor for the current procedure, replace it with those of the
+ * called procedure.
+ */
+void BreadthFirstExtractor::expandLastExecutableCallStatements(
     Statement *callStatement, Procedure *currentProcedure,
-    ProcName calleeName) {
+    const ProcName &calleeName) {
 
-    // If the call statement is the last-executable statement,
-    // replace it with those of the called proc. Again, the correctness of this
-    // subroutine we rely on the reverse topological order of procedures.
     ProcName curProcName = currentProcedure->getName();
     StmtIndex curStmtIndex = callStatement->getIndex();
     if (ExtractionContext::getInstance()
@@ -151,9 +151,11 @@ void BreadthFirstExtractor::updateLastExecutableStatements(
         auto calleeLastExecutableStmts =
             ExtractionContext::getInstance().getLastExecutableStatements(
                 calleeName);
+
         curProcLastExecutableStmts.erase(curStmtIndex);
         curProcLastExecutableStmts.insert(calleeLastExecutableStmts.begin(),
                                           calleeLastExecutableStmts.end());
+
         ExtractionContext::getInstance().setLastExecutableStatements(
             curProcName, curProcLastExecutableStmts);
     }
