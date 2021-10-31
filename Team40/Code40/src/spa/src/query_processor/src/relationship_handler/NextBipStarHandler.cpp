@@ -8,12 +8,6 @@ NextBipStarHandler::NextBipStarHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
-set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
-    ExplorationFunction explorationFunction =
-        &NextBipStarHandler::getNextBipLines;
-    return breadthFirstSearch(explorationFunction, r2);
-}
-
 set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
                                                    const string &r) {
     queue<ProgLineIndex> toExplore;
@@ -47,6 +41,12 @@ set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
 set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
     ExplorationFunction explore = &NextBipStarHandler::getPreviousBipLines;
     return breadthFirstSearch(explore, r1);
+}
+
+set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
+    ExplorationFunction explorationFunction =
+        &NextBipStarHandler::getNextBipLines;
+    return breadthFirstSearch(explorationFunction, r2);
 }
 
 bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
