@@ -152,6 +152,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
                 .getNextBipLines(statement2.getIndex())
                 .empty());
 }
+
 TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
           "procedure ends with an IfStatement") {
     TestExtractNextBipRelationship::reset();
@@ -199,6 +200,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
     de.extract(&program);
 
+    // NextBip(1, 3)
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement1.getIndex())
                 .size() == 1);
@@ -206,6 +208,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
                 .getNextBipLines(statement1.getIndex())
                 .count(statement3.getIndex()) == 1);
 
+    // Next(3, 4), NextBip(3, 5)
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement3.getIndex())
                 .size() == 2);
@@ -216,6 +219,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
                 .getNextBipLines(statement3.getIndex())
                 .count(statement5.getIndex()) == 1);
 
+    // NextBip(4, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement4.getIndex())
                 .size() == 1);
@@ -223,6 +227,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
                 .getNextBipLines(statement4.getIndex())
                 .count(statement2.getIndex()) == 1);
 
+    // NextBip(5, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement5.getIndex())
                 .size() == 1);
@@ -230,7 +235,72 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
                 .getNextBipLines(statement5.getIndex())
                 .count(statement2.getIndex()) == 1);
 
+    // NextBip(2, _)
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement2.getIndex())
                 .empty());
+}
+
+TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
+          "procedure ends with a WhileStatement") {
+    TestExtractNextBipRelationship::reset();
+
+    Program program;
+    Procedure procedure1(TestExtractNextBipRelationship::PROC_NAME_1);
+    Procedure procedure2(TestExtractNextBipRelationship::PROC_NAME_2);
+    Statement statement1(1, StatementType::CALL);
+    Statement statement2(2, StatementType::WHILE);
+    Statement statement3(3, StatementType::READ);
+    Variable variable(TestExtractNextBipRelationship::VAR_NAME);
+
+    statement1.setProcName(procedure2.getName());
+    TestUtil::addConditionalExpression(&statement2);
+    statement3.setVariable(&variable);
+
+    procedure1.addToStmtLst(&statement1);
+    procedure2.addToStmtLst(&statement2);
+    statement2.addThenStmt(&statement3);
+    program.addToProcLst(&procedure1);
+    program.addToProcLst(&procedure2);
+
+    /**
+     * THE ABOVE PROGRAM TRANSLATES TO:
+     * ****************** START OF PROGRAM ******************
+     * procedure PROC_1 {
+     *    call PROC_2;           (1)
+     * }
+     * procedure PROC_2 {
+     *   while (x > 0) then {    (2)
+     *     read VAR;             (3)
+     *   }
+     * }
+     * ****************** END OF PROGRAM ******************
+     */
+
+    DesignExtractor de(&TestExtractNextBipRelationship::pkb);
+    de.extract(&program);
+
+    // NextBip(1, 2)
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement1.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement1.getIndex())
+                .count(statement2.getIndex()) == 1);
+
+    // NextBip(2, 3)
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement2.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement2.getIndex())
+                .count(statement3.getIndex()) == 1);
+
+    // NextBip(3, 2)
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement3.getIndex())
+                .size() == 1);
+    REQUIRE(TestExtractNextBipRelationship::pkb
+                .getNextBipLines(statement3.getIndex())
+                .count(statement2.getIndex()) == 1);
 }
