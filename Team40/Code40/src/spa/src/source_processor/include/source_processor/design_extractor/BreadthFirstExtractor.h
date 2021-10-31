@@ -9,7 +9,6 @@ private:
     vector<vector<Statement *>> statementLists;
     PKB *pkb;
 
-    // Utility
     void extractTransitiveUsesRelationship(Statement *callStatement,
                                            Procedure *currentProcedure,
                                            ProcName calleeName);

@@ -12,10 +12,10 @@ private:
     PKB *pkb;
 
     // Utility
-    void extractLastExecutedStatement(vector<Statement *> statementList,
-                                      vector<Statement *> &result);
-    static void updateLastExecutedStatementsForCurrentProc(
-        set<StmtIndex> lastExecutedStmtIndices);
+    void extractLastExecutableStatement(vector<Statement *> statementList,
+                                        vector<Statement *> &result);
+    static void updateLastExecutableStatementsForCurrentProc(
+        set<StmtIndex> lastExecutableStmtIndices);
 
 public:
     // Constructor

@@ -34,34 +34,34 @@ void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
 }
 
 StmtIndex
-ExtractionContext::getFirstExecutedStatement(const ProcName &procName) {
-    if (procFirstExecutedStatements.find(procName) ==
-        procFirstExecutedStatements.end()) {
+ExtractionContext::getFirstExecutableStatement(const ProcName &procName) {
+    if (procFirstExecutableStatements.find(procName) ==
+        procFirstExecutableStatements.end()) {
         throw runtime_error("Trying to get a null value.");
     }
-    return procFirstExecutedStatements[procName];
+    return procFirstExecutableStatements[procName];
 }
 
-void ExtractionContext::setFirstExecutedStatement(const ProcName &procName,
-                                                  StmtIndex stmtIndex) {
-    if (procFirstExecutedStatements.count(procName)) {
+void ExtractionContext::setFirstExecutableStatement(const ProcName &procName,
+                                                    StmtIndex stmtIndex) {
+    if (procFirstExecutableStatements.count(procName)) {
         throw runtime_error("Trying to unset another StmtIndex.");
     }
-    procFirstExecutedStatements[procName] = stmtIndex;
+    procFirstExecutableStatements[procName] = stmtIndex;
 }
 
 set<StmtIndex>
-ExtractionContext::getLastExecutedStatements(const ProcName &procName) {
-    if (procLastExecutedStatements.find(procName) ==
-        procLastExecutedStatements.end()) {
+ExtractionContext::getLastExecutableStatements(const ProcName &procName) {
+    if (procLastExecutableStatements.find(procName) ==
+        procLastExecutableStatements.end()) {
         throw runtime_error("Trying to get a null value.");
     }
-    return procLastExecutedStatements[procName];
+    return procLastExecutableStatements[procName];
 }
 
-void ExtractionContext::setLastExecutedStatements(const ProcName &procName,
-                                                  set<StmtIndex> stmtIndices) {
-    procLastExecutedStatements[procName] = std::move(stmtIndices);
+void ExtractionContext::setLastExecutableStatements(
+    const ProcName &procName, set<StmtIndex> stmtIndices) {
+    procLastExecutableStatements[procName] = std::move(stmtIndices);
 }
 
 optional<Statement *> ExtractionContext::getModifyingStatement() {
@@ -247,6 +247,6 @@ void ExtractionContext::reset() {
     resetTransientContexts();
     procDependencyMap.clear();
     procIndegreesCounter.clear();
-    procFirstExecutedStatements.clear();
-    procLastExecutedStatements.clear();
+    procFirstExecutableStatements.clear();
+    procLastExecutableStatements.clear();
 }

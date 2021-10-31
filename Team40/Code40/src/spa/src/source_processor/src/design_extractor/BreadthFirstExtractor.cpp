@@ -143,18 +143,18 @@ void BreadthFirstExtractor::updateLastExecutableStatements(
     ProcName curProcName = currentProcedure->getName();
     StmtIndex curStmtIndex = callStatement->getIndex();
     if (ExtractionContext::getInstance()
-            .getLastExecutedStatements(curProcName)
+            .getLastExecutableStatements(curProcName)
             .count(curStmtIndex)) {
         auto curProcLastExecutableStmts =
-            ExtractionContext::getInstance().getLastExecutedStatements(
+            ExtractionContext::getInstance().getLastExecutableStatements(
                 curProcName);
         auto calleeLastExecutableStmts =
-            ExtractionContext::getInstance().getLastExecutedStatements(
+            ExtractionContext::getInstance().getLastExecutableStatements(
                 calleeName);
         curProcLastExecutableStmts.erase(curStmtIndex);
         curProcLastExecutableStmts.insert(calleeLastExecutableStmts.begin(),
                                           calleeLastExecutableStmts.end());
-        ExtractionContext::getInstance().setLastExecutedStatements(
+        ExtractionContext::getInstance().setLastExecutableStatements(
             curProcName, curProcLastExecutableStmts);
     }
 }

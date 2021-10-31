@@ -16,12 +16,12 @@ void NextBipExtractor::extract(Program *program) {
 }
 
 void NextBipExtractor::extractProcedure(Procedure *procedure) {
-    StmtIndex firstExecutedStmtIndex =
-        ExtractionContext::getInstance().getFirstExecutedStatement(
+    StmtIndex firstExecutableStmtIndex =
+        ExtractionContext::getInstance().getFirstExecutableStatement(
             procedure->getName());
-    Statement *firstExecutedStatement =
-        pkb->getStmtByIndex(firstExecutedStmtIndex);
-    extractStatement(firstExecutedStatement);
+    Statement *firstExecutableStatement =
+        pkb->getStmtByIndex(firstExecutableStmtIndex);
+    extractStatement(firstExecutableStatement);
 }
 
 void NextBipExtractor::extractStatement(Statement *statement) {
@@ -43,7 +43,7 @@ void NextBipExtractor::extractCallStatement(Statement *statement) {
     // proc
     ProcName calledProcName = statement->getProcName();
     StmtIndex calledProcFirstStmtIndex =
-        ExtractionContext::getInstance().getFirstExecutedStatement(
+        ExtractionContext::getInstance().getFirstExecutableStatement(
             calledProcName);
     Statement *calledProcFirstStmt =
         pkb->getStmtByIndex(calledProcFirstStmtIndex);
@@ -64,7 +64,7 @@ void NextBipExtractor::extractCallStatement(Statement *statement) {
     // If s2 is a call statement, recursively find non-call last-executable
     // statement.
     set<StmtIndex> calledProcLastStmtIndices =
-        ExtractionContext::getInstance().getLastExecutedStatements(
+        ExtractionContext::getInstance().getLastExecutableStatements(
             calledProcName);
     for (auto calledProcLastStmtIndex : calledProcLastStmtIndices) {
         Statement *calledProcLastStmt =
