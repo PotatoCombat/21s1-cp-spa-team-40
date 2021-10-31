@@ -15,10 +15,12 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
         throw runtime_error("Encountered a Procedure with a duplicate name.");
     }
     pkb->insertProc(procedure);
+
     // Set first-executable statement in ExtractionContext
     StmtIndex firstStmtIndex = procedure->getStmtLst().front()->getIndex();
     ExtractionContext::getInstance().setFirstExecutableStatement(
         procName, firstStmtIndex);
+
     // Extract each statement in procedure
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
     for (Statement *statement : procedure->getStmtLst()) {
@@ -32,20 +34,8 @@ void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
 void DepthFirstExtractor::extractStatement(Statement *statement) {
     pkb->insertStmt(statement);
 
-    // Handle Parents(s1, s2)
-    vector<Statement *> parentStatement =
-        ExtractionContext::getInstance().getParentStatements();
-    if (!parentStatement.empty()) {
-        pkb->insertParent(parentStatement.back(), statement);
-    }
-
-    // Handle Next(s1, s2)
-    vector<Statement *> previousStatements =
-        ExtractionContext::getInstance().getPreviousStatements();
-    for (Statement *previousStatement : previousStatements) {
-        pkb->insertNext(previousStatement, statement);
-    }
-    ExtractionContext::getInstance().clearPreviousStatements();
+    extractParentRelationship(statement);
+    extractNextRelationship(statement);
 
     switch (statement->getStatementType()) {
     case StatementType::ASSIGN:
@@ -74,12 +64,23 @@ void DepthFirstExtractor::extractStatement(Statement *statement) {
 void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
     pkb->insertPatternAssign(assignStatement);
 
-    // Handle LHS
+    extractAssignStatementLHS(assignStatement);
+    extractAssignStatementRHS(assignStatement);
+
+    ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
+    ExtractionContext::getInstance().setPreviousStatement(assignStatement);
+    updateLastExecutableStatementsForCurrentProc({assignStatement->getIndex()});
+}
+
+void DepthFirstExtractor::extractAssignStatementLHS(
+    Statement *assignStatement) {
     ExtractionContext::getInstance().setModifyingStatement(assignStatement);
     extractVariable(assignStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(assignStatement);
+}
 
-    // Handle RHS
+void DepthFirstExtractor::extractAssignStatementRHS(
+    Statement *assignStatement) {
     ExtractionContext::getInstance().setUsingStatement(assignStatement);
     for (Variable *variable : assignStatement->getExpressionVars()) {
         extractVariable(variable);
@@ -88,15 +89,17 @@ void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
          assignStatement->getExpressionConsts()) {
         extractConstantValue(constantValue);
     }
-    ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
-    ExtractionContext::getInstance().setPreviousStatement(assignStatement);
-    updateLastExecutableStatementsForCurrentProc({assignStatement->getIndex()});
 }
 
 void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
-    ProcName calledProcName = callStatement->getProcName();
+    extractProcDependency(callStatement);
+    ExtractionContext::getInstance().setPreviousStatement(callStatement);
+    updateLastExecutableStatementsForCurrentProc({callStatement->getIndex()});
+}
 
+void DepthFirstExtractor::extractProcDependency(Statement *callStatement) {
+    ProcName calledProcName = callStatement->getProcName();
     optional<Procedure *> currentProcedure =
         ExtractionContext::getInstance().getCurrentProcedure();
     if (!currentProcedure.has_value()) {
@@ -104,14 +107,20 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
     }
     ExtractionContext::getInstance().registerProcDependency(
         currentProcedure.value()->getName(), calledProcName);
-    ExtractionContext::getInstance().setPreviousStatement(callStatement);
-    updateLastExecutableStatementsForCurrentProc({callStatement->getIndex()});
 }
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
+
+    extractIfCondition(ifStatement);
+    extractIfThenStatements(ifStatement);
+    extractIfElseStatements(ifStatement);
+    extractIfStatementCleanup(ifStatement);
+    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
+}
+
+void DepthFirstExtractor::extractIfCondition(Statement *ifStatement) {
     pkb->insertIfPattern(ifStatement);
 
-    // 1. Handle condition
     auto variables = ifStatement->getExpressionVars();
     auto constantValues = ifStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
@@ -126,23 +135,27 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
         extractConstantValue(constantValue);
     }
     ExtractionContext::getInstance().unsetUsingStatement(ifStatement);
+}
 
-    // 2. Handle THEN statements
+void DepthFirstExtractor::extractIfThenStatements(Statement *ifStatement) {
     ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(ifStatement);
     ExtractionContext::getInstance().setParentStatement(ifStatement);
     for (Statement *statement : ifStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
+}
 
-    // 3. Handle ELSE statements
+void DepthFirstExtractor::extractIfElseStatements(Statement *ifStatement) {
     ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(ifStatement);
     for (Statement *statement : ifStatement->getElseStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().clearPreviousStatements();
+}
 
+void DepthFirstExtractor::extractIfStatementCleanup(Statement *ifStatement) {
     // Set all last non-while, non-if (a.k.a. leaf) statements in the THEN/ELSE
     // statement lists as previous statements
     vector<Statement *> lastExecutableStatements;
@@ -156,7 +169,6 @@ void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
             lastExecutableStatement);
         lastExecutableStmtIndices.insert(lastExecutableStatement->getIndex());
     }
-    ExtractionContext::getInstance().unsetParentStatement(ifStatement);
     updateLastExecutableStatementsForCurrentProc(lastExecutableStmtIndices);
 }
 
@@ -192,15 +204,22 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
 }
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
+
+    extractWhileCondition(whileStatement);
+    extractWhileThenStatements(whileStatement);
+    extractWhileStatementCleanup(whileStatement);
+}
+
+void DepthFirstExtractor::extractWhileCondition(Statement *whileStatement) {
     pkb->insertWhilePattern(whileStatement);
 
-    // 1. Handle condition
     auto variables = whileStatement->getExpressionVars();
     auto constantValues = whileStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
         throw runtime_error(to_string(whileStatement->getIndex()) +
                             ": WhileStatement is missing cond_expr.");
     }
+
     ExtractionContext::getInstance().setUsingStatement(whileStatement);
     for (Variable *variable : variables) {
         extractVariable(variable);
@@ -209,15 +228,20 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
         extractConstantValue(constantValue);
     }
     ExtractionContext::getInstance().unsetUsingStatement(whileStatement);
+}
 
-    // 2. Handle THEN statements
+void DepthFirstExtractor::extractWhileThenStatements(
+    Statement *whileStatement) {
     ExtractionContext::getInstance().setParentStatement(whileStatement);
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
     for (Statement *statement : whileStatement->getThenStmtLst()) {
         extractStatement(statement);
     }
     ExtractionContext::getInstance().unsetParentStatement(whileStatement);
+}
 
+void DepthFirstExtractor::extractWhileStatementCleanup(
+    Statement *whileStatement) {
     // Handle Next(w, s) where stmt s are all the last non-while, non-if (a.k.a.
     // leaf) statements in the THEN statement list belonging to while w
     vector<Statement *> lastExecutableStatements;
@@ -226,6 +250,8 @@ void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     for (Statement *lastExecutableStatement : lastExecutableStatements) {
         pkb->insertNext(lastExecutableStatement, whileStatement);
     }
+
+    // Set whileStatement as the only previous statement
     ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
     updateLastExecutableStatementsForCurrentProc({whileStatement->getIndex()});
@@ -314,4 +340,21 @@ void DepthFirstExtractor::updateLastExecutableStatementsForCurrentProc(
     ProcName curProcName = curProc.value()->getName();
     ExtractionContext::getInstance().setLastExecutableStatements(
         curProcName, std::move(lastExecutableStmtIndices));
+}
+
+void DepthFirstExtractor::extractParentRelationship(Statement *statement) {
+    vector<Statement *> parentStatement =
+        ExtractionContext::getInstance().getParentStatements();
+    if (!parentStatement.empty()) {
+        pkb->insertParent(parentStatement.back(), statement);
+    }
+}
+
+void DepthFirstExtractor::extractNextRelationship(Statement *statement) {
+    vector<Statement *> previousStatements =
+        ExtractionContext::getInstance().getPreviousStatements();
+    for (Statement *previousStatement : previousStatements) {
+        pkb->insertNext(previousStatement, statement);
+    }
+    ExtractionContext::getInstance().clearPreviousStatements();
 }

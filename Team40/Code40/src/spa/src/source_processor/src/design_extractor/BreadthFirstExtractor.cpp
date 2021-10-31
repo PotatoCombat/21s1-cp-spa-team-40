@@ -132,9 +132,9 @@ void BreadthFirstExtractor::extractTransitiveUsesRelationship(
 }
 
 /**
- * If a call statement is (one of) the last-executable statement found by the
- * DepthFirstExtractor for the current procedure, replace it with those of the
- * called procedure.
+ * If the given call statement is (one of) the last-executable statement found
+ * by the DepthFirstExtractor for the current procedure, replace it with those
+ * of the called procedure.
  */
 void BreadthFirstExtractor::expandLastExecutableCallStatements(
     Statement *callStatement, Procedure *currentProcedure,
@@ -142,6 +142,7 @@ void BreadthFirstExtractor::expandLastExecutableCallStatements(
 
     ProcName curProcName = currentProcedure->getName();
     StmtIndex curStmtIndex = callStatement->getIndex();
+
     if (ExtractionContext::getInstance()
             .getLastExecutableStatements(curProcName)
             .count(curStmtIndex)) {
