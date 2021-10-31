@@ -14,6 +14,8 @@ private:
     // Utility
     void extractLastExecutedStatement(vector<Statement *> statementList,
                                       vector<Statement *> &result);
+    static void updateLastExecutedStatementsForCurrentProc(
+        set<StmtIndex> lastExecutedStmtIndices);
 
 public:
     // Constructor
@@ -23,7 +25,7 @@ public:
     void extract(Program *program);
 
     // Procedure
-    void extractProcedure(Procedure *program);
+    void extractProcedure(Procedure *procedure);
 
     // Statement
     void extractStatement(Statement *statement);
