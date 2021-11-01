@@ -298,7 +298,7 @@ bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
     return nextBipTable.nextBip(previousLine, nextLine);
 }
 
-StmtIndex PKB::getBranchInToLines(ProgLineIndex line) {
+StmtIndex PKB::getBranchInToLine(ProgLineIndex line) {
     return branchInTable.getBranchInToStmt(line);
 }
 
@@ -308,6 +308,18 @@ set<StmtIndex> PKB::getBranchInFromLines(ProgLineIndex line) {
 
 bool PKB::branchIn(ProgLineIndex fromLine, ProgLineIndex toLine) {
     return branchInTable.branchIn(fromLine, toLine);
+}
+
+set<StmtIndex> PKB::getBranchBackToLines(ProgLineIndex line) {
+    return branchBackTable.getBranchBackToStmts(line);
+}
+
+StmtIndex PKB::getBranchBackFromLine(ProgLineIndex line) {
+    return branchBackTable.getBranchBackFromStmt(line);
+}
+
+bool PKB::branchBack(ProgLineIndex fromLine, ProgLineIndex toLine) {
+    return branchBackTable.branchBack(fromLine, toLine);
 }
 
 // Pattern =====================================================================

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BranchBackTable.h"
 #include "BranchInTable.h"
 #include "CallsStarTable.h"
 #include "CallsTable.h"
@@ -491,7 +492,7 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual ProgLineIndex getBranchInToLines(ProgLineIndex line);
+    virtual ProgLineIndex getBranchInToLine(ProgLineIndex line);
 
     /**
      * Selects s such that line branches in from s
@@ -504,7 +505,27 @@ public:
      * Selects BOOLEAN such that there exists a branch-in from fromLine to
      * toLine
      */
+
     virtual bool branchIn(ProgLineIndex fromLine, ProgLineIndex toLine);
+    /**
+     * Selects s such that line branches back to s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<ProgLineIndex> getBranchBackToLines(ProgLineIndex line);
+
+    /**
+     * Selects s such that line branches back from s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual ProgLineIndex getBranchBackFromLine(ProgLineIndex line);
+
+    /**
+     * Selects BOOLEAN such that there exists a branch-back from fromLine to
+     * toLine
+     */
+    virtual bool branchBack(ProgLineIndex fromLine, ProgLineIndex toLine);
 
     // Pattern =================================================================
 
@@ -595,4 +616,5 @@ private:
     PatternTable patternTable;
     ConditionTable conditionTable;
     BranchInTable branchInTable;
+    BranchBackTable branchBackTable;
 };

@@ -13,10 +13,10 @@ public:
     void insertBranchBack(Statement *stmt1, Statement *stmt2);
 
     /// Selects s such that stmt branches back to s
-    StmtIndex getBranchBackToStmt(StmtIndex stmt);
+    set<StmtIndex> getBranchBackToStmts(StmtIndex stmt);
 
     /// Selects s such that stmt branches back from s
-    set<StmtIndex> getBranchBackFromStmts(StmtIndex stmt);
+    StmtIndex getBranchBackFromStmt(StmtIndex stmt);
 
     /// Selects BOOLEAN such that stmt1 branches back to stmt2
     bool branchBack(StmtIndex stmt1, StmtIndex stmt2);
