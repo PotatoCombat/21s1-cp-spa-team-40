@@ -71,6 +71,7 @@ void NextBipExtractor::extractCallStatement(Statement *statement) {
             pkb->getStmtByIndex(calledProcLastStmtIndex);
         pkb->insertNextBip(calledProcLastStmt, nextStatement);
     }
+    extractStatement(nextStatement);
 }
 
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
