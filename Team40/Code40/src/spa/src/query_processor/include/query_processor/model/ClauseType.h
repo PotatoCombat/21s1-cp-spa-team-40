@@ -13,6 +13,8 @@ enum class ClauseType {
     CALLS_T,
     NEXT,
     NEXT_T,
+    NEXTBIP,
+    NEXTBIP_T,
     AFFECTS,
     AFFECTS_T,
     WITH,
