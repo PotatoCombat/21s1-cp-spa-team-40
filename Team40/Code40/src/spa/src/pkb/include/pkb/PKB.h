@@ -167,6 +167,11 @@ public:
      */
     virtual void insertBranchIn(Statement *fromStmt, Statement *toStmt);
 
+    /**
+     * Stores the branch-back relationship from stmt1 to stmt2
+     */
+    virtual void insertBranchBack(Statement *fromStmt, Statement *toStmt);
+
     // =========================================================================
     // Query Processor
     // =========================================================================

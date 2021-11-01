@@ -93,6 +93,10 @@ void PKB::insertBranchIn(Statement *fromStmt, Statement *toStmt) {
     branchInTable.insertBranchIn(fromStmt, toStmt);
 }
 
+void PKB::insertBranchBack(Statement *fromStmt, Statement *toStmt) {
+    branchBackTable.insertBranchBack(fromStmt, toStmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
