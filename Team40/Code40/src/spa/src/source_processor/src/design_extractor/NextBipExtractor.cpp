@@ -38,40 +38,19 @@ void NextBipExtractor::extractStatement(Statement *statement) {
     }
 }
 
-void NextBipExtractor::extractCallStatement(Statement *statement) {
-    // Extract NextBip(statement, s1) where s1 is the first statement of called
-    // proc
-    ProcName calledProcName = statement->getProcName();
-    StmtIndex calledProcFirstStmtIndex =
-        ExtractionContext::getInstance().getFirstExecutableStatement(
-            calledProcName);
-    Statement *calledProcFirstStmt =
-        pkb->getStmtByIndex(calledProcFirstStmtIndex);
-    pkb->insertNextBip(statement, calledProcFirstStmt);
+void NextBipExtractor::extractCallStatement(Statement *callStatement) {
+    ProcName calledProcName = callStatement->getProcName();
+    StmtIndex callStmtIndex = callStatement->getIndex();
 
-    // Extract NextBip(s2, s3) where s2 is last-executable non-call
-    // statement of calledProc and Next(statement, s3) holds.
-    set<ProgLineIndex> nextStmtIndices =
-        pkb->getNextLines(statement->getIndex());
-    if (nextStmtIndices.empty()) {
-        return;
+    auto calledProcFirstExecutableStmt = getFirstExecutableStmt(calledProcName);
+    auto calledProcLastExecutableStmts = getLastExecutableStmts(calledProcName);
+    auto nextStatement = getStatementAfterCallStatement(callStmtIndex);
+
+    extractNextBip(callStatement, calledProcFirstExecutableStmt,
+                   calledProcLastExecutableStmts, nextStatement);
+    if (nextStatement.has_value()) {
+        extractStatement(nextStatement.value());
     }
-    if (nextStmtIndices.size() > 1) {
-        throw runtime_error("Encountered a call statement with >1 next "
-                            "statements (syntactically impossible).");
-    }
-    Statement *nextStatement = pkb->getStmtByIndex(*nextStmtIndices.begin());
-    // If s2 is a call statement, recursively find non-call last-executable
-    // statement.
-    set<StmtIndex> calledProcLastStmtIndices =
-        ExtractionContext::getInstance().getLastExecutableStatements(
-            calledProcName);
-    for (auto calledProcLastStmtIndex : calledProcLastStmtIndices) {
-        Statement *calledProcLastStmt =
-            pkb->getStmtByIndex(calledProcLastStmtIndex);
-        pkb->insertNextBip(calledProcLastStmt, nextStatement);
-    }
-    extractStatement(nextStatement);
 }
 
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
@@ -88,4 +67,48 @@ void NextBipExtractor::extractNonCallStatement(Statement *statement) {
         pkb->insertNextBip(statement, nextStatement);
         extractStatement(nextStatement);
     }
+}
+
+void NextBipExtractor::extractNextBip(Statement *branchInFrom,
+                                      Statement *branchInTo,
+                                      set<Statement *> branchBackFroms,
+                                      optional<Statement *> branchBackTo) {
+    for (auto branchBackFrom : branchBackFroms) {
+        pkb->insertBranchIn(branchInFrom, branchInTo);
+        pkb->insertNextBip(branchInFrom, branchInTo);
+        if (branchBackTo.has_value()) {
+            pkb->insertNextBip(branchBackFrom, branchBackTo.value());
+            pkb->insertBranchBack(branchBackFrom, branchBackTo.value());
+        }
+    }
+}
+
+Statement *NextBipExtractor::getFirstExecutableStmt(ProcName procName) {
+    StmtIndex calledProcFirstStmtIndex =
+        ExtractionContext::getInstance().getFirstExecutableStatement(procName);
+    return pkb->getStmtByIndex(calledProcFirstStmtIndex);
+}
+
+set<Statement *> NextBipExtractor::getLastExecutableStmts(ProcName procName) {
+    set<StmtIndex> procLastStmtIndices =
+        ExtractionContext::getInstance().getLastExecutableStatements(procName);
+    set<Statement *> procLastStmts;
+    for (auto procLastStmtIndex : procLastStmtIndices) {
+        Statement *procLastStmt = pkb->getStmtByIndex(procLastStmtIndex);
+        procLastStmts.insert(procLastStmt);
+    }
+    return procLastStmts;
+}
+
+optional<Statement *>
+NextBipExtractor::getStatementAfterCallStatement(StmtIndex callStmtIndex) {
+    set<ProgLineIndex> nextStmtIndices = pkb->getNextLines(callStmtIndex);
+    if (nextStmtIndices.empty()) {
+        return nullopt;
+    }
+    if (nextStmtIndices.size() > 1) {
+        throw runtime_error("Encountered a call statement with >1 next "
+                            "statements (syntactically impossible).");
+    }
+    return pkb->getStmtByIndex(*nextStmtIndices.begin());
 }

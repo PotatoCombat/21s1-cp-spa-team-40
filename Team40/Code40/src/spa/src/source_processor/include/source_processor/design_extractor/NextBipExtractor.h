@@ -10,14 +10,22 @@ private:
     vector<set<ProgLineIndex>> callbacks;
     set<ProgLineIndex> visited;
 
-public:
-    explicit NextBipExtractor(PKB *pkb);
-
-    void extract(Program *program);
-
     void extractProcedure(Procedure *procedure);
 
     void extractStatement(Statement *statement);
     void extractCallStatement(Statement *callStatement);
     void extractNonCallStatement(Statement *statement);
+    void extractNextBip(Statement *branchInFrom, Statement *branchInTo,
+                        set<Statement *> branchBackFrom,
+                        optional<Statement *> branchBackTo);
+    // Helper functions
+    Statement *getFirstExecutableStmt(ProcName procName);
+    set<Statement *> getLastExecutableStmts(ProcName procName);
+    optional<Statement *>
+    getStatementAfterCallStatement(StmtIndex callStmtIndex);
+
+public:
+    explicit NextBipExtractor(PKB *pkb);
+
+    void extract(Program *program);
 };
