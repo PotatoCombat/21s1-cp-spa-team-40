@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BranchInTable.h"
 #include "CallsStarTable.h"
 #include "CallsTable.h"
 #include "ConditionTable.h"
@@ -159,6 +160,11 @@ public:
      * @param stmt WHILE statement while.
      */
     virtual void insertWhilePattern(Statement *stmt);
+
+    /**
+     * Stores the branch-in relationship from stmt1 to stmt2
+     */
+    virtual void insertBranchIn(Statement *fromStmt, Statement *toStmt);
 
     // =========================================================================
     // Query Processor
@@ -480,6 +486,26 @@ public:
      */
     virtual bool nextBip(ProgLineIndex previous, ProgLineIndex next);
 
+    /**
+     * Selects s such that line branches in to s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual ProgLineIndex getBranchInToLines(ProgLineIndex line);
+
+    /**
+     * Selects s such that line branches in from s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<ProgLineIndex> getBranchInFromLines(ProgLineIndex line);
+
+    /**
+     * Selects BOOLEAN such that there exists a branch-in from fromLine to
+     * toLine
+     */
+    virtual bool branchIn(ProgLineIndex fromLine, ProgLineIndex toLine);
+
     // Pattern =================================================================
 
     /**
@@ -568,4 +594,5 @@ private:
     NextBipTable nextBipTable;
     PatternTable patternTable;
     ConditionTable conditionTable;
+    BranchInTable branchInTable;
 };

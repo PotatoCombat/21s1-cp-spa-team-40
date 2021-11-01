@@ -89,6 +89,10 @@ void PKB::insertWhilePattern(Statement *stmt) {
     conditionTable.insertWhilePattern(stmt);
 }
 
+void PKB::insertBranchIn(Statement *fromStmt, Statement *toStmt) {
+    branchInTable.insertBranchIn(fromStmt, toStmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -292,6 +296,18 @@ set<StmtIndex> PKB::getPreviousBipLines(ProgLineIndex line) {
 
 bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
     return nextBipTable.nextBip(previousLine, nextLine);
+}
+
+StmtIndex PKB::getBranchInToLines(ProgLineIndex line) {
+    return branchInTable.getBranchInToStmt(line);
+}
+
+set<StmtIndex> PKB::getBranchInFromLines(ProgLineIndex line) {
+    return branchInTable.getBranchInFromStmts(line);
+}
+
+bool PKB::branchIn(ProgLineIndex fromLine, ProgLineIndex toLine) {
+    return branchInTable.branchIn(fromLine, toLine);
 }
 
 // Pattern =====================================================================
