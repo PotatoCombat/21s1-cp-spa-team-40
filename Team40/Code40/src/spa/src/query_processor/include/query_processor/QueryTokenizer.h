@@ -44,7 +44,9 @@ private:
     void validateTokens(vector<PatToken> tokens);
     void validateDeType(string input);
     void validateRsType(string input);
-    void validateClauseArg(string input);
+    void validateSuchThatArg(string input);
+    void validatePatternArg(string input);
+    void validateWithArg(string input);
     void validateQuoted(string input);
     void validateAttrRef(string input);
     void validateName(string input);
@@ -70,8 +72,9 @@ private:
         "prog_line", "stmt", "assign",   "while",     "if",      "read",
         "print",     "call", "variable", "procedure", "constant"};
     inline static const unordered_set<string> RS_TYPE_SET = {
-        "Follows", "Follows*", "Parent", "Parent*", "Modifies", "Uses",
-        "Calls",   "Calls*",   "Next",   "Next*",   "Affects",  "Affects*"};
+        "Follows", "Follows*", "Parent",  "Parent*", "Modifies", "Uses",
+        "Calls",   "Calls*",   "Next",    "Next*",   "NextBip",  "NextBip*",
+        "NextBip", "NextBip*", "Affects", "Affects*"};
     inline static const unordered_set<string> ATTRIBUTE_SET = {
         "stmt#", "value", "varName", "procName"};
 

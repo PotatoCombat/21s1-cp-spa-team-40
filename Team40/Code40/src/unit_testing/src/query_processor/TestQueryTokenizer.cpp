@@ -842,19 +842,26 @@ TEST_CASE("QueryTokenizer: tokenizePattern") {
 
 TEST_CASE("QueryTokenizer: syntax error checking") {
     QueryTokenizer tokenizer;
+    string q;
     string remaining = "";
     vector<ClsTuple> rel;
     vector<PatTuple> pat;
     vector<WithPair> wit;
 
     SECTION("FAIL: empty tuple") {
-        string q = "Select <>";
+        q = "Select <>";
         REQUIRE_THROWS_AS(tokenizer.tokenizeReturnSynonyms(q, remaining),
                           SyntaxError);
     }
 
+    SECTION("FAIL: invalid clauses") {
+        q = "and Parent(2, 3)";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+    }
+
     SECTION("FAIL: empty with arguments") {
-        string q = "with \" \" = n";
+        q = "with \" \" = n";
         REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
                           SyntaxError);
         q = "with n = \" \"";
@@ -869,7 +876,7 @@ TEST_CASE("QueryTokenizer: syntax error checking") {
     }
 
     SECTION("FAIL: empty quoted strings in such that clauses") {
-        string q = "such that Modifies(\"  \", \" y \")";
+        q = "such that Modifies(\"  \", \" y \")";
         REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
                           SyntaxError);
         q = "such that Modifies(\" x \", \"  \")";
@@ -878,7 +885,7 @@ TEST_CASE("QueryTokenizer: syntax error checking") {
     }
 
     SECTION("FAIL: empty quoted strings in pattern clauses") {
-        string q = "pattern a(\"  \", _)";
+        q = "pattern a(\"  \", _)";
         REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
                           SyntaxError);
     }

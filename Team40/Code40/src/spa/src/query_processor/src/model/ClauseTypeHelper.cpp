@@ -7,48 +7,50 @@ ClauseTypeHelper::ClauseTypeHelper() {
         {"Parent", ClauseType::PARENT},
         {"Parent*", ClauseType::PARENT_T},
         {"Modifies", ClauseType::MODIFIES_S},
-        {"Modifies*", ClauseType::MODIFIES_P}, // workaround differentiating S and P
+        {"Modifies*",
+         ClauseType::MODIFIES_P}, // workaround differentiating S and P
         {"Uses", ClauseType::USES_S},
         {"Uses*", ClauseType::USES_P}, // workaround differentiating S and P
         {"Calls", ClauseType::CALLS},
         {"Calls*", ClauseType::CALLS_T},
         {"Next", ClauseType::NEXT},
         {"Next*", ClauseType::NEXT_T},
+        {"NextBip", ClauseType::NEXTBIP},
+        {"NextBip*", ClauseType::NEXTBIP_T},
         {"Affects", ClauseType::AFFECTS},
-        {"Affects*", ClauseType::AFFECTS_T}
-    };
-    deTypeMap1 = {
-        {ClauseType::FOLLOWS, DesignEntityType::STMT},
-        {ClauseType::FOLLOWS_T, DesignEntityType::STMT},
-        {ClauseType::PARENT, DesignEntityType::STMT},
-        {ClauseType::PARENT_T, DesignEntityType::STMT},
-        {ClauseType::MODIFIES_P, DesignEntityType::PROCEDURE},
-        {ClauseType::MODIFIES_S, DesignEntityType::STMT},
-        {ClauseType::USES_P, DesignEntityType::PROCEDURE},
-        {ClauseType::USES_S, DesignEntityType::STMT},
-        {ClauseType::CALLS, DesignEntityType::PROCEDURE},
-        {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
-        {ClauseType::NEXT, DesignEntityType::STMT},
-        {ClauseType::NEXT_T, DesignEntityType::STMT},
-        {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
-        {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}
-    };
-    deTypeMap2 = {
-        {ClauseType::FOLLOWS, DesignEntityType::STMT},
-        {ClauseType::FOLLOWS_T, DesignEntityType::STMT},
-        {ClauseType::PARENT, DesignEntityType::STMT},
-        {ClauseType::PARENT_T, DesignEntityType::STMT},
-        {ClauseType::MODIFIES_P, DesignEntityType::VARIABLE},
-        {ClauseType::MODIFIES_S, DesignEntityType::VARIABLE},
-        {ClauseType::USES_P, DesignEntityType::VARIABLE},
-        {ClauseType::USES_S, DesignEntityType::VARIABLE},
-        {ClauseType::CALLS, DesignEntityType::PROCEDURE},
-        {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
-        {ClauseType::NEXT, DesignEntityType::STMT},
-        {ClauseType::NEXT_T, DesignEntityType::STMT},
-        {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
-        {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}
-    };
+        {"Affects*", ClauseType::AFFECTS_T}};
+    deTypeMap1 = {{ClauseType::FOLLOWS, DesignEntityType::STMT},
+                  {ClauseType::FOLLOWS_T, DesignEntityType::STMT},
+                  {ClauseType::PARENT, DesignEntityType::STMT},
+                  {ClauseType::PARENT_T, DesignEntityType::STMT},
+                  {ClauseType::MODIFIES_P, DesignEntityType::PROCEDURE},
+                  {ClauseType::MODIFIES_S, DesignEntityType::STMT},
+                  {ClauseType::USES_P, DesignEntityType::PROCEDURE},
+                  {ClauseType::USES_S, DesignEntityType::STMT},
+                  {ClauseType::CALLS, DesignEntityType::PROCEDURE},
+                  {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
+                  {ClauseType::NEXT, DesignEntityType::STMT},
+                  {ClauseType::NEXT_T, DesignEntityType::STMT},
+                  {ClauseType::NEXTBIP, DesignEntityType::STMT},
+                  {ClauseType::NEXTBIP_T, DesignEntityType::STMT},
+                  {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
+                  {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}};
+    deTypeMap2 = {{ClauseType::FOLLOWS, DesignEntityType::STMT},
+                  {ClauseType::FOLLOWS_T, DesignEntityType::STMT},
+                  {ClauseType::PARENT, DesignEntityType::STMT},
+                  {ClauseType::PARENT_T, DesignEntityType::STMT},
+                  {ClauseType::MODIFIES_P, DesignEntityType::VARIABLE},
+                  {ClauseType::MODIFIES_S, DesignEntityType::VARIABLE},
+                  {ClauseType::USES_P, DesignEntityType::VARIABLE},
+                  {ClauseType::USES_S, DesignEntityType::VARIABLE},
+                  {ClauseType::CALLS, DesignEntityType::PROCEDURE},
+                  {ClauseType::CALLS_T, DesignEntityType::PROCEDURE},
+                  {ClauseType::NEXT, DesignEntityType::STMT},
+                  {ClauseType::NEXT_T, DesignEntityType::STMT},
+                  {ClauseType::NEXTBIP, DesignEntityType::STMT},
+                  {ClauseType::NEXTBIP_T, DesignEntityType::STMT},
+                  {ClauseType::AFFECTS, DesignEntityType::ASSIGN},
+                  {ClauseType::AFFECTS_T, DesignEntityType::ASSIGN}};
 }
 
 ClauseType ClauseTypeHelper::valueToClsType(string val) {
