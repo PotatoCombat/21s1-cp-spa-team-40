@@ -39,13 +39,13 @@ set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
 }
 
 set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
-    ExplorationFunction explore = &NextBipStarHandler::getPreviousBipLines;
+    ExplorationFunction explore = &NextBipStarHandler::getNextBipLines;
     return breadthFirstSearch(explore, r1);
 }
 
 set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
     ExplorationFunction explorationFunction =
-        &NextBipStarHandler::getNextBipLines;
+        &NextBipStarHandler::getPreviousBipLines;
     return breadthFirstSearch(explorationFunction, r2);
 }
 
@@ -82,10 +82,12 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
 
 set<ProgLineIndex>
 NextBipStarHandler::getNextBipLines(ProgLineIndex progLineIndex) {
+    // TODO: Add additional filter logic here
     return pkb->getNextBipLines(progLineIndex);
 }
 
 set<ProgLineIndex>
 NextBipStarHandler::getPreviousBipLines(ProgLineIndex progLineIndex) {
+    // TODO: Add additional filter logic here
     return pkb->getPreviousBipLines(progLineIndex);
 }
