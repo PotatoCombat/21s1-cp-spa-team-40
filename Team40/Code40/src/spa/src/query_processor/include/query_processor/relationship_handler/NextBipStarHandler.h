@@ -8,7 +8,7 @@
 class NextBipStarHandler;
 
 typedef set<ProgLineIndex> (NextBipStarHandler::*ExplorationFunction)(
-    ProgLineIndex progLineIndex);
+    ProgLineIndex progLineIndex, set<ProgLineIndex> &validBranchBackLines);
 
 class NextBipStarHandler : public ClauseHandler {
 private:
@@ -17,8 +17,12 @@ private:
     bool isR1ClauseR2(string r1, string r2) override;
     set<string> breadthFirstSearch(ExplorationFunction explorationFunction,
                                    const string &r);
-    set<ProgLineIndex> getNextBipLines(ProgLineIndex progLineIndex);
-    set<ProgLineIndex> getPreviousBipLines(ProgLineIndex progLineIndex);
+    set<ProgLineIndex>
+    getNextBipLines(ProgLineIndex progLineIndex,
+                    set<ProgLineIndex> &validBranchBackLines);
+    set<ProgLineIndex>
+    getPreviousBipLines(ProgLineIndex progLineIndex,
+                        set<ProgLineIndex> &validBranchInLines);
 
 public:
     NextBipStarHandler(Clause *clause, PKB *pkb);

@@ -11,31 +11,33 @@ NextBipStarHandler::NextBipStarHandler(Clause *clause, PKB *pkb)
 set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
                                                    const string &r) {
     queue<ProgLineIndex> toExplore;
-    unordered_set<ProgLineIndex> visited;
+    unordered_set<ProgLineIndex> visitedWhileStmts;
+    set<string> result;
 
     toExplore.push(stoi(r));
 
     ProgLineIndex curIndex;
+    set<ProgLineIndex> validBranchLines;
     while (!toExplore.empty()) {
         curIndex = toExplore.front();
         toExplore.pop();
+        // If while statement, mark as visited to prevent infinite loop
+        if (pkb->getStmtByIndex(curIndex)->getStatementType() ==
+            StatementType::WHILE) {
+            visitedWhileStmts.insert(curIndex);
+        }
 
         // Explore neighbours
-        for (ProgLineIndex index : (this->*explore)(curIndex)) {
-            // Only add neighbours that haven't been visited
-            if (visited.find(index) == visited.end()) {
-                visited.insert(index); // Mark current as visited
+        for (ProgLineIndex index :
+             (this->*explore)(curIndex, validBranchLines)) {
+            if (visitedWhileStmts.find(index) == visitedWhileStmts.end()) {
                 toExplore.push(index);
             }
+            result.insert(to_string(index));
         }
     }
 
-    set<string> res;
-    for (ProgLineIndex index : visited) {
-        res.insert(to_string(index));
-    }
-
-    return res;
+    return result;
 }
 
 set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
@@ -81,13 +83,52 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
 }
 
 set<ProgLineIndex>
-NextBipStarHandler::getNextBipLines(ProgLineIndex progLineIndex) {
-    // TODO: Add additional filter logic here
-    return pkb->getNextBipLines(progLineIndex);
+NextBipStarHandler::getNextBipLines(ProgLineIndex curLine,
+                                    set<ProgLineIndex> &validBranchBackLines) {
+    set<ProgLineIndex> nextBipLines = pkb->getNextBipLines(curLine);
+    set<ProgLineIndex> validNextBipLines;
+    for (auto nextBipLine : nextBipLines) {
+        // If BranchIn, add next lines to validBranchBackLines
+        if (pkb->branchIn(curLine, nextBipLine)) {
+            set<ProgLineIndex> branchBackLines = pkb->getNextLines(curLine);
+            validBranchBackLines.insert(branchBackLines.begin(),
+                                        branchBackLines.end());
+        }
+        // If invalid BranchBack, filter it out
+        if (pkb->branchBack(curLine, nextBipLine)) {
+            if (validBranchBackLines.find(nextBipLine) !=
+                validBranchBackLines.end()) {
+                validBranchBackLines.erase(nextBipLine);
+            } else {
+                continue;
+            }
+        }
+        validNextBipLines.insert(nextBipLine);
+    }
+    return validNextBipLines;
 }
 
-set<ProgLineIndex>
-NextBipStarHandler::getPreviousBipLines(ProgLineIndex progLineIndex) {
+set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
+    ProgLineIndex curLine, set<ProgLineIndex> &validBranchInLines) {
     // TODO: Add additional filter logic here
-    return pkb->getPreviousBipLines(progLineIndex);
+    set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
+    set<ProgLineIndex> validPreviousBipLines;
+    for (auto previousBipLine : previousBipLines) {
+        // If BranchBack, add prev lines to validBranchInLines
+        if (pkb->branchBack(previousBipLine, curLine)) {
+            set<ProgLineIndex> branchInLInes = pkb->getPreviousLines(curLine);
+            validBranchInLines.insert(branchInLInes.begin(),
+                                      branchInLInes.end());
+        }
+        // If invalid BranchIn, filter it out
+        if (pkb->branchIn(previousBipLine, curLine)) {
+            if (validBranchInLines.find(curLine) != validBranchInLines.end()) {
+                validBranchInLines.erase(curLine);
+            } else {
+                continue;
+            }
+        }
+        validPreviousBipLines.insert(previousBipLine);
+    }
+    return validPreviousBipLines;
 }
