@@ -524,7 +524,7 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual ProgLineIndex getBranchBackFromLine(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchBackFromLines(ProgLineIndex line);
 
     /**
      * Selects BOOLEAN such that there exists a branch-back from fromLine to

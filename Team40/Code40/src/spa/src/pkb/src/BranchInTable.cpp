@@ -5,11 +5,11 @@ BranchInTable::BranchInTable() = default;
 void BranchInTable::insertBranchIn(Statement *stmt1, Statement *stmt2) {
     branchInToMap[stmt1->getIndex()] = stmt2->getIndex();
 
-    auto search = branchInFromMap.find(stmt1->getIndex());
+    auto search = branchInFromMap.find(stmt2->getIndex());
     if (search == branchInFromMap.end()) {
-        branchInFromMap[stmt1->getIndex()] = {stmt2->getIndex()};
+        branchInFromMap[stmt2->getIndex()] = {stmt1->getIndex()};
     } else {
-        search->second.insert(stmt2->getIndex());
+        search->second.insert(stmt1->getIndex());
     }
 }
 

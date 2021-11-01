@@ -318,8 +318,8 @@ set<StmtIndex> PKB::getBranchBackToLines(ProgLineIndex line) {
     return branchBackTable.getBranchBackToStmts(line);
 }
 
-StmtIndex PKB::getBranchBackFromLine(ProgLineIndex line) {
-    return branchBackTable.getBranchBackFromStmt(line);
+set<StmtIndex> PKB::getBranchBackFromLines(ProgLineIndex line) {
+    return branchBackTable.getBranchBackFromStmts(line);
 }
 
 bool PKB::branchBack(ProgLineIndex fromLine, ProgLineIndex toLine) {
