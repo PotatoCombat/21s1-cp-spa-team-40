@@ -8,7 +8,8 @@
 class NextBipStarHandler;
 
 typedef set<ProgLineIndex> (NextBipStarHandler::*ExplorationFunction)(
-    ProgLineIndex progLineIndex, set<ProgLineIndex> &validBranchBackLines);
+    ProgLineIndex progLineIndex,
+    unordered_set<ProgLineIndex> &validBranchBackLines);
 
 class NextBipStarHandler : public ClauseHandler {
 private:
@@ -19,10 +20,10 @@ private:
                                    const string &r);
     set<ProgLineIndex>
     getNextBipLines(ProgLineIndex progLineIndex,
-                    set<ProgLineIndex> &validBranchBackLines);
+                    unordered_set<ProgLineIndex> &validBranchBackLines);
     set<ProgLineIndex>
     getPreviousBipLines(ProgLineIndex progLineIndex,
-                        set<ProgLineIndex> &validBranchInLines);
+                        unordered_set<ProgLineIndex> &validBranchInLines);
 
 public:
     NextBipStarHandler(Clause *clause, PKB *pkb);

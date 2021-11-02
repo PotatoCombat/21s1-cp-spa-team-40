@@ -17,7 +17,7 @@ set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
     toExplore.push(stoi(r));
 
     ProgLineIndex curIndex;
-    set<ProgLineIndex> validBranchLines;
+    unordered_set<ProgLineIndex> validBranchLines;
     while (!toExplore.empty()) {
         curIndex = toExplore.front();
         toExplore.pop();
@@ -82,9 +82,8 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
     return false;
 }
 
-set<ProgLineIndex>
-NextBipStarHandler::getNextBipLines(ProgLineIndex curLine,
-                                    set<ProgLineIndex> &validBranchBackLines) {
+set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
+    ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchBackLines) {
     set<ProgLineIndex> nextBipLines = pkb->getNextBipLines(curLine);
     set<ProgLineIndex> validNextBipLines;
     for (auto nextBipLine : nextBipLines) {
@@ -109,7 +108,7 @@ NextBipStarHandler::getNextBipLines(ProgLineIndex curLine,
 }
 
 set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
-    ProgLineIndex curLine, set<ProgLineIndex> &validBranchInLines) {
+    ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchInLines) {
     // TODO: Add additional filter logic here
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
     set<ProgLineIndex> validPreviousBipLines;

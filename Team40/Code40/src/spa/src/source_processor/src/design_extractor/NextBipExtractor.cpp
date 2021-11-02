@@ -101,8 +101,9 @@ NextBipExtractor::getStatementAfterCallStatement(StmtIndex callStmtIndex) {
         return nullopt;
     }
     if (nextStmtIndices.size() > 1) {
-        throw runtime_error("Encountered a call statement with >1 next "
-                            "statements (syntactically impossible).");
+        throw runtime_error(
+            "Encountered a call statement with more than one next "
+            "statements (syntactically impossible).");
     }
     return pkb->getStmtByIndex(*nextStmtIndices.begin());
 }
