@@ -641,9 +641,6 @@ TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
 
             tup = make_tuple("Affects", "PROCEDURE", "a");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-
-            tup = make_tuple("Affects", "statement", "a");
-            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
         }
 
         SECTION("second synonym non-assign") {
@@ -651,9 +648,6 @@ TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
             tup = make_tuple("Affects", "a", "PROCEDURE");
-            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
-
-            tup = make_tuple("Affects", "a", "statement");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
         }
     }

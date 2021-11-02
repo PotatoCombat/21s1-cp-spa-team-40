@@ -14,6 +14,7 @@ void QueryProcessor::processQuery(string query, list<string> &results) {
             return;
         }
     } catch (ValidityError &ve) {
+        // cout << ve.what() << endl;
         results.push_back("FALSE");
         return;
     }
