@@ -19,17 +19,20 @@ void NextBipStarHandler::depthFirstSearch(
         visited.insert(progLine);
     }
 
+    if (!validBranchLines.empty() &&
+        validBranchLines.back() == progLine) {
+        validBranchLines.pop_back();
+    }
+
     // Explore neighbours
     unordered_set<ProgLineIndex> toExplore =
         (this->*explore)(progLine, validBranchLines);
-    for (ProgLineIndex index : toExplore) {
-        if (visited.find(index) == visited.end()) {
-            depthFirstSearch(explore, index, result, visited, validBranchLines);
+    for (ProgLineIndex neighbourLine : toExplore) {
+        if (visited.find(neighbourLine) == visited.end()) {
+            depthFirstSearch(explore, neighbourLine, result, visited,
+                             validBranchLines);
         }
-        result.insert(to_string(index));
-    }
-    if (!validBranchLines.empty() && validBranchLines.back() == progLine) {
-        validBranchLines.pop_back();
+        result.insert(to_string(neighbourLine));
     }
 }
 
@@ -95,7 +98,9 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
                     "Encountered a call statement with more than one next "
                     "statement (syntactically impossible).");
             }
-            validBranchBackLines.push_back(*branchBackLines.begin());
+            if (!branchBackLines.empty()) {
+                validBranchBackLines.push_back(*branchBackLines.begin());
+            }
         } else if (pkb->branchBack(curLine, nextBipLine)) {
             // If invalid BranchBack, ignore it
             if (validBranchBackLines.empty() ||
