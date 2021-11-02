@@ -6,7 +6,6 @@
 
 #include "pkb/PKB.h"
 
-#include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ClauseHandlerError.h"

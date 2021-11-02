@@ -7,8 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include "Result.h"
-
 #include "pkb/PKB.h"
 
 #include "query_processor/ResultFormatter.h"
@@ -17,6 +15,7 @@
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 
 #include "query_processor/relationship_handler/AffectsHandler.h"
 #include "query_processor/relationship_handler/AffectsStarHandler.h"

@@ -9,9 +9,9 @@
 
 #include "pkb/PKB.h"
 
-#include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
 
 class ClauseHandler {

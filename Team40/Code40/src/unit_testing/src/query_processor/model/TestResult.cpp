@@ -1,7 +1,7 @@
 #include <vector>
 
-#include "query_processor/Result.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 #include "query_processor/ResultTable.h"
 
 #include "catch.hpp"
