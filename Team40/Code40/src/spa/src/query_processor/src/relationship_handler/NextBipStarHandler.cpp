@@ -17,7 +17,7 @@ set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
     toExplore.push(stoi(r));
 
     ProgLineIndex curIndex;
-    unordered_set<ProgLineIndex> validBranchLines;
+    vector<ProgLineIndex> validBranchLines;
     while (!toExplore.empty()) {
         curIndex = toExplore.front();
         toExplore.pop();
@@ -83,21 +83,25 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
 }
 
 unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
-    ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchBackLines) {
+    ProgLineIndex curLine, vector<ProgLineIndex> &validBranchBackLines) {
     set<ProgLineIndex> nextBipLines = pkb->getNextBipLines(curLine);
     unordered_set<ProgLineIndex> validNextBipLines;
     for (auto nextBipLine : nextBipLines) {
         // If BranchIn, add next lines to validBranchBackLines
         if (pkb->branchIn(curLine, nextBipLine)) {
             set<ProgLineIndex> branchBackLines = pkb->getNextLines(curLine);
-            validBranchBackLines.insert(branchBackLines.begin(),
-                                        branchBackLines.end());
+            if (branchBackLines.size() > 1) {
+                throw runtime_error(
+                    "Encountered a call statement with more than one next "
+                    "statement (syntactically impossible).");
+            }
+            validBranchBackLines.push_back(*branchBackLines.begin());
         } else if (pkb->branchBack(curLine, nextBipLine)) {
-            // If invalid BranchBack, filter it out
-            if (validBranchBackLines.find(nextBipLine) !=
-                validBranchBackLines.end()) {
-                validBranchBackLines.erase(nextBipLine);
+            // If valid BranchBack, pop the stack
+            if (validBranchBackLines.back() == nextBipLine) {
+                validBranchBackLines.pop_back();
             } else {
+                // Else, ignore it
                 continue;
             }
         }
@@ -107,20 +111,25 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
 }
 
 unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
-    ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchInLines) {
+    ProgLineIndex curLine, vector<ProgLineIndex> &validBranchInLines) {
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
     unordered_set<ProgLineIndex> validPreviousBipLines;
     for (auto previousBipLine : previousBipLines) {
         // If BranchBack, add prev lines to validBranchInLines
         if (pkb->branchBack(previousBipLine, curLine)) {
-            set<ProgLineIndex> branchInLInes = pkb->getPreviousLines(curLine);
-            validBranchInLines.insert(branchInLInes.begin(),
-                                      branchInLInes.end());
+            set<ProgLineIndex> branchInLines = pkb->getPreviousLines(curLine);
+            if (branchInLines.size() > 1) {
+                throw runtime_error(
+                    "Encountered a call statement with more than one next "
+                    "statement (syntactically impossible).");
+            }
+            validBranchInLines.push_back(*branchInLines.begin());
         } else if (pkb->branchIn(previousBipLine, curLine)) {
-            // If invalid BranchIn, filter it out
-            if (validBranchInLines.find(curLine) != validBranchInLines.end()) {
-                validBranchInLines.erase(curLine);
+            // If valid BranchIn, pop the stack
+            if (validBranchInLines.back() == curLine) {
+                validBranchInLines.pop_back();
             } else {
+                // Else, ignore it
                 continue;
             }
         }
