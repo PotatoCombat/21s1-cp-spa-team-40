@@ -9,111 +9,94 @@ AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb)
 }
 
 set<string> AffectsHandler::getR1ClauseR2(string r2) {
-    set<string> results;
-
     ProgLineIndex line2 = stoi(r2);
-    ProgLineIndex curr;
 
     if (pkb->getStmtType(line2) != StatementType::ASSIGN) {
-        return { };
+        return {};
     }
 
     set<VarName> usedVars = pkb->getVarsUsedByStmt(line2);
 
-    for (auto &usedVar : usedVars) {
+    return breathFirstSearch(line2, usedVars, true);
+}
+
+set<string> AffectsHandler::getR2ClausedR1(string r1) {
+    ProgLineIndex line1 = stoi(r1);
+
+    if (pkb->getStmtType(line1) != StatementType::ASSIGN) {
+        return {};
+    }
+
+    set<VarName> modifiedVars = pkb->getVarsModifiedByStmt(line1);
+
+    // Should only have one var
+    if (modifiedVars.size() != 1) {
+        throw runtime_error("Invalid modifiedVars size");
+    }
+
+    return breathFirstSearch(line1, modifiedVars, false);
+}
+
+set<string> AffectsHandler::breathFirstSearch(const ProgLineIndex line, const set<VarName> &vars, bool isFindingR1) {
+    set<string> results;
+    ProgLineIndex curr;
+
+    for (auto &var : vars) {
         queue<ProgLineIndex> open;
         unordered_set<ProgLineIndex> visited;
 
-        open.push(line2);
+        open.push(line);
 
         while (!open.empty()) {
             curr = open.front();
             open.pop();
 
             // Explore neighbours
-            for (ProgLineIndex i : pkb->getPreviousLines(curr)) {
-                if (visited.find(i) != visited.end()) {
-                    continue;
-                }
-                visited.insert(i); // Mark current as visited
-
-                switch (pkb->getStmtType(i)) {
-                    case StatementType::ASSIGN:
-                        if (pkb->stmtModifies(i, usedVar)) {
-                            results.insert(to_string(i));
-                            continue;
-                        }
-                        break;
-                    case StatementType::IF:
-                    case StatementType::WHILE:
-                        break;
-                    default:
-                        if (pkb->stmtModifies(i, usedVar)) {
-                            continue;
-                        }
-                        break;
-                }
-                open.push(i);
-            }
+            exploreNeighbours(isFindingR1, curr, var, visited, open, results);
         }
     }
 
     return results;
+
 }
 
-set<string> AffectsHandler::getR2ClausedR1(string r1) {
-    set<string> results;
+void AffectsHandler::exploreNeighbours(bool isFindingR1,
+                                       const ProgLineIndex currLine,
+                                       const VarName currVar,
+                                       unordered_set<ProgLineIndex> &visited,
+                                       queue<ProgLineIndex> &open,
+                                       set<string> &results) {
+    bool (PKB::*checkRelationship)(ProgLineIndex, VarName) =
+        isFindingR1 ? &PKB::stmtModifies : &PKB::stmtUses;
 
-    queue<ProgLineIndex> open;
-    unordered_set<ProgLineIndex> visited;
+    for (ProgLineIndex i : pkb->getPreviousLines(currLine)) {
+        if (visited.find(i) != visited.end()) {
+            continue;
+        }
+        visited.insert(i); // Mark current as visited
 
-    ProgLineIndex line1 = stoi(r1);
-    ProgLineIndex curr;
-
-    if (pkb->getStmtType(line1) != StatementType::ASSIGN) {
-        return { };
-    }
-
-    // Should only have one var
-    VarName modifiedVar = *pkb->getVarsModifiedByStmt(line1).begin();
-
-    open.push(line1);
-
-    while (!open.empty()) {
-        curr = open.front();
-        open.pop();
-
-        // Explore neighbours
-        for (ProgLineIndex i : pkb->getNextLines(curr)) {
-            if (visited.find(i) != visited.end()) {
+        switch (pkb->getStmtType(i)) {
+        case StatementType::ASSIGN:
+            if ((pkb->*checkRelationship)(i, currVar)) {
+                results.insert(to_string(i));
+            }
+            if (pkb->stmtModifies(i, currVar)) {
                 continue;
             }
-            visited.insert(i); // Mark current as visited
-
-            switch (pkb->getStmtType(i)) {
-                case StatementType::ASSIGN:
-                    if (pkb->stmtUses(i, modifiedVar)) {
-                        results.insert(to_string(i));
-                    }
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
-                case StatementType::IF:
-                case StatementType::WHILE:
-                    break;
-                default:
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
+            break;
+        case StatementType::IF:
+        case StatementType::WHILE:
+            break;
+        default:
+            if (pkb->stmtModifies(i, currVar)) {
+                continue;
             }
-            open.push(i);
+            break;
         }
+        open.push(i);
     }
-
-    return results;
 }
+
 
 bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
     queue<ProgLineIndex> open;
@@ -152,14 +135,14 @@ bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
             }
 
             switch (pkb->getStmtType(i)) {
-                case StatementType::IF:
-                case StatementType::WHILE:
-                    break;
-                default:
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
+            case StatementType::IF:
+            case StatementType::WHILE:
+                break;
+            default:
+                if (pkb->stmtModifies(i, modifiedVar)) {
+                    continue;
+                }
+                break;
             }
 
             visited.insert(i); // Mark current as visited
