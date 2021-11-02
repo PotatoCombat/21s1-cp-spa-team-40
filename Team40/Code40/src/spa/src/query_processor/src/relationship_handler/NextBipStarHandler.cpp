@@ -98,7 +98,8 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
             validBranchBackLines.push_back(*branchBackLines.begin());
         } else if (pkb->branchBack(curLine, nextBipLine)) {
             // If valid BranchBack, pop the stack
-            if (validBranchBackLines.back() == nextBipLine) {
+            if (!validBranchBackLines.empty() &&
+                validBranchBackLines.back() == nextBipLine) {
                 validBranchBackLines.pop_back();
             } else {
                 // Else, ignore it
@@ -126,7 +127,8 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
             validBranchInLines.push_back(*branchInLines.begin());
         } else if (pkb->branchIn(previousBipLine, curLine)) {
             // If valid BranchIn, pop the stack
-            if (validBranchInLines.back() == curLine) {
+            if (!validBranchInLines.empty() &&
+                validBranchInLines.back() == curLine) {
                 validBranchInLines.pop_back();
             } else {
                 // Else, ignore it
