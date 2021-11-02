@@ -1,8 +1,8 @@
 #include "../test_util/PKBStub.h"
 #include "../test_util/PKBStub2.h"
-#include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
 
 #include "catch.hpp"

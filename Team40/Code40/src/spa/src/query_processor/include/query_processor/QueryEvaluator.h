@@ -7,23 +7,23 @@
 #include <utility>
 #include <vector>
 
-#include "Result.h"
-
 #include "pkb/PKB.h"
 
 #include "query_processor/ResultFormatter.h"
 #include "query_processor/ResultTable.h"
 
+#include "query_processor/exception/ClauseHandlerError.h"
+
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 
 #include "query_processor/relationship_handler/AffectsHandler.h"
 #include "query_processor/relationship_handler/AffectsStarHandler.h"
 #include "query_processor/relationship_handler/CallsHandler.h"
 #include "query_processor/relationship_handler/CallsStarHandler.h"
 #include "query_processor/relationship_handler/ClauseHandler.h"
-#include "query_processor/relationship_handler/ClauseHandlerError.h"
 #include "query_processor/relationship_handler/FollowsHandler.h"
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
 #include "query_processor/relationship_handler/ModifiesProcHandler.h"
