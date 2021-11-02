@@ -10,7 +10,6 @@ template <typename T> class EntityParser {
 protected:
     vector<string> content;
     int index;
-    static int dummyProgramIndex;
 
     explicit EntityParser(vector<string> content, int index)
         : content(content), index(index){};
@@ -27,7 +26,7 @@ protected:
     }
 
 public:
-    virtual T *parseEntity(int &programIndex = dummyProgramIndex) {
+    virtual T *parseEntity(int &programIndex = 0) {
         return new T();
     };
 };

@@ -32,14 +32,14 @@ Statement *IfStatementParser::parseEntity(int &programIndex) {
     ExpressionParser exprParser(vector<string>(next(next(ifItr)), prev(prev(endItr))), stmt);
     vector<string> condLst = exprParser.parseExpression();
     stmt->setExpressionLst(condLst);
-    parseChildStatements(programIndex);
+    parseChildStmts(programIndex);
     if (stmt->getThenStmtLst().size() == 0 || stmt->getElseStmtLst().size() == 0) {
         throw invalid_argument("nested stmtLst should have at least one statement.");
     }
     return stmt;
 }
 
-void IfStatementParser::parseChildStatements(int &programIndex) {
+void IfStatementParser::parseChildStmts(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();

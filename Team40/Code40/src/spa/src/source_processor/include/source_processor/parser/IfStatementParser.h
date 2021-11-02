@@ -12,5 +12,5 @@ private:
 public:
     IfStatementParser(vector<string> content, int index, vector<Line> programLines);
     Statement *parseEntity(int &programIndex);
-    void parseChildStatements(int &programIndex);
+    void parseChildStmts(int &programIndex);
 };
