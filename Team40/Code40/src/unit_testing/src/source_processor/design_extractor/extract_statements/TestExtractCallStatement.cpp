@@ -32,18 +32,21 @@ TEST_CASE(
     Program program;
     Procedure callingProc(TestExtractCallStatement::PROC_NAME_1);
     Procedure calledProc(TestExtractCallStatement::PROC_NAME_2);
-    Statement statement(1, StatementType::CALL);
+    Statement statement1(1, StatementType::CALL);
+    Statement statement2(2, StatementType::READ);
+    Variable variable(TestExtractCallStatement::VAR_NAME);
 
-    statement.setProcName(calledProc.getName());
+    statement1.setProcName(calledProc.getName());
+    statement2.setVariable(&variable);
+    callingProc.addToStmtLst(&statement1);
+    calledProc.addToStmtLst(&statement2);
     program.addToProcLst(&callingProc);
     program.addToProcLst(&calledProc);
-    callingProc.addToStmtLst(&statement);
 
     DesignExtractor de(&TestExtractCallStatement::pkb);
     de.extract(&program);
 
     REQUIRE(TestExtractCallStatement::pkb.getAllProcs().asVector().size() == 2);
-    REQUIRE(TestExtractCallStatement::pkb.getAllStmts().asVector().size() == 1);
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
                 .asVector()
                 .size() == 1);

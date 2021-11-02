@@ -21,7 +21,8 @@ ProcName TestExtractUsesRelationship::PROC_NAME_1 = "PROC_1";
 ProcName TestExtractUsesRelationship::PROC_NAME_2 = "PROC_2";
 VarName TestExtractUsesRelationship::VAR_NAME = "VAR";
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts a simple Uses(s, v)") {
+TEST_CASE(
+    "TestExtractUsesRelationship: Correctly extracts a simple Uses(s, v)") {
     TestExtractUsesRelationship::reset();
 
     Program program;
@@ -44,7 +45,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts a simple Uses(s, v)") {
             .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(p, v) where "
+TEST_CASE("TestExtractUsesRelationship: Correctly extracts Uses(p, v) where "
           "Uses(s, v)") {
     TestExtractUsesRelationship::reset();
 
@@ -74,7 +75,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(p, v) where "
             .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(p1, v) where "
+TEST_CASE("TestExtractUsesRelationship: Correctly extracts Uses(p1, v) where "
           "Uses(p2, v) and Calls(p1, p2)") {
     TestExtractUsesRelationship::reset();
 
@@ -120,7 +121,7 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(p1, v) where "
             .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
+TEST_CASE("TestExtractUsesRelationship: Correctly extracts Uses(s1, v) where "
           "Uses(s2, v) and Parent(s1, s2)") {
     TestExtractUsesRelationship::reset();
 
@@ -158,8 +159,9 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts Uses(s1, v) where "
                 .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
-          "call statement in a while loop") {
+TEST_CASE(
+    "TestExtractUsesRelationship: Correctly extracts transitive Uses for a "
+    "call statement in a while loop") {
     TestExtractUsesRelationship::reset();
 
     Program program;
@@ -224,8 +226,9 @@ TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
             .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractUsesRelationship: Correct extracts transitive Uses for a "
-          "call statement in a if statement") {
+TEST_CASE(
+    "TestExtractUsesRelationship: Correctly extracts transitive Uses for a "
+    "call statement in a if statement") {
     TestExtractUsesRelationship::reset();
 
     Program program;

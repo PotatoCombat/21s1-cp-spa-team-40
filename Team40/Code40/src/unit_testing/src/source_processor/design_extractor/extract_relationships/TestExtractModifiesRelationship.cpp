@@ -21,7 +21,7 @@ ProcName TestExtractModifiesRelationship::PROC_NAME_1 = "PROC_1";
 ProcName TestExtractModifiesRelationship::PROC_NAME_2 = "PROC_2";
 VarName TestExtractModifiesRelationship::VAR_NAME = "VAR";
 
-TEST_CASE("TestExtractModifiesRelationship: Correct extracts a simple "
+TEST_CASE("TestExtractModifiesRelationship: Correctly extracts a simple "
           "Modifies(s, v)") {
     TestExtractModifiesRelationship::reset();
 
@@ -46,7 +46,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts a simple "
 }
 
 TEST_CASE(
-    "TestExtractModifiesRelationship: Correct extracts Modifies(p, v) where "
+    "TestExtractModifiesRelationship: Correctly extracts Modifies(p, v) where "
     "Modifies(s, v)") {
     TestExtractModifiesRelationship::reset();
 
@@ -77,7 +77,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "TestExtractModifiesRelationship: Correct extracts Modifies(p1, v) where "
+    "TestExtractModifiesRelationship: Correctly extracts Modifies(p1, v) where "
     "Modifies(p2, v) and Calls(p1, p2)") {
     TestExtractModifiesRelationship::reset();
 
@@ -124,7 +124,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "TestExtractModifiesRelationship: Correct extracts Modifies(s1, v) where "
+    "TestExtractModifiesRelationship: Correctly extracts Modifies(s1, v) where "
     "Modifies(s2, v) and Parent(s1, s2)") {
     TestExtractModifiesRelationship::reset();
 
@@ -165,7 +165,7 @@ TEST_CASE(
                 .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
+TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
           "Modifies for a call statement in a while loop") {
     TestExtractModifiesRelationship::reset();
 
@@ -237,7 +237,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
                 .count(variable.getName()));
 }
 
-TEST_CASE("TestExtractModifiesRelationship: Correct extracts transitive "
+TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
           "Modifies for a call statement in a if statement") {
     TestExtractModifiesRelationship::reset();
 
