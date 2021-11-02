@@ -69,7 +69,10 @@ void AffectsHandler::exploreNeighbours(bool isFindingR1,
     bool (PKB::*checkRelationship)(ProgLineIndex, VarName) =
         isFindingR1 ? &PKB::stmtModifies : &PKB::stmtUses;
 
-    for (ProgLineIndex i : pkb->getPreviousLines(currLine)) {
+    set<ProgLineIndex> (PKB::*getNeighbours)(ProgLineIndex) =
+        isFindingR1 ? &PKB::getPreviousLines : &PKB::getNextLines;
+
+    for (ProgLineIndex i : (pkb->*getNeighbours)(currLine)) {
         if (visited.find(i) != visited.end()) {
             continue;
         }
