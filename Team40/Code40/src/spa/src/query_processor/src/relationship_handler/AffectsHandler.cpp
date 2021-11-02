@@ -17,7 +17,7 @@ set<string> AffectsHandler::getR1ClauseR2(string r2) {
 
     set<VarName> usedVars = pkb->getVarsUsedByStmt(line2);
 
-    return breathFirstSearch(line2, usedVars, true);
+    return breadthFirstSearch(line2, usedVars, true);
 }
 
 set<string> AffectsHandler::getR2ClausedR1(string r1) {
@@ -34,10 +34,10 @@ set<string> AffectsHandler::getR2ClausedR1(string r1) {
         throw runtime_error("Invalid modifiedVars size");
     }
 
-    return breathFirstSearch(line1, modifiedVars, false);
+    return breadthFirstSearch(line1, modifiedVars, false);
 }
 
-set<string> AffectsHandler::breathFirstSearch(const ProgLineIndex line, const set<VarName> &vars, bool isFindingR1) {
+set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line, const set<VarName> &vars, bool isFindingR1) {
     set<string> results;
     ProgLineIndex curr;
 
