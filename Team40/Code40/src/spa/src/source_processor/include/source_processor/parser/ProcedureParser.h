@@ -4,9 +4,6 @@
 using namespace std;
 
 class ProcedureParser : public EntityParser<Procedure> {
-private:
-    Procedure *proc;
-
 public:
     ProcedureParser(vector<string> content);
     Procedure *parseEntity();

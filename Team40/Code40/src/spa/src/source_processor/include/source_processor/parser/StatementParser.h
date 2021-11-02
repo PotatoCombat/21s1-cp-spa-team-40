@@ -11,7 +11,6 @@ using namespace std;
 
 class StatementParser : public EntityParser<Statement> {
 private:
-    Statement *stmt;
     vector<Line> programLines;
     int &programIndex;
 

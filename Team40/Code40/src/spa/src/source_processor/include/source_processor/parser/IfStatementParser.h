@@ -6,7 +6,6 @@ using namespace std;
 
 class IfStatementParser : public EntityParser<Statement> {
 private:
-    Statement *stmt;
     vector<Line> programLines;
 
 public:

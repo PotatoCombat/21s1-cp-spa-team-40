@@ -4,9 +4,6 @@
 using namespace std;
 
 class CallStatementParser : public EntityParser<Statement> {
-private:
-    Statement *stmt;
-
 public:
     CallStatementParser(vector<string> content, int index);
     Statement *parseEntity();

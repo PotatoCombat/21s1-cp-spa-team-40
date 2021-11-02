@@ -7,7 +7,7 @@
 WhileStatementParser::WhileStatementParser(vector<string> content, int index,
                                            vector<Line> programLines)
     : EntityParser(content, index), programLines(programLines) {
-    stmt = new Statement(index, StatementType::WHILE);
+    entity = new Statement(index, StatementType::WHILE);
 };
 
 Statement *WhileStatementParser::parseEntity(int &programIndex) {
@@ -17,7 +17,7 @@ Statement *WhileStatementParser::parseEntity(int &programIndex) {
     if (endItr == content.end())
         throw invalid_argument("invalid while statement");
     // while: 'while' Tokens::CHAR_OPEN_BRACKET cond_expr Tokens::CHAR_CLOSE_BRACKET
-    // Tokens::CHAR_OPEN_BRACE stmtLst Tokens::CHAR_CLOSE_BRACE
+    // Tokens::CHAR_OPEN_BRACE entityLst Tokens::CHAR_CLOSE_BRACE
     if (next(whileItr) == content.end() || prev(endItr) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
@@ -28,14 +28,14 @@ Statement *WhileStatementParser::parseEntity(int &programIndex) {
     if (next(next(whileItr)) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
-    ExpressionParser exprParser(vector<string>(next(next(whileItr)), prev(endItr)), stmt);
+    ExpressionParser exprParser(vector<string>(next(next(whileItr)), prev(endItr)), entity);
     vector<string> condLst = exprParser.parseExpression();
-    stmt->setExpressionLst(condLst);
+    entity->setExpressionLst(condLst);
     parseChildStmts(programIndex);
-    if (stmt->getThenStmtLst().size() == 0) {
-        throw invalid_argument("nested stmtLst should have at least one statement.");
+    if (entity->getThenStmtLst().size() == 0) {
+        throw invalid_argument("nested entityLst should have at least one statement.");
     }
-    return stmt;
+    return entity;
 }
 
 void WhileStatementParser::parseChildStmts(int &programIndex) {
@@ -50,12 +50,12 @@ void WhileStatementParser::parseChildStmts(int &programIndex) {
         }
         Parser parser;
         if (parser.isStmt(currContent)) {
-            StatementParser stmtParser(currContent, currIndex, programLines, i);
-            Statement *nestedStmt = stmtParser.parseEntity();
-            stmt->addThenStmt(nestedStmt);
+            StatementParser entityParser(currContent, currIndex, programLines, i);
+            Statement *nestedStmt = entityParser.parseEntity();
+            entity->addThenStmt(nestedStmt);
         }
     }
-    // ... stmtLst Tokens::CHAR_CLOSE_BRACE
+    // ... entityLst Tokens::CHAR_CLOSE_BRACE
     if (terminator != 1) {
         throw invalid_argument("invalid while statement");
     }

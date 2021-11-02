@@ -3,7 +3,7 @@
 
 PrintStatementParser::PrintStatementParser(vector<string> content, int index)
     : EntityParser(content, index) {
-    stmt = new Statement(index, StatementType::PRINT);
+    entity = new Statement(index, StatementType::PRINT);
 };
 
 Statement *PrintStatementParser::parseEntity() {
@@ -23,6 +23,6 @@ Statement *PrintStatementParser::parseEntity() {
         throw invalid_argument("invalid print statement");
     }
     Variable *variable = new Variable(var_name);
-    stmt->setVariable(variable);
-    return stmt;
+    entity->setVariable(variable);
+    return entity;
 }

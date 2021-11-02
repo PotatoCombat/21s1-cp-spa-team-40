@@ -20,6 +20,6 @@ Procedure *ProcedureParser::parseEntity() {
     if (*next(next(procItr)) != Tokens::SYMBOL_OPEN_BRACE) {
         throw invalid_argument("invalid procedure");
     }
-    Procedure *procedure = new Procedure(proc_name);
-    return procedure;
+    entity = new Procedure(proc_name);
+    return entity;
 }

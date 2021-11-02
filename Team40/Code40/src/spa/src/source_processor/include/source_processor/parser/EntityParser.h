@@ -10,6 +10,7 @@ template <typename T> class EntityParser {
 protected:
     vector<string> content;
     int index;
+    T* entity;
 
     explicit EntityParser(vector<string> content, int index)
         : content(content), index(index){};

@@ -3,7 +3,7 @@
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
     : EntityParser(content, index) {
-    stmt = new Statement(index, StatementType::READ);
+    entity = new Statement(index, StatementType::READ);
 };
 
 Statement *ReadStatementParser::parseEntity() {
@@ -24,6 +24,6 @@ Statement *ReadStatementParser::parseEntity() {
         throw invalid_argument("invalid read statement");
     }
     Variable *var = new Variable(var_name);
-    stmt->setVariable(var);
-    return stmt;
+    entity->setVariable(var);
+    return entity;
 }

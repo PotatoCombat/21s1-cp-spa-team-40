@@ -3,7 +3,7 @@
 
 CallStatementParser::CallStatementParser(vector<string> content, int index)
     : EntityParser(content, index) {
-    stmt = new Statement(index, StatementType::CALL);
+    entity = new Statement(index, StatementType::CALL);
 };
 
 Statement *CallStatementParser::parseEntity() {
@@ -22,6 +22,6 @@ Statement *CallStatementParser::parseEntity() {
     if (*next(next(callItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid call statement");
     }
-    stmt->setProcName(proc_name);
-    return stmt;
+    entity->setProcName(proc_name);
+    return entity;
 }

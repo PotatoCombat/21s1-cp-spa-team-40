@@ -4,7 +4,7 @@
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
     : EntityParser(content, index) {
-    stmt = new Statement(index, StatementType::ASSIGN);
+    entity = new Statement(index, StatementType::ASSIGN);
 };
 
 Statement *AssignStatementParser::parseEntity() {
@@ -18,7 +18,7 @@ Statement *AssignStatementParser::parseEntity() {
         throw invalid_argument("invalid variable name");
     }
     Variable *variable = new Variable(var_name);
-    stmt->setVariable(variable);
+    entity->setVariable(variable);
 
     vector<string>::iterator endItr =
         find(content.begin(), content.end(), Tokens::SYMBOL_SEMICOLON);
@@ -27,8 +27,8 @@ Statement *AssignStatementParser::parseEntity() {
     if (next(assignItr) == content.end()) {
         throw invalid_argument("invalid assign statement");
     }
-    ExpressionParser exprParser(vector<string>(next(assignItr), endItr), stmt);
+    ExpressionParser exprParser(vector<string>(next(assignItr), endItr), entity);
     vector<string> exprLst = exprParser.parseExpression();
-    stmt->setExpressionLst(exprLst);
-    return stmt;
+    entity->setExpressionLst(exprLst);
+    return entity;
 }
