@@ -82,10 +82,10 @@ bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
     return false;
 }
 
-set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
+unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
     ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchBackLines) {
     set<ProgLineIndex> nextBipLines = pkb->getNextBipLines(curLine);
-    set<ProgLineIndex> validNextBipLines;
+    unordered_set<ProgLineIndex> validNextBipLines;
     for (auto nextBipLine : nextBipLines) {
         // If BranchIn, add next lines to validBranchBackLines
         if (pkb->branchIn(curLine, nextBipLine)) {
@@ -106,10 +106,10 @@ set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
     return validNextBipLines;
 }
 
-set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
+unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
     ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchInLines) {
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
-    set<ProgLineIndex> validPreviousBipLines;
+    unordered_set<ProgLineIndex> validPreviousBipLines;
     for (auto previousBipLine : previousBipLines) {
         // If BranchBack, add prev lines to validBranchInLines
         if (pkb->branchBack(previousBipLine, curLine)) {

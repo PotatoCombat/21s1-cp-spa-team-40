@@ -7,7 +7,7 @@
 
 class NextBipStarHandler;
 
-typedef set<ProgLineIndex> (NextBipStarHandler::*ExplorationFunction)(
+typedef unordered_set<ProgLineIndex> (NextBipStarHandler::*ExplorationFunction)(
     ProgLineIndex progLineIndex,
     unordered_set<ProgLineIndex> &validBranchBackLines);
 
@@ -18,10 +18,10 @@ private:
     bool isR1ClauseR2(string r1, string r2) override;
     set<string> breadthFirstSearch(ExplorationFunction explorationFunction,
                                    const string &r);
-    set<ProgLineIndex>
+    unordered_set<ProgLineIndex>
     getNextBipLines(ProgLineIndex progLineIndex,
                     unordered_set<ProgLineIndex> &validBranchBackLines);
-    set<ProgLineIndex>
+    unordered_set<ProgLineIndex>
     getPreviousBipLines(ProgLineIndex progLineIndex,
                         unordered_set<ProgLineIndex> &validBranchInLines);
 
