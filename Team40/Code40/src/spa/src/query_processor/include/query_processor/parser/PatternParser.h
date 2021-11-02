@@ -33,4 +33,7 @@ private:
     string ref1;
     string ref2;
     vector<string> tokens;
+
+    inline static const int PATARG_SIZE_ONE = 1;
+    inline static const int PATARG_SIZE_TWO = 2;
 };

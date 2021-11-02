@@ -5,6 +5,8 @@
 
 #include "ClauseHandler.h"
 
+#include "common/model/Abstractions.h"
+
 #include "pkb/PKB.h"
 
 using namespace std;

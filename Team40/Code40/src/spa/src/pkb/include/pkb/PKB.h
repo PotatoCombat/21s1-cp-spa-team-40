@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AssignPattern.h"
+#include "BranchBackTable.h"
+#include "BranchInTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
 #include "PostfixAdapter.h"
@@ -146,6 +148,16 @@ public:
      * @param stmt WHILE statement while.
      */
     virtual void insertWhilePattern(Statement *stmt);
+
+    /**
+     * Stores the branch-in relationship from stmt1 to stmt2
+     */
+    virtual void insertBranchIn(Statement *fromStmt, Statement *toStmt);
+
+    /**
+     * Stores the branch-back relationship from stmt1 to stmt2
+     */
+    virtual void insertBranchBack(Statement *fromStmt, Statement *toStmt);
 
     // =========================================================================
     // Query Processor
@@ -467,6 +479,46 @@ public:
      */
     virtual bool nextBip(const ProgLineIndex &previous, const ProgLineIndex &next);
 
+    /**
+     * Selects s such that line branches in to s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual ProgLineIndex getBranchInToLine(ProgLineIndex line);
+
+    /**
+     * Selects s such that line branches in from s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<ProgLineIndex> getBranchInFromLines(ProgLineIndex line);
+
+    /**
+     * Selects BOOLEAN such that there exists a branch-in from fromLine to
+     * toLine
+     */
+
+    virtual bool branchIn(ProgLineIndex fromLine, ProgLineIndex toLine);
+    /**
+     * Selects s such that line branches back to s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<ProgLineIndex> getBranchBackToLines(ProgLineIndex line);
+
+    /**
+     * Selects s such that line branches back from s
+     * @return all program line numbers that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<ProgLineIndex> getBranchBackFromLines(ProgLineIndex line);
+
+    /**
+     * Selects BOOLEAN such that there exists a branch-back from fromLine to
+     * toLine
+     */
+    virtual bool branchBack(ProgLineIndex fromLine, ProgLineIndex toLine);
+
     // Pattern =================================================================
 
     /**
@@ -565,4 +617,6 @@ private:
 
     RelationshipTable<StmtIndex, IfPattern> ifPatternTable;
     RelationshipTable<StmtIndex, WhilePattern> whilePatternTable;
+    BranchInTable branchInTable;
+    BranchBackTable branchBackTable;
 };

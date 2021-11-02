@@ -2,6 +2,7 @@
 
 #include "BreadthFirstExtractor.h"
 #include "DepthFirstExtractor.h"
+#include "NextBipExtractor.h"
 #include "common/model/Program.h"
 #include "pkb/PKB.h"
 
@@ -15,4 +16,5 @@ public:
     void extract(Program *program);
     void extractDepthFirst(Program *program);
     void extractBreadthFirst(Program *program);
+    void extractNextBip(Program *program);
 };

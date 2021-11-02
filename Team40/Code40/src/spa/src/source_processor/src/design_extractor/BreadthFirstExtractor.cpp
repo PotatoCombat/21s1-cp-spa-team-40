@@ -5,6 +5,7 @@ BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 void BreadthFirstExtractor::extract(Program *program) {
     ExtractionContext::getInstance().resetTransientContexts();
 
+    // Extract procedures in topologically reverse order of dependencies
     unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
         procMap[procedure->getId()] = procedure;
@@ -69,7 +70,7 @@ void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
 
 void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     optional<Procedure *> currentProcedure =
-        ExtractionContext::getInstance().getCurrentProcedure().value();
+        ExtractionContext::getInstance().getCurrentProcedure();
     if (!currentProcedure.has_value()) {
         throw runtime_error("Current procedure not set");
     }
@@ -83,12 +84,24 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     // Extract Calls(proc, proc) relationship
     pkb->insertCalls(currentProcedure.value(), calleeName);
 
-    // Handle transitive Modifies
-    set<VarName> modifiedVarNames = pkb->getVarsModifiedByProc(calleeName);
-    for (VarName modifiedVarName : modifiedVarNames) {
+    extractTransitiveUsesRelationship(callStatement, currentProcedure.value(),
+                                      calleeName);
+    extractTransitiveModifiesRelationship(callStatement,
+                                          currentProcedure.value(), calleeName);
+    expandLastExecutableCallStatements(callStatement, currentProcedure.value(),
+                                       calleeName);
+}
+
+void BreadthFirstExtractor::extractTransitiveModifiesRelationship(
+    Statement *callStatement, Procedure *currentProcedure,
+    ProcName calleeName) {
+
+    set<VarName> modifiedVarNames =
+        pkb->getVarsModifiedByProc(std::move(calleeName));
+    for (const VarName &modifiedVarName : modifiedVarNames) {
         Variable *modifiedVar = pkb->getVarByName(modifiedVarName);
         // If Modifies(calleeProc, var) then Modifies(callerProc, var)
-        pkb->insertProcModifyingVar(currentProcedure.value(), modifiedVar);
+        pkb->insertProcModifyingVar(currentProcedure, modifiedVar);
         pkb->insertStmtModifyingVar(callStatement, modifiedVar);
         // If Modifies(stmt, var) then Modifies(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
@@ -97,13 +110,17 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
                 pkb->getStmtByIndex(parentStarStatement), modifiedVar);
         }
     }
+}
 
-    // Handle transitive Uses(proc, var)
-    set<VarName> usedVarNames = pkb->getVarsUsedByProc(calleeName);
-    for (VarName usedVarName : usedVarNames) {
+void BreadthFirstExtractor::extractTransitiveUsesRelationship(
+    Statement *callStatement, Procedure *currentProcedure,
+    ProcName calleeName) {
+
+    set<VarName> usedVarNames = pkb->getVarsUsedByProc(std::move(calleeName));
+    for (const VarName &usedVarName : usedVarNames) {
         Variable *usedVar = pkb->getVarByName(usedVarName);
         // If Uses(calleeProc, var) then Uses(callerProc, var)
-        pkb->insertProcUsingVar(currentProcedure.value(), usedVar);
+        pkb->insertProcUsingVar(currentProcedure, usedVar);
         pkb->insertStmtUsingVar(callStatement, usedVar);
         // If Uses(stmt, var) then Uses(parentStarStmt, var)
         for (StmtIndex parentStarStatement :
@@ -111,5 +128,36 @@ void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
             pkb->insertStmtUsingVar(pkb->getStmtByIndex(parentStarStatement),
                                     usedVar);
         }
+    }
+}
+
+/**
+ * If the given call statement is (one of) the last-executable statement found
+ * by the DepthFirstExtractor for the current procedure, replace it with those
+ * of the called procedure.
+ */
+void BreadthFirstExtractor::expandLastExecutableCallStatements(
+    Statement *callStatement, Procedure *currentProcedure,
+    const ProcName &calleeName) {
+
+    ProcName curProcName = currentProcedure->getName();
+    StmtIndex curStmtIndex = callStatement->getIndex();
+
+    if (ExtractionContext::getInstance()
+            .getLastExecutableStatements(curProcName)
+            .count(curStmtIndex)) {
+        auto curProcLastExecutableStmts =
+            ExtractionContext::getInstance().getLastExecutableStatements(
+                curProcName);
+        auto calleeLastExecutableStmts =
+            ExtractionContext::getInstance().getLastExecutableStatements(
+                calleeName);
+
+        curProcLastExecutableStmts.erase(curStmtIndex);
+        curProcLastExecutableStmts.insert(calleeLastExecutableStmts.begin(),
+                                          calleeLastExecutableStmts.end());
+
+        ExtractionContext::getInstance().setLastExecutableStatements(
+            curProcName, curProcLastExecutableStmts);
     }
 }
