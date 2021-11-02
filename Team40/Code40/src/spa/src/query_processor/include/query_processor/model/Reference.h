@@ -18,6 +18,9 @@ enum class ReferenceAttribute {
     DEFAULT
 };
 
+/**
+* Represents a reference object that is used in the clauses
+*/
 class Reference {
 private:
     DesignEntityType deType;

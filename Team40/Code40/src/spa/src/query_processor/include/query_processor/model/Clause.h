@@ -8,6 +8,9 @@
 
 using namespace std;
 
+/**
+* Represents a clause in a query
+*/
 class Clause {
 private:
     ClauseType type;
