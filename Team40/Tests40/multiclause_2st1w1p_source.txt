@@ -1,0 +1,352 @@
+procedure read {
+	read a;
+	x = a + 1;
+	read b;
+	y = b + 1;
+	read c;
+	z = c + 1;
+	if (a == b) then {
+		z = (x + y) / y;
+		call call;
+		a = z * 200 + d;
+		b = z % 200 - e;
+		c = z / 200 + f;
+		while (a != b) {
+			a = a - f;
+			b = b + g;
+			c = c * h;
+		}
+	} else {
+		read a;
+		read b;
+		read c;
+	}
+	call while;
+	print a;
+	print b;
+	print c;
+	print d;
+	print e;
+	print f;
+	print g;
+	if (9 == 9) then {
+		call then;
+	} else {
+		call else;
+	}
+	condition = a + b / c - d % e * f - g % h;
+	if (condition >= 0) then {
+		call then;
+	} else {
+		call else;
+	}
+	variable = x + y + (a + b / c) - (y / (x * x + (d - 1)) - f % e % d * 6 + while / 3) * 200 * (read * 200 + 7 * f);
+}
+
+procedure call {
+	a = 10;
+	b = 11;
+	c = 12;
+	d = 13;
+	e = 14;
+	f = 15;
+	g = 16;
+	h = 17;
+	call if;
+	h = g;
+	g = f;
+	f = e;
+	e = d;
+	d = c;
+	c = b;
+	b = a;
+	a = h;
+	call while;
+	h = h * y - y + y / (x * x + (h - 1)) + 28;
+	g = g * y - y + y / (z * z + (g - 1)) + 29;
+	f = f * y - y + y / (x * x + (f - 1)) + 30;
+	e = e * y - y + y / (z * z + (e - 1)) + 31;
+	d = d * y - y + y / (x * x + (d - 1)) + 32;
+	c = c * y - y + y / (z * z + (c - 1)) + 33;
+	b = b * y - y + y / (x * x + (b - 1)) + 34;
+	a = a * y - y + y / (z * z + (a - 1)) + 35;
+	call print;
+	assign = h;
+	if = h % g;
+	while = h % g % f;
+	print = h % (g % f) % e;
+	read = h % (g % f) % (e % d);
+	call = h % g % (f % e) % d % c;
+	if = read * 200 + 1 + h % g % (f % e) % d % c % b;
+	while = print * 200 + 1 + h % g % (f % e) % d % c % b % a;
+	call print;
+}
+
+procedure while {
+	while ((1 == d + e) || (1 == f + g)) {
+		call = d % e % e % d;
+		read = e % f % (e % e);
+		print = f % g + f % e;
+		while (!(((d < e) && (e >= f)) && (f == g))) {
+			call procedure;
+		}
+		x = call + e % e;
+		y = read + d % e;
+		z = print + f % e;
+	}
+	x = x + 1;
+	y = y + 1;
+	z = z + 1;
+	while (x * y * z < 200) {
+		call print;
+		call procedure;
+		while ((x * y * z > 0) && (x + y + z > read)) {
+			x = x - 1;
+			y = y - 1;
+			z = z - 1;
+			while ((x != 0) && (y != 0) && (z != 0)) {
+				x = x + x - 1;
+				y = y - 1 + y;
+				z = z - (z - 1);
+				while ((x != call) || (z == z)) {
+					call procedure;
+					print call;
+					print x;
+					if (x < z) then {
+						x = x + z + 1;
+						print x;
+					} else {
+						x = z - x + 1;
+					}
+				}
+				while ((y != read) || (x == x)) {
+					read print;
+					if (x == y) then {
+						print = x + y + 1;
+					} else {
+						print = x + y;
+					}
+					print = print + read;
+					print print;
+				}
+				while ((z != print) || (y == y)) {
+					print read;
+					if (y == 0) then {
+						y = z;
+					} else {
+						y = ((y + y) % (y - (y * y))) - (y % y);
+					}
+					read z;
+				}
+			}
+		}
+	}
+	call print;
+}
+
+procedure print {
+	call if;
+	print read;
+	print print;
+	call procedure;
+	print read;
+	print print;
+}
+
+procedure procedure {
+	read read;
+	read print;
+}
+
+procedure if {
+	if (a == 1) then {
+		if (b == 2) then {
+			if (c == 3) then {
+				a = e % d % (d % e);
+				b = f % e % (e % f) - d % d;
+				c = 7 * f + f % g - 4 * 5 - e % f + 6;
+			} else {
+				a = b + 1 - c * 2 % 3 + b * c - if + assign;
+				b = a * c / 3 - a - 1 + a - c + call * if;
+				c = a / b + (b - b % 2) * 1 - if - while / 3;
+				if (h == 8) then {
+					assign = a - 1;
+					while = b + 1;
+					if = c - 1;
+					z = a + b + c;
+					y = b + 1;
+					read x;
+				} else {
+					while (h > 0) {
+						h = h - 1;
+						a = b * c;
+						b = c * a;
+						c = a * b;
+					}
+				}
+				print x;
+				print y;
+				print z;
+				a = x;
+				b = y;
+				c = z;
+			}
+		} else {
+			while = b;
+			if = b;
+			read while;
+			while = if + while;
+		}
+	} else {
+		while (a != 1) {
+			if (h == 8) then {
+				print read;
+				print print;
+				if (read == print) then {
+					h = read * 200;
+				} else { 
+					h = print * 200;
+				}
+				a = h;
+			} else {
+				if ((h == 7) || (h == 6)) then {
+					a = 2;
+				} else {
+					a = h * g / (f % e);
+				}
+			}
+		}
+		read read;
+		read print;
+		read call;
+		if (a == 1) then {
+			x = (x + 1) - (d % e) + (e % d);
+			y = (y + 1) - (e % f) + (f % e);
+			z = (z + 1) - (f % g) + (g % f);
+		} else {
+			x = read + print;
+			y = x - 1;
+			z = y - 1;
+		}
+	}
+}
+
+procedure then {
+	a = a + 1;
+	if ((a > 1) && (a < 100)) then {
+		a = a / 1;
+		while (a <= b) {
+			a = a - 1;
+			if ((b > 1) && (b < 100)) then {
+				b = b % 1;
+				while (!((b <= c) || (c >= d))) {
+					b = b - 1;
+					c = c + 1;
+					c = c - 1;
+					c = c / 1;
+					c = c % 1;
+					c = c * 1;
+					d = d + 1;
+					d = d - 1;
+					d = d / 1;
+					d = d % 1;
+					d = d * 1;
+				}
+				b = b * 1;
+			} else {
+				b = b + 1;
+				e = e + 1;
+				while (!(e <= f)) {
+					b = b / 1;
+					while (e == f) {
+						f = f - 1;
+						e = e - 1;
+						f = f + 1;
+					}
+					g = e + f;
+					g = e % f;
+					e = e / 1 - f / 1;
+					while (e != f) {
+						f = f / 1 - e / 1;
+					}
+					f = f % 1;
+					e = e % 1;
+					g = g + 1 - (g - 1);
+					g = g % 1;
+				}
+				g = g / 1;
+				e = e * 1;
+				f = f * 1;
+				g = g * 1;
+			}
+		}
+		a = a % 1;
+	} else {
+		a = a * 1;
+		h = 0;
+		while (h > 0) {
+			h = h + 1;
+			while (h < 200) {
+				h = h - 1;
+				while (h < 190) {
+					h = h * 1;
+					while (h < 180) {
+						h = h / 1;
+						while (h < 170) {
+							h = h % 1;
+						}
+						a = a + b;
+					}
+					b = b + c;
+				}
+				h = a + b + c;
+				c = c + d;
+				while (h > 100) {
+					h = h + d + e + f;
+				}
+				g = h;
+			}
+			h = a + b + c + d + e + f + g;
+			h = a + b + c + d + e + f + g + h;
+		}
+		print h;
+	}
+	print a;
+	print b;
+	print c;
+	print d;
+	print e;
+	print f;
+	print g;
+	print h;
+}
+
+procedure else {
+	print assign;
+	if (assign != a + b + c + d) then {
+		read assign;
+	} else {
+		if = assign;
+		while = assign;
+		call = assign;
+	}
+	print assign;
+	print if;
+	if (if != e + f + g + h) then {
+		read if;
+	} else {
+		assign = if;
+		while = assign;
+		call = assign;
+	}
+	print if;
+	print while;
+	if (while != e + f + g + h) then {
+		read while;
+	} else {
+		assign = while;
+		while = assign;
+		call = assign;
+	}
+	print while;
+}
