@@ -92,9 +92,8 @@ set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
             set<ProgLineIndex> branchBackLines = pkb->getNextLines(curLine);
             validBranchBackLines.insert(branchBackLines.begin(),
                                         branchBackLines.end());
-        }
-        // If invalid BranchBack, filter it out
-        if (pkb->branchBack(curLine, nextBipLine)) {
+        } else if (pkb->branchBack(curLine, nextBipLine)) {
+            // If invalid BranchBack, filter it out
             if (validBranchBackLines.find(nextBipLine) !=
                 validBranchBackLines.end()) {
                 validBranchBackLines.erase(nextBipLine);
@@ -109,7 +108,6 @@ set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
 
 set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
     ProgLineIndex curLine, unordered_set<ProgLineIndex> &validBranchInLines) {
-    // TODO: Add additional filter logic here
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
     set<ProgLineIndex> validPreviousBipLines;
     for (auto previousBipLine : previousBipLines) {
@@ -118,9 +116,8 @@ set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
             set<ProgLineIndex> branchInLInes = pkb->getPreviousLines(curLine);
             validBranchInLines.insert(branchInLInes.begin(),
                                       branchInLInes.end());
-        }
-        // If invalid BranchIn, filter it out
-        if (pkb->branchIn(previousBipLine, curLine)) {
+        } else if (pkb->branchIn(previousBipLine, curLine)) {
+            // If invalid BranchIn, filter it out
             if (validBranchInLines.find(curLine) != validBranchInLines.end()) {
                 validBranchInLines.erase(curLine);
             } else {
