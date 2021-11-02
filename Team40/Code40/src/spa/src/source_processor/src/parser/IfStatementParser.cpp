@@ -14,10 +14,7 @@ Statement *IfStatementParser::parseEntity(int &programIndex) {
         find(content.begin(), content.end(), Tokens::SYMBOL_OPEN_BRACE);
     if (endItr == content.end())
         throw invalid_argument("invalid if statement");
-    // if: 'if' Tokens::CHAR_OPEN_BRACKET cond_expr Tokens::CHAR_CLOSE_BRACKET 'then'
-    // Tokens::CHAR_OPEN_BRACE entityLst
-    // Tokens::CHAR_CLOSE_BRACE 'else' Tokens::CHAR_OPEN_BRACE entityLst
-    // Tokens::CHAR_CLOSE_BRACE
+    // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}
     if (next(ifItr) == content.end() || prev(endItr) == content.end() ||
         prev(prev(endItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
@@ -34,7 +31,7 @@ Statement *IfStatementParser::parseEntity(int &programIndex) {
     entity->setExpressionLst(condLst);
     parseChildStmts(programIndex);
     if (entity->getThenStmtLst().size() == 0 || entity->getElseStmtLst().size() == 0) {
-        throw invalid_argument("nested entityLst should have at least one statement.");
+        throw invalid_argument("nested stmtLst should have at least one statement.");
     }
     return entity;
 }
@@ -47,8 +44,7 @@ void IfStatementParser::parseChildStmts(int &programIndex) {
         programIndex = i;
         if (currContent[0] == Tokens::SYMBOL_CLOSE_BRACE) {
             terminator++;
-            // ... entityLst Tokens::CHAR_CLOSE_BRACE 'else' Tokens::CHAR_OPEN_BRACEentityLst
-            // Tokens::CHAR_CLOSE_BRACE
+            // ... stmtLst '}' 'else' '{'stmtLst '}'
             if (terminator == 1 && programLines[i + 1].getContent()[0] != Tokens::KEYWORD_ELSE &&
                 programLines[i + 1].getContent()[1] != Tokens::SYMBOL_OPEN_BRACE) {
                 throw invalid_argument("invalid if statement");
@@ -60,8 +56,8 @@ void IfStatementParser::parseChildStmts(int &programIndex) {
         }
         Parser parser;
         if (parser.isStmt(currContent)) {
-            StatementParser entityParser(currContent, currIndex, programLines, i);
-            Statement *nestedStmt = entityParser.parseEntity();
+            StatementParser stmtParser(currContent, currIndex, programLines, i);
+            Statement *nestedStmt = stmtParser.parseEntity();
             if (terminator == 0) {
                 entity->addThenStmt(nestedStmt);
             } else if (terminator == 1) {
@@ -69,8 +65,7 @@ void IfStatementParser::parseChildStmts(int &programIndex) {
             }
         }
     }
-    // ... entityLst Tokens::CHAR_CLOSE_BRACE 'else' Tokens::CHAR_OPEN_BRACEentityLst
-    // Tokens::CHAR_CLOSE_BRACE
+    // ... stmtLst '}' 'else' '{'stmtLst '}'
     if (terminator != 2) {
         throw invalid_argument("invalid if statement");
     }

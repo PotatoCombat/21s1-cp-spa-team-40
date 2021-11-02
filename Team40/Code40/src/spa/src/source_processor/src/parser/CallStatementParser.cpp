@@ -15,7 +15,7 @@ Statement *CallStatementParser::parseEntity() {
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
-    // call: 'call' proc_name Tokens::CHAR_SEMICOLON
+    // call: 'call' proc_name ';'
     if (next(next(callItr)) == content.end()) {
         throw invalid_argument("invalid call statement");
     }

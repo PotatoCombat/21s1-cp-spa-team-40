@@ -24,6 +24,4 @@ public:
     bool isWhileStmt();
     bool isIfStmt();
     bool isAssignStmt();
-    bool isParentStmt();
-    bool isSingleStmt();
 };
