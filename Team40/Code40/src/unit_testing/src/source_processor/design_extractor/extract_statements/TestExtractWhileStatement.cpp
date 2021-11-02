@@ -297,7 +297,6 @@ TEST_CASE(
      *        read x;              (8)
      *        read x;              (9)
      *        read x;              (10)
-     *      {
      *    }
      *    read x;                  (11)
      * }

@@ -89,6 +89,14 @@ void PKB::insertWhilePattern(Statement *stmt) {
     conditionTable.insertWhilePattern(stmt);
 }
 
+void PKB::insertBranchIn(Statement *fromStmt, Statement *toStmt) {
+    branchInTable.insertBranchIn(fromStmt, toStmt);
+}
+
+void PKB::insertBranchBack(Statement *fromStmt, Statement *toStmt) {
+    branchBackTable.insertBranchBack(fromStmt, toStmt);
+}
+
 // =============================================================================
 // Query Processor
 // =============================================================================
@@ -292,6 +300,30 @@ set<StmtIndex> PKB::getPreviousBipLines(ProgLineIndex line) {
 
 bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
     return nextBipTable.nextBip(previousLine, nextLine);
+}
+
+StmtIndex PKB::getBranchInToLine(ProgLineIndex line) {
+    return branchInTable.getBranchInToStmt(line);
+}
+
+set<StmtIndex> PKB::getBranchInFromLines(ProgLineIndex line) {
+    return branchInTable.getBranchInFromStmts(line);
+}
+
+bool PKB::branchIn(ProgLineIndex fromLine, ProgLineIndex toLine) {
+    return branchInTable.branchIn(fromLine, toLine);
+}
+
+set<StmtIndex> PKB::getBranchBackToLines(ProgLineIndex line) {
+    return branchBackTable.getBranchBackToStmts(line);
+}
+
+set<StmtIndex> PKB::getBranchBackFromLines(ProgLineIndex line) {
+    return branchBackTable.getBranchBackFromStmts(line);
+}
+
+bool PKB::branchBack(ProgLineIndex fromLine, ProgLineIndex toLine) {
+    return branchBackTable.branchBack(fromLine, toLine);
 }
 
 // Pattern =====================================================================

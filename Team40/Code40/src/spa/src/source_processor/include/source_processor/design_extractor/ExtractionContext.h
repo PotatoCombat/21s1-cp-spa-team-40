@@ -14,6 +14,8 @@ class ExtractionContext {
 private:
     unordered_map<ProcName, unordered_set<ProcName>> procDependencyMap;
     unordered_map<ProcName, int> procIndegreesCounter;
+    unordered_map<ProcName, StmtIndex> procFirstExecutableStatements;
+    unordered_map<ProcName, set<StmtIndex>> procLastExecutableStatements;
 
     static ExtractionContext *instance;
 
@@ -37,6 +39,13 @@ public:
     optional<Procedure *> getCurrentProcedure();
     void setCurrentProcedure(Procedure *procedure);
     void unsetCurrentProcedure(Procedure *procedure);
+
+    StmtIndex getFirstExecutableStatement(const ProcName &procName);
+    set<StmtIndex> getLastExecutableStatements(const ProcName &procName);
+    void setFirstExecutableStatement(const ProcName &procName,
+                                     StmtIndex stmtIndex);
+    void setLastExecutableStatements(const ProcName &procName,
+                                     set<StmtIndex> stmtIndices);
 
     optional<Statement *> getModifyingStatement();
     void setModifyingStatement(Statement *statement);
