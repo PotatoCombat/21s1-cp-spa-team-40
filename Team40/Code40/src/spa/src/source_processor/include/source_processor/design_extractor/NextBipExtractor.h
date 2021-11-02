@@ -7,7 +7,6 @@
 class NextBipExtractor {
 private:
     PKB *pkb;
-    vector<set<ProgLineIndex>> callbacks;
     set<ProgLineIndex> visited;
 
     void extractProcedure(Procedure *procedure);

@@ -56,12 +56,6 @@ void NextBipExtractor::extractCallStatement(Statement *callStatement) {
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     set<ProgLineIndex> nextStatements =
         pkb->getNextLines(statement->getIndex());
-    if (nextStatements.empty()) { // Reached end of procedure
-        if (!callbacks.empty()) {
-            nextStatements = callbacks.back();
-            callbacks.pop_back();
-        }
-    }
     for (ProgLineIndex nextStatementIndex : nextStatements) {
         Statement *nextStatement = pkb->getStmtByIndex(nextStatementIndex);
         pkb->insertNextBip(statement, nextStatement);
