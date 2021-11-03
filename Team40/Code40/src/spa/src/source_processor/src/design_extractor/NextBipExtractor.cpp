@@ -22,11 +22,11 @@ void NextBipExtractor::extractProcedure(Procedure *procedure) {
     // Create terminal stmt (equivalent of dummy node in CFG)
     auto *terminalStmt =
         new Statement(getNextTerminalIndex(), StatementType::TERMINAL);
-    terminalStmtsMap[procedure->getName()] = terminalStmt;
+    terminalStmtsMap[procedure->getId()] = terminalStmt;
 
     // Extract statements recursively
     Statement *firstExecutableStmt =
-        pkb->getProcByName(procedure->getName())->getStmtLst().front();
+        pkb->getProcByName(procedure->getId())->getStmtLst().front();
     extractStatement(firstExecutableStmt);
 
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
@@ -69,8 +69,7 @@ void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     if (isLastExecutableStmt(statement)) {
         extractNonCallTerminalNextBip(statement);
     }
-    set<ProgLineIndex> nextStatements =
-        pkb->getNextLines(statement->getId());
+    set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
         Statement *nextStatement;
         if (nextStatementIndex >= STARTING_TERMINAL_INDEX) {
@@ -118,7 +117,7 @@ ProcName NextBipExtractor::getCurrentProcName() {
     if (!currentProc.has_value()) {
         throw runtime_error("Current procedure not set.");
     }
-    return currentProc.value()->getName();
+    return currentProc.value()->getId();
 }
 
 void NextBipExtractor::extractNonCallTerminalNextBip(Statement *statement) {
@@ -129,7 +128,7 @@ void NextBipExtractor::extractNonCallTerminalNextBip(Statement *statement) {
 
     pkb->insertNext(statement, terminalStmtsMap[currentProcName]);
     pkb->insertNextBip(statement, terminalStmtsMap[currentProcName]);
-    visited.insert(terminalStmtsMap[currentProcName]->getIndex());
+    visited.insert(terminalStmtsMap[currentProcName]->getId());
 }
 
 void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
@@ -143,12 +142,11 @@ void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
     pkb->insertNext(branchInFrom, branchBackTo);
     extractCallStatementNextBip(branchInFrom, branchInTo, branchBackFrom,
                                 branchBackTo);
-    visited.insert(terminalStmtsMap[currentProcName]->getIndex());
+    visited.insert(terminalStmtsMap[currentProcName]->getId());
 }
 
 bool NextBipExtractor::isLastExecutableStmt(Statement *statement) {
-    set<ProgLineIndex> nextStatements =
-        pkb->getNextLines(statement->getIndex());
+    set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
     return (nextStatements.empty() ||
             (statement->getStatementType() == StatementType::WHILE &&
              nextStatements.size() < 2));
