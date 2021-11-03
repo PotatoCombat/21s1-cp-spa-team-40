@@ -1,0 +1,95 @@
+1 - follows invalid
+assign a;
+Select BOOLEAN such that Follows(a, "b")
+FALSE
+5000
+2 - follows invalid
+assign a;
+Select BOOLEAN such that Follows("b", a)
+FALSE
+5000
+3 - follows* invalid
+assign a;
+Select BOOLEAN such that Follows*(a, "b")
+FALSE
+5000
+4 - follows* invalid
+assign a;
+Select BOOLEAN such that Follows*("b", a)
+FALSE
+5000
+5 - Parent invalid
+stmt a;
+Select BOOLEAN such that Parent(a, "b")
+FALSE
+5000
+6 - Parent invalid
+stmt a;
+Select BOOLEAN such that Parent("b", a)
+FALSE
+5000
+7 - Parent* invalid
+stmt a;
+Select BOOLEAN such that Parent*(a, "b")
+FALSE
+5000
+8 - Parent* invalid
+stmt a;
+Select BOOLEAN such that Parent*("b", a)
+FALSE
+5000
+9 - nc
+stmt s; variable v;
+Select BOOLEAN such that Follows(s, v)
+FALSE
+5000
+10 - nc
+stmt s; constant c;
+Select BOOLEAN such that Parent(s, c)
+FALSE
+5000
+11 - Uses invalid
+stmt s;
+Select BOOLEAN such that Uses(s, 9)
+FALSE
+5000
+12 - Modifies invalid
+variable v;
+Select BOOLEAN such that Modifies(_, v)
+FALSE
+5000
+13 - uses number in quotes
+stmt s;
+Select BOOLEAN such that Uses(s, "9")
+
+5000
+14 - Pattern validation
+stmt s;
+Select BOOLEAN pattern s(_, _)
+FALSE
+5000
+15 - synonym doesnt exist
+stmt s;
+Select BOOLEAN such that Follows(s, a)
+FALSE
+5000
+16 - synonym doesnt exist
+assign a;
+Select BOOLEAN with s.stmt# = a.stmt#
+FALSE
+5000
+17 - synonym doesnt exist
+while w; assign a;
+Select <ifs, w> such that Follows(a, w)
+none
+5000
+18 - incorrect attribute
+while w;
+Select BOOLEAN with w.value = 60
+FALSE
+5000
+19 - incorrect attribute
+while w;
+Select <w.procName>
+none
+5000

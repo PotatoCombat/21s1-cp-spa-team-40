@@ -9,8 +9,7 @@ void QueryEvaluator::clear() {
     appearInSameClauseAlr.clear();
 }
 
-QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb) {}
+QueryEvaluator::QueryEvaluator(PKB *pkb) : pkb(pkb) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
@@ -38,7 +37,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-Result QueryEvaluator::getTempResult(Clause* clause) {
+Result QueryEvaluator::getTempResult(Clause *clause) {
     ClauseHandler *clauseHandler;
 
     if (clause->getType() == ClauseType::PATTERN) {
@@ -106,6 +105,16 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &nextStarHandler;
     }
 
+    if (clause->getType() == ClauseType::NEXTBIP) {
+        NextBipHandler nextBipHandler(clause, pkb);
+        clauseHandler = &nextBipHandler;
+    }
+
+    if (clause->getType() == ClauseType::NEXTBIP_T) {
+        NextBipStarHandler nextBipStarHandler(clause, pkb);
+        clauseHandler = &nextBipStarHandler;
+    }
+
     if (clause->getType() == ClauseType::WITH) {
         WithHandler withHandler(clause, pkb);
         clauseHandler = &withHandler;
@@ -130,10 +139,12 @@ void QueryEvaluator::evalClauses(bool &exitEarly) {
         Result tempResult = getTempResult(clause);
 
         int ref1Index = INVALID_INDEX, ref2Index = INVALID_INDEX;
-        if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
+        if (clause->getFirstReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
             ref1Index = getRefIndex(clause->getFirstReference());
         }
-        if (clause->getSecondReference()->getRefType() == ReferenceType::SYNONYM) {
+        if (clause->getSecondReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 
@@ -164,7 +175,7 @@ vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
         return trueRes;
     }
 
-    // for values that is returned but not appear in any clauses, 
+    // for values that is returned but not appear in any clauses,
     // fill in the table with all possible values
     vector<int> returnIndexes;
     for (auto ref : returnRefs) {
@@ -186,13 +197,15 @@ vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
     return ResultFormatter::formatResult(updatedAttrRes);
 }
 
-void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool &exitEarly) {
+void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx,
+                                   bool &exitEarly) {
     if (!result.isResultValid()) {
         exitEarly = true;
         return;
     }
 
-    if (result.hasResultList1() && result.hasResultList2() && appearInSameClauseAlr[ref1Idx][ref2Idx]) {
+    if (result.hasResultList1() && result.hasResultList2() &&
+        appearInSameClauseAlr[ref1Idx][ref2Idx]) {
         combineTwoSyn(result, ref1Idx, ref2Idx);
     } else {
         vector<pair<int, string>> toRemove;
@@ -218,12 +231,13 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         appearInSameClauseAlr[ref1Idx][ref2Idx] = true;
         appearInSameClauseAlr[ref2Idx][ref1Idx] = true;
     }
-    
+
     exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
 void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
-                                   bool isSecondRef, vector<pair<int, string>> *toRemove) {
+                                   bool isSecondRef,
+                                   vector<pair<int, string>> *toRemove) {
     // refIdx should not be INVALID_INDEX
     map<VALUE, VALUE_SET> res;
 
@@ -259,85 +273,94 @@ void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
 
 void QueryEvaluator::combineTwoSyn(Result result, int ref1Idx, int ref2Idx) {
     // ref1Idx, ref2Idx should not be INVALID_INDEX
-    map<VALUE, VALUE_SET> res1;
-    map<VALUE, VALUE_SET> res2;
-    vector<pair<int, string>> toRemove;
+    map<VALUE, VALUE_SET> res1 = result.getResultList1();
+    map<VALUE, VALUE_SET> res2 = result.getResultList2();
 
-    res1 = result.getResultList1();
-    res2 = result.getResultList2();
     // remove links in the intermediate res
-    for (auto it = res1.begin(); it != res1.end();) {
-        string sourceVal = it->first;
-        VALUE_SET vals = it->second;
-        bool erased = false;
-        for (string targetVal : vals) {
-            if (!resultTable.hasLinkBetweenValues(ref1Idx, sourceVal, ref2Idx, targetVal)) {
-                res1[sourceVal].erase(targetVal);
-                if (res1[sourceVal].size() == 0) {
-                    it = res1.erase(it);
-                    erased = true;
-                }
-            }
-        }
-        if (!erased) {
-            ++it;
-        }
-    }
-    for (auto it = res2.begin(); it != res2.end();) {
-        string sourceVal = it->first;
-        VALUE_SET vals = it->second;
-        bool erased = false;
-        for (string targetVal : vals) {
-            if (!resultTable.hasLinkBetweenValues(ref2Idx, sourceVal, ref1Idx, targetVal)) {
-                res2[sourceVal].erase(targetVal);
-                if (res2[sourceVal].size() == 0) {
-                    it = res2.erase(it);
-                    erased = true;
-                }
-            }
-        }
-        if (!erased) {
-            ++it;
-        }
-    }
+    removeLinkIRes(res1, ref1Idx, ref2Idx);
+    removeLinkIRes(res2, ref2Idx, ref1Idx);
 
     // remove links in the result table
-    vector<string> existingValues = resultTable.getValues(ref1Idx);
-    for (string sourceVal : resultTable.getValues(ref1Idx)) {
+    removeLinkResultTable(res1, ref1Idx, ref2Idx);
+
+    // add all
+    addIResToResultTable(res1, ref1Idx, ref2Idx);
+    addIResToResultTable(res2, ref2Idx, ref1Idx);
+
+    // remove those with no link in the resultTable
+    removeValuesWithNoLink(ref1Idx, ref2Idx);
+    removeValuesWithNoLink(ref2Idx, ref1Idx);
+}
+
+/* Removes the links from the intermediate result
+ * if they do not appear in the result table
+ * @param iRes: the intermediate result
+ * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of otherIdx
+ */
+void QueryEvaluator::removeLinkIRes(map<VALUE, VALUE_SET> &iRes, int thisIdx,
+                                    int otherIdx) {
+    for (auto it = iRes.begin(); it != iRes.end();) {
+        string sourceVal = it->first;
+        VALUE_SET vals = it->second;
+        bool erased = false;
+        for (string targetVal : vals) {
+            if (!resultTable.hasLinkBetweenValues(thisIdx, sourceVal, otherIdx,
+                                                  targetVal)) {
+                iRes[sourceVal].erase(targetVal);
+                if (iRes[sourceVal].size() == 0) {
+                    it = iRes.erase(it);
+                    erased = true;
+                }
+            }
+        }
+        if (!erased) {
+            ++it;
+        }
+    }
+}
+
+/* Removes the links from the result table
+ * if they do not appear in the intermediate result
+ * @param iRes: the intermediate result
+ * @param thisIdx, otherIdx: iRes  map values of thisIdx to values of
+ * otherIdx
+ */
+void QueryEvaluator::removeLinkResultTable(map<VALUE, VALUE_SET> &iRes,
+                                           int thisIdx, int otherIdx) {
+    vector<string> existingValues = resultTable.getValues(thisIdx);
+    for (string sourceVal : resultTable.getValues(thisIdx)) {
         VALUE_SET vals =
-            resultTable.getPointersToIdx(ref1Idx, sourceVal, ref2Idx);
+            resultTable.getPointersToIdx(thisIdx, sourceVal, otherIdx);
         for (string targetVal : vals) {
             bool hasLink = true;
-            if (res1.find(sourceVal) == res1.end()) {
+            if (iRes.find(sourceVal) == iRes.end()) {
                 hasLink = false;
-            } else if (res1[sourceVal].find(targetVal) ==
-                       res1[sourceVal].end()) {
+            } else if (iRes[sourceVal].find(targetVal) ==
+                       iRes[sourceVal].end()) {
                 hasLink = false;
             }
             if (!hasLink) {
-                resultTable.removeLink(ref1Idx, sourceVal, ref2Idx, targetVal);
+                resultTable.removeLink(thisIdx, sourceVal, otherIdx, targetVal);
             }
         }
     }
-    // add all
-    for (auto &valueToVals : res1) {
-        resultTable.addValueWithLink(ref1Idx, valueToVals.first, ref2Idx,
-                                     valueToVals.second);
-    }
-    for (auto &valueToVals : res2) {
-        resultTable.addValueWithLink(ref2Idx, valueToVals.first, ref1Idx,
-                                     valueToVals.second);
-    }
+}
 
-    // remove those with no link in the resultTable
-    for (string refValue : resultTable.getValues(ref1Idx)) {
-        if (!resultTable.hasPointerToIdx(ref1Idx, refValue, ref2Idx)) {
-            resultTable.removeValue(ref1Idx, refValue);
-        }
+void QueryEvaluator::addIResToResultTable(map<VALUE, VALUE_SET> &iRes,
+                                          int thisIdx, int otherIdx) {
+    for (auto &valueToVals : iRes) {
+        resultTable.addValueWithLink(thisIdx, valueToVals.first, otherIdx,
+                                     valueToVals.second);
     }
-    for (string refValue : resultTable.getValues(ref2Idx)) {
-        if (!resultTable.hasPointerToIdx(ref2Idx, refValue, ref1Idx)) {
-            resultTable.removeValue(ref2Idx, refValue);
+}
+
+/* Removes the values from thisIdx that have no link to any value of otherIdx
+ * @param thisIdx, otherIdx
+ */
+void QueryEvaluator::removeValuesWithNoLink(int thisIdx, int otherIdx) {
+    for (string refValue : resultTable.getValues(thisIdx)) {
+        if (!resultTable.hasPointerToIdx(thisIdx, refValue, otherIdx)) {
+            resultTable.removeValue(thisIdx, refValue);
         }
     }
 }
@@ -363,7 +386,8 @@ bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
     return false;
 }
 
-vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) {
+vector<vector<string>>
+QueryEvaluator::handleAttr(vector<vector<string>> input) {
     vector<vector<string>> updatedResList;
     for (auto res : input) {
         if (returnRefs.size() != res.size()) {

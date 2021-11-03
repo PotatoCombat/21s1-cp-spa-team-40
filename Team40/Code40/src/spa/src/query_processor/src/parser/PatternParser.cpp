@@ -11,7 +11,7 @@ void PatternParser::clear() {
 }
 
 /**
- * Parse a PatTuple into a Clause object.
+ * Parses a PatTuple into a Clause object.
  * @param patTuple Tuple of <stmt, var, vector<token>>.
  * @return Clause object of type PATTERN.
  */
@@ -86,18 +86,17 @@ vector<PatToken> PatternParser::parsePatternTokens(vector<PatToken> tokens) {
 }
 
 bool PatternParser::isAssignPatternClause() {
-    return r1->getDeType() == DesignEntityType::ASSIGN &&
-           this->tokens.size() > 0;
+    return r1->getDeType() == DesignEntityType::ASSIGN && !this->tokens.empty();
 }
 
 bool PatternParser::isWhilePatternClause() {
     return r1->getDeType() == DesignEntityType::WHILE &&
-           this->tokens.size() == 1;
+           this->tokens.size() == PATARG_SIZE_ONE;
 }
 
 bool PatternParser::isIfPatternClause() {
-    return r1->getDeType() == DesignEntityType::IF && 
-           this->tokens.size() == 2;
+    return r1->getDeType() == DesignEntityType::IF &&
+           this->tokens.size() == PATARG_SIZE_TWO;
 }
 
 bool PatternParser::isExactPattern(vector<PatToken> pattern) {
@@ -110,7 +109,8 @@ bool PatternParser::isExactPattern(vector<PatToken> pattern) {
 }
 
 bool PatternParser::isWildcardPattern(vector<PatToken> pattern) {
-    return pattern.size() == 1 && ParserUtil::isWildcard(pattern.at(0));
+    return pattern.size() == PATARG_SIZE_ONE &&
+           ParserUtil::isWildcard(pattern.at(0));
 }
 
 bool PatternParser::isQuotedPattern(vector<PatToken> pattern) {

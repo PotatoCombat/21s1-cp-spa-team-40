@@ -1,34 +1,18 @@
 #include <set>
 
+#include "TestUtils.h"
+
 #include "common/model/Abstractions.h"
 #include "pkb/RelationshipTable.h"
 
 #include "catch.hpp"
 
-#define EQUALS_SET( actual, ... ) REQUIRE(TestRelationshipTable::equalSets(actual, __VA_ARGS__))
+#define EQUALS_SET( actual, ... ) REQUIRE(TestUtils::equalSets(actual, __VA_ARGS__))
 
 using namespace std;
 
-struct TestRelationshipTable {
-    typedef RelationshipTable<int, int> Table;
-
-    inline static bool equalSets(set<int> actual, set<int> expected) {
-        if (actual.size() != expected.size()) {
-            return false;
-        }
-        set<int> matches(actual.begin(), actual.end());
-        for (auto &s : expected) {
-            auto keyValuePair = matches.find(s);
-            if (keyValuePair == matches.end()) {
-                return false;
-            }
-        }
-        return true;
-    }
-};
-
 TEST_CASE("RelationshipTable: standard table") {
-    TestRelationshipTable::Table table;
+    RelationshipTable<int, int> table;
 
     int L1 = 1;
     int R1 = 2;

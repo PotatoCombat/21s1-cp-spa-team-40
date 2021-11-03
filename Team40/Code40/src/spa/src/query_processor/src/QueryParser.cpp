@@ -15,7 +15,7 @@ void QueryParser::clearDeclarations() {
 }
 
 /**
- * Parses declared synonyms and store them inside parser.
+ * Parses declared synonyms and stores them inside parser.
  * @param declPairs Pairs of declarations as <type, synonym>.
  */
 void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
@@ -52,7 +52,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
 
     bool isAttrRef = ParserUtil::isAttrRef(ref);
     if (isAttrRef) {
-        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        AttrRef attrRef = ParserUtil::splitAttrRef(ref);
         syn = attrRef.first;
         attrStr = attrRef.second;
     }

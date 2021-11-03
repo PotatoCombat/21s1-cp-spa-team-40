@@ -1,0 +1,421 @@
+procedure A {
+1    x = x + 1;
+2    y = y + 5;
+3    while (a >= 10) {
+4        x = x + 5;
+5        call B;
+6        c = a;
+    }
+7    if (a >= b) then {
+8        x = x * 5;
+9        call C;
+    } else {
+10        call D;
+11        y = y + 10;
+    }
+12    a = b;
+13    b = c + 10;
+14    c = c * 10;
+15    while (x > 4) {
+16        if (x > 2) then {
+17            a = 44;
+        } else {
+18            a = 4;
+19            b = s;
+        }
+    }
+20    a = 4 + 1;
+}
+
+procedure B {
+21    while (x >= 1) {
+22        x = x + 1;
+    }
+23    call C;
+}
+
+procedure C {
+24    call D;
+25    a = a + 1;
+26    b = c;
+}
+
+procedure D {
+27    x = x + 1;
+28    y = 4;
+}
+
+procedure proc1 {
+29    read w;
+30    read x;
+31    read y;
+32    read z;
+33    call proc2;
+34    w = b + c - d;
+35    if (w < x + y * z) then {
+36        a = x + y * z;
+37        while(a > b - c / d) {
+38            call proc3;
+39            w = a * b / c;
+40            if (w + x <= y * z) then {
+41                a = w - x / y;
+42                z = d;
+43                call proc4;
+            } else {
+44                w = a + a * a;
+45                c = y;
+            }
+46            call proc5;
+47            a = z * z + z;
+        }
+48        w = d / d - d;
+    } else {
+49        call proc6;
+50        a = w - w / w;
+51        while(a - b >= c / d) {
+52            x = a + c - d;
+53            if (w + x * y == z) then {
+54                call proc7;
+55                b = w + y * z;
+56                x = b;
+            } else {
+57                x = a * b / d;
+58                call proc8;
+59                a = w;
+            }
+60            b = w - x / z;
+        }
+61        call proc9;
+62        x = c + c * c;
+    }
+63    b = y * y + y;
+64    print a;
+65    call proc2;
+66    print b;
+67    print c;
+68    print d;
+}
+
+procedure proc2 {
+69    read a;
+70    read b;
+71    read c;
+72    call proc3;
+73    read d;
+74    x = b / b - b;
+75    while (a - b / c != d) {
+76        b = x - x / x;
+77        call proc4;
+78        if (w + x < y) then {
+79            y = a + b - d;
+80            while (a > b - c) {
+81                c = w + x * z;
+82                call proc5;
+83                d = x - y;
+            }
+84            y = a * c / d;
+        } else {
+85            call proc6;
+86            c = w - y / z;
+87            while (w <= x * z) {
+88                y = b + b * b;
+89                z = a / c;
+90                call proc7;
+            }
+91            c = x * x + x;
+        }
+92        y = c / c - c;
+93        call proc8;
+    }
+94    c = y - y / y;
+95    print w;
+96    print x;
+97    call proc9;
+98    print y;
+99    print z;
+}
+
+procedure proc3 {
+100    z = a + b - c;
+101    if (a / c >= d) then {
+102        d = w + x * y;
+103        while(w + y == z ) {
+104            call proc4;
+105            z = b + c / d;
+106            d = w + y;
+        }
+107        d = x - y / z;
+108        call proc5;
+    } else {
+109        z = a + a * a;
+110        while(a != b - d) {
+111            d = w * w + w;
+112            call proc6;
+113            z = b * c;
+        }
+114        z = d / d - d;
+    }
+115    call proc7;
+116    d = z - z / z;
+}
+
+procedure proc4 {
+117    w = b + c;
+118    while (a != b - d) {
+119        a = x * y;
+120        if (c / b < d) then {
+121            w = b - d;
+122            call proc8;
+123            d = w / x;
+        } else {
+124            a = x / z;
+125            z = a - b;
+126            call proc9;
+        }
+127        w = c * d;
+    }
+128    a = y + z;
+129    call proc5;
+}
+
+procedure proc5 {
+130    x = a / c;
+131    call proc6;
+132    while(z != w + x * y) {
+133        b = w - y;
+134        c = x * v;
+    }
+135    call proc7;
+136    x = a + d;
+}
+
+procedure proc6 {
+137    call proc8;
+138    b = w * z;
+139    if ( d == a - b / c) then {
+140        x = c - d;
+141        y = b + d;
+142        call proc9;
+    } else {
+143        b = y / z;
+144        c = w - z;
+    }
+145    call proc7;
+146    y = a * b;
+}
+
+procedure proc7 {
+147    call proc8;
+148    c = w + x;
+149    y = a / d;
+}
+
+procedure proc8 {
+150    w = y - x * z * w;
+151    if (d + c – b * a != 23) then {
+152        a = c * b / d - a;
+153        while (z – y * x / w == 11) {
+154            call proc9;
+155            x = y - w / z / x;
+156            if (b >= a * 23 + d - c ) then {
+157                b = c / a + d * b;
+158                while (x <= w / 11 - z * y) {
+159                    call proc9;
+160                    y = x * w + z % y;
+161                    z = y + w – x * z;
+                }
+162                c = b / a – d / c ;
+163                call proc9;
+            } else {
+164                z = x * w – y + z;
+165                while (b * a > 23 + d - c) {
+166                    d = b / a * c % d;
+167                    call proc9;
+168                    d = c * a / b - d;
+                }
+169                w = y / z + x / 1;
+            }
+170            call proc9;
+171            a = c * d – b * 13;
+        }
+172        x = y / z – w % 4;
+    } else {
+173        call proc9;
+174        b = c * d + a / 16;
+175        while (x / w < 11 - z * y) {
+176            y = x / z + w + 7;
+177            if (b * a + 23 == d - c) then {
+178                call proc9;
+179                c = b - d / a % 19;
+180                while (x / w - 11 != z * y) {
+181                    z = x * y / w - 10;
+182                    w = z * y - x + 2;
+183                    call proc9;
+                }
+184                d = b - c * a + 22;
+            } else {
+185                w = z - x + y % w;
+186                call proc9;
+187                while (b * a + 23 - d != c) {
+188                    a = d / b * c / a;
+189                    a = d - c + b % 14;
+                }
+190                call proc9;
+191                x = z + w / y + x;
+            }
+192            b = d / a - c % b;
+        }
+193        call proc9;
+194        y = z + w * x - y;
+    }
+195    c = d / a + b + c;
+}
+
+procedure proc9 {
+196    w = x + y – z + w / 25;
+197    while (d < c + b – a * 23) {
+198        a = b - c * d % a;
+199        if (z > y - x * w / 11) then {
+200            x = w + y * z - x;
+201            while (d + c <= b – a * 23) {
+202                b = a - c / d + b;
+203                if (z – y >= x * w / 11) then {
+204                    y = w + x / z * y;
+205                    x = z * y + w - 5;
+                } else {
+206                    c = a * b + d – c;
+207                    b = d + c / a + 17;
+                }
+208                z = w - x + y / z;
+            }
+209            d = a * b – c * d;
+        } else {
+210            w = x * z / y – 0 % w;
+211            while (d + c – b == a * 23) {
+212                a = b + d – c + 12;
+213                if (z – y * x != w / 11) then {
+214                    x = w / z + y * 3;
+215                    y = z - x / w * 8;
+                } else {
+216                    b = a + d * c - 15;
+217                    c = d + b * a - 20;
+                }
+218                y = w / z – x / 6;
+            }
+219            c = a + d / b * 18;
+        }
+220        z = w / y * x % 9;
+    }
+221    d = a - c + b / 21;
+}
+
+procedure Examp1le    {
+222    read x;
+223    y = 1;
+224    z = x + y;
+
+225    while ( i>9) {
+226        z = z + i;
+227        i = i - 1;
+    }
+
+228    i = 10      + y * z /    x + 5 * x - 3 *    y;
+
+229    if (z ==        10) then {
+230        print x;
+231        print    y;
+    } else {
+232        while ( z!= 4 ) {
+233            z = z - 1;
+234            print z;
+235            call procName;
+        }
+    }
+
+236    if (z == 6) then {
+237        print z;
+     } else {
+238        print y;
+     }
+}
+
+procedure    procName {
+239    x = 7 * 4 + 5 * l;
+240    if (3 == 3) then {
+241        z = z;
+242        print y;
+243        read a;
+244        if (3 == 4) then {
+245            m = 3 + ((y));
+        } else {
+246            l = 3 + (3/4) + (4  /   5) + (6 * 7);
+247            if (x == 1) then {
+248                while (y > 10) {
+249                    d = a + b + c + d;
+                }
+250            } else {
+251                while (i > j) {
+252                    while (j != y) {
+253                        read a;
+                    }
+254                    xyzaaaaaaaaaaaaaaaaaaaaaaaaalongvarnameeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = y;
+255                    d = d + a + b;
+256                    if (!((a > b) || (((a >= b) && (b >= c)) || (z + 10 - 4 % 7 <= 110)))) then {
+257                        z = 10;
+                    } else {
+258                        while (x == 5) {
+259                            while (z > 10) {
+260                                y = y;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+261        y = 44;
+262        print z;
+    } else {
+263        bigNum = 1098765432109876;
+    }
+}
+
+procedure Oneee {
+264    read x;
+265    print y;
+266    read y;
+267    print x;
+268    x = x + 5;
+269    y = x * z + 4;
+270    while ( x != 7) {
+271        read z;
+272        x = x + 5;
+273        z = a + b + c;
+274        while (1 ==1) {
+275            x = x * x;
+276            y = 4 * x;
+277            if ( x == 27) then {
+278                print m;
+279                m = n * l + k;
+280                y = 4044;
+281                while ( x == 1) {
+282                    print z;
+283                    read z;
+284                } x = x + 1;
+285            } else { read z;
+286                z = z - 1;
+287            } d = a * c + b;
+288        } m = m * n;
+289        l = l * l;
+290        if ( x == x) then {
+291            read y;
+292            read z;
+293        } else { print z;
+294            read y;
+295            if ( y > 3 ) then {
+296                x = 22;
+297                z = 55;
+298            } else { read x;
+299                print x;
+300            } } } read l;
+301    read m;
+}

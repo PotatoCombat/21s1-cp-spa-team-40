@@ -10,7 +10,7 @@ void WithParser::clear() {
 }
 
 /**
- * Parse a WithPair into a Clause object.
+ * Parses a WithPair into a Clause object.
  * @param withPair Pair of <ref, ref>.
  * @return Clause object of type WITH.
  */
@@ -37,7 +37,7 @@ Reference *WithParser::parseReference(string ref) {
     bool isAttrRef = ParserUtil::isAttrRef(ref);
 
     if (isAttrRef) {
-        pair<string, string> attrRef = ParserUtil::splitAttrRef(ref);
+        AttrRef attrRef = ParserUtil::splitAttrRef(ref);
         syn = attrRef.first;
         attrStr = attrRef.second;
     }

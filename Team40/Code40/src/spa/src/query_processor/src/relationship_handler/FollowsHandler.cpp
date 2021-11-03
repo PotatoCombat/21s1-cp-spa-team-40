@@ -11,7 +11,7 @@ FollowsHandler::FollowsHandler(Clause* clause, PKB* pkb)
 set<string> FollowsHandler::getR1ClauseR2(string r2) {
     set<string> res;
     int stmt = pkb->getPrecedingStmt(stoi(r2));
-    if (stmt != -1) {
+    if (stmt != InvalidIndex) {
         res.insert(to_string(stmt));
     }
     return res;
@@ -20,7 +20,7 @@ set<string> FollowsHandler::getR1ClauseR2(string r2) {
 set<string> FollowsHandler::getR2ClausedR1(string r1) {
     set<string> res;
     int stmt = pkb->getFollowingStmt(stoi(r1));
-    if (stmt != -1) {
+    if (stmt != InvalidIndex) {
         res.insert(to_string(stmt));
     }
     return res;

@@ -184,6 +184,10 @@ public:
         vector<Statement *> stmts = TestIntegrationUtils::createExampleStmts();
         Procedure procedure = TestIntegrationUtils::createExampleProcedure();
 
+        for (auto it = ++stmts.begin(); it != stmts.end(); it++) {
+            pkb.insertStmt(*it);
+        }
+
         pkb.insertFollows(stmts[1], stmts[2]);
         pkb.insertFollows(stmts[2], stmts[3]);
         pkb.insertFollows(stmts[3], stmts[4]);

@@ -1,13 +1,23 @@
 #pragma once
 
+#include "common/model/Program.h"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/ExtractionContext.h"
-#include <common/model/Program.h>
 
 class BreadthFirstExtractor {
 private:
     vector<vector<Statement *>> statementLists;
     PKB *pkb;
+
+    void extractTransitiveUsesRelationship(Statement *callStatement,
+                                           Procedure *currentProcedure,
+                                           ProcName calleeName);
+    void extractTransitiveModifiesRelationship(Statement *callStatement,
+                                               Procedure *currentProcedure,
+                                               ProcName calleeName);
+    static void expandLastExecutableCallStatements(Statement *callStatement,
+                                                   Procedure *currentProcedure,
+                                                   const ProcName &calleeName);
 
 public:
     explicit BreadthFirstExtractor(PKB *pkb);

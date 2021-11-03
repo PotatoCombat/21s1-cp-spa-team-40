@@ -8,6 +8,7 @@ struct TestSuchThatParser {
     static Reference DECLARED_ASSIGN;
     static Reference DECLARED_VARIABLE;
     static Reference DECLARED_PROCEDURE;
+    static Reference DECLARED_PROG_LINE;
     static Reference WILDCARD_STMT;
     static Reference WILDCARD_VARIABLE;
     static Reference WILDCARD_PROCEDURE;
@@ -20,6 +21,7 @@ struct TestSuchThatParser {
     static Clause *createModifiesS(Reference r1, Reference r2);
     static Clause *createModifiesP(Reference r1, Reference r2);
     static Clause *createCallsT(Reference r1, Reference r2);
+    static Clause *createAffects(Reference r1, Reference r2);
 };
 
 Reference TestSuchThatParser::DECLARED_STMT =
@@ -30,6 +32,8 @@ Reference TestSuchThatParser::DECLARED_VARIABLE = Reference(
     DesignEntityType::VARIABLE, ReferenceType::SYNONYM, "foodVariable");
 Reference TestSuchThatParser::DECLARED_PROCEDURE =
     Reference(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM, "PROCEDURE");
+Reference TestSuchThatParser::DECLARED_PROG_LINE =
+    Reference(DesignEntityType::PROG_LINE, ReferenceType::SYNONYM, "n");
 Reference TestSuchThatParser::WILDCARD_STMT =
     Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
 Reference TestSuchThatParser::WILDCARD_VARIABLE =
@@ -46,7 +50,8 @@ Reference TestSuchThatParser::CONSTANT_PROCEDURE = Reference(
     DesignEntityType::PROCEDURE, ReferenceType::CONSTANT, "procedur3");
 
 vector<Reference *> TestSuchThatParser::DECLARATIONS = {
-    &DECLARED_STMT, &DECLARED_ASSIGN, &DECLARED_VARIABLE, &DECLARED_PROCEDURE};
+    &DECLARED_STMT, &DECLARED_ASSIGN, &DECLARED_VARIABLE, &DECLARED_PROCEDURE,
+    &DECLARED_PROG_LINE};
 
 Clause *TestSuchThatParser::createParent(Reference r1, Reference r2) {
     return new Clause(ClauseType::PARENT, r1, r2);
@@ -62,6 +67,10 @@ Clause *TestSuchThatParser::createModifiesP(Reference r1, Reference r2) {
 
 Clause *TestSuchThatParser::createCallsT(Reference r1, Reference r2) {
     return new Clause(ClauseType::CALLS_T, r1, r2);
+}
+
+Clause *TestSuchThatParser::createAffects(Reference r1, Reference r2) {
+    return new Clause(ClauseType::AFFECTS, r1, r2);
 }
 
 TEST_CASE("SuchThatParser: parse parent clause - valid arguments") {
@@ -482,5 +491,176 @@ TEST_CASE("SuchThatParser: prog_line is converted to stmt") {
         ClsTuple tup = make_tuple("Next", "n", "n");
         Clause *actual = p.parse(tup);
         REQUIRE(actual->equals(*expected));
+    }
+}
+
+TEST_CASE("SuchThatParser: parse affects clause - valid arguments") {
+    SuchThatParser p;
+    p.initReferences(TestSuchThatParser::DECLARATIONS);
+
+    SECTION("test wildcard wildcard") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::WILDCARD_STMT,
+            TestSuchThatParser::WILDCARD_STMT);
+        ClsTuple tup = make_tuple("Affects", "_", "_");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("test constant constant") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::CONSTANT_STMT_1,
+            TestSuchThatParser::CONSTANT_STMT_4);
+        ClsTuple tup = make_tuple("Affects", "1", "4");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("test wildcard/constant") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::WILDCARD_STMT,
+            TestSuchThatParser::CONSTANT_STMT_1);
+        ClsTuple tup = make_tuple("Affects", "_", "1");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::CONSTANT_STMT_1,
+            TestSuchThatParser::WILDCARD_STMT);
+        tup = make_tuple("Affects", "1", "_");
+        actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("test wildcard/synonym") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::WILDCARD_STMT,
+            TestSuchThatParser::DECLARED_ASSIGN);
+        ClsTuple tup = make_tuple("Affects", "_", "a");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::DECLARED_ASSIGN,
+            TestSuchThatParser::WILDCARD_STMT);
+        tup = make_tuple("Affects", "a", "_");
+        actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("test constant/synonym") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::CONSTANT_STMT_1,
+            TestSuchThatParser::DECLARED_ASSIGN);
+        ClsTuple tup = make_tuple("Affects", "1", "a");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::DECLARED_ASSIGN,
+            TestSuchThatParser::CONSTANT_STMT_1);
+        tup = make_tuple("Affects", "a", "1");
+        actual = p.parse(tup);
+
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("test synonym/synonym") {
+        Clause *expected = TestSuchThatParser::createAffects(
+            TestSuchThatParser::DECLARED_ASSIGN,
+            TestSuchThatParser::DECLARED_ASSIGN);
+        ClsTuple tup = make_tuple("Affects", "a", "a");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(expected->equals(*actual));
+        delete expected, actual;
+    }
+
+    SECTION("test prog_line/prog_line") {
+        Reference resultProgLine =
+            Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "n");
+        Clause *expected =
+            TestSuchThatParser::createAffects(resultProgLine, resultProgLine);
+        ClsTuple tup = make_tuple("Affects", "n", "n");
+        Clause *actual = p.parse(tup);
+
+        REQUIRE(expected->equals(*actual));
+        delete expected, actual;
+    }
+}
+
+TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
+    SuchThatParser p;
+    p.initReferences(TestSuchThatParser::DECLARATIONS);
+
+    SECTION("TEST FAIL: quoted argument") {
+        SECTION("integer/quoted") {
+            ClsTuple tup = make_tuple("Affects", "1", "\"C4\"");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+            tup = make_tuple("Affects", "\"C4\"", "1");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+
+        SECTION("wildcard/quoted") {
+            ClsTuple tup = make_tuple("Affects", "_", "\"C4\"");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+            tup = make_tuple("Affects", "\"C4\"", "_");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+
+        SECTION("synonym/quoted") {
+            ClsTuple tup = make_tuple("Affects", "a", "\"C4\"");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+            tup = make_tuple("Affects", "\"C4\"", "a");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+    }
+
+    SECTION("TEST FAIL: wrong type synonym (non-assign)") {
+        SECTION("first synonym non-assign") {
+            ClsTuple tup = make_tuple("Affects", "foodVariable", "a");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+            tup = make_tuple("Affects", "PROCEDURE", "a");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+
+        SECTION("second synonym non-assign") {
+            ClsTuple tup = make_tuple("Affects", "a", "foodVariable");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+
+            tup = make_tuple("Affects", "a", "PROCEDURE");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+    }
+
+    SECTION("TEST FAIL: undeclared synonym") {
+        SECTION("first synonym undeclared") {
+            ClsTuple tup = make_tuple("Affects", "a", "aaaaaa");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
+
+        SECTION("second synonym undeclared") {
+            ClsTuple tup = make_tuple("Affects", "aaaaaa", "a");
+            REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
+        }
     }
 }

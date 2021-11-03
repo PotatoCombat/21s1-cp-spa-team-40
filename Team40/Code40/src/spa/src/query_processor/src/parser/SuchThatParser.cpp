@@ -10,6 +10,11 @@ void SuchThatParser::clear() {
     this->ref2 = "";
 }
 
+/**
+ * Parses a ClsTuple into a Clause object.
+ * @param clsTuple Tuple of <type, ref, ref>.
+ * @return Clause object of some `such that` type.
+ */
 Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
     type = get<0>(clsTuple);
     ref1 = get<1>(clsTuple);
@@ -17,11 +22,15 @@ Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
 
     // choose a parser
     ClauseType clsType = clsHelper.valueToClsType(type);
+    bool isAffects =
+        clsType == ClauseType::AFFECTS || clsType == ClauseType::AFFECTS_T;
     bool isStmtStmt =
         clsHelper.chooseDeType2(clsType) == DesignEntityType::STMT;
     bool isProcProc =
         clsType == ClauseType::CALLS || clsType == ClauseType::CALLS_T;
-    if (isStmtStmt) {
+    if (isAffects) {
+        return parseAffects();
+    } else if (isStmtStmt) {
         return parseStmtStmt();
     } else if (isProcProc) {
         return parseProcProc();
@@ -32,7 +41,7 @@ Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
 
 /**
  * Parses a clause that takes in (stmt, stmt) as parameters.
- * This includes: Follows(*)/Parent(*)/Next(*)/Affects(*).
+ * This includes: Follows(*)/Parent(*)/Next(*).
  * @return Clause object.
  * @exception ValidityError if invalid arguments.
  */
@@ -48,6 +57,31 @@ Clause *SuchThatParser::parseStmtStmt() {
 
     r1 = parseStmtRef(this->ref1);
     r2 = parseStmtRef(this->ref2);
+    if (r1 == nullptr || r2 == nullptr) {
+        throw ValidityError("invalid clause argument");
+    }
+
+    return new Clause(clsType, *r1, *r2);
+}
+
+/**
+ * Parses a clause that takes in (assign, assign) as parameters.
+ * This includes: Affects(*).
+ * @return Clause object.
+ * @exception ValidityError if invalid arguments.
+ */
+Clause *SuchThatParser::parseAffects() {
+    // number/assign/wildcard, number/assign/wildcard
+
+    // statement is a constant(integer)/wildcard
+    if (ParserUtil::isQuoted(this->ref1) || ParserUtil::isQuoted(this->ref2)) {
+        throw ValidityError("invalid clause argument");
+    }
+
+    ClauseType clsType = clsHelper.valueToClsType(this->type);
+
+    r1 = parseAssignRef(this->ref1);
+    r2 = parseAssignRef(this->ref2);
     if (r1 == nullptr || r2 == nullptr) {
         throw ValidityError("invalid clause argument");
     }
@@ -175,4 +209,31 @@ Clause *SuchThatParser::parseUses() {
     }
 
     return new Clause(clsType, *r1, *r2);
+}
+
+Reference *SuchThatParser::parseAssignRef(string syn) {
+    // syn:  ASSIGN | INTEGER | WILDCARD
+    if (ParserUtil::isQuoted(syn)) {
+        return nullptr;
+    }
+
+    Reference *r = getReferenceIfDeclared(syn);
+    if (r != nullptr) {
+        DesignEntityType deType = r->getDeType();
+        if (deType != DesignEntityType::ASSIGN &&
+            deType != DesignEntityType::PROG_LINE && 
+            deType != DesignEntityType::STMT) {
+            return nullptr;
+        }
+
+        if (deType == DesignEntityType::PROG_LINE) {
+            deType = DesignEntityType::STMT;
+        }
+        return new Reference(deType, r->getRefType(), syn, r->getAttr());
+    }
+
+    DesignEntityType deType = DesignEntityType::STMT;
+    ReferenceType refType = ParserUtil::checkRefType(syn);
+    ReferenceAttribute attr = ReferenceAttribute::INTEGER;
+    return new Reference(deType, refType, syn, attr);
 }
