@@ -18,8 +18,9 @@ void NextBipStarHandler::depthFirstSearch(
     }
 
     // If while statement, mark as visited to prevent infinite loop
-    if (pkb->getStmtByIndex(progLine)->getStatementType() ==
-        StatementType::WHILE) {
+    if (!isDummyStmt(progLine) &&
+        pkb->getStmtByIndex(progLine)->getStatementType() ==
+            StatementType::WHILE) {
         visited.insert(progLine);
     }
 
@@ -27,7 +28,9 @@ void NextBipStarHandler::depthFirstSearch(
     unordered_set<ProgLineIndex> toExplore =
         (this->*explore)(progLine, validBranchLines);
     for (ProgLineIndex neighbourLine : toExplore) {
-        result.insert(to_string(neighbourLine));
+        if (!isDummyStmt(neighbourLine)) {
+            result.insert(to_string(neighbourLine));
+        }
         if (target.has_value() && neighbourLine == target.value()) {
             return;
         }
