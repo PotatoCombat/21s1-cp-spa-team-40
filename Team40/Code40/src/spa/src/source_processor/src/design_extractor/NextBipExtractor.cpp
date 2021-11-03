@@ -6,7 +6,7 @@ void NextBipExtractor::extract(Program *program) {
     // Extract procedures in topological order of dependencies
     unordered_map<ProcName, Procedure *> procMap;
     for (Procedure *procedure : program->getProcLst()) {
-        procMap[procedure->getName()] = procedure;
+        procMap[procedure->getId()] = procedure;
     }
     vector<ProcName> sortedProcNames =
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
@@ -18,7 +18,7 @@ void NextBipExtractor::extract(Program *program) {
 void NextBipExtractor::extractProcedure(Procedure *procedure) {
     StmtIndex firstExecutableStmtIndex =
         ExtractionContext::getInstance().getFirstExecutableStatement(
-            procedure->getName());
+            procedure->getId());
     Statement *firstExecutableStatement =
         pkb->getStmtByIndex(firstExecutableStmtIndex);
     extractStatement(firstExecutableStatement);
@@ -26,7 +26,7 @@ void NextBipExtractor::extractProcedure(Procedure *procedure) {
 
 void NextBipExtractor::extractStatement(Statement *statement) {
     // If previously extracted, do nothing
-    ProgLineIndex index = statement->getIndex();
+    ProgLineIndex index = statement->getId();
     if (visited.count(index)) {
         return;
     }
@@ -40,7 +40,7 @@ void NextBipExtractor::extractStatement(Statement *statement) {
 
 void NextBipExtractor::extractCallStatement(Statement *callStatement) {
     ProcName calledProcName = callStatement->getProcName();
-    StmtIndex callStmtIndex = callStatement->getIndex();
+    StmtIndex callStmtIndex = callStatement->getId();
 
     auto calledProcFirstExecutableStmt = getFirstExecutableStmt(calledProcName);
     auto calledProcLastExecutableStmts = getLastExecutableStmts(calledProcName);
@@ -55,7 +55,7 @@ void NextBipExtractor::extractCallStatement(Statement *callStatement) {
 
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     set<ProgLineIndex> nextStatements =
-        pkb->getNextLines(statement->getIndex());
+        pkb->getNextLines(statement->getId());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
         Statement *nextStatement = pkb->getStmtByIndex(nextStatementIndex);
         pkb->insertNextBip(statement, nextStatement);

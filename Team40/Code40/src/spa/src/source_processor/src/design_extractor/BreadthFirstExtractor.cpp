@@ -140,8 +140,8 @@ void BreadthFirstExtractor::expandLastExecutableCallStatements(
     Statement *callStatement, Procedure *currentProcedure,
     const ProcName &calleeName) {
 
-    ProcName curProcName = currentProcedure->getName();
-    StmtIndex curStmtIndex = callStatement->getIndex();
+    ProcName curProcName = currentProcedure->getId();
+    StmtIndex curStmtIndex = callStatement->getId();
 
     if (ExtractionContext::getInstance()
             .getLastExecutableStatements(curProcName)
