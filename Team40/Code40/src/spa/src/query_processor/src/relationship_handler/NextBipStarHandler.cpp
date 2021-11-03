@@ -13,26 +13,25 @@ void NextBipStarHandler::depthFirstSearch(
     unordered_set<ProgLineIndex> &visited,
     vector<ProgLineIndex> &validBranchLines) {
 
+    if (!validBranchLines.empty() && validBranchLines.back() == progLine) {
+        validBranchLines.pop_back();
+    }
+
     // If while statement, mark as visited to prevent infinite loop
     if (pkb->getStmtByIndex(progLine)->getStatementType() ==
         StatementType::WHILE) {
         visited.insert(progLine);
     }
 
-    if (!validBranchLines.empty() &&
-        validBranchLines.back() == progLine) {
-        validBranchLines.pop_back();
-    }
-
     // Explore neighbours
     unordered_set<ProgLineIndex> toExplore =
         (this->*explore)(progLine, validBranchLines);
     for (ProgLineIndex neighbourLine : toExplore) {
+        result.insert(to_string(neighbourLine));
         if (visited.find(neighbourLine) == visited.end()) {
             depthFirstSearch(explore, neighbourLine, result, visited,
                              validBranchLines);
         }
-        result.insert(to_string(neighbourLine));
     }
 }
 
@@ -103,7 +102,7 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
             }
         } else if (pkb->branchBack(curLine, nextBipLine)) {
             // If invalid BranchBack, ignore it
-            if (validBranchBackLines.empty() ||
+            if (!validBranchBackLines.empty() &&
                 validBranchBackLines.back() != nextBipLine) {
                 continue;
             }
@@ -127,8 +126,8 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
             }
         } else if (pkb->branchIn(previousBipLine, curLine)) {
             // If invalid BranchIn, ignore it
-            if (validBranchInLines.empty() ||
-                validBranchInLines.back() != curLine) {
+            if (!validBranchInLines.empty() &&
+                validBranchInLines.back() != previousBipLine) {
                 continue;
             }
         }
