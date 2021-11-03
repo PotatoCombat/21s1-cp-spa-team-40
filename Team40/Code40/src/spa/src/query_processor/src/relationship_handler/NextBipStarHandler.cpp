@@ -118,22 +118,6 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
                 validBranchInLines.back() != previousBipLine) {
                 continue;
             }
-            //            bool valid = validBranchInLines.empty();
-            //            for (auto validBranchInLine : validBranchInLines) {
-            //                set<string> result;
-            //                unordered_set<ProgLineIndex> progLines;
-            //                vector<ProgLineIndex> dummy;
-            //                depthFirstSearch(&NextBipStarHandler::getNextBipLines,
-            //                                 validBranchInLine, result,
-            //                                 progLines, dummy, curLine);
-            //                if (result.count(to_string(previousBipLine))) {
-            //                    valid = true;
-            //                    break;
-            //                }
-            //            }
-            //            if (!valid) {
-            //                continue;
-            //            }
         }
         validPreviousBipLines.insert(previousBipLine);
     }
