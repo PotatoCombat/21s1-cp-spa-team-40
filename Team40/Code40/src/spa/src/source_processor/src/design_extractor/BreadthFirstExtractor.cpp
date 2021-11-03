@@ -6,16 +6,12 @@ void BreadthFirstExtractor::extract(Program *program) {
     ExtractionContext::getInstance().resetTransientContexts();
 
     // Extract procedures in topologically reverse order of dependencies
-    unordered_map<ProcName, Procedure *> procMap;
-    for (Procedure *procedure : program->getProcLst()) {
-        procMap[procedure->getName()] = procedure;
-    }
     vector<ProcName> sortedProcNames =
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
     for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
          it++) {
-        string procName = *it;
-        extractProcedure(procMap[procName]);
+        Procedure *proc = pkb->getProcByName(*it);
+        extractProcedure(proc);
     }
 }
 
