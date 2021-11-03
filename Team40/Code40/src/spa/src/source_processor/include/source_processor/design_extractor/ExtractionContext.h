@@ -67,9 +67,10 @@ public:
     void unsetPreviousStatement(Statement *statement);
     void clearPreviousStatements();
 
-    void registerProcDependency(ProcName caller, ProcName callee);
-    bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
-    unordered_set<ProcName> getProcDependencies(ProcName from);
+    void registerProcDependency(const ProcName &caller, const ProcName &callee);
+    bool hasCyclicalProcDependency(const ProcName &caller,
+                                   const ProcName &callee);
+    unordered_set<ProcName> getProcDependencies(const ProcName &from);
     vector<ProcName> getTopologicallySortedProcNames();
 
     void resetTransientContexts();
