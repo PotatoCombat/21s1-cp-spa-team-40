@@ -89,7 +89,7 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
                 validBranchBackLines.push_back(*branchBackLines.begin());
             }
         } else if (pkb->branchBack(curLine, nextBipLine)) {
-            // If invalid BranchBack, ignore it
+            // If invalid BranchBack, discard it
             if (!validBranchBackLines.empty() &&
                 validBranchBackLines.back() != nextBipLine) {
                 continue;
@@ -105,7 +105,7 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
     unordered_set<ProgLineIndex> validPreviousBipLines;
     for (auto previousBipLine : previousBipLines) {
-        // If BranchBack, add prev lines to validBranchInLines
+        // If BranchBack, update valid BranchIns
         if (pkb->branchBack(previousBipLine, curLine)) {
             unordered_set<ProgLineIndex> branchInLines =
                 getBranchInLines(previousBipLine, curLine);
@@ -113,7 +113,7 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
                 validBranchInLines.push_back(*branchInLines.begin());
             }
         } else if (pkb->branchIn(previousBipLine, curLine)) {
-            // If invalid BranchIn, ignore it
+            // If invalid BranchIn, discard it
             if (!validBranchInLines.empty() &&
                 validBranchInLines.back() != previousBipLine) {
                 continue;
@@ -134,7 +134,8 @@ NextBipStarHandler::getBranchInLines(ProgLineIndex branchBackFromLine,
         if (prevStmt->getStatementType() != StatementType::CALL) {
             continue;
         }
-        ProcName calledProcName = prevStmt->getProcName();
+        // If NextBip*(prevLine, branchBackFromLine), then prevLine is a valid
+        // BranchIn
         ExplorationFunction explore = &NextBipStarHandler::getNextBipLines;
         unordered_set<ProgLineIndex> visited;
         vector<ProgLineIndex> validBranchLines;
