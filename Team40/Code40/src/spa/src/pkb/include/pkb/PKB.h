@@ -1,8 +1,6 @@
 #pragma once
 
 #include "AssignPattern.h"
-#include "BranchBackTable.h"
-#include "BranchInTable.h"
 #include "EntityTable.h"
 #include "Iterator.h"
 #include "PostfixAdapter.h"
@@ -484,40 +482,40 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual ProgLineIndex getBranchInToLine(ProgLineIndex line);
+    virtual ProgLineIndex getBranchInToLine(const ProgLineIndex &line);
 
     /**
      * Selects s such that line branches in from s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchInFromLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchInFromLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that there exists a branch-in from fromLine to
      * toLine
      */
 
-    virtual bool branchIn(ProgLineIndex fromLine, ProgLineIndex toLine);
+    virtual bool branchIn(const ProgLineIndex &from, const ProgLineIndex &to);
     /**
      * Selects s such that line branches back to s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchBackToLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchBackToLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that line branches back from s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchBackFromLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchBackFromLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that there exists a branch-back from fromLine to
      * toLine
      */
-    virtual bool branchBack(ProgLineIndex fromLine, ProgLineIndex toLine);
+    virtual bool branchBack(const ProgLineIndex &from, const ProgLineIndex &to);
 
     // Pattern =================================================================
 
@@ -617,6 +615,7 @@ private:
 
     RelationshipTable<StmtIndex, IfPattern> ifPatternTable;
     RelationshipTable<StmtIndex, WhilePattern> whilePatternTable;
-    BranchInTable branchInTable;
-    BranchBackTable branchBackTable;
+
+    RelationshipTable<ProgLineIndex, ProgLineIndex> branchInTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> branchBackTable;
 };

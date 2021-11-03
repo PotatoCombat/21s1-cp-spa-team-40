@@ -118,11 +118,11 @@ void PKB::insertWhilePattern(Statement *stmt) {
 }
 
 void PKB::insertBranchIn(Statement *fromStmt, Statement *toStmt) {
-    branchInTable.insertBranchIn(fromStmt, toStmt);
+    branchInTable.insertRelationship(fromStmt->getId(), toStmt->getId());
 }
 
 void PKB::insertBranchBack(Statement *fromStmt, Statement *toStmt) {
-    branchBackTable.insertBranchBack(fromStmt, toStmt);
+    branchBackTable.insertRelationship(fromStmt->getId(), toStmt->getId());
 }
 
 // =============================================================================
@@ -330,28 +330,28 @@ bool PKB::nextBip(const ProgLineIndex &previousLine, const ProgLineIndex &nextLi
     return nextBipTable.isRelationship(previousLine, nextLine);
 }
 
-StmtIndex PKB::getBranchInToLine(ProgLineIndex line) {
-    return branchInTable.getBranchInToStmt(line);
+ProgLineIndex PKB::getBranchInToLine(const ProgLineIndex &line) {
+    return branchInTable.getFirstRHSRelationship(line, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getBranchInFromLines(ProgLineIndex line) {
-    return branchInTable.getBranchInFromStmts(line);
+set<ProgLineIndex> PKB::getBranchInFromLines(const ProgLineIndex &line) {
+    return branchInTable.getLHSRelationships(line);
 }
 
-bool PKB::branchIn(ProgLineIndex fromLine, ProgLineIndex toLine) {
-    return branchInTable.branchIn(fromLine, toLine);
+bool PKB::branchIn(const ProgLineIndex &from, const ProgLineIndex &to) {
+    return branchInTable.isRelationship(from, to);
 }
 
-set<StmtIndex> PKB::getBranchBackToLines(ProgLineIndex line) {
-    return branchBackTable.getBranchBackToStmts(line);
+set<ProgLineIndex> PKB::getBranchBackToLines(const ProgLineIndex &line) {
+    return branchBackTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getBranchBackFromLines(ProgLineIndex line) {
-    return branchBackTable.getBranchBackFromStmts(line);
+set<ProgLineIndex> PKB::getBranchBackFromLines(const ProgLineIndex &line) {
+    return branchBackTable.getLHSRelationships(line);
 }
 
-bool PKB::branchBack(ProgLineIndex fromLine, ProgLineIndex toLine) {
-    return branchBackTable.branchBack(fromLine, toLine);
+bool PKB::branchBack(const ProgLineIndex &from, const ProgLineIndex &to) {
+    return branchBackTable.isRelationship(from, to);
 }
 
 // Pattern =====================================================================
