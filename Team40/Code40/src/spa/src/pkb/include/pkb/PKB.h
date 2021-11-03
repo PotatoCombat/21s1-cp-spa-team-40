@@ -1,22 +1,11 @@
 #pragma once
 
-#include "BranchBackTable.h"
-#include "BranchInTable.h"
-#include "CallsStarTable.h"
-#include "CallsTable.h"
-#include "ConditionTable.h"
+#include "AssignPattern.h"
 #include "EntityTable.h"
-#include "FollowsStarTable.h"
-#include "FollowsTable.h"
 #include "Iterator.h"
-#include "ModifiesTable.h"
-#include "NextBipTable.h"
-#include "NextTable.h"
-#include "ParentStarTable.h"
-#include "ParentTable.h"
-#include "PatternTable.h"
+#include "PostfixAdapter.h"
+#include "RelationshipTable.h"
 #include "StatementTable.h"
-#include "UsesTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
@@ -26,33 +15,29 @@ using namespace std;
 
 class PKB {
 public:
-    typedef EntityTable<Procedure, ProcName> ProcedureTable;
-    typedef EntityTable<Variable, VarName> VarTable;
-    typedef EntityTable<ConstantValue, ConstName> ConstTable;
-
     /**
      * Returns the procedure with the given procedure name.
      * @param procName name of the procedure
      */
-    virtual Procedure *getProcByName(ProcName procName);
+    virtual Procedure *getProcByName(const ProcName &procName);
 
     /**
      * Returns the variable with the given variable name.
      * @param varName name of the variable
      */
-    virtual Variable *getVarByName(VarName varName);
+    virtual Variable *getVarByName(const VarName &varName);
 
     /**
      * Returns the constant value with the given constant name \param .
      * @param constName name of the constant value
      */
-    virtual ConstantValue *getConstByName(ConstName constName);
+    virtual ConstantValue *getConstByName(const ConstName &constName);
 
     /**
      * Returns the statement with the given statement index.
      * @param stmtIndex statement index of the statement.
      */
-    virtual Statement *getStmtByIndex(StmtIndex stmtIndex);
+    virtual Statement *getStmtByIndex(const StmtIndex &stmtIndex);
 
     // =========================================================================
     // Source Processor
@@ -76,7 +61,7 @@ public:
     /**
      * @param statement statement to insert into the PKB.
      */
-    virtual StmtIndex insertStmt(Statement *statement);
+    virtual void insertStmt(Statement *statement);
 
     /**
      * Stores the relationship Follows(stmt1, stmt2),
@@ -128,7 +113,7 @@ public:
      * @param proc where proc1 == proc.procName.
      * @param called proc2.
      */
-    virtual void insertCalls(Procedure *proc, ProcName called);
+    virtual void insertCalls(Procedure *proc, const ProcName &called);
 
     /**
      * Stores the relationship Next(stmt1, stmt2).
@@ -148,7 +133,7 @@ public:
      * Stores the pattern a(var, exprList), where a is an ASSIGN statement.
      * @param stmt ASSIGN statement a.
      */
-    virtual void insertPatternAssign(Statement *stmt);
+    virtual void insertAssignPattern(Statement *stmt);
 
     /**
      * Stores the pattern if(var, exprList), where if is an IF statement.
@@ -200,31 +185,31 @@ public:
      * Returns all statement indices of a given statement type in the program.
      * @param type statement type to find.
      */
-    virtual Iterator<StmtIndex> getAllStmts(StatementType type);
+    virtual Iterator<StmtIndex> getAllStmts(const StatementType &type);
 
     /**
      * Returns the statement type of the given statement index in the program.
      * @param stmt statement index to find.
      */
-    virtual StatementType getStmtType(StmtIndex stmt);
+    virtual StatementType getStmtType(const StmtIndex &stmt);
 
     /**
      * Returns the variable used in the given PRINT statement.
      * @param printStmt statement index of a PRINT statement.
      */
-    virtual VarName getPrintVariable(StmtIndex printStmt);
+    virtual VarName getPrintVariable(const StmtIndex &printStmt);
 
     /**
      * Returns the variable used in the given READ statement.
      * @param readStmt statement index of a READ statement.
      */
-    virtual VarName getReadVariable(StmtIndex readStmt);
+    virtual VarName getReadVariable(const StmtIndex &readStmt);
 
     /**
      * Returns the procedure used in the given CALL statement.
      * @param callStmt statement index of a CALL statement.
      */
-    virtual ProcName getCallProcedure(StmtIndex callStmt);
+    virtual ProcName getCallProcedure(const StmtIndex &callStmt);
 
     // Follows =================================================================
 
@@ -233,42 +218,42 @@ public:
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getFollowingStmt(StmtIndex stmt);
+    virtual StmtIndex getFollowingStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows*(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getFollowingStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows(s, stmt).
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getPrecedingStmt(StmtIndex stmt);
+    virtual StmtIndex getPrecedingStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Follows*(s, stmt).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getPrecedingStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Follows(stmt1, stmt2).
      * @param preceding stmt1.
      * @param following stmt2.
      */
-    virtual bool follows(StmtIndex preceding, StmtIndex following);
+    virtual bool follows(const StmtIndex &preceding, const StmtIndex &following);
 
     /**
      * Selects BOOLEAN such that Follows*(stmt1, stmt2).
      * @param preceding stmt1.
      * @param following stmt2.
      */
-    virtual bool followsStar(StmtIndex preceding, StmtIndex following);
+    virtual bool followsStar(const StmtIndex &preceding, const StmtIndex &following);
 
     // Parent ==================================================================
 
@@ -277,42 +262,42 @@ public:
      * @return stmt#no that fits the relationship,
      *             or InvalidIndex if there is none.
      */
-    virtual StmtIndex getParentStmt(StmtIndex stmt);
+    virtual StmtIndex getParentStmt(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent*(s, stmt).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getParentStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getParentStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getChildStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getChildStmts(const StmtIndex &stmt);
 
     /**
      * Selects s such that Parent*(stmt, s).
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getChildStarStmts(StmtIndex stmt);
+    virtual set<StmtIndex> getChildStarStmts(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Parent(stmt1, stmt2).
      * @param parent stmt1.
      * @param child stmt2.
      */
-    virtual bool parent(StmtIndex parent, StmtIndex child);
+    virtual bool parent(const StmtIndex &parent, const StmtIndex &child);
 
     /**
      * Selects BOOLEAN such that Parent*(stmt1, stmt2).
      * @param parent stmt1.
      * @param child stmt2.
      */
-    virtual bool parentStar(StmtIndex parentStmt, StmtIndex childStmt);
+    virtual bool parentStar(const StmtIndex &parent, const StmtIndex &child);
 
     // Modifies ================================================================
 
@@ -321,42 +306,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getProcsModifyingVar(VarName var);
+    virtual set<ProcName> getProcsModifyingVar(const VarName &var);
 
     /**
      * Selects s such that Modifies(s, var), where s is a statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getStmtsModifyingVar(VarName var);
+    virtual set<StmtIndex> getStmtsModifyingVar(const VarName &var);
 
     /**
      * Selects v such that Modifies(proc, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsModifiedByProc(ProcName proc);
+    virtual set<VarName> getVarsModifiedByProc(const ProcName &proc);
 
     /**
      * Selects v such that Modifies(stmt, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsModifiedByStmt(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Modifies(proc, var).
      * @param proc proc.
      * @param var var.
      */
-    virtual bool procModifies(ProcName proc, VarName var);
+    virtual bool procModifies(const ProcName &proc, const VarName &var);
 
     /**
      * Selects BOOLEAN such that Modifies(stmt, var).
      * @param stmt stmt.
      * @param var var.
      */
-    virtual bool stmtModifies(StmtIndex stmt, VarName var);
+    virtual bool stmtModifies(const StmtIndex &stmt, const VarName &var);
 
     // Uses ====================================================================
 
@@ -365,42 +350,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getProcsUsingVar(VarName var);
+    virtual set<ProcName> getProcsUsingVar(const VarName &var);
 
     /**
      * Selects s such that Uses(s, var), where s is a statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getStmtsUsingVar(VarName var);
+    virtual set<StmtIndex> getStmtsUsingVar(const VarName &var);
 
     /**
      * Selects v such that Uses(proc, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsUsedByProc(ProcName proc);
+    virtual set<VarName> getVarsUsedByProc(const ProcName &proc);
 
     /**
      * Selects v such that Uses(stmt, v), where v is a variable.
      * @return all variable names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<VarName> getVarsUsedByStmt(StmtIndex stmt);
+    virtual set<VarName> getVarsUsedByStmt(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that Uses(proc, var).
      * @param proc proc.
      * @param var var.
      */
-    virtual bool procUses(ProcName proc, VarName var);
+    virtual bool procUses(const ProcName &proc, const VarName &var);
 
     /**
      * Selects BOOLEAN such that Uses(stmt, var).
      * @param stmt stmt.
      * @param var var.
      */
-    virtual bool stmtUses(StmtIndex stmt, VarName var);
+    virtual bool stmtUses(const StmtIndex &stmt, const VarName &var);
 
     // Calls ==================================================================
 
@@ -409,42 +394,42 @@ public:
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCalledProcs(ProcName caller);
+    virtual set<ProcName> getCalledProcs(const ProcName &caller);
 
     /**
      * Selects p such that Calls*(caller, p).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCalledStarProcs(ProcName caller);
+    virtual set<ProcName> getCalledStarProcs(const ProcName &caller);
 
     /**
      * Selects p such that Calls(p, called).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCallerProcs(ProcName called);
+    virtual set<ProcName> getCallerProcs(const ProcName &called);
 
     /**
      * Selects p such that Calls*(p, called).
      * @return all procedure names that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProcName> getCallerStarProcs(ProcName called);
+    virtual set<ProcName> getCallerStarProcs(const ProcName &called);
 
     /**
      * Selects BOOLEAN such that Calls(p1, p2).
      * @param caller p1.
      * @param called p2.
      */
-    virtual bool calls(ProcName caller, ProcName called);
+    virtual bool calls(const ProcName &caller, const ProcName &called);
 
     /**
      * Selects BOOLEAN such that Calls*(p1, p2).
      * @param caller p1.
      * @param called p2.
      */
-    virtual bool callsStar(ProcName caller, ProcName called);
+    virtual bool callsStar(const ProcName &caller, const ProcName &called);
 
     // Next ==================================================================
 
@@ -453,21 +438,21 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getNextLines(ProgLineIndex line);
+    virtual set<StmtIndex> getNextLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that Next(s, line).
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPreviousLines(ProgLineIndex line);
+    virtual set<StmtIndex> getPreviousLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that Next(line1, line2).
      * @param previous line1.
      * @param next line2.
      */
-    virtual bool next(ProgLineIndex previous, ProgLineIndex next);
+    virtual bool next(const ProgLineIndex &previous, const ProgLineIndex &next);
 
     // NextBip ===============================================================
 
@@ -476,114 +461,114 @@ public:
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getNextBipLines(ProgLineIndex line);
+    virtual set<StmtIndex> getNextBipLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that NextBip(s, line).
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPreviousBipLines(ProgLineIndex line);
+    virtual set<StmtIndex> getPreviousBipLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that NextBip(line1, line2).
      * @param previous line1.
      * @param next line2.
      */
-    virtual bool nextBip(ProgLineIndex previous, ProgLineIndex next);
+    virtual bool nextBip(const ProgLineIndex &previous, const ProgLineIndex &next);
 
     /**
      * Selects s such that line branches in to s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual ProgLineIndex getBranchInToLine(ProgLineIndex line);
+    virtual ProgLineIndex getBranchInToLine(const ProgLineIndex &line);
 
     /**
      * Selects s such that line branches in from s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchInFromLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchInFromLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that there exists a branch-in from fromLine to
      * toLine
      */
 
-    virtual bool branchIn(ProgLineIndex fromLine, ProgLineIndex toLine);
+    virtual bool branchIn(const ProgLineIndex &from, const ProgLineIndex &to);
     /**
      * Selects s such that line branches back to s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchBackToLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchBackToLines(const ProgLineIndex &line);
 
     /**
      * Selects s such that line branches back from s
      * @return all program line numbers that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<ProgLineIndex> getBranchBackFromLines(ProgLineIndex line);
+    virtual set<ProgLineIndex> getBranchBackFromLines(const ProgLineIndex &line);
 
     /**
      * Selects BOOLEAN such that there exists a branch-back from fromLine to
      * toLine
      */
-    virtual bool branchBack(ProgLineIndex fromLine, ProgLineIndex toLine);
+    virtual bool branchBack(const ProgLineIndex &from, const ProgLineIndex &to);
 
     // Pattern =================================================================
 
     /**
-     * Selects a such that a(var, pattern), where a is an ASSIGN statement.
+     * Selects a such that a(var, exprList), where a is an ASSIGN statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getPartialAssignPatternStmts(VarName var,
-                                                        ExpressionList pattern);
+    virtual set<StmtIndex> getPartialAssignPatternStmts(const VarName &var,
+                                                        const ExpressionList &exprList);
 
     /**
-     * Selects a such that a(var, pattern), where a is an ASSIGN statement,
+     * Selects a such that a(var, exprList), where a is an ASSIGN statement,
      * and the pattern requires an exact match.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getExactAssignPatternStmts(VarName var,
-                                                      ExpressionList pattern);
+    virtual set<StmtIndex> getExactAssignPatternStmts(const VarName &var,
+                                                      const ExpressionList &exprList);
 
     /**
      * Selects if such that if(var, _, _), where if is an IF statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getIfPatternStmts(VarName var);
+    virtual set<StmtIndex> getIfPatternStmts(const VarName &var);
 
     /**
      * Selects while such that while(var, _), where while is a WHILE statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
-    virtual set<StmtIndex> getWhilePatternStmts(VarName var);
+    virtual set<StmtIndex> getWhilePatternStmts(const VarName &var);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
      * statement.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
      */
-    virtual bool partialAssignPattern(StmtIndex stmt, VarName var,
-                                      ExpressionList pattern);
+    virtual bool partialAssignPattern(const StmtIndex &stmt, const VarName &var,
+                                      const ExpressionList &exprList);
 
     /**
-     * Selects BOOLEAN such that a(var, pattern), where a is an ASSIGN
+     * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
      * statement, and the pattern requires an exact match.
      * @param stmt statement index of the ASSIGN statement.
      * @param var var.
      * @param pattern expression list (tokenized infix expression).
      */
-    virtual bool exactAssignPattern(StmtIndex stmt, VarName var,
-                                    ExpressionList pattern);
+    virtual bool exactAssignPattern(const StmtIndex &stmt, const VarName &var,
+                                    const ExpressionList &exprList);
 
     /// Selects BOOLEAN such that if(var, _, _), where if is an IF statement.
 
@@ -592,7 +577,7 @@ public:
      * @param stmt statement index of the IF statement.
      * @param var var.
      */
-    virtual bool ifPattern(StmtIndex stmt, VarName var);
+    virtual bool ifPattern(const StmtIndex &stmtIndex, const VarName &var);
 
     /**
      * Selects BOOLEAN such that while(var, _), where while is a WHILE
@@ -600,26 +585,37 @@ public:
      * @param stmt statement index of the WHILE statement.
      * @param var var.
      */
-    virtual bool whilePattern(StmtIndex stmtIndex, VarName var);
+    virtual bool whilePattern(const StmtIndex &stmtIndex, const VarName &var);
 
 private:
-    ProcedureTable procTable;
-    VarTable varTable;
-    ConstTable constTable;
     StatementTable statementTable;
 
-    FollowsTable followsTable;
-    FollowsStarTable followsStarTable;
-    ParentTable parentTable;
-    ParentStarTable parentStarTable;
-    ModifiesTable modifiesTable;
-    UsesTable usesTable;
-    CallsTable callsTable;
-    CallsStarTable callsStarTable;
-    NextTable nextTable;
-    NextBipTable nextBipTable;
-    PatternTable patternTable;
-    ConditionTable conditionTable;
-    BranchInTable branchInTable;
-    BranchBackTable branchBackTable;
+    EntityTable<Procedure, ProcName> procTable;
+    EntityTable<Variable, VarName> varTable;
+    EntityTable<ConstantValue, ConstName> constTable;
+
+    RelationshipTable<StmtIndex, StmtIndex> followsTable;
+    RelationshipTable<StmtIndex, StmtIndex> followsStarTable;
+    RelationshipTable<StmtIndex, StmtIndex> parentTable;
+    RelationshipTable<StmtIndex, StmtIndex> parentStarTable;
+    RelationshipTable<ProcName, VarName> modifiesProcTable;
+    RelationshipTable<StmtIndex, VarName> modifiesStmtTable;
+    RelationshipTable<ProcName, VarName> usesProcTable;
+    RelationshipTable<StmtIndex, VarName> usesStmtTable;
+    RelationshipTable<ProcName, ProcName> callsTable;
+    RelationshipTable<ProcName, ProcName> callsStarTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> nextTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> nextBipTable;
+
+    RelationshipTable<StmtIndex, AssignPattern> partialAssignPatternTable;
+    RelationshipTable<StmtIndex, AssignPattern> exactAssignPatternTable;
+
+    typedef VarName IfPattern;
+    typedef VarName WhilePattern;
+
+    RelationshipTable<StmtIndex, IfPattern> ifPatternTable;
+    RelationshipTable<StmtIndex, WhilePattern> whilePatternTable;
+
+    RelationshipTable<ProgLineIndex, ProgLineIndex> branchInTable;
+    RelationshipTable<ProgLineIndex, ProgLineIndex> branchBackTable;
 };

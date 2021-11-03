@@ -19,7 +19,7 @@ Iterator<ConstName> PKBStub::getAllConsts() {
     return iter;
 }
 
-Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
+Iterator<StmtIndex> PKBStub::getAllStmts(const StatementType &stmtType) {
     vector<int> allStmts = getAllStmts().asVector();
     vector<int> filteredStmts;
     for (auto stmt : allStmts) {
@@ -31,7 +31,7 @@ Iterator<StmtIndex> PKBStub::getAllStmts(StatementType stmtType) {
     return iter;
 }
 
-StatementType PKBStub::getStmtType(StmtIndex stmt) {
+StatementType PKBStub::getStmtType(const StmtIndex &stmt) {
     vector<StatementType> stmtTypes{
         StatementType::ASSIGN, StatementType::ASSIGN, StatementType::ASSIGN,
         StatementType::WHILE,  StatementType::ASSIGN, StatementType::IF,
@@ -40,69 +40,69 @@ StatementType PKBStub::getStmtType(StmtIndex stmt) {
     return stmtTypes[stmt - 1];
 }
 
-StmtIndex PKBStub::getFollowingStmt(StmtIndex stmt) {
+StmtIndex PKBStub::getFollowingStmt(const StmtIndex &stmt) {
     vector<int> followingStmts{2, 3, 4, 12, 6, 9, -1, -1, 10, 11, -1, -1};
     return followingStmts[stmt - 1];
 }
 
-StmtIndex PKBStub::getPrecedingStmt(StmtIndex stmt) {
+StmtIndex PKBStub::getPrecedingStmt(const StmtIndex &stmt) {
     vector<int> precedingStmts{-1, 1, 2, 3, -1, 5, -1, -1, 6, 9, 10, 4};
     return precedingStmts[stmt - 1];
 }
 
-bool PKBStub::follows(StmtIndex stmt1, StmtIndex stmt2) {
+bool PKBStub::follows(const StmtIndex &stmt1, const StmtIndex &stmt2) {
     return getFollowingStmt(stmt1) == stmt2;
 }
 
-set<StmtIndex> PKBStub::getFollowingStarStmts(StmtIndex stmt) {
+set<StmtIndex> PKBStub::getFollowingStarStmts(const StmtIndex &stmt) {
     vector<set<int>> followingStarStmtsList = {
         {2, 3, 4, 12}, {3, 4, 12}, {4, 12}, {12}, {6, 9, 10, 11}, {9, 10, 11}, {}, {}, {10, 11}, {11}, {}, {}};
     return followingStarStmtsList[stmt - 1];
 }
 
-set<StmtIndex> PKBStub::getPrecedingStarStmts(StmtIndex stmt) {
+set<StmtIndex> PKBStub::getPrecedingStarStmts(const StmtIndex &stmt) {
     vector<set<int>> precedingStarStmtsList = {
         {}, {1}, {1, 2}, {1, 2, 3}, {}, {5}, {}, {}, {5, 6}, {5, 6, 9}, {5, 6, 9, 10}, {1, 2, 3, 4}};
     return precedingStarStmtsList[stmt - 1];
 }
 
-bool PKBStub::followsStar(StmtIndex stmt1, StmtIndex stmt2) {
+bool PKBStub::followsStar(const StmtIndex &stmt1, const StmtIndex &stmt2) {
     set<int> followingStarStmts = getFollowingStarStmts(stmt1);
     return followingStarStmts.find(stmt2) != followingStarStmts.end();
 }
 
-StmtIndex PKBStub::getParentStmt(StmtIndex stmt) {
+StmtIndex PKBStub::getParentStmt(const StmtIndex &stmt) {
     vector<int> parentStmts = {-1, -1, -1, -1, 4, 4, 6, 6, 4, 4, 4, -1};
     return parentStmts[stmt - 1];
 }
 
-set<StmtIndex> PKBStub::getChildStmts(StmtIndex stmt) {
+set<StmtIndex> PKBStub::getChildStmts(const StmtIndex &stmt) {
     vector<set<int>> childStmtsList = {{}, {}, {}, {5, 6, 9, 10, 11}, {}, {7, 8}, {}, {}, {}, {}, {}, {}};
     return childStmtsList[stmt - 1];
 }
 
-bool PKBStub::parent(StmtIndex stmt1, StmtIndex stmt2) {
+bool PKBStub::parent(const StmtIndex &stmt1, const StmtIndex &stmt2) {
     return getParentStmt(stmt2) == stmt1;
 }
 
-set<StmtIndex> PKBStub::getParentStarStmts(StmtIndex stmt) {
+set<StmtIndex> PKBStub::getParentStarStmts(const StmtIndex &stmt) {
     vector<set<int>> parentStarStmtsList = {{}, {}, {}, {}, {4}, {4}, {4, 6}, {4, 6}, {4}, {4}, {4}, {}};
     return parentStarStmtsList[stmt - 1];
 }
 
-set<StmtIndex> PKBStub::getChildStarStmts(StmtIndex stmt) {
+set<StmtIndex> PKBStub::getChildStarStmts(const StmtIndex &stmt) {
     vector<set<int>> childStarStmtsList = {
         {}, {}, {}, {5, 6, 7, 8, 9, 10, 11}, {}, {7, 8}, {}, {}, {},
         {}, {}, {}};
     return childStarStmtsList[stmt - 1];
 }
 
-bool PKBStub::parentStar(StmtIndex stmt1, StmtIndex stmt2) {
+bool PKBStub::parentStar(const StmtIndex &stmt1, const StmtIndex &stmt2) {
     set<int> childStarStmts = getChildStarStmts(stmt1);
     return find(childStarStmts.begin(), childStarStmts.end(), stmt2) != childStarStmts.end();
 }
 
-set<StmtIndex> PKBStub::getStmtsUsingVar(VarName var) {
+set<StmtIndex> PKBStub::getStmtsUsingVar(const VarName &var) {
     if (var == "x") {
         return set<int>{4, 5, 6, 7, 8, 9, 10, 12}; // not considered call stmts yet
     } else if (var == "i") {
@@ -116,7 +116,7 @@ set<StmtIndex> PKBStub::getStmtsUsingVar(VarName var) {
     }
 }
 
-set<VarName> PKBStub::getVarsUsedByStmt(StmtIndex stmt) {
+set<VarName> PKBStub::getVarsUsedByStmt(const StmtIndex &stmt) {
     vector<set<string>> varsUsed = {{},
                                  {},
                                  {},
@@ -132,12 +132,12 @@ set<VarName> PKBStub::getVarsUsedByStmt(StmtIndex stmt) {
     return varsUsed[stmt - 1];
 }
 
-bool PKBStub::stmtUses(StmtIndex stmt, VarName var) {
+bool PKBStub::stmtUses(const StmtIndex &stmt, const VarName &var) {
     set<string> varsUsed = getVarsUsedByStmt(stmt);
     return varsUsed.find(var) != varsUsed.end();
 }
 
-set<StmtIndex> PKBStub::getStmtsModifyingVar(VarName var) {
+set<StmtIndex> PKBStub::getStmtsModifyingVar(const VarName &var) {
     if (var == "x") {
         return set<int>{1, 4, 5};
     } else if (var == "z") {
@@ -151,7 +151,7 @@ set<StmtIndex> PKBStub::getStmtsModifyingVar(VarName var) {
     }
 }
 
-set<VarName> PKBStub::getVarsModifiedByStmt(StmtIndex stmt) {
+set<VarName> PKBStub::getVarsModifiedByStmt(const StmtIndex &stmt) {
     vector<set<string>> varsModified = {
         {"x"}, {"z"}, {"i"}, {"x", "z", "y", "i"}, {"x"}, {"z", "y"},
         {"z"}, {"y"}, {"z"}, {"z", "x"},           {"i"}, {"x", "z", "i"}};
@@ -159,22 +159,22 @@ set<VarName> PKBStub::getVarsModifiedByStmt(StmtIndex stmt) {
     return varsModified[stmt - 1];
 }
 
-bool PKBStub::stmtModifies(StmtIndex stmt, VarName var) {
+bool PKBStub::stmtModifies(const StmtIndex &stmt, const VarName &var) {
     set<string> varsModified = getVarsModifiedByStmt(stmt);
     return varsModified.find(var) != varsModified.end();
 }
 
-VarName PKBStub::getPrintVariable(StmtIndex printStmt) {
+VarName PKBStub::getPrintVariable(const StmtIndex &printStmt) {
     // no print in Example procedure
     return "no print";
 }
 
-VarName PKBStub::getReadVariable(StmtIndex readStmt) {
+VarName PKBStub::getReadVariable(const StmtIndex &readStmt) {
     // no read in Example procedure
     return "no read";
 }
 
-ProcName PKBStub::getCallProcedure(StmtIndex callStmt) {
+ProcName PKBStub::getCallProcedure(const StmtIndex &callStmt) {
     if (callStmt == 10) {
         return "q";
     } else if (callStmt == 12) {

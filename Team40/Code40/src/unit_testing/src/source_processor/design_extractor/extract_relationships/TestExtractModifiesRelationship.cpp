@@ -38,11 +38,11 @@ TEST_CASE("TestExtractModifiesRelationship: Correctly extracts a simple "
     de.extract(&program);
 
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(statement.getIndex())
+                .getVarsModifiedByStmt(statement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(statement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(statement.getId())
+                .count(variable.getId()));
 }
 
 TEST_CASE(
@@ -63,17 +63,17 @@ TEST_CASE(
     de.extract(&program);
 
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(statement.getIndex())
+                .getVarsModifiedByStmt(statement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(statement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(statement.getId())
+                .count(variable.getId()));
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure.getName())
+                .getVarsModifiedByProc(procedure.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure.getName())
-                .count(variable.getName()));
+                .getVarsModifiedByProc(procedure.getId())
+                .count(variable.getId()));
 }
 
 TEST_CASE(
@@ -88,7 +88,7 @@ TEST_CASE(
     Statement readStatement(2, StatementType::READ);
     Variable variable(TestExtractModifiesRelationship::VAR_NAME);
 
-    callStatement.setProcName(procedure2.getName());
+    callStatement.setProcName(procedure2.getId());
     readStatement.setVariable(&variable);
     procedure1.addToStmtLst(&callStatement);
     procedure2.addToStmtLst(&readStatement);
@@ -100,27 +100,27 @@ TEST_CASE(
 
     // Check that Modifies(p2, v)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure2.getName())
+                .getVarsModifiedByProc(procedure2.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure2.getName())
-                .count(variable.getName()));
+                .getVarsModifiedByProc(procedure2.getId())
+                .count(variable.getId()));
 
     // Check that Calls(p1, p2)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getCalledProcs(procedure1.getName())
+                .getCalledProcs(procedure1.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getCalledProcs(procedure1.getName())
-                .count(procedure2.getName()));
+                .getCalledProcs(procedure1.getId())
+                .count(procedure2.getId()));
 
     // Check that Modifies(p1, v)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
+                .getVarsModifiedByProc(procedure1.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
-                .count(variable.getName()));
+                .getVarsModifiedByProc(procedure1.getId())
+                .count(variable.getId()));
 }
 
 TEST_CASE(
@@ -146,23 +146,23 @@ TEST_CASE(
 
     // Check that Modifies(s2, v)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
+                .getVarsModifiedByStmt(readStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(readStatement.getId())
+                .count(variable.getId()));
 
     // Check that Parent(s1, s2)
     REQUIRE(TestExtractModifiesRelationship::pkb.getParentStmt(
-                readStatement.getIndex()) == whileStatement.getIndex());
+                readStatement.getId()) == whileStatement.getId());
 
     // Check that Modifies(p1, v)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(whileStatement.getIndex())
+                .getVarsModifiedByStmt(whileStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(whileStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(whileStatement.getId())
+                .count(variable.getId()));
 }
 
 TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
@@ -180,7 +180,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
     TestUtil::addConditionalExpression(&whileStatement);
 
     whileStatement.addThenStmt(&callStatement);
-    callStatement.setProcName(procedure2.getName());
+    callStatement.setProcName(procedure2.getId());
     readStatement.setVariable(&variable);
     procedure1.addToStmtLst(&whileStatement);
     procedure2.addToStmtLst(&readStatement);
@@ -206,35 +206,35 @@ TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
 
     // Check that Modifies(readStatement, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
+                .getVarsModifiedByStmt(readStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(readStatement.getId())
+                .count(variable.getId()));
 
     // Check that Calls(procedure1, procedure2)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getCalledProcs(procedure1.getName())
-                .count(procedure2.getName()));
+                .getCalledProcs(procedure1.getId())
+                .count(procedure2.getId()));
     // Check that Parent(whileStatement, callStatement)
     REQUIRE(TestExtractModifiesRelationship::pkb.getParentStmt(
-                callStatement.getIndex()) == whileStatement.getIndex());
+                callStatement.getId()) == whileStatement.getId());
 
     // Check that Modifies(whileStatement, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(whileStatement.getIndex())
+                .getVarsModifiedByStmt(whileStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(whileStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(whileStatement.getId())
+                .count(variable.getId()));
 
     // Check that Modifies(procedure1, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
+                .getVarsModifiedByProc(procedure1.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
-                .count(variable.getName()));
+                .getVarsModifiedByProc(procedure1.getId())
+                .count(variable.getId()));
 }
 
 TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
@@ -253,7 +253,7 @@ TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
 
     ifStatement.addThenStmt(&callStatement);
     ifStatement.addElseStmt(&callStatement);
-    callStatement.setProcName(procedure2.getName());
+    callStatement.setProcName(procedure2.getId());
     readStatement.setVariable(&variable);
     procedure1.addToStmtLst(&ifStatement);
     procedure2.addToStmtLst(&readStatement);
@@ -281,33 +281,33 @@ TEST_CASE("TestExtractModifiesRelationship: Correctly extracts transitive "
 
     // Check that Modifies(readStatement, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
+                .getVarsModifiedByStmt(readStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(readStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(readStatement.getId())
+                .count(variable.getId()));
 
     // Check that Calls(procedure1, procedure2)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getCalledProcs(procedure1.getName())
-                .count(procedure2.getName()));
+                .getCalledProcs(procedure1.getId())
+                .count(procedure2.getId()));
     // Check that Parent(whileStatement, callStatement)
     REQUIRE(TestExtractModifiesRelationship::pkb.getParentStmt(
-                callStatement.getIndex()) == ifStatement.getIndex());
+                callStatement.getId()) == ifStatement.getId());
 
     // Check that Modifies(whileStatement, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(ifStatement.getIndex())
+                .getVarsModifiedByStmt(ifStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByStmt(ifStatement.getIndex())
-                .count(variable.getName()));
+                .getVarsModifiedByStmt(ifStatement.getId())
+                .count(variable.getId()));
 
     // Check that Modifies(procedure1, variable)
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
+                .getVarsModifiedByProc(procedure1.getId())
                 .size() == 1);
     REQUIRE(TestExtractModifiesRelationship::pkb
-                .getVarsModifiedByProc(procedure1.getName())
-                .count(variable.getName()));
+                .getVarsModifiedByProc(procedure1.getId())
+                .count(variable.getId()));
 }

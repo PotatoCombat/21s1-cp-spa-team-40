@@ -1,6 +1,4 @@
 #include "catch.hpp"
-#include "common/model/relation/EqualsRelation.h"
-#include "common/model/relation/Relation.h"
 #include "pkb/PKB.h"
 #include "source_processor/design_extractor/DesignExtractor.h"
 

@@ -1,17 +1,14 @@
 #pragma once
-#include <string>
-#include "Factor.h"
+
+#include "Abstractions.h"
+#include "Entity.h"
+
 using namespace std;
 
-class ConstantValue : public Factor {
+class ConstantValue : public Entity<ConstName> {
 public:
-    explicit ConstantValue(string name);
-
-    string getName();
+    explicit ConstantValue(ConstName name);
 
     bool operator<(const ConstantValue &other) const;
     bool operator==(const ConstantValue &other) const;
-
-private:
-    string name;
 };

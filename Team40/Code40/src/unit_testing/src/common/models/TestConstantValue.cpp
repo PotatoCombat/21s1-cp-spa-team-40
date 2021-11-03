@@ -4,5 +4,5 @@
 TEST_CASE("ConstantValue: Creates and retrieves name correctly") {
     const string VALUE = "10";
     ConstantValue c(VALUE);
-    REQUIRE(c.getName() == VALUE);
+    REQUIRE(c.getId() == VALUE);
 }

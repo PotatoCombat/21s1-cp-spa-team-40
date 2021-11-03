@@ -10,14 +10,14 @@ void DepthFirstExtractor::extract(Program *program) {
 }
 
 void DepthFirstExtractor::extractProcedure(Procedure *procedure) {
-    ProcName procName = procedure->getName();
+    ProcName procName = procedure->getId();
     if (pkb->getProcByName(procName) != nullptr) {
         throw runtime_error("Encountered a Procedure with a duplicate name.");
     }
     pkb->insertProc(procedure);
 
     // Set first-executable statement in ExtractionContext
-    StmtIndex firstStmtIndex = procedure->getStmtLst().front()->getIndex();
+    StmtIndex firstStmtIndex = procedure->getStmtLst().front()->getId();
     ExtractionContext::getInstance().setFirstExecutableStatement(
         procName, firstStmtIndex);
 
@@ -62,14 +62,14 @@ void DepthFirstExtractor::extractStatement(Statement *statement) {
 }
 
 void DepthFirstExtractor::extractAssignStatement(Statement *assignStatement) {
-    pkb->insertPatternAssign(assignStatement);
+    pkb->insertAssignPattern(assignStatement);
 
     extractAssignStatementLHS(assignStatement);
     extractAssignStatementRHS(assignStatement);
 
     ExtractionContext::getInstance().unsetUsingStatement(assignStatement);
     ExtractionContext::getInstance().setPreviousStatement(assignStatement);
-    updateLastExecutableStatementsForCurrentProc({assignStatement->getIndex()});
+    updateLastExecutableStatementsForCurrentProc({assignStatement->getId()});
 }
 
 void DepthFirstExtractor::extractAssignStatementLHS(
@@ -95,7 +95,7 @@ void DepthFirstExtractor::extractCallStatement(Statement *callStatement) {
 
     extractProcDependency(callStatement);
     ExtractionContext::getInstance().setPreviousStatement(callStatement);
-    updateLastExecutableStatementsForCurrentProc({callStatement->getIndex()});
+    updateLastExecutableStatementsForCurrentProc({callStatement->getId()});
 }
 
 void DepthFirstExtractor::extractProcDependency(Statement *callStatement) {
@@ -106,7 +106,7 @@ void DepthFirstExtractor::extractProcDependency(Statement *callStatement) {
         throw runtime_error("Current procedure not set.");
     }
     ExtractionContext::getInstance().registerProcDependency(
-        currentProcedure.value()->getName(), calledProcName);
+        currentProcedure.value()->getId(), calledProcName);
 }
 
 void DepthFirstExtractor::extractIfStatement(Statement *ifStatement) {
@@ -124,7 +124,7 @@ void DepthFirstExtractor::extractIfCondition(Statement *ifStatement) {
     auto variables = ifStatement->getExpressionVars();
     auto constantValues = ifStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
-        throw runtime_error(to_string(ifStatement->getIndex()) +
+        throw runtime_error(to_string(ifStatement->getId()) +
                             ": IfStatement is missing cond_expr.");
     }
     ExtractionContext::getInstance().setUsingStatement(ifStatement);
@@ -167,7 +167,7 @@ void DepthFirstExtractor::extractIfStatementCleanup(Statement *ifStatement) {
     for (Statement *lastExecutableStatement : lastExecutableStatements) {
         ExtractionContext::getInstance().setPreviousStatement(
             lastExecutableStatement);
-        lastExecutableStmtIndices.insert(lastExecutableStatement->getIndex());
+        lastExecutableStmtIndices.insert(lastExecutableStatement->getId());
     }
     updateLastExecutableStatementsForCurrentProc(lastExecutableStmtIndices);
 }
@@ -191,7 +191,7 @@ void DepthFirstExtractor::extractReadStatement(Statement *readStatement) {
     extractVariable(readStatement->getVariable());
     ExtractionContext::getInstance().unsetModifyingStatement(readStatement);
     ExtractionContext::getInstance().setPreviousStatement(readStatement);
-    updateLastExecutableStatementsForCurrentProc({readStatement->getIndex()});
+    updateLastExecutableStatementsForCurrentProc({readStatement->getId()});
 }
 
 void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
@@ -200,7 +200,7 @@ void DepthFirstExtractor::extractPrintStatement(Statement *printStatement) {
     ExtractionContext::getInstance().unsetUsingStatement(printStatement);
 
     ExtractionContext::getInstance().setPreviousStatement(printStatement);
-    updateLastExecutableStatementsForCurrentProc({printStatement->getIndex()});
+    updateLastExecutableStatementsForCurrentProc({printStatement->getId()});
 }
 
 void DepthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
@@ -216,7 +216,7 @@ void DepthFirstExtractor::extractWhileCondition(Statement *whileStatement) {
     auto variables = whileStatement->getExpressionVars();
     auto constantValues = whileStatement->getExpressionConsts();
     if (variables.empty() && constantValues.empty()) {
-        throw runtime_error(to_string(whileStatement->getIndex()) +
+        throw runtime_error(to_string(whileStatement->getId()) +
                             ": WhileStatement is missing cond_expr.");
     }
 
@@ -254,7 +254,7 @@ void DepthFirstExtractor::extractWhileStatementCleanup(
     // Set whileStatement as the only previous statement
     ExtractionContext::getInstance().clearPreviousStatements();
     ExtractionContext::getInstance().setPreviousStatement(whileStatement);
-    updateLastExecutableStatementsForCurrentProc({whileStatement->getIndex()});
+    updateLastExecutableStatementsForCurrentProc({whileStatement->getId()});
 }
 
 void DepthFirstExtractor::extractVariable(Variable *variable) {
@@ -337,7 +337,7 @@ void DepthFirstExtractor::updateLastExecutableStatementsForCurrentProc(
     if (!curProc.has_value()) {
         throw runtime_error("Current procedure not set.");
     }
-    ProcName curProcName = curProc.value()->getName();
+    ProcName curProcName = curProc.value()->getId();
     ExtractionContext::getInstance().setLastExecutableStatements(
         curProcName, std::move(lastExecutableStmtIndices));
 }
