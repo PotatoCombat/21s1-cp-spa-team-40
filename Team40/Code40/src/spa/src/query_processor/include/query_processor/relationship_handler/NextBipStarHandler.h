@@ -18,7 +18,8 @@ private:
     void depthFirstSearch(ExplorationFunction explore, ProgLineIndex progLine,
                           set<string> &result,
                           unordered_set<ProgLineIndex> &visited,
-                          vector<ProgLineIndex> &validBranchLines);
+                          vector<ProgLineIndex> &validBranchLines,
+                          optional<ProgLineIndex> target);
     unordered_set<ProgLineIndex>
     getNextBipLines(ProgLineIndex progLineIndex,
                     vector<ProgLineIndex> &validBranchBackLines);
