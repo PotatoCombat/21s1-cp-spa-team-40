@@ -57,7 +57,6 @@ set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line, const s
     }
 
     return results;
-
 }
 
 void AffectsHandler::exploreNeighbours(bool isFindingR1,
