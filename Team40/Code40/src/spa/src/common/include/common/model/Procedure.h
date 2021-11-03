@@ -11,6 +11,7 @@ using namespace std;
 
 class Procedure : public Entity<ProcName> {
 public:
+    Procedure();
     explicit Procedure(ProcName name);
 
     void addToStmtLst(Statement *stmt);

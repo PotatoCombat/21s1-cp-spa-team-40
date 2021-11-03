@@ -1,17 +1,10 @@
 #pragma once
 #include "common/model/Procedure.h"
-#include "source_processor/parser/Line.h"
-#include <string>
-#include <vector>
-
+#include "source_processor/parser/EntityParser.h"
 using namespace std;
 
-class ProcedureParser {
-protected:
-    vector<string> content;
-
+class ProcedureParser : public EntityParser<Procedure> {
 public:
     ProcedureParser(vector<string> content);
-    Procedure *parseProcedure();
-    bool isValidName(string input);
+    Procedure *parseEntity();
 };

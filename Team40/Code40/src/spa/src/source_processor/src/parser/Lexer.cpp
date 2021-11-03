@@ -1,4 +1,5 @@
 #include "source_processor/parser/Lexer.h"
+#include "source_processor/parser/Tokens.h"
 #include <algorithm>
 #include <iostream>
 #include <tuple>
@@ -6,10 +7,10 @@
 // tokenize file input
 
 vector<Line> Lexer::tokenizeFile(fstream &file) {
-    vector<Line> programLines = {};
+    vector<Line> programLines;
     vector<vector<string>> programTokens = mergeLine(file);
     int stmtNum = 0;
-    vector<string> currString = {};
+    vector<string> currString;
     for (int i = 0; i < programTokens.size(); i++) {
         vector<string> subString = programTokens[i];
         currString.insert(currString.end(), subString.begin(), subString.end());
@@ -35,7 +36,7 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
 
 vector<vector<string>> Lexer::mergeLine(fstream &file) {
     string input;
-    vector<vector<string>> programTokens = {};
+    vector<vector<string>> programTokens;
 
     while (getline(file, input)) {
         vector<string> line = tokenizeLine(input);
@@ -62,8 +63,8 @@ vector<vector<string>> Lexer::mergeLine(fstream &file) {
 
 tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
-    vector<string> currString = {};
-    vector<string> nextString = {};
+    vector<string> currString;
+    vector<string> nextString;
 
     for (int i = 0; i < line.size(); i++) {
         string curr = line[i];
@@ -81,7 +82,7 @@ tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
 }
 
 vector<string> Lexer::tokenizeLine(string input) {
-    vector<string> inputLine = {};
+    vector<string> inputLine;
     string currString = "";
     for (int i = 0; i < input.size(); i++) {
         char curr = input.at(i);
@@ -151,14 +152,16 @@ string Lexer::cleanString(string input) {
 
 void Lexer::checkValidBracket(char curr) {
     if (isBracket(curr)) {
-        if (curr == '(' || curr == '{') {
+        if (curr == Tokens::CHAR_OPEN_BRACKET || curr == Tokens::CHAR_OPEN_BRACE) {
             brackets.push(curr);
         }
-        if (curr == ')' || curr == '}') {
+        if (curr == Tokens::CHAR_CLOSE_BRACKET || curr == Tokens::CHAR_CLOSE_BRACE) {
             if (brackets.empty()) {
                 throw invalid_argument("invalid program, brackets do not match");
             }
-            if ((curr == ')' && brackets.top() == '(') || (curr == '}' && brackets.top() == '{')) {
+            if ((curr == Tokens::CHAR_CLOSE_BRACKET &&
+                 brackets.top() == Tokens::CHAR_OPEN_BRACKET) ||
+                (curr == Tokens::CHAR_CLOSE_BRACE && brackets.top() == Tokens::CHAR_OPEN_BRACE)) {
                 brackets.pop();
             } else {
                 throw invalid_argument("invalid program, brackets do not match");
@@ -170,35 +173,44 @@ void Lexer::checkValidBracket(char curr) {
 // special keywords
 
 bool Lexer::isKeyword(string input) {
-    return input == "read" || input == "print" || input == "call" || input == "while" ||
-           input == "if" || input == "then" || input == "procedure" || input == "else";
+    return input == Tokens::KEYWORD_READ || input == Tokens::KEYWORD_PRINT ||
+           input == Tokens::KEYWORD_CALL || input == Tokens::KEYWORD_WHILE ||
+           input == Tokens::KEYWORD_IF || input == Tokens::KEYWORD_THEN ||
+           input == Tokens::KEYWORD_PROCEDURE || input == Tokens::KEYWORD_ELSE;
 }
 
 bool Lexer::isAssignStmt(vector<string> content) {
-    return find(content.begin(), content.end(), "=") != content.end();
+    return find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN) != content.end();
 }
 
 bool Lexer::isStmt(vector<string> content) {
-    return (
-        (content.front() != "}" && content.front() != "else" && content.front() != "procedure") ||
-        (isAssignStmt(content)));
+    return ((content.front() != Tokens::SYMBOL_CLOSE_BRACE &&
+             content.front() != Tokens::KEYWORD_ELSE &&
+             content.front() != Tokens::KEYWORD_PROCEDURE) ||
+            (isAssignStmt(content)));
 }
 
 // special symbols
 
 bool Lexer::isOperator(char input) { // logical, comparison, artihmetic and
                                      // assignment (they all overlap)
-    return input == '&' || input == '|' || input == '!' || input == '>' || input == '<' ||
-           input == '=' || input == '+' || input == '-' || input == '*' || input == '/' ||
-           input == '%';
+    return input == Tokens::CHAR_AMPERSAND || input == Tokens::CHAR_BAR ||
+           input == Tokens::CHAR_NOT || input == Tokens::CHAR_GREATER_THAN ||
+           input == Tokens::CHAR_LESS_THAN || input == Tokens::CHAR_ASSIGN ||
+           input == Tokens::CHAR_PLUS || input == Tokens::CHAR_MINUS ||
+           input == Tokens::CHAR_MULTIPLY || input == Tokens::CHAR_DIVIDE ||
+           input == Tokens::CHAR_MODULO;
 }
 
 bool Lexer::isBracket(char input) {
-    return input == '(' || input == ')' || input == '{' || input == '}';
+    return input == Tokens::CHAR_OPEN_BRACKET || input == Tokens::CHAR_CLOSE_BRACKET ||
+           input == Tokens::CHAR_OPEN_BRACE || input == Tokens::CHAR_CLOSE_BRACE;
 }
 
-bool Lexer::isSemiColon(char input) { return input == ';'; }
+bool Lexer::isSemiColon(char input) { return input == Tokens::CHAR_SEMICOLON; }
 
-bool Lexer::isCurlyBracket(string input) { return input == "{" || input == "}"; }
+bool Lexer::isCurlyBracket(string input) {
+    return input == Tokens::SYMBOL_OPEN_BRACE || input == Tokens::SYMBOL_CLOSE_BRACE;
+}
 
-bool Lexer::isSemiColon(string input) { return input == ";"; }
+bool Lexer::isSemiColon(string input) { return input == Tokens::SYMBOL_SEMICOLON; }

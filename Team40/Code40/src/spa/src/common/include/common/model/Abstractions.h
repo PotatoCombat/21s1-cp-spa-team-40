@@ -18,8 +18,6 @@ const string WILDCARD = "_";
 
 typedef vector<string> ExpressionList;
 
-template<class T> struct Comparator {
-    bool operator()(const T* lhs, const T* rhs) const {
-        return *lhs < *rhs;
-    }
+template <class T> struct Comparator {
+    bool operator()(const T *lhs, const T *rhs) const { return *lhs < *rhs; }
 };

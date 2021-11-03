@@ -2,12 +2,12 @@
 #include <algorithm>
 
 PrintStatementParser::PrintStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
-    stmt = new Statement(index, StatementType::PRINT);
+    : EntityParser(content, index) {
+    entity = new Statement(index, StatementType::PRINT);
 };
 
-Statement *PrintStatementParser::parsePrintStatement() {
-    vector<string>::iterator printItr = find(content.begin(), content.end(), "print");
+Statement *PrintStatementParser::parseEntity() {
+    vector<string>::iterator printItr = find(content.begin(), content.end(), Tokens::KEYWORD_PRINT);
     if (next(printItr) == content.end()) {
         throw invalid_argument("invalid print statement");
     }
@@ -15,24 +15,14 @@ Statement *PrintStatementParser::parsePrintStatement() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    // print: 'print' var_name';'
+    // print: 'print' var_nameTokens::CHAR_SEMICOLON
     if (next(next(printItr)) == content.end()) {
         throw invalid_argument("invalid print statement");
     }
-    if (*next(next(printItr)) != ";") {
+    if (*next(next(printItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid print statement");
     }
-    auto variable = new Variable(var_name);
-    stmt->setVariable(variable);
-    return stmt;
-}
-
-bool PrintStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
+    Variable *variable = new Variable(var_name);
+    entity->setVariable(variable);
+    return entity;
 }
