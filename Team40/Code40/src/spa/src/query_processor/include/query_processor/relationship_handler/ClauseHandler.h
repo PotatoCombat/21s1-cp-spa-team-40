@@ -11,11 +11,13 @@
 
 #include "query_processor/Result.h"
 #include "query_processor/model/Clause.h"
-#include "query_processor/model/Reference.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
+#include "query_processor/model/Reference.h"
 
 class ClauseHandler {
 protected:
+    const int DUMMY_STMT_THRESHOLD = 1000;
+
     Clause *clause;
     PKB *pkb;
     set<DesignEntityType> *validDesType1;
@@ -49,14 +51,19 @@ protected:
     Result evalSynConst();
     Result evalConstSyn();
     Result evalNotConstNotConst();
-    
+
     Result evalSameSyn();
-    void setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef, bool isFirstRef);
+    void setResultListForOneRef(Result &result, Reference *thisRef,
+                                Reference *otherRef, bool isFirstRef);
+
+    [[nodiscard]] inline bool isDummyStmt(ProgLineIndex progLineIndex) const {
+        return progLineIndex >= DUMMY_STMT_THRESHOLD;
+    }
 
 public:
     // evaluates the clause and writes the answer to the result object
     // Result invalid = false only happens when neither of the references is
     // synonym
     virtual Result eval();
-    static set<string> getAll(PKB* pkb, Reference ref);
+    static set<string> getAll(PKB *pkb, Reference ref);
 };
