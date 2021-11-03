@@ -1,6 +1,9 @@
 #include <string>
 #include <vector>
 
+#include "TestUtils.h"
+#include "TestPKBUtils.h"
+
 #include "pkb/PKB.h"
 
 #include "catch.hpp"
@@ -65,7 +68,7 @@ TEST_CASE("PKB: insertVar/getAllVars") {
 
     REQUIRE(actual.size() == vars.size());
     for (auto &v : vars) {
-        REQUIRE(matches.count(v.getName()) == 1);
+        REQUIRE(matches.count(v.getId()) == 1);
     }
 }
 
@@ -82,7 +85,7 @@ TEST_CASE("PKB: insertConst/getAllConsts") {
 
     REQUIRE(actual.size() == constants.size());
     for (auto &c : constants) {
-        REQUIRE(matches.count(c.getName()) == 1);
+        REQUIRE(matches.count(c.getId()) == 1);
     }
 }
 
@@ -99,7 +102,7 @@ TEST_CASE("PKB: insertProcs/getAllProcs") {
 
     REQUIRE(actual.size() == procs.size());
     for (auto &p : procs) {
-        REQUIRE(matches.count(p.getName()) == 1);
+        REQUIRE(matches.count(p.getId()) == 1);
     }
 }
 
@@ -116,7 +119,7 @@ TEST_CASE("PKB: insertStmt/getAllStmts") {
 
     REQUIRE(actual.size() == stmts.size());
     for (auto &s : stmts) {
-        REQUIRE(matches.count(s.getIndex()) == 1);
+        REQUIRE(matches.count(s.getId()) == 1);
     }
 }
 
@@ -193,4 +196,99 @@ TEST_CASE("Can handle transitive Follows") {
 
     REQUIRE(follow3 == -1);
     REQUIRE(followStar3.empty());
+}
+
+TEST_CASE("PKB: partialAssignPattern (with insertAssignPattern)") {
+    PKB pkb;
+
+    Statement stmt = TestUtils::createAssignStmt(
+            2, "x", TestPKBUtils::EXPRESSION_2);
+
+    pkb.insertStmt(&stmt);
+    pkb.insertAssignPattern(&stmt);
+
+    StmtIndex stmtIndex = stmt.getId();
+    VarName varName = stmt.getVariable()->getId();
+
+    for (auto &query : TestPKBUtils::QUERIES_2) {
+        auto exprList = TestUtils::tokenizePattern(query);
+        REQUIRE(pkb.partialAssignPattern(stmtIndex, WILDCARD, exprList));
+        REQUIRE(pkb.partialAssignPattern(stmtIndex, varName, exprList));
+    }
+    REQUIRE(pkb.partialAssignPattern(stmtIndex, varName, TestPKBUtils::WILDCARD_EXPRLIST));
+}
+
+TEST_CASE("PKB: exactAssignPattern (with insertAssignPattern)") {
+    PKB pkb;
+
+    Statement stmt = TestUtils::createAssignStmt(
+            1, "small", TestPKBUtils::EXPRESSION_1);
+
+    pkb.insertStmt(&stmt);
+    pkb.insertAssignPattern(&stmt);
+
+    StmtIndex stmtIndex = stmt.getId();
+    VarName varName = stmt.getVariable()->getId();
+
+    REQUIRE(pkb.exactAssignPattern(stmtIndex, WILDCARD, TestPKBUtils::INFIX_1));
+    REQUIRE(pkb.exactAssignPattern(stmtIndex, varName, TestPKBUtils::INFIX_1));
+    REQUIRE(pkb.exactAssignPattern(stmtIndex, varName, TestPKBUtils::WILDCARD_EXPRLIST));
+}
+
+TEST_CASE("PKB: getPartialAssignPatternStmts (with insertAssignPattern)") {
+    PKB pkb;
+
+    Statement stmt = TestUtils::createAssignStmt(
+            1, "x", TestPKBUtils::EXPRESSION_2);
+
+    pkb.insertStmt(&stmt);
+    pkb.insertAssignPattern(&stmt);
+
+    StmtIndex stmtIndex = stmt.getId();
+    VarName varName = stmt.getVariable()->getId();
+
+    set<StmtIndex> stmts;
+
+    for (auto &query : TestPKBUtils::QUERIES_2) {
+        auto exprList = TestUtils::tokenizePattern(query);
+
+        stmts = pkb.getPartialAssignPatternStmts(WILDCARD, exprList);
+        REQUIRE(stmts.size() == 1);
+        REQUIRE(stmts.count(stmtIndex) == 1);
+
+        stmts = pkb.getPartialAssignPatternStmts(varName, exprList);
+        REQUIRE(stmts.size() == 1);
+        REQUIRE(stmts.count(stmtIndex) == 1);
+    }
+
+    stmts = pkb.getPartialAssignPatternStmts(varName, TestPKBUtils::WILDCARD_EXPRLIST);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
+}
+
+TEST_CASE("PKB: getExactAssignPatternStmts (with insertAssignPattern)") {
+    PKB pkb;
+
+    Statement stmt = TestUtils::createAssignStmt(
+            1, "x", TestPKBUtils::EXPRESSION_2);
+
+    pkb.insertStmt(&stmt);
+    pkb.insertAssignPattern(&stmt);
+
+    StmtIndex stmtIndex = stmt.getId();
+    VarName varName = stmt.getVariable()->getId();
+
+    set<StmtIndex> stmts;
+
+    stmts = pkb.getExactAssignPatternStmts(WILDCARD, TestPKBUtils::INFIX_2);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
+
+    stmts = pkb.getExactAssignPatternStmts(varName, TestPKBUtils::INFIX_2);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
+
+    stmts = pkb.getExactAssignPatternStmts(varName, TestPKBUtils::WILDCARD_EXPRLIST);
+    REQUIRE(stmts.size() == 1);
+    REQUIRE(stmts.count(stmtIndex) == 1);
 }

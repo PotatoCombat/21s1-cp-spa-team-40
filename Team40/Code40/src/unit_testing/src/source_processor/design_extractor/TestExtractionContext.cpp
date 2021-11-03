@@ -32,7 +32,7 @@ TEST_CASE("TestExtractionContext") {
         REQUIRE(ExtractionContext::getInstance()
                     .getCurrentProcedure()
                     .value()
-                    ->getName() == PROC_NAME);
+                    ->getId() == PROC_NAME);
     }
 
     SECTION("Correctly sets and unsets statements") {

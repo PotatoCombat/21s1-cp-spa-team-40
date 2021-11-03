@@ -3,6 +3,8 @@
 #include <set>
 #include <string>
 
+#include "query_processor/exception/ClauseHandlerError.h"
+
 #include "query_processor/relationship_handler/ClauseHandler.h"
 
 class WithHandler : public ClauseHandler {

@@ -1,22 +1,20 @@
 #include "pkb/PKB.h"
 
-#include <utility>
-
 using namespace std;
 
-Procedure *PKB::getProcByName(ProcName procName) {
-    return procTable.getEntity(move(procName));
+Procedure *PKB::getProcByName(const ProcName &procName) {
+    return procTable.getEntity(procName);
 }
 
-Variable *PKB::getVarByName(VarName varName) {
-    return varTable.getEntity(move(varName));
+Variable *PKB::getVarByName(const VarName &varName) {
+    return varTable.getEntity(varName);
 }
 
-ConstantValue *PKB::getConstByName(ConstName constName) {
-    return constTable.getEntity(move(constName));
+ConstantValue *PKB::getConstByName(const ConstName &constName) {
+    return constTable.getEntity(constName);
 }
 
-Statement *PKB::getStmtByIndex(StmtIndex stmtIndex) {
+Statement *PKB::getStmtByIndex(const StmtIndex &stmtIndex) {
     return statementTable.getStmt(stmtIndex);
 }
 
@@ -34,108 +32,138 @@ void PKB::insertConst(ConstantValue *constant) {
     return constTable.insert(constant);
 }
 
-StmtIndex PKB::insertStmt(Statement *statement) {
+void PKB::insertStmt(Statement *statement) {
     return statementTable.insert(statement);
 }
 
-void PKB::insertFollows(Statement *precedingStmt, Statement *followingStmt) {
-    followsTable.insertFollows(precedingStmt, followingStmt);
-    followsStarTable.insertFollowsStar(precedingStmt, followingStmt);
+void PKB::insertFollows(Statement *preceding, Statement *following) {
+    followsTable.insertRelationship(preceding->getId(), following->getId());
+    followsStarTable.insertRelationship(preceding->getId(), following->getId());
+    followsStarTable.updateTransitivity(preceding->getId(), following->getId());
 }
 
-void PKB::insertParent(Statement *parentStmt, Statement *childStmt) {
-    parentTable.insertParent(parentStmt, childStmt);
-    parentStarTable.insertParentStar(parentStmt, childStmt);
+void PKB::insertParent(Statement *parent, Statement *child) {
+    parentTable.insertRelationship(parent->getId(), child->getId());
+    parentStarTable.insertRelationship(parent->getId(), child->getId());
+    parentStarTable.updateTransitivity(parent->getId(), child->getId());
 }
 
 void PKB::insertProcModifyingVar(Procedure *proc, Variable *var) {
-    modifiesTable.insertProcModifyingVar(proc, var);
+    modifiesProcTable.insertRelationship(proc->getId(), var->getId());
 }
 
 void PKB::insertStmtModifyingVar(Statement *stmt, Variable *var) {
-    modifiesTable.insertStmtModifyingVar(stmt, var);
+    modifiesStmtTable.insertRelationship(stmt->getId(), var->getId());
 }
 
 void PKB::insertProcUsingVar(Procedure *proc, Variable *var) {
-    usesTable.insertProcUsingVar(proc, var);
+    usesProcTable.insertRelationship(proc->getId(), var->getId());
 }
 
 void PKB::insertStmtUsingVar(Statement *stmt, Variable *var) {
-    usesTable.insertStmtUsingVar(stmt, var);
+    usesStmtTable.insertRelationship(stmt->getId(), var->getId());
 }
 
-void PKB::insertCalls(Procedure *proc, ProcName called) {
-    callsTable.insertCalls(proc, called);
-    callsStarTable.insertCallsStar(proc, called);
+void PKB::insertCalls(Procedure *proc, const ProcName &called) {
+    callsTable.insertRelationship(proc->getId(), called);
+    callsStarTable.insertRelationship(proc->getId(), called);
+    callsStarTable.updateTransitivity(proc->getId(), called);
 }
 
-void PKB::insertNext(Statement *previousStmt, Statement *nextStmt) {
-    nextTable.insertNext(previousStmt, nextStmt);
+void PKB::insertNext(Statement *previous, Statement *next) {
+    nextTable.insertRelationship(previous->getId(), next->getId());
 }
 
-void PKB::insertNextBip(Statement *previousStmt, Statement *nextStmt) {
-    nextBipTable.insertNextBip(previousStmt, nextStmt);
+void PKB::insertNextBip(Statement *previous, Statement *next) {
+    nextBipTable.insertRelationship(previous->getId(), next->getId());
 }
 
-void PKB::insertPatternAssign(Statement *stmt) {
-    patternTable.insertAssignPattern(stmt);
+void PKB::insertAssignPattern(Statement *stmt) {
+    StmtIndex stmtIndex = stmt->getId();
+    VarName varName = stmt->getVariable()->getId();
+
+    PostfixAdapter postfix = PostfixAdapter(stmt->getExpressionLst());
+    set<string> partialPatterns = postfix.createPartialPatterns();
+    string exactPattern = postfix.createExactPattern();
+
+    for (auto &pattern : partialPatterns) {
+        partialAssignPatternTable.insertRelationship(
+                stmtIndex,AssignPattern { WILDCARD, pattern });
+        partialAssignPatternTable.insertRelationship(
+                stmtIndex,AssignPattern { varName, pattern });
+    }
+    partialAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, WILDCARD });
+
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { WILDCARD, exactPattern });
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, exactPattern });
+    exactAssignPatternTable.insertRelationship(
+            stmtIndex,AssignPattern { varName, WILDCARD });
 }
 
 void PKB::insertIfPattern(Statement *stmt) {
-    conditionTable.insertIfPattern(stmt);
+    for (auto &var : stmt->getExpressionVars()) {
+        ifPatternTable.insertRelationship(stmt->getId(), var->getId());
+    }
+    ifPatternTable.insertRelationship(stmt->getId(), WILDCARD);
 }
 
 void PKB::insertWhilePattern(Statement *stmt) {
-    conditionTable.insertWhilePattern(stmt);
+    for (auto &var : stmt->getExpressionVars()) {
+        whilePatternTable.insertRelationship(stmt->getId(), var->getId());
+    }
+    whilePatternTable.insertRelationship(stmt->getId(), WILDCARD);
 }
 
 void PKB::insertBranchIn(Statement *fromStmt, Statement *toStmt) {
-    branchInTable.insertBranchIn(fromStmt, toStmt);
+    branchInTable.insertRelationship(fromStmt->getId(), toStmt->getId());
 }
 
 void PKB::insertBranchBack(Statement *fromStmt, Statement *toStmt) {
-    branchBackTable.insertBranchBack(fromStmt, toStmt);
+    branchBackTable.insertRelationship(fromStmt->getId(), toStmt->getId());
 }
 
 // =============================================================================
 // Query Processor
 // =============================================================================
 
-Iterator<ProcName> PKB::getAllProcs() { return procTable.getNames(); }
+Iterator<ProcName> PKB::getAllProcs() { return procTable.getIds(); }
 
-Iterator<VarName> PKB::getAllVars() { return varTable.getNames(); }
+Iterator<VarName> PKB::getAllVars() { return varTable.getIds(); }
 
-Iterator<ConstName> PKB::getAllConsts() { return constTable.getNames(); }
+Iterator<ConstName> PKB::getAllConsts() { return constTable.getIds(); }
 
 Iterator<StmtIndex> PKB::getAllStmts() { return statementTable.getIndices(); }
 
-Iterator<StmtIndex> PKB::getAllStmts(StatementType type) {
+Iterator<StmtIndex> PKB::getAllStmts(const StatementType &type) {
     return statementTable.getIndices(type);
 }
 
-StatementType PKB::getStmtType(StmtIndex stmt) {
+StatementType PKB::getStmtType(const StmtIndex &stmt) {
     return statementTable.getStmtType(stmt);
 }
 
-VarName PKB::getPrintVariable(StmtIndex printStmt) {
+VarName PKB::getPrintVariable(const StmtIndex &printStmt) {
     auto stmt = statementTable.getStmt(printStmt);
     if (stmt->getStatementType() != StatementType::PRINT) {
         throw runtime_error(
             "This statement number does not refer to a print statement.");
     }
-    return stmt->getVariable()->getName();
+    return stmt->getVariable()->getId();
 }
 
-VarName PKB::getReadVariable(StmtIndex readStmt) {
+VarName PKB::getReadVariable(const StmtIndex &readStmt) {
     auto stmt = statementTable.getStmt(readStmt);
     if (stmt->getStatementType() != StatementType::READ) {
         throw runtime_error(
             "This statement number does not refer to a read statement.");
     }
-    return stmt->getVariable()->getName();
+    return stmt->getVariable()->getId();
 }
 
-ProcName PKB::getCallProcedure(StmtIndex callStmt) {
+ProcName PKB::getCallProcedure(const StmtIndex &callStmt) {
     auto stmt = statementTable.getStmt(callStmt);
     if (stmt->getStatementType() != StatementType::CALL) {
         throw runtime_error(
@@ -146,220 +174,232 @@ ProcName PKB::getCallProcedure(StmtIndex callStmt) {
 
 // Follows =====================================================================
 
-StmtIndex PKB::getFollowingStmt(StmtIndex stmt) {
-    return followsTable.getFollowingStmt(stmt);
+StmtIndex PKB::getFollowingStmt(const StmtIndex &stmt) {
+    return followsTable.getFirstRHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getFollowingStarStmts(StmtIndex stmt) {
-    return followsStarTable.getFollowingStarStmts(stmt);
+set<StmtIndex> PKB::getFollowingStarStmts(const StmtIndex &stmt) {
+    return followsStarTable.getRHSRelationships(stmt);
 }
 
-StmtIndex PKB::getPrecedingStmt(StmtIndex stmt) {
-    return followsTable.getPrecedingStmt(stmt);
+StmtIndex PKB::getPrecedingStmt(const StmtIndex &stmt) {
+    return followsTable.getFirstLHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getPrecedingStarStmts(StmtIndex stmt) {
-    return followsStarTable.getPrecedingStarStmts(stmt);
+set<StmtIndex> PKB::getPrecedingStarStmts(const StmtIndex &stmt) {
+    return followsStarTable.getLHSRelationships(stmt);
 }
 
-bool PKB::follows(StmtIndex precedingStmt, StmtIndex followingStmt) {
-    return followsTable.follows(precedingStmt, followingStmt);
+bool PKB::follows(const StmtIndex &preceding, const StmtIndex &following) {
+    return followsTable.isRelationship(preceding, following);
 }
 
-bool PKB::followsStar(StmtIndex precedingStmt, StmtIndex followingStmt) {
-    return followsStarTable.followsStar(precedingStmt, followingStmt);
+bool PKB::followsStar(const StmtIndex &preceding, const StmtIndex &following) {
+    return followsStarTable.isRelationship(preceding, following);
 }
 
 // Parent ======================================================================
 
-StmtIndex PKB::getParentStmt(StmtIndex stmt) {
-    return parentTable.getParentStmt(stmt);
+StmtIndex PKB::getParentStmt(const StmtIndex &stmt) {
+    return parentTable.getFirstLHSRelationship(stmt, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getParentStarStmts(StmtIndex stmt) {
-    return parentStarTable.getParentStarStmts(stmt);
+set<StmtIndex> PKB::getParentStarStmts(const StmtIndex &stmt) {
+    return parentStarTable.getLHSRelationships(stmt);
 }
 
-set<StmtIndex> PKB::getChildStmts(StmtIndex stmt) {
-    return parentTable.getChildStmts(stmt);
+set<StmtIndex> PKB::getChildStmts(const StmtIndex &stmt) {
+    return parentTable.getRHSRelationships(stmt);
 }
 
-set<StmtIndex> PKB::getChildStarStmts(StmtIndex stmt) {
-    return parentStarTable.getChildStarStmts(stmt);
+set<StmtIndex> PKB::getChildStarStmts(const StmtIndex &stmt) {
+    return parentStarTable.getRHSRelationships(stmt);
 }
 
-bool PKB::parent(StmtIndex parentStmt, StmtIndex childStmt) {
-    return parentTable.parent(parentStmt, childStmt);
+bool PKB::parent(const StmtIndex &parent, const StmtIndex &child) {
+    return parentTable.isRelationship(parent, child);
 }
 
-bool PKB::parentStar(StmtIndex parentStmt, StmtIndex childStmt) {
-    return parentStarTable.parentStar(parentStmt, childStmt);
+bool PKB::parentStar(const StmtIndex &parent, const StmtIndex &child) {
+    return parentStarTable.isRelationship(parent, child);
 }
 
 // Modifies ====================================================================
 
-set<ProcName> PKB::getProcsModifyingVar(VarName var) {
-    return modifiesTable.getProcsModifyingVar(var);
+set<ProcName> PKB::getProcsModifyingVar(const VarName &var) {
+    return modifiesProcTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getStmtsModifyingVar(VarName var) {
-    return modifiesTable.getStmtsModifyingVar(var);
+set<StmtIndex> PKB::getStmtsModifyingVar(const VarName &var) {
+    return modifiesStmtTable.getLHSRelationships(var);
 }
 
-set<VarName> PKB::getVarsModifiedByProc(ProcName proc) {
-    return modifiesTable.getVarsModifiedByProc(proc);
+set<VarName> PKB::getVarsModifiedByProc(const ProcName &proc) {
+    return modifiesProcTable.getRHSRelationships(proc);
 }
 
-set<VarName> PKB::getVarsModifiedByStmt(StmtIndex stmt) {
-    return modifiesTable.getVarsModifiedByStmt(stmt);
+set<VarName> PKB::getVarsModifiedByStmt(const StmtIndex &stmt) {
+    return modifiesStmtTable.getRHSRelationships(stmt);
 }
 
-bool PKB::procModifies(ProcName proc, VarName var) {
-    return modifiesTable.procModifies(proc, var);
+bool PKB::procModifies(const ProcName &proc, const VarName &var) {
+    return modifiesProcTable.isRelationship(proc, var);
 }
 
-bool PKB::stmtModifies(StmtIndex stmt, VarName var) {
-    return modifiesTable.stmtModifies(stmt, var);
+bool PKB::stmtModifies(const StmtIndex &stmt, const VarName &var) {
+    return modifiesStmtTable.isRelationship(stmt, var);
 }
 
 // Uses ========================================================================
 
-set<ProcName> PKB::getProcsUsingVar(VarName var) {
-    return usesTable.getProcsUsingVar(var);
+set<ProcName> PKB::getProcsUsingVar(const VarName &var) {
+    return usesProcTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getStmtsUsingVar(VarName var) {
-    return usesTable.getStmtsUsingVar(var);
+set<StmtIndex> PKB::getStmtsUsingVar(const VarName &var) {
+    return usesStmtTable.getLHSRelationships(var);
 }
 
-set<VarName> PKB::getVarsUsedByProc(ProcName proc) {
-    return usesTable.getVarsUsedByProc(proc);
+set<VarName> PKB::getVarsUsedByProc(const ProcName &proc) {
+    return usesProcTable.getRHSRelationships(proc);
 }
 
-set<VarName> PKB::getVarsUsedByStmt(StmtIndex stmt) {
-    return usesTable.getVarsUsedByStmt(stmt);
+set<VarName> PKB::getVarsUsedByStmt(const StmtIndex &stmt) {
+    return usesStmtTable.getRHSRelationships(stmt);
 }
 
-bool PKB::procUses(ProcName proc, VarName var) {
-    return usesTable.procUses(proc, var);
+bool PKB::procUses(const ProcName &proc, const VarName &var) {
+    return usesProcTable.isRelationship(proc, var);
 }
 
-bool PKB::stmtUses(StmtIndex stmt, VarName var) {
-    return usesTable.stmtUses(stmt, var);
+bool PKB::stmtUses(const StmtIndex &stmt, const VarName &var) {
+    return usesStmtTable.isRelationship(stmt, var);
 }
 
 // Calls =======================================================================
 
-set<ProcName> PKB::getCalledProcs(ProcName caller) {
-    return callsTable.getCalledProcs(caller);
+set<ProcName> PKB::getCalledProcs(const ProcName &caller) {
+    return callsTable.getRHSRelationships(caller);
 }
 
-set<ProcName> PKB::getCalledStarProcs(ProcName caller) {
-    return callsStarTable.getCalledStarProcs(caller);
+set<ProcName> PKB::getCalledStarProcs(const ProcName &caller) {
+    return callsStarTable.getRHSRelationships(caller);
 }
 
-set<ProcName> PKB::getCallerProcs(ProcName called) {
-    return callsTable.getCallerProcs(called);
+set<ProcName> PKB::getCallerProcs(const ProcName &called) {
+    return callsTable.getLHSRelationships(called);
 }
 
-set<ProcName> PKB::getCallerStarProcs(ProcName called) {
-    return callsStarTable.getCallerStarProcs(called);
+set<ProcName> PKB::getCallerStarProcs(const ProcName &called) {
+    return callsStarTable.getLHSRelationships(called);
 }
 
-bool PKB::calls(ProcName caller, ProcName called) {
-    return callsTable.calls(caller, called);
+bool PKB::calls(const ProcName &caller, const ProcName &called) {
+    return callsTable.isRelationship(caller, called);
 }
 
-bool PKB::callsStar(ProcName caller, ProcName called) {
-    return callsStarTable.callsStar(caller, called);
+bool PKB::callsStar(const ProcName &caller, const ProcName &called) {
+    return callsStarTable.isRelationship(caller, called);
 }
 
 // Next ========================================================================
 
-set<StmtIndex> PKB::getNextLines(ProgLineIndex line) {
-    return nextTable.getNextLines(line);
+set<StmtIndex> PKB::getNextLines(const ProgLineIndex &line) {
+    return nextTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getPreviousLines(ProgLineIndex line) {
-    return nextTable.getPreviousLines(line);
+set<StmtIndex> PKB::getPreviousLines(const ProgLineIndex &line) {
+    return nextTable.getLHSRelationships(line);
 }
 
-bool PKB::next(ProgLineIndex previousLine, ProgLineIndex nextLine) {
-    return nextTable.next(previousLine, nextLine);
+bool PKB::next(const ProgLineIndex &previousLine, const ProgLineIndex &nextLine) {
+    return nextTable.isRelationship(previousLine, nextLine);
 }
 
 // NextBip =====================================================================
 
-set<StmtIndex> PKB::getNextBipLines(ProgLineIndex line) {
-    return nextBipTable.getNextBipLines(line);
+set<StmtIndex> PKB::getNextBipLines(const ProgLineIndex &line) {
+    return nextBipTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getPreviousBipLines(ProgLineIndex line) {
-    return nextBipTable.getPreviousBipLines(line);
+set<StmtIndex> PKB::getPreviousBipLines(const ProgLineIndex &line) {
+    return nextBipTable.getLHSRelationships(line);
 }
 
-bool PKB::nextBip(ProgLineIndex previousLine, ProgLineIndex nextLine) {
-    return nextBipTable.nextBip(previousLine, nextLine);
+bool PKB::nextBip(const ProgLineIndex &previousLine, const ProgLineIndex &nextLine) {
+    return nextBipTable.isRelationship(previousLine, nextLine);
 }
 
-StmtIndex PKB::getBranchInToLine(ProgLineIndex line) {
-    return branchInTable.getBranchInToStmt(line);
+ProgLineIndex PKB::getBranchInToLine(const ProgLineIndex &line) {
+    return branchInTable.getFirstRHSRelationship(line, InvalidIndex);
 }
 
-set<StmtIndex> PKB::getBranchInFromLines(ProgLineIndex line) {
-    return branchInTable.getBranchInFromStmts(line);
+set<ProgLineIndex> PKB::getBranchInFromLines(const ProgLineIndex &line) {
+    return branchInTable.getLHSRelationships(line);
 }
 
-bool PKB::branchIn(ProgLineIndex fromLine, ProgLineIndex toLine) {
-    return branchInTable.branchIn(fromLine, toLine);
+bool PKB::branchIn(const ProgLineIndex &from, const ProgLineIndex &to) {
+    return branchInTable.isRelationship(from, to);
 }
 
-set<StmtIndex> PKB::getBranchBackToLines(ProgLineIndex line) {
-    return branchBackTable.getBranchBackToStmts(line);
+set<ProgLineIndex> PKB::getBranchBackToLines(const ProgLineIndex &line) {
+    return branchBackTable.getRHSRelationships(line);
 }
 
-set<StmtIndex> PKB::getBranchBackFromLines(ProgLineIndex line) {
-    return branchBackTable.getBranchBackFromStmts(line);
+set<ProgLineIndex> PKB::getBranchBackFromLines(const ProgLineIndex &line) {
+    return branchBackTable.getLHSRelationships(line);
 }
 
-bool PKB::branchBack(ProgLineIndex fromLine, ProgLineIndex toLine) {
-    return branchBackTable.branchBack(fromLine, toLine);
+bool PKB::branchBack(const ProgLineIndex &from, const ProgLineIndex &to) {
+    return branchBackTable.isRelationship(from, to);
 }
 
 // Pattern =====================================================================
 
-set<StmtIndex> PKB::getPartialAssignPatternStmts(VarName var,
-                                                 ExpressionList pattern) {
-    return patternTable.getPartialAssignPatternStmts(var, pattern);
+set<StmtIndex> PKB::getPartialAssignPatternStmts(const VarName &var,
+                                                 const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return partialAssignPatternTable.getLHSRelationships(record);
 }
 
-set<StmtIndex> PKB::getExactAssignPatternStmts(VarName var,
-                                               ExpressionList pattern) {
-    return patternTable.getExactAssignPatternStmts(var, pattern);
+set<StmtIndex> PKB::getExactAssignPatternStmts(const VarName &var,
+                                               const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return exactAssignPatternTable.getLHSRelationships(record);
 }
 
-set<StmtIndex> PKB::getIfPatternStmts(VarName var) {
-    return conditionTable.getIfPatternStmts(var);
+set<StmtIndex> PKB::getIfPatternStmts(const VarName &var) {
+    return ifPatternTable.getLHSRelationships(var);
 }
 
-set<StmtIndex> PKB::getWhilePatternStmts(VarName var) {
-    return conditionTable.getWhilePatternStmts(var);
+set<StmtIndex> PKB::getWhilePatternStmts(const VarName &var) {
+    return whilePatternTable.getLHSRelationships(var);
 }
 
-bool PKB::partialAssignPattern(StmtIndex stmtIndex, VarName var,
-                               ExpressionList pattern) {
-    return patternTable.partialAssignPattern(stmtIndex, var, pattern);
+bool PKB::partialAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
+                               const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return partialAssignPatternTable.isRelationship(stmtIndex, record);
 }
 
-bool PKB::exactAssignPattern(StmtIndex stmtIndex, VarName var,
-                             ExpressionList pattern) {
-    return patternTable.exactAssignPattern(stmtIndex, var, pattern);
+bool PKB::exactAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
+                             const ExpressionList &exprList) {
+    string pattern = PostfixAdapter(exprList).createExactPattern();
+    AssignPattern record = AssignPattern { var, pattern };
+
+    return exactAssignPatternTable.isRelationship(stmtIndex, record);
 }
 
-bool PKB::ifPattern(StmtIndex stmtIndex, VarName var) {
-    return conditionTable.ifPattern(stmtIndex, var);
+bool PKB::ifPattern(const StmtIndex &stmtIndex, const VarName &var) {
+    return ifPatternTable.isRelationship(stmtIndex, var);
 }
 
-bool PKB::whilePattern(StmtIndex stmtIndex, VarName var) {
-    return conditionTable.whilePattern(stmtIndex, var);
+bool PKB::whilePattern(const StmtIndex &stmtIndex, const VarName &var) {
+    return whilePatternTable.isRelationship(stmtIndex, var);
 }

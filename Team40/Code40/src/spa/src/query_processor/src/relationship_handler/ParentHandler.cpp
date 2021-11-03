@@ -11,7 +11,7 @@ ParentHandler::ParentHandler(Clause* clause, PKB* pkb)
 set<string> ParentHandler::getR1ClauseR2(string r2) {
     set<string> res;
     int stmt = pkb->getParentStmt(stoi(r2));
-    if (stmt != -1) {
+    if (stmt != InvalidIndex) {
         res.insert(to_string(stmt));
     }
     return res;

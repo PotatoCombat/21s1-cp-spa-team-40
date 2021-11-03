@@ -6,50 +6,52 @@
 
 WhileStatementParser::WhileStatementParser(vector<string> content, int index,
                                            vector<Line> programLines)
-    : content(content), index(index), programLines(programLines) {
-    stmt = new Statement(index, StatementType::WHILE);
+    : EntityParser(content, index), programLines(programLines) {
+    entity = new Statement(index, StatementType::WHILE);
 };
 
-Statement *WhileStatementParser::parseWhileStatement(int &programIndex) {
-    vector<string>::iterator whileItr = find(content.begin(), content.end(), "while");
-    vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
+Statement *WhileStatementParser::parseEntity(int &programIndex) {
+    vector<string>::iterator whileItr = find(content.begin(), content.end(), Tokens::KEYWORD_WHILE);
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_OPEN_BRACE);
     if (endItr == content.end())
         throw invalid_argument("invalid while statement");
     // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
     if (next(whileItr) == content.end() || prev(endItr) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
-    if (*next(whileItr) != "(" || *prev(endItr) != ")") {
+    if (*next(whileItr) != Tokens::SYMBOL_OPEN_BRACKET ||
+        *prev(endItr) != Tokens::SYMBOL_CLOSE_BRACKET) {
         throw invalid_argument("invalid while statement");
     }
     if (next(next(whileItr)) == content.end()) {
         throw invalid_argument("invalid while statement");
     }
-    ExpressionParser exprParser(vector<string> (next(next(whileItr)), prev(endItr)), stmt);
+    ExpressionParser exprParser(vector<string>(next(next(whileItr)), prev(endItr)), entity);
     vector<string> condLst = exprParser.parseExpression();
-    stmt->setExpressionLst(condLst);
-    parseChildStatements(programIndex);
-    if (stmt->getThenStmtLst().size() == 0) {
+    entity->setExpressionLst(condLst);
+    parseChildStmts(programIndex);
+    if (entity->getThenStmtLst().size() == 0) {
         throw invalid_argument("nested stmtLst should have at least one statement.");
     }
-    return stmt;
+    return entity;
 }
 
-void WhileStatementParser::parseChildStatements(int &programIndex) {
+void WhileStatementParser::parseChildStmts(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         programIndex = i;
-        if (currContent[0] == "}") {
+        if (currContent[0] == Tokens::SYMBOL_CLOSE_BRACE) {
             terminator++;
             break;
         }
         Parser parser;
         if (parser.isStmt(currContent)) {
             StatementParser stmtParser(currContent, currIndex, programLines, i);
-            auto nestedStmt = stmtParser.parseStatement();
-            stmt->addThenStmt(nestedStmt);
+            Statement *nestedStmt = stmtParser.parseEntity();
+            entity->addThenStmt(nestedStmt);
         }
     }
     // ... stmtLst '}'

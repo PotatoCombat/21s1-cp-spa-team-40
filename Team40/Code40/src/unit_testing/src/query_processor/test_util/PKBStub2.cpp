@@ -7,16 +7,16 @@ Iterator<StmtIndex> PKBStub2::getAllStmts() {
     return iter;
 }
 
-StmtIndex PKBStub2::getFollowingStmt(StmtIndex stmt) { return -1; }
+StmtIndex PKBStub2::getFollowingStmt(const StmtIndex &stmt) { return InvalidIndex; }
 
-StmtIndex PKBStub2::getPrecedingStmt(StmtIndex stmt) { return -1; }
+StmtIndex PKBStub2::getPrecedingStmt(const StmtIndex &stmt) { return InvalidIndex; }
 
-bool PKBStub2::follows(StmtIndex stmt1, StmtIndex stmt2) { return false; }
+bool PKBStub2::follows(const StmtIndex &stmt1, const StmtIndex &stmt2) { return false; }
 
-StmtIndex PKBStub2::getParentStmt(StmtIndex stmt) { return -1; }
+StmtIndex PKBStub2::getParentStmt(const StmtIndex &stmt) { return InvalidIndex; }
 
-set<StmtIndex> PKBStub2::getChildStmts(StmtIndex stmt) {
-    return set<StmtIndex>{};
+set<StmtIndex> PKBStub2::getChildStmts(const StmtIndex &stmt) {
+    return { };
 }
 
-bool PKBStub2::parent(StmtIndex stmt1, StmtIndex Stmt2) { return false; }
+bool PKBStub2::parent(const StmtIndex &stmt1, const StmtIndex &stmt2) { return false; }

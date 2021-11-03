@@ -2,12 +2,13 @@
 #include <algorithm>
 
 ReadStatementParser::ReadStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
-    stmt = new Statement(index, StatementType::READ);
+    : EntityParser(content, index) {
+    entity = new Statement(index, StatementType::READ);
 };
 
-Statement *ReadStatementParser::parseReadStatement() {
-    vector<string>::iterator readItr = find(content.begin(), content.end(), "read");
+Statement *ReadStatementParser::parseEntity() {
+    vector<string>::iterator readItr =
+        find(content.begin(), content.end(), Tokens::KEYWORD_READ);
     if (next(readItr) == content.end()) {
         throw invalid_argument("invalid read statement");
     }
@@ -15,24 +16,14 @@ Statement *ReadStatementParser::parseReadStatement() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    // read: 'read' var_name';'
+    // read: 'read' var_nameTokens::CHAR_SEMICOLON
     if (next(next(readItr)) == content.end()) {
         throw invalid_argument("invalid read statement");
     }
-    if (*next(next(readItr)) != ";") {
+    if (*next(next(readItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid read statement");
     }
-    auto var = new Variable(var_name);
-    stmt->setVariable(var);
-    return stmt;
-}
-
-bool ReadStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
+    Variable *var = new Variable(var_name);
+    entity->setVariable(var);
+    return entity;
 }
