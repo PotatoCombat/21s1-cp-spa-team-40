@@ -10,7 +10,7 @@ private:
 public:
     Program();
 
-    void addToProcLst(Procedure* proc);
+    void addToProcLst(Procedure *proc);
 
     vector<Procedure *> getProcLst();
 };

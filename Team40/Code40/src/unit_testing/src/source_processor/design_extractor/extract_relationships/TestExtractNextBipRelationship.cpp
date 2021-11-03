@@ -46,33 +46,33 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts a simple "
     de.extract(&program);
 
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement1.getIndex()) == InvalidIndex);
+                statement1.getId()) == InvalidIndex);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement1.getIndex())
+                .getBranchInFromLines(statement1.getId())
                 .empty());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchBackToLines(statement1.getIndex())
+                .getBranchBackToLines(statement1.getId())
                 .empty());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchBackFromLines(statement1.getIndex())
+                .getBranchBackFromLines(statement1.getId())
                 .empty());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement2.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement2.getId()) == 1);
 
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement2.getIndex()) == InvalidIndex);
+                statement2.getId()) == InvalidIndex);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement2.getIndex())
+                .getBranchInFromLines(statement2.getId())
                 .empty());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchBackToLines(statement2.getIndex())
+                .getBranchBackToLines(statement2.getId())
                 .empty());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchBackFromLines(statement2.getIndex())
+                .getBranchBackFromLines(statement2.getId())
                 .empty());
     // NextBip(
     REQUIRE(TestExtractNextBipRelationship::pkb
@@ -96,7 +96,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts a simple "
     Statement statement3(3, StatementType::READ);
     Variable variable(TestExtractNextBipRelationship::VAR_NAME);
 
-    statement1.setProcName(procedure2.getName());
+    statement1.setProcName(procedure2.getId());
     statement2.setVariable(&variable);
     statement3.setVariable(&variable);
     procedure1.addToStmtLst(&statement1);
@@ -114,22 +114,22 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts a simple "
 
     // NextBip(1, 3)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement3.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement3.getId()) == 1);
 
     // BranchIn from 1 to 3
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement1.getIndex()) == statement3.getIndex());
+                statement1.getId()) == statement3.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement3.getIndex())
-                .count(statement1.getIndex()));
+                .getBranchInFromLines(statement3.getId())
+                .count(statement1.getId()));
 
     // NextBip(3, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement3.getIndex())
@@ -171,9 +171,9 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
     Statement statement4(4, StatementType::READ);
     Variable variable(TestExtractNextBipRelationship::VAR_NAME);
 
-    statement1.setProcName(procedure2.getName());
+    statement1.setProcName(procedure2.getId());
     statement2.setVariable(&variable);
-    statement3.setProcName(procedure3.getName());
+    statement3.setProcName(procedure3.getId());
     statement4.setVariable(&variable);
     procedure1.addToStmtLst(&statement1);
     procedure1.addToStmtLst(&statement2);
@@ -193,22 +193,22 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
 
     // NextBip(1, 3)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement3.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement3.getId()) == 1);
 
     // BranchIn from 1 to 3
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement1.getIndex()) == statement3.getIndex());
+                statement1.getId()) == statement3.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement3.getIndex())
-                .count(statement1.getIndex()));
+                .getBranchInFromLines(statement3.getId())
+                .count(statement1.getId()));
 
     // NextBip(3, 4)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement3.getIndex())
@@ -216,14 +216,14 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
 
     // BranchIn from 3 to 4
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement3.getIndex()) == statement4.getIndex());
+                statement3.getId()) == statement4.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement4.getIndex())
-                .count(statement3.getIndex()));
+                .getBranchInFromLines(statement4.getId())
+                .count(statement3.getId()));
 
     // NextBip(4, t3)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement4.getIndex())
+                .getNextBipLines(statement4.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement4.getIndex())
@@ -281,7 +281,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
     Statement statement5(5, StatementType::READ);
     Variable variable(TestExtractNextBipRelationship::VAR_NAME);
 
-    statement1.setProcName(procedure2.getName());
+    statement1.setProcName(procedure2.getId());
     statement2.setVariable(&variable);
     TestUtil::addConditionalExpression(&statement3);
     statement4.setVariable(&variable);
@@ -320,41 +320,40 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
 
     // NextBip(1, 3)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement3.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement3.getId()) == 1);
 
     // BranchIn from 1 to 3
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement1.getIndex()) == statement3.getIndex());
+                statement1.getId()) == statement3.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement3.getIndex())
-                .count(statement1.getIndex()));
+                .getBranchInFromLines(statement3.getId())
+                .count(statement1.getId()));
 
     // Next(3, 4), NextBip(3, 5)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 2);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
-                .count(statement4.getIndex()) == 1);
+                .getNextBipLines(statement3.getId())
+                .count(statement4.getId()) == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
-                .count(statement5.getIndex()) == 1);
+                .getNextBipLines(statement3.getId())
+                .count(statement5.getId()) == 1);
 
     // NextBip(4, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement4.getIndex())
+                .getNextBipLines(statement4.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement4.getIndex())
                 .count(t2) == 1);
-
     // NextBip(5, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement5.getIndex())
+                .getNextBipLines(statement5.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement5.getIndex())
@@ -394,7 +393,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
     Statement statement3(3, StatementType::READ);
     Variable variable(TestExtractNextBipRelationship::VAR_NAME);
 
-    statement1.setProcName(procedure2.getName());
+    statement1.setProcName(procedure2.getId());
     TestUtil::addConditionalExpression(&statement2);
     statement3.setVariable(&variable);
 
@@ -427,18 +426,18 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
 
     // NextBip(1, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement2.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement2.getId()) == 1);
 
     // BranchIn from 1 to 2
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement1.getIndex()) == statement2.getIndex());
+                statement1.getId()) == statement2.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement2.getIndex())
-                .count(statement1.getIndex()));
+                .getBranchInFromLines(statement2.getId())
+                .count(statement1.getId()));
 
     // NextBip(2, 3), NextBip(2, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
@@ -453,11 +452,11 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
 
     // NextBip(3, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
-                .count(statement2.getIndex()) == 1);
+                .getNextBipLines(statement3.getId())
+                .count(statement2.getId()) == 1);
 
     // BranchBack from t2 to t1
     REQUIRE(
@@ -483,7 +482,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when call "
 
     statement1.setVariable(&variable);
     TestUtil::addConditionalExpression(&statement2);
-    statement3.setProcName(procedure2.getName());
+    statement3.setProcName(procedure2.getId());
     TestUtil::addConditionalExpression(&statement4);
     statement5.setVariable(&variable);
 
@@ -521,11 +520,11 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when call "
 
     // NextBip(1, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement2.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement2.getId()) == 1);
 
     // NextBip(2, 3), NextBip(2, t1)
     REQUIRE(TestExtractNextBipRelationship::pkb
@@ -540,22 +539,22 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when call "
 
     // NextBip(3, 4)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
-                .count(statement4.getIndex()) == 1);
+                .getNextBipLines(statement3.getId())
+                .count(statement4.getId()) == 1);
 
     // BranchIn from 3 to 4
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement3.getIndex()) == statement4.getIndex());
+                statement3.getId()) == statement4.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement4.getIndex())
-                .count(statement3.getIndex()));
+                .getBranchInFromLines(statement4.getId())
+                .count(statement3.getId()));
 
     // NextBip(4, 5), NextBip(4, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement4.getIndex())
+                .getNextBipLines(statement4.getId())
                 .size() == 2);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement4.getIndex())
@@ -566,7 +565,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when call "
 
     // NextBip(5, 4)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement5.getIndex())
+                .getNextBipLines(statement5.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement5.getIndex())
@@ -608,12 +607,12 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
     Variable variable(TestExtractNextBipRelationship::VAR_NAME);
 
     statement1.setVariable(&variable);
-    statement2.setProcName(procedure2.getName());
+    statement2.setProcName(procedure2.getId());
     statement3.setVariable(&variable);
-    statement4.setProcName(procedure3.getName());
+    statement4.setProcName(procedure3.getId());
     statement5.setVariable(&variable);
     statement6.setVariable(&variable);
-    statement7.setProcName(procedure3.getName());
+    statement7.setProcName(procedure3.getId());
     statement8.setVariable(&variable);
     TestUtil::addConditionalExpression(&statement9);
     statement10.setVariable(&variable);
@@ -670,49 +669,49 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
 
     // NextBip(1, 2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
+                .getNextBipLines(statement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement1.getIndex())
-                .count(statement2.getIndex()) == 1);
+                .getNextBipLines(statement1.getId())
+                .count(statement2.getId()) == 1);
 
     // NextBip(2, 6)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement2.getIndex())
+                .getNextBipLines(statement2.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement2.getIndex())
-                .count(statement6.getIndex()) == 1);
+                .getNextBipLines(statement2.getId())
+                .count(statement6.getId()) == 1);
 
     // BranchIn from 2 to 6
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement2.getIndex()) == statement6.getIndex());
+                statement2.getId()) == statement6.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement6.getIndex())
-                .count(statement2.getIndex()));
+                .getBranchInFromLines(statement6.getId())
+                .count(statement2.getId()));
 
     // NextBip(3, 4)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
+                .getNextBipLines(statement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement3.getIndex())
-                .count(statement4.getIndex()) == 1);
+                .getNextBipLines(statement3.getId())
+                .count(statement4.getId()) == 1);
 
     // NextBip(4, 9)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement4.getIndex())
+                .getNextBipLines(statement4.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement4.getIndex())
-                .count(statement9.getIndex()) == 1);
+                .getNextBipLines(statement4.getId())
+                .count(statement9.getId()) == 1);
 
     // BranchIn from 4 to 9
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement4.getIndex()) == statement9.getIndex());
+                statement4.getId()) == statement9.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement9.getIndex())
-                .count(statement4.getIndex()));
+                .getBranchInFromLines(statement9.getId())
+                .count(statement4.getId()));
 
     // NextBip(5, t1)
     REQUIRE(TestExtractNextBipRelationship::pkb
@@ -724,30 +723,30 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
 
     // NextBip(6, 7)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement6.getIndex())
+                .getNextBipLines(statement6.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement6.getIndex())
-                .count(statement7.getIndex()) == 1);
+                .getNextBipLines(statement6.getId())
+                .count(statement7.getId()) == 1);
 
     // NextBip(7, 9)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement7.getIndex())
+                .getNextBipLines(statement7.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement7.getIndex())
-                .count(statement9.getIndex()) == 1);
+                .getNextBipLines(statement7.getId())
+                .count(statement9.getId()) == 1);
 
     // BranchIn from 7 to 9
     REQUIRE(TestExtractNextBipRelationship::pkb.getBranchInToLine(
-                statement7.getIndex()) == statement9.getIndex());
+                statement7.getId()) == statement9.getId());
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getBranchInFromLines(statement9.getIndex())
-                .count(statement7.getIndex()));
+                .getBranchInFromLines(statement9.getId())
+                .count(statement7.getId()));
 
     // NextBip(8, t2)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement8.getIndex())
+                .getNextBipLines(statement8.getId())
                 .size() == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
                 .getNextBipLines(statement8.getIndex())
@@ -771,14 +770,14 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
 
     // NextBip(9, 10), NextBip(9, 11)
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement9.getIndex())
+                .getNextBipLines(statement9.getId())
                 .size() == 2);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement9.getIndex())
-                .count(statement10.getIndex()) == 1);
+                .getNextBipLines(statement9.getId())
+                .count(statement10.getId()) == 1);
     REQUIRE(TestExtractNextBipRelationship::pkb
-                .getNextBipLines(statement9.getIndex())
-                .count(statement11.getIndex()) == 1);
+                .getNextBipLines(statement9.getId())
+                .count(statement11.getId()) == 1);
 
     // NextBip(10, t3)
     REQUIRE(TestExtractNextBipRelationship::pkb

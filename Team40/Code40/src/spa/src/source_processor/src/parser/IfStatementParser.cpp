@@ -4,47 +4,49 @@
 #include <algorithm>
 
 IfStatementParser::IfStatementParser(vector<string> content, int index, vector<Line> programLines)
-    : content(content), index(index), programLines(programLines) {
-    stmt = new Statement(index, StatementType::IF);
+    : EntityParser(content, index), programLines(programLines) {
+    entity = new Statement(index, StatementType::IF);
 };
 
-Statement *IfStatementParser::parseIfStatement(int &programIndex) {
-    vector<string>::iterator ifItr = find(content.begin(), content.end(), "if");
-    vector<string>::iterator endItr = find(content.begin(), content.end(), "{");
+Statement *IfStatementParser::parseEntity(int &programIndex) {
+    vector<string>::iterator ifItr = find(content.begin(), content.end(), Tokens::KEYWORD_IF);
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_OPEN_BRACE);
     if (endItr == content.end())
         throw invalid_argument("invalid if statement");
-    // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
+    // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}
     if (next(ifItr) == content.end() || prev(endItr) == content.end() ||
         prev(prev(endItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
     }
-    if (*next(ifItr) != "(" || *prev(endItr) != "then" || *prev(prev(endItr)) != ")") {
+    if (*next(ifItr) != Tokens::SYMBOL_OPEN_BRACKET || *prev(endItr) != Tokens::KEYWORD_THEN ||
+        *prev(prev(endItr)) != Tokens::SYMBOL_CLOSE_BRACKET) {
         throw invalid_argument("invalid if statement");
     }
     if (next(next(ifItr)) == content.end()) {
         throw invalid_argument("invalid if statement");
     }
-    ExpressionParser exprParser(vector<string> (next(next(ifItr)), prev(prev(endItr))), stmt);
+    ExpressionParser exprParser(vector<string>(next(next(ifItr)), prev(prev(endItr))), entity);
     vector<string> condLst = exprParser.parseExpression();
-    stmt->setExpressionLst(condLst);
-    parseChildStatements(programIndex);
-    if (stmt->getThenStmtLst().size() == 0 || stmt->getElseStmtLst().size() == 0) {
+    entity->setExpressionLst(condLst);
+    parseChildStmts(programIndex);
+    if (entity->getThenStmtLst().size() == 0 || entity->getElseStmtLst().size() == 0) {
         throw invalid_argument("nested stmtLst should have at least one statement.");
     }
-    return stmt;
+    return entity;
 }
 
-void IfStatementParser::parseChildStatements(int &programIndex) {
+void IfStatementParser::parseChildStmts(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {
         int currIndex = programLines[i].getIndex();
         vector<string> currContent = programLines[i].getContent();
         programIndex = i;
-        if (currContent[0] == "}") {
+        if (currContent[0] == Tokens::SYMBOL_CLOSE_BRACE) {
             terminator++;
             // ... stmtLst '}' 'else' '{'stmtLst '}'
-            if (terminator == 1 && programLines[i + 1].getContent()[0] != "else" &&
-                programLines[i + 1].getContent()[1] != "{") {
+            if (terminator == 1 && programLines[i + 1].getContent()[0] != Tokens::KEYWORD_ELSE &&
+                programLines[i + 1].getContent()[1] != Tokens::SYMBOL_OPEN_BRACE) {
                 throw invalid_argument("invalid if statement");
             }
             if (terminator == 2) {
@@ -55,11 +57,11 @@ void IfStatementParser::parseChildStatements(int &programIndex) {
         Parser parser;
         if (parser.isStmt(currContent)) {
             StatementParser stmtParser(currContent, currIndex, programLines, i);
-            auto nestedStmt = stmtParser.parseStatement();
+            Statement *nestedStmt = stmtParser.parseEntity();
             if (terminator == 0) {
-                stmt->addThenStmt(nestedStmt);
+                entity->addThenStmt(nestedStmt);
             } else if (terminator == 1) {
-                stmt->addElseStmt(nestedStmt);
+                entity->addElseStmt(nestedStmt);
             }
         }
     }

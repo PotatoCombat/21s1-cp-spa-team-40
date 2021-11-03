@@ -34,7 +34,7 @@ void NextBipExtractor::extractProcedure(Procedure *procedure) {
 
 void NextBipExtractor::extractStatement(Statement *statement) {
     // If previously extracted, do nothing
-    ProgLineIndex index = statement->getIndex();
+    ProgLineIndex index = statement->getId();
     if (visited.count(index)) {
         return;
     }
@@ -48,7 +48,7 @@ void NextBipExtractor::extractStatement(Statement *statement) {
 
 void NextBipExtractor::extractCallStatement(Statement *callStatement) {
     ProcName calledProcName = callStatement->getProcName();
-    StmtIndex callStmtIndex = callStatement->getIndex();
+    StmtIndex callStmtIndex = callStatement->getId();
 
     auto calledProcFirstExecutableStmt = getFirstExecutableStmt(calledProcName);
     auto calledProcTerminalStmt = terminalStmtsMap[calledProcName];
@@ -70,7 +70,7 @@ void NextBipExtractor::extractNonCallStatement(Statement *statement) {
         extractNonCallTerminalNextBip(statement);
     }
     set<ProgLineIndex> nextStatements =
-        pkb->getNextLines(statement->getIndex());
+        pkb->getNextLines(statement->getId());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
         Statement *nextStatement;
         if (nextStatementIndex >= STARTING_TERMINAL_INDEX) {

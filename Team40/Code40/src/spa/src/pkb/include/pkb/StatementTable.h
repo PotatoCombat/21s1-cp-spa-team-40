@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Iterator.h"
-#include "common/model/Abstractions.h"
-
-
-#include "common/model/Statement.h"
-
 #include <map>
 #include <vector>
+
+#include "Iterator.h"
+#include "common/model/Abstractions.h"
+#include "common/model/Statement.h"
 
 using namespace std;
 
@@ -15,43 +13,57 @@ class StatementTable {
 public:
     StatementTable();
 
-    /// Stores the pointer \param stmt in the table, and indexes the statement.
-    /// \return index of the \param stmt in the table.
-    StmtIndex insert(Statement *stmt);
+    /**
+     * Stores a statement in the table.
+     * @param stmt the pointer to the statement.
+     */
+    void insert(Statement *stmt);
 
-    /// Returns the pointer to the statement stored at \param index in the
-    /// table. \return pointer, or NULL if the table does not contain \param
-    /// index.
-    Statement *getStmt(StmtIndex index);
+    /**
+     * Returns a statement in the table.
+     * @param index the statement number of the statement.
+     * @returns the statement with the given index,
+     *          or InvalidStatement if none exist.
+     */
+    Statement *getStmt(const StmtIndex &index);
 
-    /// Returns the pointer to the statement stored at \param index in the
-    /// table. \return pointer, or NULL if the table does not contain \param
-    /// index.
-    StatementType getStmtType(StmtIndex index);
+    /**
+     * Returns the type of a statement in the table.
+     * @param index the statement number of the statement.
+     * @returns the type of the statement with the given index,
+     *          or StatementType::UNKNOWN if none exist.
+     */
+    StatementType getStmtType(const StmtIndex &index);
 
-    /// Returns the index of \param stmt in the table.
-    /// \return index, or InvalidIndex if the table does not contain \param
-    /// stmt.
-    StmtIndex getIndex(Statement *stmt);
-
-    /// Returns an iterator for all the statement indices stored in the table.
+    /**
+     * Returns a list of statement numbers in the table.
+     */
     Iterator<StmtIndex> getIndices();
 
-    Iterator<StmtIndex> getIndices(StatementType type);
+    /**
+     * Returns a list of statement numbers in the table,
+     * filtered by the given statement type.
+     * @param type the type of the statements to filter.
+     */
+    Iterator<StmtIndex> getIndices(const StatementType &type);
 
-    /// Returns the number of statements stored in the table.
-    int getSize();
+    /**
+     * Returns the number of statements stored in the table.
+     */
+    size_t getSize() const;
 
 private:
-    StmtIndex size = 0;
-    vector<Statement*> statements;
-    vector<StmtIndex> indices;
-    map<Statement *, StmtIndex> statementToIndex;
+    size_t size = 0;
 
-    vector<StmtIndex> assignStatements;
-    vector<StmtIndex> readStatements;
-    vector<StmtIndex> printStatements;
-    vector<StmtIndex> ifStatements;
-    vector<StmtIndex> whileStatements;
-    vector<StmtIndex> callStatements;
+    vector<Statement *> statements;
+    vector<StmtIndex> indices;
+
+    map<StatementType, vector<StmtIndex>> indicesByType = {
+            { StatementType::ASSIGN, { } },
+            { StatementType::READ, { } },
+            { StatementType::PRINT, { } },
+            { StatementType::IF, { } },
+            { StatementType::WHILE, { } },
+            { StatementType::CALL, { } },
+    };
 };

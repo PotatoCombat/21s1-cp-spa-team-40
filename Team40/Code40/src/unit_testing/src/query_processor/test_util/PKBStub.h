@@ -3,50 +3,45 @@
 #include <set>
 #include <vector>
 
-#include "common/model/Abstractions.h"
-#include "pkb/Iterator.h"
 #include "pkb/PKB.h"
-
-#include "common/model/Statement.h"
 
 using namespace std;
 
-// based on the Example procedure in Test40/sample_source
 class PKBStub : public PKB {
 public:
     Iterator<StmtIndex> getAllStmts();
     Iterator<VarName> getAllVars();
     Iterator<ConstName> getAllConsts();
 
-    Iterator<StmtIndex> getAllStmts(StatementType stmtType);
+    Iterator<StmtIndex> getAllStmts(const StatementType &stmtType);
 
-    StatementType getStmtType(StmtIndex stmt);
+    StatementType getStmtType(const StmtIndex &stmt);
 
-    StmtIndex getFollowingStmt(StmtIndex stmt);
-    StmtIndex getPrecedingStmt(StmtIndex stmt);
-    bool follows(StmtIndex stmt1, StmtIndex stmt2);
+    StmtIndex getFollowingStmt(const StmtIndex &stmt);
+    StmtIndex getPrecedingStmt(const StmtIndex &stmt);
+    bool follows(const StmtIndex &stmt1, const StmtIndex &stmt2);
 
-    set<StmtIndex> getFollowingStarStmts(StmtIndex stmt);
-    set<StmtIndex> getPrecedingStarStmts(StmtIndex stmt);
-    bool followsStar(StmtIndex stmt1, StmtIndex stmt2);
+    set<StmtIndex> getFollowingStarStmts(const StmtIndex &stmt);
+    set<StmtIndex> getPrecedingStarStmts(const StmtIndex &stmt);
+    bool followsStar(const StmtIndex &stmt1, const StmtIndex &stmt2);
 
-    StmtIndex getParentStmt(StmtIndex stmt);
-    set<StmtIndex> getChildStmts(StmtIndex stmt);
-    bool parent(StmtIndex stmt1, StmtIndex stmt2);
+    StmtIndex getParentStmt(const StmtIndex &stmt);
+    set<StmtIndex> getChildStmts(const StmtIndex &stmt);
+    bool parent(const StmtIndex &stmt1, const StmtIndex &stmt2);
 
-    set<StmtIndex> getParentStarStmts(StmtIndex stmt);
-    set<StmtIndex> getChildStarStmts(StmtIndex stmt);
-    bool parentStar(StmtIndex stmt1, StmtIndex stmt2);
+    set<StmtIndex> getParentStarStmts(const StmtIndex &stmt);
+    set<StmtIndex> getChildStarStmts(const StmtIndex &stmt);
+    bool parentStar(const StmtIndex &stmt1, const StmtIndex &stmt2);
 
-    set<StmtIndex> getStmtsUsingVar(VarName var);
-    set<VarName> getVarsUsedByStmt(StmtIndex stmt);
-    bool stmtUses(StmtIndex stmt, VarName var);
+    set<StmtIndex> getStmtsUsingVar(const VarName &var);
+    set<VarName> getVarsUsedByStmt(const StmtIndex &stmt);
+    bool stmtUses(const StmtIndex &stmt, const VarName &var);
 
-    set<StmtIndex> getStmtsModifyingVar(VarName var);
-    set<VarName> getVarsModifiedByStmt(StmtIndex stmt);
-    bool stmtModifies(StmtIndex stmt, VarName var);
+    set<StmtIndex> getStmtsModifyingVar(const VarName &var);
+    set<VarName> getVarsModifiedByStmt(const StmtIndex &stmt);
+    bool stmtModifies(const StmtIndex &stmt, const VarName &var);
 
-    VarName getPrintVariable(StmtIndex printStmt);
-    VarName getReadVariable(StmtIndex readStmt);
-    ProcName getCallProcedure(StmtIndex callStmt);
+    VarName getPrintVariable(const StmtIndex &printStmt);
+    VarName getReadVariable(const StmtIndex &readStmt);
+    ProcName getCallProcedure(const StmtIndex &callStmt);
 };

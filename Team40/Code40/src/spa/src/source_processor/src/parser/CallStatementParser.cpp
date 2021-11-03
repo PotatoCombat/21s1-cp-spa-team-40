@@ -2,12 +2,12 @@
 #include <algorithm>
 
 CallStatementParser::CallStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
-    stmt = new Statement(index, StatementType::CALL);
+    : EntityParser(content, index) {
+    entity = new Statement(index, StatementType::CALL);
 };
 
-Statement *CallStatementParser::parseCallStatement() {
-    vector<string>::iterator callItr = find(content.begin(), content.end(), "call");
+Statement *CallStatementParser::parseEntity() {
+    vector<string>::iterator callItr = find(content.begin(), content.end(), Tokens::KEYWORD_CALL);
     if (next(callItr) == content.end()) {
         throw invalid_argument("invalid call statement");
     }
@@ -19,19 +19,9 @@ Statement *CallStatementParser::parseCallStatement() {
     if (next(next(callItr)) == content.end()) {
         throw invalid_argument("invalid call statement");
     }
-    if (*next(next(callItr)) != ";") {
+    if (*next(next(callItr)) != Tokens::SYMBOL_SEMICOLON) {
         throw invalid_argument("invalid call statement");
     }
-    stmt->setProcName(proc_name);
-    return stmt;
-}
-
-bool CallStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
+    entity->setProcName(proc_name);
+    return entity;
 }

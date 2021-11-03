@@ -20,8 +20,8 @@ public:
     vector<string> tokenizeLine(string input);
 
     // helper functions
-    void tokenizeAndAddSymbol(string input, int &index, char curr,
-                              string &currString, vector<string> &inputLine);
+    void tokenizeAndAddSymbol(string input, int &index, char curr, string &currString,
+                              vector<string> &inputLine);
     void tokenizeAndAddKeyword(string input, int &index, string &currString,
                                vector<string> &inputLine);
     string cleanString(string input);

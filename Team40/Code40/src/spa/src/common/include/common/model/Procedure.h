@@ -1,24 +1,26 @@
 #pragma once
 
-#include "common/model/Statement.h"
 #include <string>
 #include <vector>
 
+#include "Abstractions.h"
+#include "Entity.h"
+#include "Statement.h"
+
 using namespace std;
 
-class Procedure {
-private:
-    string name;
-    vector<Statement *> stmtLst;
-
+class Procedure : public Entity<ProcName> {
 public:
-    Procedure(string name);
+    Procedure();
+    explicit Procedure(ProcName name);
 
     void addToStmtLst(Statement *stmt);
 
-    string getName();
-
     vector<Statement *> getStmtLst();
 
+    bool operator<(const Procedure &other) const;
     bool operator==(const Procedure &other) const;
+
+private:
+    vector<Statement *> stmtLst;
 };

@@ -3,12 +3,13 @@
 #include <algorithm>
 
 AssignStatementParser::AssignStatementParser(vector<string> content, int index)
-    : content(content), index(index) {
-    stmt = new Statement(index, StatementType::ASSIGN);
+    : EntityParser(content, index) {
+    entity = new Statement(index, StatementType::ASSIGN);
 };
 
-Statement *AssignStatementParser::parseAssignStatement() {
-    vector<string>::iterator assignItr = find(content.begin(), content.end(), "=");
+Statement *AssignStatementParser::parseEntity() {
+    vector<string>::iterator assignItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN);
     if (assignItr == content.begin()) {
         throw invalid_argument("invalid assign statement");
     }
@@ -16,27 +17,18 @@ Statement *AssignStatementParser::parseAssignStatement() {
     if (!isValidName(var_name)) {
         throw invalid_argument("invalid variable name");
     }
-    auto variable = new Variable(var_name);
-    stmt->setVariable(variable);
+    Variable *variable = new Variable(var_name);
+    entity->setVariable(variable);
 
-    vector<string>::iterator endItr = find(content.begin(), content.end(), ";");
+    vector<string>::iterator endItr =
+        find(content.begin(), content.end(), Tokens::SYMBOL_SEMICOLON);
     if (endItr == content.end())
         throw invalid_argument("invalid assign statement");
     if (next(assignItr) == content.end()) {
         throw invalid_argument("invalid assign statement");
     }
-    ExpressionParser exprParser(vector<string>(next(assignItr), endItr), stmt);
+    ExpressionParser exprParser(vector<string>(next(assignItr), endItr), entity);
     vector<string> exprLst = exprParser.parseExpression();
-    stmt->setExpressionLst(exprLst);
-    return stmt;
-}
-
-bool AssignStatementParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
+    entity->setExpressionLst(exprLst);
+    return entity;
 }

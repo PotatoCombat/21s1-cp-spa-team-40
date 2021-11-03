@@ -1,10 +1,11 @@
 #include "source_processor/parser/ProcedureParser.h"
 #include <algorithm>
 
-ProcedureParser::ProcedureParser(vector<string> content) : content(content) {}
+ProcedureParser::ProcedureParser(vector<string> content) : EntityParser(content, 0) {}
 
-Procedure *ProcedureParser::parseProcedure() {
-    vector<string>::iterator procItr = find(content.begin(), content.end(), "procedure");
+Procedure *ProcedureParser::parseEntity() {
+    vector<string>::iterator procItr =
+        find(content.begin(), content.end(), Tokens::KEYWORD_PROCEDURE);
     if (next(procItr) == content.end()) {
         throw invalid_argument("invalid procedure");
     }
@@ -12,23 +13,13 @@ Procedure *ProcedureParser::parseProcedure() {
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
-    // procedure: 'procedure' proc_name '{' stmtLst '}'
+    // procedure: 'procedure' proc_name Tokens::CHAR_OPEN_BRACE stmtLst Tokens::CHAR_CLOSE_BRACE
     if (next(next(procItr)) == content.end()) {
         throw invalid_argument("invalid procedure");
     }
-    if (*next(next(procItr)) != "{") {
+    if (*next(next(procItr)) != Tokens::SYMBOL_OPEN_BRACE) {
         throw invalid_argument("invalid procedure");
     }
-    auto procedure = new Procedure(proc_name);
-    return procedure;
-}
-
-bool ProcedureParser::isValidName(string input) {
-    // NAME: LETTER (LETTER | DIGIT)*
-    // procedure names and variables are strings of letters, and digits,
-    // starting with a letter
-    if (!isalpha(input.at(0))) {
-        return false;
-    }
-    return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
+    entity = new Procedure(proc_name);
+    return entity;
 }

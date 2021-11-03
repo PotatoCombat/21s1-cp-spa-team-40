@@ -27,7 +27,7 @@ TEST_CASE(
     Statement readStatement(1, StatementType::READ);
     Variable modifiedVar(TestExtractReadStatement::VAR_NAME);
 
-    readStatement.setProcName(procedure.getName());
+    readStatement.setProcName(procedure.getId());
     readStatement.setVariable(&modifiedVar);
     procedure.addToStmtLst(&readStatement);
     program.addToProcLst(&procedure);
@@ -43,11 +43,11 @@ TEST_CASE(
 
     // Check that procedure modifies variable correctly extracted
     REQUIRE(TestExtractReadStatement::pkb
-                .getProcsModifyingVar(modifiedVar.getName())
-                .count(procedure.getName()));
+                .getProcsModifyingVar(modifiedVar.getId())
+                .count(procedure.getId()));
 
     // Check that statement modifies variable correctly extracted
     REQUIRE(TestExtractReadStatement::pkb
-                .getStmtsModifyingVar(modifiedVar.getName())
-                .count(readStatement.getIndex()));
+                .getStmtsModifyingVar(modifiedVar.getId())
+                .count(readStatement.getId()));
 }
