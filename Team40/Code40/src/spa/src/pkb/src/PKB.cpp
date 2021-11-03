@@ -75,7 +75,7 @@ void PKB::insertNext(Statement *previous, Statement *next) {
 }
 
 void PKB::insertNextBip(Statement *previous, Statement *next) {
-    nextTable.insertRelationship(previous->getId(), next->getId());
+    nextBipTable.insertRelationship(previous->getId(), next->getId());
 }
 
 void PKB::insertAssignPattern(Statement *stmt) {
