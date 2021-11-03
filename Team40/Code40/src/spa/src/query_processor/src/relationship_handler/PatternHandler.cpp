@@ -48,11 +48,21 @@ set<string> PatternHandler::getR1ClauseR2(string r2) {
 
 set<string> PatternHandler::getR2ClausedR1(string r1) {
     set<string> result;
-    set<string> vars = getAll(pkb, *clause->getSecondReference());
-    for (string var : vars) {
-        if (isR1ClauseR2(r1, var)) {
-            result.insert(var);
-        }
+    switch (clause->getFirstReference()->getDeType()) {
+        case DesignEntityType::ASSIGN:
+            for (auto &var : pkb->getVarsModifiedByStmt(stoi(r1))) {
+                if (isR1ClauseR2(r1, var)) {
+                    result.insert(var);
+                }
+            }
+            break;
+        case DesignEntityType::WHILE:
+            return pkb->getWhilePatternVars(stoi(r1));
+        case DesignEntityType::IF:
+            return pkb->getIfPatternVars(stoi(r1));
+        default:
+            throw ClauseHandlerError(
+                    "PatternHandler: unknown pattern clause type!");
     }
     return result;
 }
