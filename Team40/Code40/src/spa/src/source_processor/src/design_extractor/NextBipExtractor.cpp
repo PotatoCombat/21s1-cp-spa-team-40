@@ -20,7 +20,7 @@ void NextBipExtractor::extract(Program *program) {
 void NextBipExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
     // Create terminal stmt (equivalent of dummy node in CFG)
-    Statement *terminalStmt =
+    auto *terminalStmt =
         new Statement(getNextTerminalIndex(), StatementType::TERMINAL);
     terminalStmtsMap[procedure->getName()] = terminalStmt;
 
@@ -51,45 +51,46 @@ void NextBipExtractor::extractCallStatement(Statement *callStatement) {
     StmtIndex callStmtIndex = callStatement->getIndex();
 
     auto calledProcFirstExecutableStmt = getFirstExecutableStmt(calledProcName);
-    auto terminalStmt = terminalStmtsMap[calledProcName];
+    auto calledProcTerminalStmt = terminalStmtsMap[calledProcName];
     auto nextStatement = getStatementAfterCallStatement(callStmtIndex);
 
-    extractCallStatementNextBip(callStatement, calledProcFirstExecutableStmt,
-                                terminalStmt, nextStatement);
-    if (nextStatement.has_value()) {
-        extractStatement(nextStatement.value());
+    if (!nextStatement.has_value()) {
+        extractCallTerminalNextBip(callStatement, calledProcFirstExecutableStmt,
+                                   calledProcTerminalStmt);
     } else {
-        extractTerminalNextBip(callStatement);
+        extractCallStatementNextBip(
+            callStatement, calledProcFirstExecutableStmt,
+            calledProcTerminalStmt, nextStatement.value());
+        extractStatement(nextStatement.value());
     }
 }
 
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     if (isLastExecutableStmt(statement)) {
-        extractTerminalNextBip(statement);
+        extractNonCallTerminalNextBip(statement);
     }
     set<ProgLineIndex> nextStatements =
         pkb->getNextLines(statement->getIndex());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
-        Statement *nextStatement = pkb->getStmtByIndex(nextStatementIndex);
+        Statement *nextStatement;
+        if (nextStatementIndex >= STARTING_TERMINAL_INDEX) {
+            nextStatement = terminalStmtsMap[getCurrentProcName()];
+        } else {
+            nextStatement = pkb->getStmtByIndex(nextStatementIndex);
+        }
         pkb->insertNextBip(statement, nextStatement);
         extractStatement(nextStatement);
     }
 }
 
-void NextBipExtractor::extractCallStatementNextBip(
-    Statement *branchInFrom, Statement *branchInTo, Statement *branchBackFrom,
-    optional<Statement *> branchBackTo) {
+void NextBipExtractor::extractCallStatementNextBip(Statement *branchInFrom,
+                                                   Statement *branchInTo,
+                                                   Statement *branchBackFrom,
+                                                   Statement *branchBackTo) {
     pkb->insertBranchIn(branchInFrom, branchInTo);
     pkb->insertNextBip(branchInFrom, branchInTo);
-    if (branchBackTo.has_value()) {
-        pkb->insertNextBip(branchBackFrom, branchBackTo.value());
-        pkb->insertBranchBack(branchBackFrom, branchBackTo.value());
-    } else {
-        ProcName currentProcName = getCurrentProcName();
-        pkb->insertNextBip(branchBackFrom, terminalStmtsMap[currentProcName]);
-        pkb->insertBranchBack(branchBackFrom,
-                              terminalStmtsMap[currentProcName]);
-    }
+    pkb->insertNextBip(branchBackFrom, branchBackTo);
+    pkb->insertBranchBack(branchBackFrom, branchBackTo);
 }
 
 Statement *NextBipExtractor::getFirstExecutableStmt(const ProcName &procName) {
@@ -120,19 +121,35 @@ ProcName NextBipExtractor::getCurrentProcName() {
     return currentProc.value()->getName();
 }
 
-void NextBipExtractor::extractTerminalNextBip(Statement *statement) {
+void NextBipExtractor::extractNonCallTerminalNextBip(Statement *statement) {
     ProcName currentProcName = getCurrentProcName();
     if (!terminalStmtsMap.count(currentProcName)) {
         throw runtime_error("Current procedure terminal stmt not set.");
     }
 
+    pkb->insertNext(statement, terminalStmtsMap[currentProcName]);
     pkb->insertNextBip(statement, terminalStmtsMap[currentProcName]);
+    visited.insert(terminalStmtsMap[currentProcName]->getIndex());
+}
+
+void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
+                                                  Statement *branchInTo,
+                                                  Statement *branchBackFrom) {
+    ProcName currentProcName = getCurrentProcName();
+    if (!terminalStmtsMap.count(currentProcName)) {
+        throw runtime_error("Current procedure terminal stmt not set.");
+    }
+    Statement *branchBackTo = terminalStmtsMap[currentProcName];
+    pkb->insertNext(branchInFrom, branchBackTo);
+    extractCallStatementNextBip(branchInFrom, branchInTo, branchBackFrom,
+                                branchBackTo);
+    visited.insert(terminalStmtsMap[currentProcName]->getIndex());
 }
 
 bool NextBipExtractor::isLastExecutableStmt(Statement *statement) {
     set<ProgLineIndex> nextStatements =
         pkb->getNextLines(statement->getIndex());
-    return nextStatements.empty() ||
-           (statement->getStatementType() == StatementType::WHILE &&
-            nextStatements.size() < 2);
+    return (nextStatements.empty() ||
+            (statement->getStatementType() == StatementType::WHILE &&
+             nextStatements.size() < 2));
 }

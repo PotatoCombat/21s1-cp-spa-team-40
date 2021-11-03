@@ -17,16 +17,19 @@ private:
     void extractProcedure(Procedure *procedure);
     void extractStatement(Statement *statement);
     void extractCallStatement(Statement *callStatement);
+    void extractCallTerminalNextBip(Statement *branchInFrom,
+                                    Statement *branchInTo,
+                                    Statement *branchBackFrom);
     void extractNonCallStatement(Statement *statement);
+    void extractNonCallTerminalNextBip(Statement *statement);
     void extractCallStatementNextBip(Statement *branchInFrom,
                                      Statement *branchInTo,
                                      Statement *branchBackFrom,
-                                     optional<Statement *> branchBackTo);
+                                     Statement *branchBackTo);
     // Helper functions
     Statement *getFirstExecutableStmt(const ProcName &procName);
     optional<Statement *>
     getStatementAfterCallStatement(StmtIndex callStmtIndex);
-    void extractTerminalNextBip(Statement *statement);
     bool isLastExecutableStmt(Statement *statement);
     static ProcName getCurrentProcName();
     inline int getNextTerminalIndex() { return nextTerminalIndex++; }
