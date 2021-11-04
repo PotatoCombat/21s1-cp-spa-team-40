@@ -10,14 +10,13 @@
 #include "query_processor/exception/ClauseHandlerError.h"
 
 #include "query_processor/model/Clause.h"
-#include "query_processor/model/Reference.h"
-#include "query_processor/model/Result.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Reference.h"
+#include "query_processor/model/Result.h"
 
 class ClauseHandler {
 protected:
-    const int DUMMY_STMT_THRESHOLD = 1000;
+    const int DUMMY_STMT_THRESHOLD = -1;
 
     Clause *clause;
     PKB *pkb;
@@ -58,7 +57,7 @@ protected:
                                 Reference *otherRef, bool isFirstRef);
 
     [[nodiscard]] inline bool isDummyStmt(ProgLineIndex progLineIndex) const {
-        return progLineIndex >= DUMMY_STMT_THRESHOLD;
+        return progLineIndex <= DUMMY_STMT_THRESHOLD;
     }
 
 public:
