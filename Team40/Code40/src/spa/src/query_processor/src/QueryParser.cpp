@@ -23,15 +23,12 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
         DesignEntityType deType = deHelper.valueToDesType(x.first);
         ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
-        auto it =
-            find_if(declList.begin(), declList.end(),
-                    [&syn](Reference *ref) { return ref->getValue() == syn; });
-
-        if (it != declList.end()) {
+        Reference *ref = ParserUtil::getReferenceFromList(declList, syn);
+        if (ref != nullptr) {
             throw ValidityError("QP-ERROR: synonym has been declared");
         }
         ReferenceAttribute attr = deHelper.typeToDefaultAttr(deType);
-        Reference *ref = new Reference(deType, refType, syn, attr);
+        ref = new Reference(deType, refType, syn, attr);
         declList.push_back(ref);
     }
 
@@ -43,7 +40,6 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
 /**
  * Parses return reference by checking if it is in the declaration list.
  * @param ref Return reference to parse.
- * @param &found Whether the reference is found.
  * @return Reference object, otherwise nullptr.
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
@@ -57,21 +53,21 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
         attrStr = attrRef.second;
     }
 
-    for (auto x : declList) {
-        if (syn == x->getValue()) {
-            DesignEntityType deType = x->getDeType();
-            ReferenceType refType = x->getRefType();
-            ReferenceAttribute attr = x->getAttr();
-            if (isAttrRef) {
-                attr = ParserUtil::parseValidAttr(deType, attrStr);
-            }
-            if (deType == DesignEntityType::PROG_LINE) {
-                deType = DesignEntityType::STMT;
-            }
-            return new Reference(deType, refType, syn, attr);
-        }
+    Reference *x = ParserUtil::getReferenceFromList(declList, syn);
+    if (x == nullptr) {
+        throw ValidityError("QP-ERROR: return synonym is undeclared");
     }
-    return nullptr;
+
+    DesignEntityType deType = x->getDeType();
+    ReferenceType refType = x->getRefType();
+    ReferenceAttribute attr = x->getAttr();
+    if (isAttrRef) {
+        attr = ParserUtil::parseValidAttr(deType, attrStr);
+    }
+    if (deType == DesignEntityType::PROG_LINE) {
+        deType = DesignEntityType::STMT;
+    }
+    return new Reference(deType, refType, syn, attr);
 }
 
 /**
@@ -99,4 +95,13 @@ Clause *QueryParser::parsePatternClause(PatTuple patTuple) {
  */
 Clause *QueryParser::parseWithClause(WithPair withPair) {
     return wtParser.parse(withPair);
+}
+
+/**
+ * Retrieves synonym in the declaration list if it exists.
+ * @param syn The synonym name.
+ * @return Reference object if match, otherwise nullptr.
+ */
+Reference *QueryParser::getReferenceIfDeclared(string syn) {
+    return ParserUtil::getReferenceFromList(declList, syn);
 }

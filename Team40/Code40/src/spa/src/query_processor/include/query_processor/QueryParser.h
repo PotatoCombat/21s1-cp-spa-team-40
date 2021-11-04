@@ -22,6 +22,7 @@ public:
     Clause *parseSuchThatClause(ClsTuple clsTuple);
     Clause *parsePatternClause(PatTuple patTuple);
     Clause *parseWithClause(WithPair withPair);
+    Reference *getReferenceIfDeclared(string syn);
 
     void clear();
 

@@ -25,4 +25,6 @@ private:
     QueryParser parser;
 
     bool returnBoolean = false;
+
+    inline static const string KEYWORD_BOOLEAN = "BOOLEAN";
 };
