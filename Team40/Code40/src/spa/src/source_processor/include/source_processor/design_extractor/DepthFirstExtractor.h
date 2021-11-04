@@ -1,11 +1,14 @@
 #pragma once
 
+#include <set>
+
 #include "common/model/Procedure.h"
 #include "common/model/Program.h"
 #include "common/model/Statement.h"
+
 #include "pkb/PKB.h"
+
 #include "source_processor/design_extractor/ExtractionContext.h"
-#include <set>
 
 class DepthFirstExtractor {
 private:

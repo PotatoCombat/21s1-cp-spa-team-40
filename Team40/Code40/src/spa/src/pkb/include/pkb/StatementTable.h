@@ -3,9 +3,10 @@
 #include <map>
 #include <vector>
 
-#include "Iterator.h"
 #include "common/model/Abstractions.h"
 #include "common/model/Statement.h"
+
+#include "pkb/Iterator.h"
 
 using namespace std;
 

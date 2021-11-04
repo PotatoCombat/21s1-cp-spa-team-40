@@ -10,6 +10,7 @@
 #include "query_processor/Abstractions.h"
 
 #include "query_processor/exception/SyntaxError.h"
+
 #include "query_processor/parser/ParserUtil.h"
 
 using namespace std;

@@ -1,7 +1,10 @@
 #pragma once
+
 #include "common/model/Statement.h"
+
 #include "source_processor/parser/EntityParser.h"
 #include "source_processor/parser/Line.h"
+
 using namespace std;
 
 class IfStatementParser : public EntityParser<Statement> {

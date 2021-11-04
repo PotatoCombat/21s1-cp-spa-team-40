@@ -4,12 +4,13 @@
 #include <string>
 #include <unordered_map>
 
+#include "common/model/Statement.h"
+
 #include "query_processor/exception/SyntaxError.h"
 #include "query_processor/exception/ValidityError.h"
+
 #include "query_processor/model/DesignEntityType.h"
 #include "query_processor/model/Reference.h"
-
-#include "common/model/Statement.h"
 
 using namespace std;
 

@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "Clause.h"
-#include "Reference.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 

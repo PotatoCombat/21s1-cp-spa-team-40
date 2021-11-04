@@ -3,14 +3,14 @@
 #include <string>
 #include <vector>
 
-#include "ClauseType.h"
-#include "Reference.h"
+#include "query_processor/model/ClauseType.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 
 /**
-* Represents a clause in a query
-*/
+ * Represents a clause in a query
+ */
 class Clause {
 private:
     ClauseType type;

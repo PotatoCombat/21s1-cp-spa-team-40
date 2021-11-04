@@ -1,9 +1,12 @@
 #pragma once
-#include "common/model/Abstractions.h"
-#include "common/model/Entity.h"
-#include "source_processor/parser/Tokens.h"
+
 #include <string>
 #include <vector>
+
+#include "common/model/Abstractions.h"
+#include "common/model/Entity.h"
+
+#include "source_processor/parser/Tokens.h"
 
 using namespace std;
 template <typename T> class EntityParser {
