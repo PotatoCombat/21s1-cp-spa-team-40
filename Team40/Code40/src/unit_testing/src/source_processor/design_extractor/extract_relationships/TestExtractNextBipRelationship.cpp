@@ -9,12 +9,12 @@ struct TestExtractNextBipRelationship {
     static ProcName PROC_NAME_2;
     static ProcName PROC_NAME_3;
     static VarName VAR_NAME;
-    static inline int terminalStmtIndex = 1000;
+    static inline int terminalStmtIndex = -1;
 
 public:
     static void reset() {
         ExtractionContext::getInstance().reset();
-        terminalStmtIndex = 1000;
+        terminalStmtIndex = -1;
         pkb = PKB();
     }
 };
@@ -106,8 +106,8 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts a simple "
     program.addToProcLst(&procedure2);
 
     // In reverse order of call dependencies
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
-    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
+    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex--;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
     de.extract(&program);
@@ -184,9 +184,9 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
     program.addToProcLst(&procedure3);
 
     // In reverse order of call dependencies
-    ProgLineIndex t3 = TestExtractNextBipRelationship::terminalStmtIndex++;
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
-    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t3 = TestExtractNextBipRelationship::terminalStmtIndex--;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
+    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex--;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
     de.extract(&program);
@@ -312,7 +312,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
      */
 
     // In reverse order of call dependencies
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
     ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
@@ -418,7 +418,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when a called "
      */
 
     // In reverse order of call dependencies
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
     ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
@@ -512,7 +512,7 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts when call "
      */
 
     // In reverse order of call dependencies
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
     ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
@@ -660,9 +660,9 @@ TEST_CASE("TestExtractNextBipRelationship: Correctly extracts p1, p2, p3 where "
      */
 
     // In reverse order of call dependencies
-    ProgLineIndex t3 = TestExtractNextBipRelationship::terminalStmtIndex++;
-    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex++;
-    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex++;
+    ProgLineIndex t3 = TestExtractNextBipRelationship::terminalStmtIndex--;
+    ProgLineIndex t2 = TestExtractNextBipRelationship::terminalStmtIndex--;
+    ProgLineIndex t1 = TestExtractNextBipRelationship::terminalStmtIndex--;
 
     DesignExtractor de(&TestExtractNextBipRelationship::pkb);
     de.extract(&program);

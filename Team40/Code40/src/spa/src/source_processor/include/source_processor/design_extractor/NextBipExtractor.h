@@ -10,8 +10,7 @@ private:
     PKB *pkb;
     unordered_map<ProcName, Statement *> terminalStmtsMap;
     unordered_set<ProgLineIndex> visited;
-    static const inline int STARTING_TERMINAL_INDEX =
-        1000; // ASSUMPTION: SIMPLE programs have < 1000 lines
+    static const inline int STARTING_TERMINAL_INDEX = -1;
     int nextTerminalIndex;
 
     void extractProcedure(Procedure *procedure);
@@ -32,7 +31,7 @@ private:
     getStatementAfterCallStatement(StmtIndex callStmtIndex);
     bool isLastExecutableStmt(Statement *statement);
     static ProcName getCurrentProcName();
-    inline int getNextTerminalIndex() { return nextTerminalIndex++; }
+    inline int getNextTerminalIndex() { return nextTerminalIndex--; }
 
 public:
     explicit NextBipExtractor(PKB *pkb);

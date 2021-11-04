@@ -1,7 +1,7 @@
 #include "source_processor/design_extractor/NextBipExtractor.h"
 
 NextBipExtractor::NextBipExtractor(PKB *pkb) : pkb(pkb) {
-    nextTerminalIndex = STARTING_TERMINAL_INDEX;
+    nextTerminalIndex = NextBipExtractor::STARTING_TERMINAL_INDEX;
 }
 
 void NextBipExtractor::extract(Program *program) {
@@ -72,7 +72,7 @@ void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
         Statement *nextStatement;
-        if (nextStatementIndex >= STARTING_TERMINAL_INDEX) {
+        if (nextStatementIndex <= STARTING_TERMINAL_INDEX) {
             nextStatement = terminalStmtsMap[getCurrentProcName()];
         } else {
             nextStatement = pkb->getStmtByIndex(nextStatementIndex);
