@@ -81,11 +81,18 @@ void QueryPreprocessor::clear() {
 
 void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
                                                    Query &q) {
+    // check if there is a declared reference "BOOLEAN"
+    // add it as a return reference
+    if (this->returnBoolean) {
+        Reference *returnRef = parser.getReferenceIfDeclared(KEYWORD_BOOLEAN);
+        if (returnRef != nullptr) {
+            this->returnBoolean = false;
+            q.addReturnReference(returnRef->copy());
+        }
+    }
+
     for (auto retString : retStrings) {
         Reference *returnRef = parser.parseReturnSynonym(retString);
-        if (returnRef == nullptr) {
-            throw ValidityError("QP-ERROR: return synonym is undeclared");
-        }
         q.addReturnReference(returnRef);
     }
 }
