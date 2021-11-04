@@ -170,8 +170,8 @@ void ExtractionContext::clearPreviousStatements() {
     previousStatements.clear();
 }
 
-void ExtractionContext::registerProcDependency(ProcName caller,
-                                               ProcName callee) {
+void ExtractionContext::registerProcDependency(const ProcName &caller,
+                                               const ProcName &callee) {
     // Note: We are guaranteed that there will be no circular dependencies in
     // SIMPLE (i.e. recursion)
     if (hasCyclicalProcDependency(caller, callee)) {
@@ -186,8 +186,8 @@ void ExtractionContext::registerProcDependency(ProcName caller,
     procIndegreesCounter[callee]++;
 }
 
-bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
-                                                  ProcName callee) {
+bool ExtractionContext::hasCyclicalProcDependency(const ProcName &caller,
+                                                  const ProcName &callee) {
     if (caller == callee) {
         return true;
     }
@@ -206,7 +206,7 @@ bool ExtractionContext::hasCyclicalProcDependency(ProcName caller,
 }
 
 unordered_set<ProcName>
-ExtractionContext::getProcDependencies(ProcName caller) {
+ExtractionContext::getProcDependencies(const ProcName &caller) {
     return procDependencyMap[caller];
 }
 
@@ -214,10 +214,13 @@ ExtractionContext::getProcDependencies(ProcName caller) {
 vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
     vector<ProcName> sortedProcNames;
     vector<ProcName> callers;
+    unordered_map<ProcName, unordered_set<ProcName>> procDependencyMapCopy(
+        procDependencyMap);
+    unordered_map<ProcName, int> procIndegreesCounterCopy(procIndegreesCounter);
     // Add all procedures with 0 in-degrees into callers
-    for (auto &it : procDependencyMap) {
+    for (auto &it : procDependencyMapCopy) {
         ProcName caller = it.first;
-        if (procIndegreesCounter[caller] == 0) {
+        if (procIndegreesCounterCopy[caller] == 0) {
             callers.push_back(caller);
         }
     }
@@ -225,9 +228,9 @@ vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
         ProcName c = callers.back();
         callers.pop_back();
         sortedProcNames.push_back(c);
-        for (ProcName procName : procDependencyMap[c]) {
-            procIndegreesCounter[procName]--;
-            if (procIndegreesCounter[procName] == 0) {
+        for (ProcName procName : procDependencyMapCopy[c]) {
+            procIndegreesCounterCopy[procName]--;
+            if (procIndegreesCounterCopy[procName] == 0) {
                 callers.push_back(procName);
             }
         }

@@ -8,78 +8,68 @@ NextBipStarHandler::NextBipStarHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
-set<string> NextBipStarHandler::breadthFirstSearch(ExplorationFunction explore,
-                                                   const string &r) {
-    queue<ProgLineIndex> toExplore;
-    unordered_set<ProgLineIndex> visitedWhileStmts;
-    set<string> result;
+void NextBipStarHandler::depthFirstSearch(
+    ExplorationFunction explore, ProgLineIndex progLine, set<string> &result,
+    unordered_set<ProgLineIndex> &visited,
+    vector<ProgLineIndex> &validBranchLines, optional<ProgLineIndex> target) {
 
-    toExplore.push(stoi(r));
-
-    ProgLineIndex curIndex;
-    vector<ProgLineIndex> validBranchLines;
-    while (!toExplore.empty()) {
-        curIndex = toExplore.front();
-        toExplore.pop();
-        // If while statement, mark as visited to prevent infinite loop
-        if (pkb->getStmtByIndex(curIndex)->getStatementType() ==
-            StatementType::WHILE) {
-            visitedWhileStmts.insert(curIndex);
-        }
-
-        // Explore neighbours
-        for (ProgLineIndex index :
-             (this->*explore)(curIndex, validBranchLines)) {
-            if (visitedWhileStmts.find(index) == visitedWhileStmts.end()) {
-                toExplore.push(index);
-            }
-            result.insert(to_string(index));
-        }
+    if (!validBranchLines.empty() && validBranchLines.back() == progLine) {
+        validBranchLines.pop_back();
     }
 
-    return result;
+    // If while statement, mark as visited to prevent infinite loop
+    if (!isDummyStmt(progLine) &&
+        pkb->getStmtByIndex(progLine)->getStatementType() ==
+            StatementType::WHILE) {
+        visited.insert(progLine);
+    }
+
+    // Explore neighbours
+    unordered_set<ProgLineIndex> toExplore =
+        (this->*explore)(progLine, validBranchLines);
+    for (ProgLineIndex neighbourLine : toExplore) {
+        if (!isDummyStmt(neighbourLine)) {
+            result.insert(to_string(neighbourLine));
+        }
+        if (target.has_value() && neighbourLine == target.value()) {
+            result.insert(to_string(target.value()));
+            return;
+        }
+        if (visited.find(neighbourLine) == visited.end()) {
+            depthFirstSearch(explore, neighbourLine, result, visited,
+                             validBranchLines, target);
+        }
+    }
 }
 
 set<string> NextBipStarHandler::getR2ClausedR1(string r1) {
     ExplorationFunction explore = &NextBipStarHandler::getNextBipLines;
-    return breadthFirstSearch(explore, r1);
+    unordered_set<ProgLineIndex> visited;
+    vector<ProgLineIndex> validBranchLines;
+    set<string> result;
+    depthFirstSearch(explore, stoi(r1), result, visited, validBranchLines,
+                     nullopt);
+    return result;
 }
 
 set<string> NextBipStarHandler::getR1ClauseR2(string r2) {
-    ExplorationFunction explorationFunction =
-        &NextBipStarHandler::getPreviousBipLines;
-    return breadthFirstSearch(explorationFunction, r2);
+    ExplorationFunction explore = &NextBipStarHandler::getPreviousBipLines;
+    unordered_set<ProgLineIndex> visited;
+    vector<ProgLineIndex> validBranchLines;
+    set<string> result;
+    depthFirstSearch(explore, stoi(r2), result, visited, validBranchLines,
+                     nullopt);
+    return result;
 }
 
 bool NextBipStarHandler::isR1ClauseR2(string r1, string r2) {
-    queue<ProgLineIndex> toExplore;
+    ExplorationFunction explore = &NextBipStarHandler::getNextBipLines;
     unordered_set<ProgLineIndex> visited;
-
-    ProgLineIndex leftIndex = stoi(r1);
-    ProgLineIndex rightIndex = stoi(r2);
-
-    toExplore.push(leftIndex);
-
-    ProgLineIndex curIndex;
-    while (!toExplore.empty()) {
-        curIndex = toExplore.front();
-        toExplore.pop();
-
-        // Explore neighbours
-        for (ProgLineIndex i : pkb->getNextBipLines(curIndex)) {
-            if (i == rightIndex) {
-                return true;
-            }
-
-            // Only add neighbours that haven't been visited
-            if (visited.find(i) == visited.end()) {
-                visited.insert(i); // Mark current as visited
-                toExplore.push(i);
-            }
-        }
-    }
-
-    return false;
+    vector<ProgLineIndex> validBranchLines;
+    set<string> result;
+    depthFirstSearch(explore, stoi(r1), result, visited, validBranchLines,
+                     stoi(r2));
+    return result.count(r2);
 }
 
 unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
@@ -91,18 +81,17 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getNextBipLines(
         if (pkb->branchIn(curLine, nextBipLine)) {
             set<ProgLineIndex> branchBackLines = pkb->getNextLines(curLine);
             if (branchBackLines.size() > 1) {
-                throw runtime_error(
+                throw ClauseHandlerError(
                     "Encountered a call statement with more than one next "
                     "statement (syntactically impossible).");
             }
-            validBranchBackLines.push_back(*branchBackLines.begin());
+            if (!branchBackLines.empty()) {
+                validBranchBackLines.push_back(*branchBackLines.begin());
+            }
         } else if (pkb->branchBack(curLine, nextBipLine)) {
-            // If valid BranchBack, pop the stack
+            // If invalid BranchBack, discard it
             if (!validBranchBackLines.empty() &&
-                validBranchBackLines.back() == nextBipLine) {
-                validBranchBackLines.pop_back();
-            } else {
-                // Else, ignore it
+                validBranchBackLines.back() != nextBipLine) {
                 continue;
             }
         }
@@ -116,26 +105,46 @@ unordered_set<ProgLineIndex> NextBipStarHandler::getPreviousBipLines(
     set<ProgLineIndex> previousBipLines = pkb->getPreviousBipLines(curLine);
     unordered_set<ProgLineIndex> validPreviousBipLines;
     for (auto previousBipLine : previousBipLines) {
-        // If BranchBack, add prev lines to validBranchInLines
+        // If BranchBack, update valid BranchIns
         if (pkb->branchBack(previousBipLine, curLine)) {
-            set<ProgLineIndex> branchInLines = pkb->getPreviousLines(curLine);
-            if (branchInLines.size() > 1) {
-                throw runtime_error(
-                    "Encountered a call statement with more than one next "
-                    "statement (syntactically impossible).");
+            unordered_set<ProgLineIndex> branchInLines =
+                getBranchInLines(previousBipLine, curLine);
+            if (!branchInLines.empty()) {
+                validBranchInLines.push_back(*branchInLines.begin());
             }
-            validBranchInLines.push_back(*branchInLines.begin());
         } else if (pkb->branchIn(previousBipLine, curLine)) {
-            // If valid BranchIn, pop the stack
+            // If invalid BranchIn, discard it
             if (!validBranchInLines.empty() &&
-                validBranchInLines.back() == curLine) {
-                validBranchInLines.pop_back();
-            } else {
-                // Else, ignore it
+                validBranchInLines.back() != previousBipLine) {
                 continue;
             }
         }
         validPreviousBipLines.insert(previousBipLine);
     }
     return validPreviousBipLines;
+}
+
+unordered_set<ProgLineIndex>
+NextBipStarHandler::getBranchInLines(ProgLineIndex branchBackFromLine,
+                                     ProgLineIndex branchBackToLine) {
+    unordered_set<ProgLineIndex> branchInLines;
+    set<ProgLineIndex> prevLines = pkb->getPreviousLines(branchBackToLine);
+    for (auto prevLine : prevLines) {
+        Statement *prevStmt = pkb->getStmtByIndex(prevLine);
+        if (prevStmt->getStatementType() != StatementType::CALL) {
+            continue;
+        }
+        // If NextBip*(prevLine, branchBackFromLine), then prevLine is a valid
+        // BranchIn
+        ExplorationFunction explore = &NextBipStarHandler::getNextBipLines;
+        unordered_set<ProgLineIndex> visited;
+        vector<ProgLineIndex> validBranchLines;
+        set<string> result;
+        depthFirstSearch(explore, prevLine, result, visited, validBranchLines,
+                         branchBackFromLine);
+        if (result.count(to_string(branchBackFromLine))) {
+            branchInLines.insert(prevLine);
+        }
+    }
+    return branchInLines;
 }
