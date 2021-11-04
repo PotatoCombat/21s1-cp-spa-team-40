@@ -27,11 +27,11 @@ TEST_CASE("WhileStatementParser: parseEntity - throws invalid while statement") 
 
     parser = WhileStatementParser({"while", "(", ">", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX), "invalid expression: conditions need at least one operator");
+    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX),"invalid expression: invalid variable, constant or operator encountered");
 
     parser = WhileStatementParser({"while", "(", "number", "0", ")", "{"}, INDEX, 
                                   whileProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX), "invalid expression: conditions need at least one operator");
+    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX), "invalid expression: invalid variable, constant or operator encountered");
 
     parser = WhileStatementParser({"while", "(", "number", ">", ")", "{"}, INDEX, 
                                   whileProgramLines);

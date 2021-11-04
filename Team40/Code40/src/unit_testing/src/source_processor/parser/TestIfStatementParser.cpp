@@ -32,11 +32,11 @@ TEST_CASE("IfStatementParser: parseEntity - throws invalid if statement") {
 
     parser = IfStatementParser({"if", "(", ">", "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX),"invalid expression: conditions need at least one operator");
+    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX),"invalid expression: invalid variable, constant or operator encountered");
 
     parser = IfStatementParser({"if", "(", "num1" "num2", ")", "then", "{"}, 
                                INDEX, ifProgramLines);
-    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX), "invalid expression: conditions need at least one operator");
+    REQUIRE_THROWS_WITH(*parser.parseEntity(INDEX), "invalid expression: conditional expressions should have at least one logical or comparison operator");
 
     parser = IfStatementParser({"if", "(", "num1", ">", ")", "then", "{"}, 
                                INDEX, ifProgramLines);

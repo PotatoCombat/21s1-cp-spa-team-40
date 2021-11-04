@@ -73,4 +73,39 @@ public:
     static constexpr char CHAR_MULTIPLY = '*';
     static constexpr char CHAR_DIVIDE = '/';
     static constexpr char CHAR_MODULO = '%';
+
+    static bool isRoundBracket(string input) {
+        return input == Tokens::SYMBOL_OPEN_BRACKET || input == Tokens::SYMBOL_CLOSE_BRACKET;
+    }
+
+    static bool isArtihmeticOperator(string input) {
+        return input == Tokens::SYMBOL_PLUS || input == Tokens::SYMBOL_MINUS ||
+               input == Tokens::SYMBOL_MULTIPLY || input == Tokens::SYMBOL_DIVIDE ||
+               input == Tokens::SYMBOL_MODULO;
+    }
+
+    static bool isComparisonOperator(string input) {
+        return input == Tokens::SYMBOL_GREATER_THAN ||
+               input == Tokens::SYMBOL_GREATER_THAN_OR_EQUALS_TO ||
+               input == Tokens::SYMBOL_LESS_THAN ||
+               input == Tokens::SYMBOL_LESS_THAN_OR_EQUALS_TO || input == Tokens::SYMBOL_EQUALS ||
+               input == Tokens::SYMBOL_NOT_EQUALS;
+    }
+
+    static bool isLogicalOperator(string input) {
+        return input == Tokens::SYMBOL_NOT || input == Tokens::SYMBOL_AND ||
+               input == Tokens::SYMBOL_OR;
+    }
+
+    static bool isOperator(string input) {
+        return isLogicalOperator(input) || isComparisonOperator(input) ||
+               isArtihmeticOperator(input);
+    }
+
+    static bool isValidAssignOperator(string input) { return (isArtihmeticOperator(input)); }
+
+    static bool isValidConditionalOperator(string input) {
+        return (isLogicalOperator(input) || isComparisonOperator(input) ||
+                isArtihmeticOperator(input));
+    }
 };
