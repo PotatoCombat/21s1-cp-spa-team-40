@@ -39,26 +39,25 @@ protected:
     ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType);
 
     /**
-     * Gets all r1 values such that the relationship between r1 and r2 holds
+     * Gets all reference 1 values such that the relationship between 
+     * reference 1 and reference 2 holds 
      * Can be overriden to handle different clause types
-     * @param r2
-     * @return all valid r1 values
+     * @return all valid reference 1 values
      */
     virtual set<string> getR1ClauseR2(string r2) = 0;
 
     /**
-     * Gets all r2 values such that the relationship between r1 and r2 holds
+     * Gets all reference 2 values such that the relationship between 
+     * reference 1 and reference 2 holds 
      * Can be overriden to handle different clause types
-     * @param r1
-     * @return all valid r2 values
+     * @return all valid reference 2 values
      */
     virtual set<string> getR2ClausedR1(string r1) = 0;
 
     /**
-    * Checks is the relationship between r1 and r2 holds
+    * Checks is the relationship between 
+    * reference 1 and reference 2 holds
     * Can be overriden to handle different clause types
-    * @param r1
-    * @param r2
     * @return true if the relationship holds, false otherwise
     */
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
