@@ -1,15 +1,16 @@
-# pragma once
+#pragma once
 
 #include <vector>
 
-#include "query_processor/model/Reference.h"
 #include "query_processor/ResultTable.h"
+
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 
-/** 
-* Represents the intermediate result returned by each clause
-*/
+/**
+ * Represents the intermediate result returned by each clause
+ */
 class Result {
 private:
     bool isValid; // false if a True/False clause returns false, true otherwise

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "common/model/ConstantValue.h"
-#include "common/model/Statement.h"
-#include "common/model/Variable.h"
 #include <stack>
 #include <string>
 #include <unordered_map>
+
+#include "common/model/ConstantValue.h"
+#include "common/model/Statement.h"
+#include "common/model/Variable.h"
 
 using namespace std;
 

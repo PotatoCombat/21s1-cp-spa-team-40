@@ -7,9 +7,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "QueryEvaluator.h"
-#include "QueryOptimizer.h"
-#include "QueryPreprocessor.h"
+#include "query_processor/QueryEvaluator.h"
+#include "query_processor/QueryOptimizer.h"
+#include "query_processor/QueryPreprocessor.h"
 
 using namespace std;
 

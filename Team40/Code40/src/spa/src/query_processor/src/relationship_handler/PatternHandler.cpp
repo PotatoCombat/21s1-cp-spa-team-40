@@ -9,6 +9,10 @@ PatternHandler::PatternHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/** 
+ * Choose suitable function to use
+ * @param getPatternStmts, hasPattern: pointers to function pointer
+ */
 void PatternHandler::getFunctions(GetPatternStmtsFunc &getPatternStmts,
                                   HasPatternFunc &hasPattern) {
     switch (clause->getFirstReference()->getDeType()) {

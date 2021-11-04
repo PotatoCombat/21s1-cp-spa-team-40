@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "Abstractions.h"
-#include "Entity.h"
-#include "Statement.h"
+#include "common/model/Abstractions.h"
+#include "common/model/Entity.h"
+#include "common/model/Statement.h"
 
 using namespace std;
 

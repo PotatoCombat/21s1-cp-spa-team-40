@@ -1,12 +1,13 @@
 #pragma once
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
-#include "query_processor/exception/ValidityError.h"
 #include "query_processor/exception/SyntaxError.h"
-#include "ClauseType.h"
-#include "DesignEntityType.h"
+#include "query_processor/exception/ValidityError.h"
+
+#include "query_processor/model/ClauseType.h"
+#include "query_processor/model/DesignEntityType.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ class ClauseTypeHelper {
 private:
     unordered_map<string, ClauseType> stringToTypeMap;
 
-    // only used to represent a wildcard/constant used in Clause 
+    // only used to represent a wildcard/constant used in Clause
     // since it cannot be declared
     unordered_map<ClauseType, DesignEntityType> deTypeMap1;
     unordered_map<ClauseType, DesignEntityType> deTypeMap2;

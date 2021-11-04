@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Abstractions.h"
-#include "Entity.h"
+#include "common/model/Abstractions.h"
+#include "common/model/Entity.h"
 
 using namespace std;
 
