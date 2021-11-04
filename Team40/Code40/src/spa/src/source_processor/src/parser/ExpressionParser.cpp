@@ -182,7 +182,8 @@ void ExpressionParser::checkValidCloseBracket(int start, int end) {
 }
 
 /**
- * Ensures that the expression is not empty and does not terminate with an operator
+ * Ensures that the expression is not empty and does not terminate with an operator. Also ensures
+ * that conditional expressions contain at least one logical or comparison operator
  */
 void ExpressionParser::checkValidExpression() {
     if (exprLst.empty()) {
