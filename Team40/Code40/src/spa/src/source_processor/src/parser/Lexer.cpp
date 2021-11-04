@@ -6,6 +6,11 @@
 
 // tokenize file input
 
+/**
+ * Tokenizes an input file using lexical analysis into its respective program lines and assigns
+ * each line a respective index
+ * @return a list of tokenized program lines
+ */
 vector<Line> Lexer::tokenizeFile(fstream &file) {
     vector<Line> programLines;
     vector<vector<string>> programTokens = mergeLine(file);
@@ -34,6 +39,10 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
     return programLines;
 }
 
+/**
+ * Merges tokenized program lines that have been separated in the source file
+ * @return a list of tokenized program lines without an index
+ */
 vector<vector<string>> Lexer::mergeLine(fstream &file) {
     string input;
     vector<vector<string>> programTokens;
@@ -61,6 +70,11 @@ vector<vector<string>> Lexer::mergeLine(fstream &file) {
     return programTokens;
 }
 
+/**
+ * Splits a tokenized program line according to terminal tokens (i.e. semicolons and braces)
+ * @return a tuple with the first and second element representing the input program line after the
+ * first split
+ */
 tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString;
@@ -81,6 +95,10 @@ tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     return splitString;
 }
 
+/**
+ * Tokenizes an input file line according to the parsing expression grammar
+ * @return a tokenized version of the input file line
+ */
 vector<string> Lexer::tokenizeLine(string input) {
     vector<string> inputLine;
     string currString = "";

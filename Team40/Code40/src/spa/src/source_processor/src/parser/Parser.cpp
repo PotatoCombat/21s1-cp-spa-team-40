@@ -1,5 +1,10 @@
 #include "source_processor/parser/Parser.h"
 
+/**
+ * Parses a list of tokenized program lines by passing them to their respective parser and adding
+ * the returned Entity object into the program's ast
+ * @return the program's abstract syntax tree
+ */
 Program Parser::parseProgram(vector<Line> programLines) {
     Program program;
     Procedure *currProc = nullptr;
