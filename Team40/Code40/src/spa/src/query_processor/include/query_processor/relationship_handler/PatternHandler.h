@@ -42,9 +42,6 @@ private:
     bool ifPattern(int stmt, string var, vector<string> pattern);
     bool whilePattern(int stmt, string var, vector<string> pattern);
 
-    /* Choose suitable function to use
-     * @param getPatternStmts, hasPattern: pointers to function pointer
-     */
     void getFunctions(GetPatternStmtsFunc &getPatternStmts,
                       HasPatternFunc &hasPattern);
 
