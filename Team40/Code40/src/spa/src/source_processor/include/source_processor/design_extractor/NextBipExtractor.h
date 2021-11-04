@@ -10,7 +10,7 @@ private:
     PKB *pkb;
     unordered_map<ProcName, Statement *> terminalStmtsMap;
     unordered_set<ProgLineIndex> visited;
-    static const inline int STARTING_TERMINAL_INDEX = -1;
+    static const inline int STARTING_TERMINAL_INDEX = -2;
     int nextTerminalIndex;
 
     void extractProcedure(Procedure *procedure);
