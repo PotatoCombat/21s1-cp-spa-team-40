@@ -7,9 +7,12 @@
 
 using namespace std;
 
+/** 
+* Represents the intermediate result returned by each clause
+*/
 class Result {
 private:
-    bool isValid; // false if a True/False returns false, true otherwise
+    bool isValid; // false if a True/False clause returns false, true otherwise
     Reference *reference1;
     Reference *reference2;
     map<VALUE, VALUE_SET> resultList1;

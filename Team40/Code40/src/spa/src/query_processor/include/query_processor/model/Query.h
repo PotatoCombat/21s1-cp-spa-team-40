@@ -8,6 +8,10 @@
 
 using namespace std;
 
+/**
+* Represents a Query object
+* Contains all the information needed to correctly evaluate the query
+*/
 class Query {
 private:
     vector<Reference *> referenceList;
