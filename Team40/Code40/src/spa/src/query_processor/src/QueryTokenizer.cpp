@@ -560,7 +560,9 @@ void QueryTokenizer::validateRsType(string input) {
  * @exception SyntaxError if clause argument is invalid.
  */
 void QueryTokenizer::validateSuchThatArg(string input) {
-    if (ParserUtil::isQuoted(input)) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid such that argument");
+    } else if (ParserUtil::isQuoted(input)) {
         validateQuoted(input);
     } else if (!ParserUtil::isValidName(input) &&
                !ParserUtil::isInteger(input) &&
@@ -575,7 +577,9 @@ void QueryTokenizer::validateSuchThatArg(string input) {
  * @exception SyntaxError if clause argument is invalid.
  */
 void QueryTokenizer::validatePatternArg(string input) {
-    if (ParserUtil::isQuoted(input)) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid pattern argument");
+    } else if (ParserUtil::isQuoted(input)) {
         validateQuoted(input);
     } else if (!ParserUtil::isValidName(input) &&
                !ParserUtil::isWildcard(input)) {
@@ -589,7 +593,9 @@ void QueryTokenizer::validatePatternArg(string input) {
  * @exception SyntaxError if clause argument is invalid.
  */
 void QueryTokenizer::validateWithArg(string input) {
-    if (ParserUtil::isQuoted(input)) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid with argument");
+    } else if (ParserUtil::isQuoted(input)) {
         validateQuoted(input);
     } else if (ParserUtil::isAttrRef(input)) {
         validateAttrRef(input);

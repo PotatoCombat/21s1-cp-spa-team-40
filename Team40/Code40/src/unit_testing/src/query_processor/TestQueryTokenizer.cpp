@@ -889,4 +889,25 @@ TEST_CASE("QueryTokenizer: syntax error checking") {
         REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
                           SyntaxError);
     }
+
+    SECTION("FAIL: empty arguments in clauses") {
+        q = "such that Affects( , x)";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "such that Affects(x, )";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "pattern a( ,  x)";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        // simulates empty 2nd/3rd argument in pattern clause
+        REQUIRE_THROWS_AS(tokenizer.tokenizePattern({""}), SyntaxError);
+        REQUIRE_THROWS_AS(tokenizer.tokenizePattern({"", ""}), SyntaxError);
+        q = "with  =  x";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+        q = "with x =  ";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeClauses(q, rel, pat, wit),
+                          SyntaxError);
+    }
 }
