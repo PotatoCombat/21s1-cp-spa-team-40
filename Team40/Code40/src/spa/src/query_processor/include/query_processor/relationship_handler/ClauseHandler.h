@@ -63,7 +63,6 @@ protected:
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
 
     virtual void validate();
-
     bool isType(string val, DesignEntityType type);
 
     Result evalWcWc();
@@ -74,11 +73,9 @@ protected:
     Result evalConstSyn();
     Result evalNotConstNotConst();
     Result evalSameSyn();
-
     void setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef, bool isFirstRef);
 
 public:
     virtual Result eval();
-
     static set<string> getAll(PKB* pkb, Reference ref);
 };
