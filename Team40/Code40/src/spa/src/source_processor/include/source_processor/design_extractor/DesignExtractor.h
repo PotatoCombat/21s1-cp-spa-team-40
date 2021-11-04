@@ -1,10 +1,12 @@
 #pragma once
 
-#include "BreadthFirstExtractor.h"
-#include "DepthFirstExtractor.h"
-#include "NextBipExtractor.h"
 #include "common/model/Program.h"
+
 #include "pkb/PKB.h"
+
+#include "source_processor/design_extractor/BreadthFirstExtractor.h"
+#include "source_processor/design_extractor/DepthFirstExtractor.h"
+#include "source_processor/design_extractor/NextBipExtractor.h"
 
 class DesignExtractor {
 private:

@@ -8,8 +8,8 @@
 #include <vector>
 
 #include "query_processor/model/Clause.h"
-#include "query_processor/model/Reference.h"
 #include "query_processor/model/Query.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 

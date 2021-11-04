@@ -1,6 +1,9 @@
 #pragma once
-#include "common/model/Procedure.h"
+
 #include <vector>
+
+#include "common/model/Procedure.h"
+
 using namespace std;
 
 class Program {

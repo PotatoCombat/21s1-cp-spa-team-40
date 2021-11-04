@@ -1,7 +1,9 @@
 #pragma once
 
 #include "common/model/Program.h"
+
 #include "pkb/PKB.h"
+
 #include "source_processor/design_extractor/ExtractionContext.h"
 
 class NextBipExtractor {

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "common/model/Abstractions.h"
-#include "common/model/ConstantValue.h"
-#include "common/model/Variable.h"
-
 #include <optional>
 #include <set>
 #include <stdexcept>
 #include <vector>
+
+#include "common/model/Abstractions.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/Variable.h"
 
 enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
 

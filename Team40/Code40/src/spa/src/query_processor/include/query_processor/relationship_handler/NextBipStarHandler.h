@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ClauseHandler.h"
-#include "pkb/PKB.h"
 #include <queue>
 #include <unordered_set>
+
+#include "pkb/PKB.h"
+
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 class NextBipStarHandler;
 

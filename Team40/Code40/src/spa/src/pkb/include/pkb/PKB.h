@@ -1,15 +1,16 @@
 #pragma once
 
-#include "AssignPattern.h"
-#include "EntityTable.h"
-#include "Iterator.h"
-#include "PostfixAdapter.h"
-#include "RelationshipTable.h"
-#include "StatementTable.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
 #include "common/model/Variable.h"
+
+#include "pkb/AssignPattern.h"
+#include "pkb/EntityTable.h"
+#include "pkb/Iterator.h"
+#include "pkb/PostfixAdapter.h"
+#include "pkb/RelationshipTable.h"
+#include "pkb/StatementTable.h"
 
 using namespace std;
 

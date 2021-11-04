@@ -1,7 +1,8 @@
 #pragma once
 
-#include "ClauseHandler.h"
 #include "pkb/PKB.h"
+
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 class NextBipHandler : public ClauseHandler {
 private:

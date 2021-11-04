@@ -1,12 +1,14 @@
 #pragma once
 
-#include "common/model/Abstractions.h"
-#include "common/model/Procedure.h"
-#include "source_processor/design_extractor/EntityContext.h"
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "common/model/Abstractions.h"
+#include "common/model/Procedure.h"
+
+#include "source_processor/design_extractor/EntityContext.h"
 
 using namespace std;
 

@@ -4,7 +4,7 @@
 #include <set>
 #include <vector>
 
-#include "Iterator.h"
+#include "pkb/Iterator.h"
 
 #include "common/model/Abstractions.h"
 #include "common/model/Entity.h"

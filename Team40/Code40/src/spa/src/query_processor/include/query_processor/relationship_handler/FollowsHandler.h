@@ -3,11 +3,11 @@
 #include <set>
 #include <string>
 
-#include "ClauseHandler.h"
-
 #include "common/model/Abstractions.h"
 
 #include "pkb/PKB.h"
+
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 using namespace std;
 

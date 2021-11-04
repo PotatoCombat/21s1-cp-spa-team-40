@@ -10,9 +10,9 @@
 #include "query_processor/exception/ClauseHandlerError.h"
 
 #include "query_processor/model/Clause.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Reference.h"
 #include "query_processor/model/Result.h"
-#include "query_processor/model/DesignEntityTypeHelper.h"
 
 /**
  * CommandPattern handler to evaluate query clauses
