@@ -77,8 +77,11 @@ if __name__ == "__main__":
 	args = sys.argv[1:]
 	source_path = args[0]
 	queries_path = args[1]
+	n = 5 # default 5
+	if len(args) == 3:
+		n = int(args[2])
 	xml_path = r"Team40\Code40\tests\out.xml"
-	n = 5 # args[2]
+	
 	avgs = []
 	mins = []
 	maxs = []
