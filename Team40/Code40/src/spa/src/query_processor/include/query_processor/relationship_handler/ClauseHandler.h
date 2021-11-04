@@ -15,8 +15,7 @@
 #include "query_processor/model/DesignEntityTypeHelper.h"
 
 /**
- * Represents a handler with hidden internal logic and the ability to be
- * evaluated
+ * CommandPattern handler to evaluate query clauses
  */
 class ClauseHandler {
 protected:
@@ -37,21 +36,14 @@ protected:
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
 
-    /**
-     * Creates a handler to be evaluated
-     * @param clause pointer to a clause representing a relationship
-     * @param pkb pointer to a pkb object containing information about the
-     * source code
-     * @param validClauseType the clause type that this handler supports
-     */
     ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType);
 
     /**
-    * Gets all r1 values such that the relationship between r1 and r2 holds
-    * Can be overriden to handle different clause types
-    * @param r2
-    * @return all valid r1 values
-    */
+     * Gets all r1 values such that the relationship between r1 and r2 holds
+     * Can be overriden to handle different clause types
+     * @param r2
+     * @return all valid r1 values
+     */
     virtual set<string> getR1ClauseR2(string r2) = 0;
 
     /**
@@ -71,70 +63,23 @@ protected:
     */
     virtual bool isR1ClauseR2(string r1, string r2) = 0;
 
-    /**
-    * Ensures that the information in the clause if valid
-    */
     virtual void validate();
 
     bool isType(string val, DesignEntityType type);
 
-    /**
-    * Handles cases where both references are wildcards
-    */
     Result evalWcWc();
-
-    /**
-     * Handles cases where both references are constants
-     */
     Result evalConstConst();
-
-    /**
-     * Handles cases where the first references is a constant, the second
-     * reference is a wildcard
-     */
     Result evalConstWc();
-
-    /**
-     * Handles cases where the first references is a wildcard, the second
-     * reference is a constant
-     */
     Result evalWcConst();
-
-    /**
-     * Handles cases where the first references is a synonym, the second
-     * reference is a constant
-     */
     Result evalSynConst();
-
-    /**
-     * Handles cases where the first references is a constant, the second
-     * reference is a synonym
-     */
     Result evalConstSyn();
-
-    /**
-    * Handles cases where neither of the references is constant
-    */
     Result evalNotConstNotConst();
-    
-    /**
-    * Handles cases where both references represent to the same synonym 
-    */
     Result evalSameSyn();
 
     void setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef, bool isFirstRef);
 
 public:
-    /**
-    * Evaluates the handler based on the clause's type and the references' types
-    * @return a result object
-    */ 
     virtual Result eval();
 
-    /**
-    * Gets all values of the reference from the pkb
-    * @param pkb pointer to a pkb object
-    * @param ref a reference object
-    */
     static set<string> getAll(PKB* pkb, Reference ref);
 };
