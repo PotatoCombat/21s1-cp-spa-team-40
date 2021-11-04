@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <set>
+#include <string>
 #include <vector>
 
 #include "pkb/PKB.h"
@@ -9,9 +9,10 @@
 #include "query_processor/exception/ClauseHandlerError.h"
 
 #include "query_processor/model/Clause.h"
+#include "query_processor/model/DesignEntityTypeHelper.h"
+
 #include "query_processor/relationship_handler/ClauseHandler.h"
 #include "query_processor/relationship_handler/ModifiesStmtHandler.h"
-#include "query_processor/model/DesignEntityTypeHelper.h"
 
 using namespace std;
 
@@ -41,12 +42,8 @@ private:
     bool ifPattern(int stmt, string var, vector<string> pattern);
     bool whilePattern(int stmt, string var, vector<string> pattern);
 
-    /* Choose suitable function to use
-    * @param getPatternStmts, hasPattern: pointers to function pointer
-    */
-    void getFunctions(
-        GetPatternStmtsFunc &getPatternStmts,
-        HasPatternFunc &hasPattern);
+    void getFunctions(GetPatternStmtsFunc &getPatternStmts,
+                      HasPatternFunc &hasPattern);
 
 public:
     PatternHandler(Clause *patternClause, PKB *pkb);

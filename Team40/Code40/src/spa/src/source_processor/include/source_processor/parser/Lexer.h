@@ -1,10 +1,12 @@
 #pragma once
-#include "source_processor/parser/Line.h"
+
 #include <fstream>
 #include <map>
 #include <stack>
 #include <string>
 #include <vector>
+
+#include "source_processor/parser/Line.h"
 
 using namespace std;
 
