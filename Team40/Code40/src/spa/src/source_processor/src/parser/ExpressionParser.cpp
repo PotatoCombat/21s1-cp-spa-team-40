@@ -6,9 +6,10 @@ ExpressionParser::ExpressionParser(vector<string> exprLst, Statement *stmt)
     : exprLst(exprLst), stmt(stmt){};
 
 /**
- * Parses the conditional expressions in If and While statements as well as the arithmetic
- * expressions in Assign statements into an expression list.
- * Also ensures that the expression is valid by ensuring that operators and factors are alternating
+ * Parses the conditional expressions in If and While statements as well as the
+ * arithmetic expressions in Assign statements into an expression list. Also
+ * ensures that the expression is valid by ensuring that operators and factors
+ * are alternating
  * @return Parsed expression list.
  */
 vector<string> ExpressionParser::parseExpression() {
@@ -30,8 +31,8 @@ vector<string> ExpressionParser::parseExpression() {
             checkValidOperator(curr, i);
             oprtrFlag = false; // next token must be a variable/constant
         } else {
-            throw invalid_argument(
-                "invalid expression: invalid variable, constant or operator encountered");
+            throw invalid_argument("invalid expression: invalid variable, "
+                                   "constant or operator encountered");
         }
     }
     if (!brackets.empty()) {
@@ -65,9 +66,11 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
         }
         if (curr != Tokens::SYMBOL_NOT) {
             if (index == 0) {
-                throw invalid_argument("invalid expression: ) must appear before logical operator");
+                throw invalid_argument("invalid expression: ) must appear "
+                                       "before logical operator");
             } else if (exprLst[index - 1] != Tokens::SYMBOL_CLOSE_BRACKET) {
-                throw invalid_argument("invalid expression: ) must appear before logical operator");
+                throw invalid_argument("invalid expression: ) must appear "
+                                       "before logical operator");
             }
         }
     }
@@ -109,9 +112,10 @@ void ExpressionParser::checkValidBracket(string curr, int index) {
 }
 
 /**
- * Ensures that a detected open bracket is followed by either a factor or a not operator and
- * preceded by nothing or an operator. Also ensures that an expression (min 3 tokens) exists between
- * the current open bracket and the next close bracket.
+ * Ensures that a detected open bracket is followed by either a factor or a not
+ * operator and preceded by nothing or an operator. Also ensures that an
+ * expression (min 3 tokens) exists between the current open bracket and the
+ * next close bracket.
  */
 void ExpressionParser::checkValidOpenBracket(int start, int end) {
     if (start == 0 && end == exprLst.size() - 1) {
@@ -139,16 +143,17 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
         }
         if (end < exprLst.size() - 2) {
             if (exprLst[end + 2] == Tokens::SYMBOL_CLOSE_BRACKET) {
-                throw invalid_argument("invalid expression: brackets should contain an expression");
+                throw invalid_argument("invalid expression: brackets should "
+                                       "contain an expression");
             }
         }
     }
 }
 
 /**
- * Ensures that a detected close bracket is preceded by a factor and followed by nothing or an
- * operator. Also ensures that an expression (min 3 tokens) exists between the current close bracket
- * and the previous open bracket.
+ * Ensures that a detected close bracket is preceded by a factor and followed by
+ * nothing or an operator. Also ensures that an expression (min 3 tokens) exists
+ * between the current close bracket and the previous open bracket.
  */
 void ExpressionParser::checkValidCloseBracket(int start, int end) {
     if (start == 0 && end == exprLst.size() - 1) {
@@ -175,15 +180,17 @@ void ExpressionParser::checkValidCloseBracket(int start, int end) {
         }
         if (start > 1) {
             if (exprLst[start - 2] == Tokens::SYMBOL_OPEN_BRACKET) {
-                throw invalid_argument("invalid expression: brackets should contain an expression");
+                throw invalid_argument("invalid expression: brackets should "
+                                       "contain an expression");
             }
         }
     }
 }
 
 /**
- * Ensures that the expression is not empty and does not terminate with an operator. Also ensures
- * that conditional expressions contain at least one logical or comparison operator
+ * Ensures that the expression is not empty and does not terminate with an
+ * operator. Also ensures that conditional expressions contain at least one
+ * logical or comparison operator
  */
 void ExpressionParser::checkValidExpression() {
     if (exprLst.empty()) {

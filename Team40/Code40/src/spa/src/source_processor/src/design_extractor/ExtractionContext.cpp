@@ -15,8 +15,7 @@ void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
     if (currentProcedure.has_value()) {
         throw runtime_error("Trying to overwrite another procedure.");
     }
-    if (procDependencyMap.find(procedure->getId()) ==
-        procDependencyMap.end()) {
+    if (procDependencyMap.find(procedure->getId()) == procDependencyMap.end()) {
         procDependencyMap[procedure->getId()] = unordered_set<ProcName>();
         procIndegreesCounter[procedure->getId()] = 0;
     }
