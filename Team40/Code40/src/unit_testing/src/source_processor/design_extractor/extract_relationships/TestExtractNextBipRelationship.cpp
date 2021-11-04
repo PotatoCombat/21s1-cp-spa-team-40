@@ -9,12 +9,12 @@ struct TestExtractNextBipRelationship {
     static ProcName PROC_NAME_2;
     static ProcName PROC_NAME_3;
     static VarName VAR_NAME;
-    static inline int terminalStmtIndex = -1;
+    static inline int terminalStmtIndex = -2;
 
 public:
     static void reset() {
         ExtractionContext::getInstance().reset();
-        terminalStmtIndex = -1;
+        terminalStmtIndex = -2;
         pkb = PKB();
     }
 };
