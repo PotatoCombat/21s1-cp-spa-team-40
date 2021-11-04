@@ -8,6 +8,11 @@ IfStatementParser::IfStatementParser(vector<string> content, int index, vector<L
     entity = new Statement(index, StatementType::IF);
 };
 
+/**
+ * Parses a tokenized string identified to be a if statement into a
+ * Statement object of type IF.
+ * @return Statement object of type IF.
+ */
 Statement *IfStatementParser::parseEntity(int &programIndex) {
     vector<string>::iterator ifItr = find(content.begin(), content.end(), Tokens::KEYWORD_IF);
     vector<string>::iterator endItr =
@@ -36,6 +41,11 @@ Statement *IfStatementParser::parseEntity(int &programIndex) {
     return entity;
 }
 
+/**
+ * Iterates through the subsequent tokenized program lines after the initial If statement
+ * declaration, calls StatementParser to parse them and adds them to the appropriate stmtLst
+ * The loop is terminated when the second unnested closing brace (terminator) is detected
+ */
 void IfStatementParser::parseChildStmts(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {

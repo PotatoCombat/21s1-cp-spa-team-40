@@ -7,6 +7,11 @@ AssignStatementParser::AssignStatementParser(vector<string> content, int index)
     entity = new Statement(index, StatementType::ASSIGN);
 };
 
+/**
+ * Parses a tokenized string identified to be an assign statement into a
+ * Statement object of type ASSIGN.
+ * @return Statement object of type ASSIGN.
+ */
 Statement *AssignStatementParser::parseEntity() {
     vector<string>::iterator assignItr =
         find(content.begin(), content.end(), Tokens::SYMBOL_ASSIGN);

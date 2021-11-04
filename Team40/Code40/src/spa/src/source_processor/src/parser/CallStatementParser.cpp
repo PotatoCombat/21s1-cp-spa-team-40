@@ -6,6 +6,11 @@ CallStatementParser::CallStatementParser(vector<string> content, int index)
     entity = new Statement(index, StatementType::CALL);
 };
 
+/**
+ * Parses a tokenized string identified to be a call statement into a
+ * Statement object of type CALL.
+ * @return Statement object of type CALL.
+ */
 Statement *CallStatementParser::parseEntity() {
     vector<string>::iterator callItr = find(content.begin(), content.end(), Tokens::KEYWORD_CALL);
     if (next(callItr) == content.end()) {

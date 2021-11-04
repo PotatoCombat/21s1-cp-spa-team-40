@@ -6,6 +6,11 @@ PrintStatementParser::PrintStatementParser(vector<string> content, int index)
     entity = new Statement(index, StatementType::PRINT);
 };
 
+/**
+ * Parses a tokenized string identified to be a print statement into a
+ * Statement object of type PRINT.
+ * @return Statement object of type PRINT.
+ */
 Statement *PrintStatementParser::parseEntity() {
     vector<string>::iterator printItr = find(content.begin(), content.end(), Tokens::KEYWORD_PRINT);
     if (next(printItr) == content.end()) {

@@ -3,6 +3,11 @@
 
 ProcedureParser::ProcedureParser(vector<string> content) : EntityParser(content, 0) {}
 
+/**
+ * Parses a tokenized string identified to be a procedure into a Procedure
+ * object
+ * @return Procedure object.
+ */
 Procedure *ProcedureParser::parseEntity() {
     vector<string>::iterator procItr =
         find(content.begin(), content.end(), Tokens::KEYWORD_PROCEDURE);
@@ -13,7 +18,8 @@ Procedure *ProcedureParser::parseEntity() {
     if (!isValidName(proc_name)) {
         throw invalid_argument("invalid procedure name");
     }
-    // procedure: 'procedure' proc_name Tokens::CHAR_OPEN_BRACE stmtLst Tokens::CHAR_CLOSE_BRACE
+    // procedure: 'procedure' proc_name Tokens::CHAR_OPEN_BRACE stmtLst
+    // Tokens::CHAR_CLOSE_BRACE
     if (next(next(procItr)) == content.end()) {
         throw invalid_argument("invalid procedure");
     }
