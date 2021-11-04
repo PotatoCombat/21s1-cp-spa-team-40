@@ -545,11 +545,25 @@ public:
     virtual set<StmtIndex> getIfPatternStmts(const VarName &var);
 
     /**
+     * Selects var such that if(var, _, _), where if is an IF statement.
+     * @return all variable names that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<VarName> getIfPatternVars(const StmtIndex &stmt);
+
+    /**
      * Selects while such that while(var, _), where while is a WHILE statement.
      * @return all stmt#no that fit the relationship,
      *             or an empty set if there are none.
      */
     virtual set<StmtIndex> getWhilePatternStmts(const VarName &var);
+
+    /**
+     * Selects var such that while(var, _), where while is a WHILE statement.
+     * @return all variable names that fit the relationship,
+     *             or an empty set if there are none.
+     */
+    virtual set<VarName> getWhilePatternVars(const StmtIndex &stmt);
 
     /**
      * Selects BOOLEAN such that a(var, exprList), where a is an ASSIGN
