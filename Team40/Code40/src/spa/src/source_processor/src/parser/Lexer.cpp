@@ -130,6 +130,9 @@ vector<string> Lexer::tokenizeLine(string input) {
 
 // helper functions
 
+/**
+ * Tokenizes an operator symbol and add its to the list of tokens from the current input file line
+ */
 void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr, string &currString,
                                  vector<string> &inputLine) {
     // check if operator has an additional character
@@ -143,6 +146,9 @@ void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr, string &currSt
     addString(currString, inputLine);
 }
 
+/**
+ * Tokenizes a keyword and adds it to the list of tokens from the current input file line
+ */
 void Lexer::tokenizeAndAddKeyword(string input, int &i, string &currString,
                                   vector<string> &inputLine) {
     // check if keyword has an additional character
@@ -155,6 +161,10 @@ void Lexer::tokenizeAndAddKeyword(string input, int &i, string &currString,
     }
 }
 
+/**
+ * Adds the current token to the list of tokens from the current input file line and resets the
+ * input string to be empty
+ */
 void Lexer::addString(string &input, vector<string> &inputVector) {
     input = cleanString(input);
     if (!input.empty()) {
@@ -163,11 +173,17 @@ void Lexer::addString(string &input, vector<string> &inputVector) {
     input = "";
 }
 
+/**
+ * Remove all spaces from the current token
+ */
 string Lexer::cleanString(string input) {
     input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
     return input;
 }
 
+/**
+ * Makes sure that all the brackets and braces in the input source file have a valid match
+ */
 void Lexer::checkValidBracket(char curr) {
     if (isBracket(curr)) {
         if (curr == Tokens::CHAR_OPEN_BRACKET || curr == Tokens::CHAR_OPEN_BRACE) {
