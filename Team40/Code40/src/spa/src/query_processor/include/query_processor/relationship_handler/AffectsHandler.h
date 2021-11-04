@@ -17,6 +17,12 @@ private:
     set<string> getR2ClausedR1(string r1) override;
     bool isR1ClauseR2(string r1, string r2) override;
 
+    set<string> breadthFirstSearch(const ProgLineIndex line, const set<VarName> &vars, bool isFindingR1);
+    void exploreNeighbours(bool isFindingR1, const ProgLineIndex currLine,
+                           const VarName currVar,
+                           unordered_set<ProgLineIndex> &visited,
+                           queue<ProgLineIndex> &open, set<string> &results);
+
 public:
     AffectsHandler(Clause *clause, PKB *pkb);
 };
