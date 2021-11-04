@@ -136,7 +136,7 @@ Select s such that NextBip*(3, s)
 28 - NextBip* of else of if statement
 stmt s;
 Select s such that NextBip*(9, s)
-10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20,24,25,26,27,28
+12, 13, 14, 15, 16, 17, 18, 19,20,24,25,26,27,28
 5000
 29 - NextBip* of then of if statement
 stmt s;

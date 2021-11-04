@@ -30,7 +30,5 @@ protected:
     }
 
 public:
-    virtual T *parseEntity(int &programIndex = 0) {
-        return new T();
-    };
+    virtual T *parseEntity(int &programIndex) { return new T(); };
 };

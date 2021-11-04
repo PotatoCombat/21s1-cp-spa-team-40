@@ -9,7 +9,16 @@
 #include "common/model/ConstantValue.h"
 #include "common/model/Variable.h"
 
-enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
+enum class StatementType {
+    UNKNOWN,
+    READ,
+    PRINT,
+    ASSIGN,
+    CALL,
+    WHILE,
+    IF,
+    TERMINAL
+};
 
 class Statement : public Entity<StmtIndex> {
 public:

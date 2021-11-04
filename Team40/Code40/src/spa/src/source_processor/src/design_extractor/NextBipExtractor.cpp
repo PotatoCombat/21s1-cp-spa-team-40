@@ -1,27 +1,35 @@
 #include "source_processor/design_extractor/NextBipExtractor.h"
 
-NextBipExtractor::NextBipExtractor(PKB *pkb) : pkb(pkb) {}
+NextBipExtractor::NextBipExtractor(PKB *pkb) : pkb(pkb) {
+    nextTerminalIndex = NextBipExtractor::STARTING_TERMINAL_INDEX;
+}
 
 void NextBipExtractor::extract(Program *program) {
-    // Extract procedures in topological order of dependencies
-    unordered_map<ProcName, Procedure *> procMap;
-    for (Procedure *procedure : program->getProcLst()) {
-        procMap[procedure->getId()] = procedure;
-    }
+    ExtractionContext::getInstance().resetTransientContexts();
+
+    // Extract procedures in topologically reverse order of dependencies
     vector<ProcName> sortedProcNames =
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
-    for (const auto &procName : sortedProcNames) {
-        extractProcedure(procMap[procName]);
+    for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
+         it++) {
+        Procedure *proc = pkb->getProcByName(*it);
+        extractProcedure(proc);
     }
 }
 
 void NextBipExtractor::extractProcedure(Procedure *procedure) {
-    StmtIndex firstExecutableStmtIndex =
-        ExtractionContext::getInstance().getFirstExecutableStatement(
-            procedure->getId());
-    Statement *firstExecutableStatement =
-        pkb->getStmtByIndex(firstExecutableStmtIndex);
-    extractStatement(firstExecutableStatement);
+    ExtractionContext::getInstance().setCurrentProcedure(procedure);
+    // Create terminal stmt (equivalent of dummy node in CFG)
+    auto *terminalStmt =
+        new Statement(getNextTerminalIndex(), StatementType::TERMINAL);
+    terminalStmtsMap[procedure->getId()] = terminalStmt;
+
+    // Extract statements recursively
+    Statement *firstExecutableStmt =
+        pkb->getProcByName(procedure->getId())->getStmtLst().front();
+    extractStatement(firstExecutableStmt);
+
+    ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
 }
 
 void NextBipExtractor::extractStatement(Statement *statement) {
@@ -43,55 +51,51 @@ void NextBipExtractor::extractCallStatement(Statement *callStatement) {
     StmtIndex callStmtIndex = callStatement->getId();
 
     auto calledProcFirstExecutableStmt = getFirstExecutableStmt(calledProcName);
-    auto calledProcLastExecutableStmts = getLastExecutableStmts(calledProcName);
+    auto calledProcTerminalStmt = terminalStmtsMap[calledProcName];
     auto nextStatement = getStatementAfterCallStatement(callStmtIndex);
 
-    extractNextBip(callStatement, calledProcFirstExecutableStmt,
-                   calledProcLastExecutableStmts, nextStatement);
-    if (nextStatement.has_value()) {
+    if (!nextStatement.has_value()) {
+        extractCallTerminalNextBip(callStatement, calledProcFirstExecutableStmt,
+                                   calledProcTerminalStmt);
+    } else {
+        extractCallStatementNextBip(
+            callStatement, calledProcFirstExecutableStmt,
+            calledProcTerminalStmt, nextStatement.value());
         extractStatement(nextStatement.value());
     }
 }
 
 void NextBipExtractor::extractNonCallStatement(Statement *statement) {
-    set<ProgLineIndex> nextStatements =
-        pkb->getNextLines(statement->getId());
+    if (isLastExecutableStmt(statement)) {
+        extractNonCallTerminalNextBip(statement);
+    }
+    set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
     for (ProgLineIndex nextStatementIndex : nextStatements) {
-        Statement *nextStatement = pkb->getStmtByIndex(nextStatementIndex);
+        Statement *nextStatement;
+        if (nextStatementIndex <= STARTING_TERMINAL_INDEX) {
+            nextStatement = terminalStmtsMap[getCurrentProcName()];
+        } else {
+            nextStatement = pkb->getStmtByIndex(nextStatementIndex);
+        }
         pkb->insertNextBip(statement, nextStatement);
         extractStatement(nextStatement);
     }
 }
 
-void NextBipExtractor::extractNextBip(Statement *branchInFrom,
-                                      Statement *branchInTo,
-                                      set<Statement *> branchBackFroms,
-                                      optional<Statement *> branchBackTo) {
-    for (auto branchBackFrom : branchBackFroms) {
-        pkb->insertBranchIn(branchInFrom, branchInTo);
-        pkb->insertNextBip(branchInFrom, branchInTo);
-        if (branchBackTo.has_value()) {
-            pkb->insertNextBip(branchBackFrom, branchBackTo.value());
-            pkb->insertBranchBack(branchBackFrom, branchBackTo.value());
-        }
-    }
+void NextBipExtractor::extractCallStatementNextBip(Statement *branchInFrom,
+                                                   Statement *branchInTo,
+                                                   Statement *branchBackFrom,
+                                                   Statement *branchBackTo) {
+    pkb->insertBranchIn(branchInFrom, branchInTo);
+    pkb->insertNextBip(branchInFrom, branchInTo);
+    pkb->insertNextBip(branchBackFrom, branchBackTo);
+    pkb->insertBranchBack(branchBackFrom, branchBackTo);
 }
 
-Statement *NextBipExtractor::getFirstExecutableStmt(ProcName procName) {
+Statement *NextBipExtractor::getFirstExecutableStmt(const ProcName &procName) {
     StmtIndex calledProcFirstStmtIndex =
         ExtractionContext::getInstance().getFirstExecutableStatement(procName);
     return pkb->getStmtByIndex(calledProcFirstStmtIndex);
-}
-
-set<Statement *> NextBipExtractor::getLastExecutableStmts(ProcName procName) {
-    set<StmtIndex> procLastStmtIndices =
-        ExtractionContext::getInstance().getLastExecutableStatements(procName);
-    set<Statement *> procLastStmts;
-    for (auto procLastStmtIndex : procLastStmtIndices) {
-        Statement *procLastStmt = pkb->getStmtByIndex(procLastStmtIndex);
-        procLastStmts.insert(procLastStmt);
-    }
-    return procLastStmts;
 }
 
 optional<Statement *>
@@ -103,7 +107,47 @@ NextBipExtractor::getStatementAfterCallStatement(StmtIndex callStmtIndex) {
     if (nextStmtIndices.size() > 1) {
         throw runtime_error(
             "Encountered a call statement with more than one next "
-            "statements (syntactically impossible).");
+            "statement (syntactically impossible).");
     }
     return pkb->getStmtByIndex(*nextStmtIndices.begin());
+}
+
+ProcName NextBipExtractor::getCurrentProcName() {
+    auto currentProc = ExtractionContext::getInstance().getCurrentProcedure();
+    if (!currentProc.has_value()) {
+        throw runtime_error("Current procedure not set.");
+    }
+    return currentProc.value()->getId();
+}
+
+void NextBipExtractor::extractNonCallTerminalNextBip(Statement *statement) {
+    ProcName currentProcName = getCurrentProcName();
+    if (!terminalStmtsMap.count(currentProcName)) {
+        throw runtime_error("Current procedure terminal stmt not set.");
+    }
+
+    pkb->insertNext(statement, terminalStmtsMap[currentProcName]);
+    pkb->insertNextBip(statement, terminalStmtsMap[currentProcName]);
+    visited.insert(terminalStmtsMap[currentProcName]->getId());
+}
+
+void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
+                                                  Statement *branchInTo,
+                                                  Statement *branchBackFrom) {
+    ProcName currentProcName = getCurrentProcName();
+    if (!terminalStmtsMap.count(currentProcName)) {
+        throw runtime_error("Current procedure terminal stmt not set.");
+    }
+    Statement *branchBackTo = terminalStmtsMap[currentProcName];
+    pkb->insertNext(branchInFrom, branchBackTo);
+    extractCallStatementNextBip(branchInFrom, branchInTo, branchBackFrom,
+                                branchBackTo);
+    visited.insert(terminalStmtsMap[currentProcName]->getId());
+}
+
+bool NextBipExtractor::isLastExecutableStmt(Statement *statement) {
+    set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
+    return (nextStatements.empty() ||
+            (statement->getStatementType() == StatementType::WHILE &&
+             nextStatements.size() < 2));
 }
