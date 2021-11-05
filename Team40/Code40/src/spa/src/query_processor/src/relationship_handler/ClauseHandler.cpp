@@ -237,7 +237,6 @@ Result ClauseHandler::evalSameSyn() {
         resultList[res1] = VALUE_SET{};
     }
     result.setResultList1(ref, resultList);
-    result.setResultList2(ref, resultList);
     return result;
 }
 
