@@ -1,4 +1,3 @@
-#include "TestUtils.h"
 #include "TestPKBUtils.h"
 
 #include "pkb/PostfixAdapter.h"
