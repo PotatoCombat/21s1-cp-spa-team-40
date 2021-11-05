@@ -47,7 +47,6 @@ private:
     static const int INVALID_INDEX = -1;
 
     PKB *pkb;
-    ResultCache cache;
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;

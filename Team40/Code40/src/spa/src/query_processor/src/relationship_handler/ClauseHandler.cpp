@@ -45,9 +45,9 @@ set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{
  * source code
  * @param validClauseType the clause type that this handler supports
  */
-ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache,
+ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb,
                              ClauseType validClauseType)
-    : clause(clause), pkb(pkb), cache(cache), validClauseType(validClauseType) {}
+    : clause(clause), pkb(pkb), validClauseType(validClauseType) {}
 
 /**
  * Evaluates the handler based on the clause's type and the references' types
@@ -218,7 +218,7 @@ Result ClauseHandler::evalNotConstNotConst() {
         setResultListForOneRef(result, ref2, ref1, false);
     }
 
-    cache->setFullyCachedAllValues(clause->getType());
+    ResultCache::getInstance().setFullyCachedAllValues(clause->getType());
     return result;
 }
 
@@ -353,44 +353,47 @@ bool ClauseHandler::isType(string val, DesignEntityType type) {
 }
 
 set<string> ClauseHandler::getR1ClauseR2Wrapper(string r2) {
+    ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache->isR2FullyCached(r2, clsType) &&
+    if (useCache && cache.isR2FullyCached(r2, clsType) &&
         clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
-        return cache->getR1Values(r2, clsType);
+        return cache.getR1Values(r2, clsType);
     }
 
     set<string> res = getR1ClauseR2(r2);
     for (auto r1 : res) {
-        cache->cache(r1, r2, clsType);
+        cache.cache(r1, r2, clsType);
     }
-    cache->setR2FullyCached(r2, clsType);
+    cache.setR2FullyCached(r2, clsType);
     return res;
 }
 
 set<string> ClauseHandler::getR2ClausedR1Wrapper(string r1) {
+    ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache->isR1FullyCached(r1, clsType) &&
+    if (useCache && cache.isR1FullyCached(r1, clsType) &&
         clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
-        return cache->getR2Values(r1, clsType);
+        return cache.getR2Values(r1, clsType);
     }
 
     set<string> res = getR2ClausedR1(r1);
     for (auto r2 : res) {
-        cache->cache(r1, r2, clsType);
+        cache.cache(r1, r2, clsType);
     }
-    cache->setR1FullyCached(r1, clsType);
+    cache.setR1FullyCached(r1, clsType);
     return res;
 }
 
 bool ClauseHandler::isR1ClauseR2Wrapper(string r1, string r2) {
+    ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache->isR1FullyCached(r1, clsType) &&
+    if (useCache && cache.isR1FullyCached(r1, clsType) &&
         clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
-        return cache->isR1ClauseR2(r1, r2, clsType);
+        return cache.isR1ClauseR2(r1, r2, clsType);
     }
     bool valid = isR1ClauseR2(r1, r2);
     if (valid) {
-        cache->cache(r1, r2, clsType);
+        cache.cache(r1, r2, clsType);
     }
 
     return valid;

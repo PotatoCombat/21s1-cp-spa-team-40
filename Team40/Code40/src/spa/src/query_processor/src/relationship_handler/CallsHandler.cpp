@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/CallsHandler.h"
 
-CallsHandler::CallsHandler(Clause *clause, PKB *pkb, ResultCache *cache)
-    : ClauseHandler(clause, pkb, cache, ClauseType::CALLS) {
+CallsHandler::CallsHandler(Clause *clause, PKB *pkb)
+    : ClauseHandler(clause, pkb, ClauseType::CALLS) {
     validDesType1 = &ClauseHandler::PROCEDURE_DES_SET;
     validDesType2 = &ClauseHandler::PROCEDURE_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;

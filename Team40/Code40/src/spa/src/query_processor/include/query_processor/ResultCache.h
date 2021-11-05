@@ -35,8 +35,13 @@ private:
 
     void assertCache(int idx);
 
-public:
     explicit ResultCache();
+
+    ResultCache(ResultCache const &) = delete;
+    void operator=(ResultCache const &) = delete;
+
+public:
+    static ResultCache &getInstance();
 
     bool isR1FullyCached(string r1, ClauseType clsType);
     bool isR2FullyCached(string r2, ClauseType clsType);

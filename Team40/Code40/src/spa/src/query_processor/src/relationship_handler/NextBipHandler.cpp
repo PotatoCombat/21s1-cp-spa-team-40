@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/NextBipHandler.h"
 
-NextBipHandler::NextBipHandler(Clause *clause, PKB *pkb, ResultCache *cache)
-    : ClauseHandler(clause, pkb, cache, ClauseType::NEXTBIP) {
+NextBipHandler::NextBipHandler(Clause *clause, PKB *pkb)
+    : ClauseHandler(clause, pkb, ClauseType::NEXTBIP) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;
