@@ -106,7 +106,7 @@ vector<string> Lexer::tokenizeLine(string input) {
         char curr = input.at(i);
         currString = cleanString(currString);
 
-        if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
+        if (isOperator(curr) || isBracket(curr) || isSemiColon(curr) || ::isspace(curr)) {
             // push back previous string before special character
             addString(currString, inputLine);
             currString.push_back(curr);
