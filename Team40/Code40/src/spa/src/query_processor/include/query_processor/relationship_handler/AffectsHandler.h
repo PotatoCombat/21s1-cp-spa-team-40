@@ -24,5 +24,5 @@ private:
                            queue<ProgLineIndex> &open, set<string> &results);
 
 public:
-    AffectsHandler(Clause *clause, PKB *pkb);
+    AffectsHandler(Clause *clause, PKB *pkb, ResultCache *cache);
 };

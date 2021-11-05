@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/UsesStmtHandler.h"
 
-UsesStmtHandler::UsesStmtHandler(Clause* clause, PKB* pkb)
-    : ClauseHandler(clause, pkb, ClauseType::USES_S) {
+UsesStmtHandler::UsesStmtHandler(Clause *clause, PKB *pkb, ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::USES_S) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::VARIABLE_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;

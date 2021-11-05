@@ -7,6 +7,8 @@
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ResultCache.h"
+
 #include "query_processor/exception/ClauseHandlerError.h"
 
 #include "query_processor/model/Clause.h"
@@ -29,6 +31,10 @@ protected:
     set<ReferenceType> *validRefType2;
     ClauseType validClauseType;
 
+    // change this to false if don't want to use cache
+    bool useCache = true;
+    ResultCache *cache;
+
     static set<DesignEntityType> STMT_DES_SET;
     static set<DesignEntityType> PROCEDURE_DES_SET;
     static set<DesignEntityType> VARIABLE_DES_SET;
@@ -38,7 +44,11 @@ protected:
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
 
-    ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType);
+    ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache, ClauseType validClauseType);
+
+    set<string> getR1ClauseR2Wrapper(string r2);
+    set<string> getR2ClausedR1Wrapper(string r1);
+    bool isR1ClauseR2Wrapper(string r1, string r2);
 
     /**
      * Gets all reference 1 values such that the relationship between

@@ -18,5 +18,8 @@ enum class ClauseType {
     AFFECTS,
     AFFECTS_T,
     WITH,
-    PATTERN
+    PATTERN,
+    Count // make sure that this is the last element of this enum for
+          // ResultCache to work properly
+          // shouldn't be used as a clause type
 };

@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/AffectsHandler.h"
 
-AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb)
-    : ClauseHandler(clause, pkb, ClauseType::AFFECTS) {
+AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb, ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::AFFECTS) {
     validDesType1 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validDesType2 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;
@@ -65,10 +65,10 @@ void AffectsHandler::exploreNeighbours(bool isFindingR1,
                                        unordered_set<ProgLineIndex> &visited,
                                        queue<ProgLineIndex> &open,
                                        set<string> &results) {
-    bool (PKB::*checkRelationship)(ProgLineIndex, VarName) =
+    bool (PKB::*checkRelationship)(const ProgLineIndex &, const VarName &) =
         isFindingR1 ? &PKB::stmtModifies : &PKB::stmtUses;
 
-    set<ProgLineIndex> (PKB::*getNeighbours)(ProgLineIndex) =
+    set<ProgLineIndex> (PKB::*getNeighbours)(const ProgLineIndex &) =
         isFindingR1 ? &PKB::getPreviousLines : &PKB::getNextLines;
 
     for (ProgLineIndex i : (pkb->*getNeighbours)(currLine)) {

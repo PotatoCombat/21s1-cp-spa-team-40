@@ -1,7 +1,8 @@
 #include "query_processor/relationship_handler/FollowsStarHandler.h"
 
-FollowsStarHandler::FollowsStarHandler(Clause* clause, PKB* pkb)
-    : ClauseHandler(clause, pkb, ClauseType::FOLLOWS_T) {
+FollowsStarHandler::FollowsStarHandler(Clause *clause, PKB *pkb,
+                                       ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::FOLLOWS_T) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;

@@ -11,5 +11,5 @@ private:
     bool isR1ClauseR2(string r1, string r2) override;
 
 public:
-    NextBipHandler(Clause *clause, PKB *pkb);
+    NextBipHandler(Clause *clause, PKB *pkb, ResultCache *cache);
 };

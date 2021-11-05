@@ -9,6 +9,7 @@
 
 #include "pkb/PKB.h"
 
+#include "query_processor/ResultCache.h"
 #include "query_processor/ResultFormatter.h"
 #include "query_processor/ResultTable.h"
 
@@ -46,6 +47,7 @@ private:
     static const int INVALID_INDEX = -1;
 
     PKB *pkb;
+    ResultCache cache;
     vector<Reference *> returnRefs;
     vector<Reference *> references;
     vector<Clause *> clauses;
