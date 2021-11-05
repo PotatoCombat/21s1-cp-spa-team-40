@@ -1,45 +1,58 @@
 #pragma once
+
 #include <map>
 #include <set>
 #include <vector>
-#include "Iterator.h"
+
+#include "pkb/Iterator.h"
+
 #include "common/model/Abstractions.h"
+#include "common/model/Entity.h"
 
 using namespace std;
 
-template <typename T, typename Name> class EntityTable {
-    static_assert(is_convertible<string, Name>::value,
-                  "Name must be convertible to a primitive string");
+template <typename T, typename Id>
+class EntityTable {
+    static_assert(is_convertible<T, Entity<Id>>::value,
+            "Cannot use table with an invalid entity type");
 
 public:
-    /// Stores the pointer \param entity in the map.
+    /**
+     * Stores an entity in the table.
+     * @param entity
+     */
     virtual void insert(T *entity) {
-        string name = entity->getName();
-        names.insert(name);
-//        entities.push_back(entity);
-        nameToEntityMap[name] = entity;
-        ++size;
+        size++;
+        ids.insert(entity->getId());
+        idToEntities[entity->getId()] = entity;
     }
 
-    /// Returns the pointer to the entity with the given name in the map.
-    /// \return pointer, or NULL if the table does not contain \param index.
-    virtual T *getEntity(Name name) {
-        auto result = nameToEntityMap.find(name);
-        if (result == nameToEntityMap.end()) {
+    /**
+     * Returns an entity in the table.
+     * @param name the name of the entity.
+     * @returns the statement with the given index,
+     *          or InvalidEntity if none exist.
+     */
+    virtual T *getEntity(const Id &id) {
+        auto key = idToEntities.find(id);
+        if (key == idToEntities.end()) {
             return nullptr;
         }
-        return result->second;
+        return key->second;
     }
 
-    /// Returns an iterator for all the entity indices stored in the table.
-    virtual Iterator<Name> getNames() { return Iterator<Name>(names); }
+    /**
+     * Returns a list of entity names in the table.
+     */
+    virtual Iterator<Id> getIds() { return Iterator<Id>(ids); }
 
-    /// Returns the number of entities stored in the table.
-    virtual int getSize() { return size; }
+    /**
+     * Returns the number of entities stored in the table.
+     */
+    virtual size_t getSize() { return size; }
 
 private:
-    int size = 0;
-    set<Name> names;
-//    vector<T*> entities;
-    map<Name, T *> nameToEntityMap;
+    size_t size = 0;
+    set<Id> ids;
+    map<Id, T *> idToEntities;
 };

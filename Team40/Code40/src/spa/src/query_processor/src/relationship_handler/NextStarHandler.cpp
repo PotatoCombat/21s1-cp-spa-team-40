@@ -24,7 +24,7 @@ set<string> NextStarHandler::getR1ClauseR2(string r2) {
         // Explore neighbours
         for (ProgLineIndex i : pkb->getPreviousLines(curr)) {
             // Only add neighbours that haven't been visited
-            if (visited.find(i) == visited.end()) {
+            if (visited.find(i) == visited.end() && !isDummyStmt(i)) {
                 visited.insert(i); // Mark current as visited
                 open.push(i);
             }
@@ -52,11 +52,10 @@ set<string> NextStarHandler::getR2ClausedR1(string r1) {
         curr = open.front();
         open.pop();
 
-
         // Explore neighbours
         for (ProgLineIndex i : pkb->getNextLines(curr)) {
             // Only add neighbours that haven't been visited
-            if (visited.find(i) == visited.end()) {
+            if (visited.find(i) == visited.end() && !isDummyStmt(i)) {
                 visited.insert(i); // Mark current as visited
                 open.push(i);
             }
@@ -92,7 +91,7 @@ bool NextStarHandler::isR1ClauseR2(string r1, string r2) {
             }
 
             // Only add neighbours that haven't been visited
-            if (visited.find(i) == visited.end()) {
+            if (visited.find(i) == visited.end() && !isDummyStmt(i)) {
                 visited.insert(i); // Mark current as visited
                 open.push(i);
             }

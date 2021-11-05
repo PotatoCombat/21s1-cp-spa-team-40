@@ -1,6 +1,9 @@
 #pragma once
-#include "common/model/Procedure.h"
+
 #include <vector>
+
+#include "common/model/Procedure.h"
+
 using namespace std;
 
 class Program {
@@ -10,7 +13,7 @@ private:
 public:
     Program();
 
-    void addToProcLst(Procedure* proc);
+    void addToProcLst(Procedure *proc);
 
     vector<Procedure *> getProcLst();
 };

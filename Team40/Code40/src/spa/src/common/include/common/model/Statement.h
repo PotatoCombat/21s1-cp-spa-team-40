@@ -1,21 +1,30 @@
 #pragma once
 
-#include "common/model/Abstractions.h"
-#include "common/model/ConstantValue.h"
-#include "common/model/Variable.h"
-
 #include <optional>
 #include <set>
 #include <stdexcept>
 #include <vector>
 
-enum class StatementType { UNKNOWN, READ, PRINT, ASSIGN, CALL, WHILE, IF };
+#include "common/model/Abstractions.h"
+#include "common/model/ConstantValue.h"
+#include "common/model/Variable.h"
 
-class Statement {
+enum class StatementType {
+    UNKNOWN,
+    READ,
+    PRINT,
+    ASSIGN,
+    CALL,
+    WHILE,
+    IF,
+    TERMINAL
+};
+
+class Statement : public Entity<StmtIndex> {
 public:
-    Statement(int index, StatementType statementType);
+    Statement();
+    explicit Statement(StmtIndex index, StatementType statementType);
 
-    int getIndex();
     StatementType getStatementType();
 
     Variable *getVariable();
@@ -41,7 +50,6 @@ public:
     bool operator==(const Statement &other) const;
 
 private:
-    int index;
     StatementType statementType;
 
     optional<Variable *> variable;

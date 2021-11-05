@@ -108,3 +108,14 @@ ReferenceAttribute ParserUtil::parseValidAttr(DesignEntityType deType,
     }
     throw ValidityError("QP-ERROR: invalid attribute");
 }
+
+Reference *ParserUtil::getReferenceFromList(std::vector<Reference *> &list,
+                                            std::string syn) {
+    auto it = find_if(list.begin(), list.end(), [&syn](Reference *ref) {
+        return ref->getValue() == syn;
+    });
+    if (it != list.end()) {
+        return *it;
+    }
+    return nullptr;
+}

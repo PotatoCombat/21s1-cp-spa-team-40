@@ -36,7 +36,7 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts a simple "
 
     TestUtil::addConditionalExpression(&whileStatement);
 
-    whileStatement.setProcName(procedure.getName());
+    whileStatement.setProcName(procedure.getId());
     whileStatement.addThenStmt(&thenStatement);
     thenStatement.setVariable(&variable);
     procedure.addToStmtLst(&whileStatement);
@@ -53,13 +53,13 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts a simple "
                 .asVector()
                 .size() == 1);
     REQUIRE(TestExtractWhileStatement::pkb.getParentStmt(
-                thenStatement.getIndex()) == whileStatement.getIndex());
+                thenStatement.getId()) == whileStatement.getId());
     REQUIRE(TestExtractWhileStatement::pkb
-                .getParentStarStmts(thenStatement.getIndex())
+                .getParentStarStmts(thenStatement.getId())
                 .size() == 1);
     REQUIRE(TestExtractWhileStatement::pkb
-                .getParentStarStmts(thenStatement.getIndex())
-                .count(whileStatement.getIndex()));
+                .getParentStarStmts(thenStatement.getId())
+                .count(whileStatement.getId()));
 }
 
 TEST_CASE(
@@ -76,7 +76,7 @@ TEST_CASE(
     TestUtil::addConditionalExpression(&whileStatement);
     TestUtil::addConditionalExpression(&thenWhileStatement);
 
-    whileStatement.setProcName(procedure.getName());
+    whileStatement.setProcName(procedure.getId());
     whileStatement.addThenStmt(&thenWhileStatement);
     thenWhileStatement.addThenStmt(&thenWhileThenStatement);
     thenWhileThenStatement.setVariable(&variable);
@@ -96,24 +96,24 @@ TEST_CASE(
 
     // Check that top level whileStatement is parent of thenWhileStatement
     REQUIRE(TestExtractWhileStatement::pkb.getParentStmt(
-                thenWhileStatement.getIndex()) == whileStatement.getIndex());
+                thenWhileStatement.getId()) == whileStatement.getId());
 
     // Check that thenWhileStatement is parent of thenWhileThenStatement
     REQUIRE(TestExtractWhileStatement::pkb.getParentStmt(
-                thenWhileThenStatement.getIndex()) ==
-            thenWhileStatement.getIndex());
+                thenWhileThenStatement.getId()) ==
+            thenWhileStatement.getId());
 
     // Check that thenWhileThenStatement has both thenWhileStatement and
     // whileStatement as transitive parents
     REQUIRE(TestExtractWhileStatement::pkb
-                .getParentStarStmts(thenWhileThenStatement.getIndex())
+                .getParentStarStmts(thenWhileThenStatement.getId())
                 .size() == 2);
     REQUIRE(TestExtractWhileStatement::pkb
-                .getParentStarStmts(thenWhileThenStatement.getIndex())
-                .count(thenWhileStatement.getIndex()));
+                .getParentStarStmts(thenWhileThenStatement.getId())
+                .count(thenWhileStatement.getId()));
     REQUIRE(TestExtractWhileStatement::pkb
-                .getParentStarStmts(thenWhileThenStatement.getIndex())
-                .count(whileStatement.getIndex()));
+                .getParentStarStmts(thenWhileThenStatement.getId())
+                .count(whileStatement.getId()));
 }
 
 TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
@@ -143,26 +143,26 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Follows relationship "
     de.extract(&program);
 
     auto follow1 = TestExtractWhileStatement::pkb.getFollowingStmt(
-        thenStatement1.getIndex());
+        thenStatement1.getId());
     auto followStar1 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
-        thenStatement1.getIndex());
+        thenStatement1.getId());
     auto follow2 = TestExtractWhileStatement::pkb.getFollowingStmt(
-        thenStatement2.getIndex());
+        thenStatement2.getId());
     auto followStar2 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
-        thenStatement2.getIndex());
+        thenStatement2.getId());
     auto follow3 = TestExtractWhileStatement::pkb.getFollowingStmt(
-        thenStatement3.getIndex());
+        thenStatement3.getId());
     auto followStar3 = TestExtractWhileStatement::pkb.getFollowingStarStmts(
-        thenStatement3.getIndex());
+        thenStatement3.getId());
 
-    REQUIRE(follow1 == thenStatement2.getIndex());
+    REQUIRE(follow1 == thenStatement2.getId());
     REQUIRE(followStar1.size() == 2);
-    REQUIRE(followStar1.count(thenStatement2.getIndex()));
-    REQUIRE(followStar1.count(thenStatement3.getIndex()));
+    REQUIRE(followStar1.count(thenStatement2.getId()));
+    REQUIRE(followStar1.count(thenStatement3.getId()));
 
-    REQUIRE(follow2 == thenStatement3.getIndex());
+    REQUIRE(follow2 == thenStatement3.getId());
     REQUIRE(followStar2.size() == 1);
-    REQUIRE(followStar2.count(thenStatement3.getIndex()));
+    REQUIRE(followStar2.count(thenStatement3.getId()));
 
     REQUIRE(follow3 == -1);
     REQUIRE(followStar3.empty());
@@ -201,36 +201,36 @@ TEST_CASE("TestExtractWhileStatement: Correctly extracts Next relationship.") {
     // Check Next(w, s1) where s1 is the first THEN statement and s2 is the
     // statement which follows immediately after the WHILE statement
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
             .size() == 2);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
-            .count(afterWhileStatement.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
+            .count(afterWhileStatement.getId()));
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
-            .count(thenStatement1.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
+            .count(thenStatement1.getId()));
 
     // Check Next(s1, s2) where s1, s2 are consecutive THEN statements
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getIndex())
-            .count(thenStatement2.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getId())
+            .count(thenStatement2.getId()));
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getIndex())
-            .count(thenStatement3.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getId())
+            .count(thenStatement3.getId()));
 
     // Check Next(s, w) where s is the last THEN statement in while w
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement3.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement3.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement3.getIndex())
-            .count(whileStatement.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement3.getId())
+            .count(whileStatement.getId()));
 }
 
 TEST_CASE(
@@ -297,7 +297,6 @@ TEST_CASE(
      *        read x;              (8)
      *        read x;              (9)
      *        read x;              (10)
-     *      {
      *    }
      *    read x;                  (11)
      * }
@@ -309,41 +308,41 @@ TEST_CASE(
     // Check Next(w, s1), Next(ifs, s2) where s1 is the first THEN
     // and s2 is the statement which follows immediately after while w
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
             .size() == 2);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
-            .count(thenStatement1.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
+            .count(thenStatement1.getId()));
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getIndex())
-            .count(afterWhileStatement.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(whileStatement.getId())
+            .count(afterWhileStatement.getId()));
 
     // Check Next(s1, s2) where s1, s2 are consecutive THEN statements
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getIndex())
-            .count(thenStatement2.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement1.getId())
+            .count(thenStatement2.getId()));
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getIndex())
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getIndex())
-            .count(thenIfStatement.getIndex()));
+        TestExtractWhileStatement::pkb.getNextLines(thenStatement2.getId())
+            .count(thenIfStatement.getId()));
 
     // Check that Next(s1, w), Next(s2, w) where s1, s2 are the last THEN/ELSE
     // statements belonging to the IfStatement respectively
     REQUIRE(TestExtractWhileStatement::pkb
-                .getNextLines(thenIfThenStatement3.getIndex())
+                .getNextLines(thenIfThenStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractWhileStatement::pkb
-                .getNextLines(thenIfThenStatement3.getIndex())
-                .count(whileStatement.getIndex()));
+                .getNextLines(thenIfThenStatement3.getId())
+                .count(whileStatement.getId()));
     REQUIRE(TestExtractWhileStatement::pkb
-                .getNextLines(thenIfElseStatement3.getIndex())
+                .getNextLines(thenIfElseStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractWhileStatement::pkb
-                .getNextLines(thenIfElseStatement3.getIndex())
-                .count(whileStatement.getIndex()));
+                .getNextLines(thenIfElseStatement3.getId())
+                .count(whileStatement.getId()));
 }

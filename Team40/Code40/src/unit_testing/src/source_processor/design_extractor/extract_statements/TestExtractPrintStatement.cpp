@@ -27,7 +27,7 @@ TEST_CASE(
     Statement printStatement(1, StatementType::PRINT);
     Variable printVar(TestExtractPrintStatement::VAR_NAME);
 
-    printStatement.setProcName(procedure.getName());
+    printStatement.setProcName(procedure.getId());
     printStatement.setVariable(&printVar);
     procedure.addToStmtLst(&printStatement);
     program.addToProcLst(&procedure);
@@ -44,10 +44,10 @@ TEST_CASE(
                 .size() == 1);
 
     // Check that procedure modifies variable correctly extracted
-    REQUIRE(TestExtractPrintStatement::pkb.getProcsUsingVar(printVar.getName())
-                .count(procedure.getName()));
+    REQUIRE(TestExtractPrintStatement::pkb.getProcsUsingVar(printVar.getId())
+                .count(procedure.getId()));
 
     // Check that statement modifies variable correctly extracted
-    REQUIRE(TestExtractPrintStatement::pkb.getStmtsUsingVar(printVar.getName())
-                .count(printStatement.getIndex()));
+    REQUIRE(TestExtractPrintStatement::pkb.getStmtsUsingVar(printVar.getId())
+                .count(printStatement.getId()));
 }

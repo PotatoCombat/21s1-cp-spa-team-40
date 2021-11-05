@@ -1,11 +1,12 @@
 #pragma once
 
-#include "common/model/ConstantValue.h"
-#include "common/model/Statement.h"
-#include "common/model/Variable.h"
 #include <stack>
 #include <string>
 #include <unordered_map>
+
+#include "common/model/ConstantValue.h"
+#include "common/model/Statement.h"
+#include "common/model/Variable.h"
 
 using namespace std;
 
@@ -13,9 +14,12 @@ class ExpressionParser {
 public:
     ExpressionParser(vector<string> exprLst, Statement *stmt);
 
-    vector<string> exprLst; 
+    vector<string> exprLst;
     Statement *stmt;
     stack<string> brackets; // for bracket matching
+
+    static const int MIN_COND_LEN_WITH_NOT = 2;
+    static const int MIN_COND_LEN_WITH_AND_OR = 3;
 
     vector<string> parseExpression();
     void checkValidOperator(string curr, int index);

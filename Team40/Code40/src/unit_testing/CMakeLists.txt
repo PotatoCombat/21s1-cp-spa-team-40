@@ -10,5 +10,7 @@ add_subdirectory(src/pkb)
 add_subdirectory(src/query_processor)
 add_subdirectory(src/source_processor)
 
+target_include_directories(unit_testing PUBLIC include)
+
 # Ensures that unit_testing runs with spa library.
 target_link_libraries(unit_testing spa)

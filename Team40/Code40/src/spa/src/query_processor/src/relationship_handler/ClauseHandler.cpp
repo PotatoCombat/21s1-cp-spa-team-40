@@ -38,10 +38,21 @@ set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{
     ReferenceType::CONSTANT, ReferenceType::SYNONYM
 };
 
+/**
+ * Creates a handler to be evaluated
+ * @param clause pointer to a clause representing a relationship
+ * @param pkb pointer to a pkb object containing information about the
+ * source code
+ * @param validClauseType the clause type that this handler supports
+ */
 ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache,
                              ClauseType validClauseType)
     : clause(clause), pkb(pkb), cache(cache), validClauseType(validClauseType) {}
 
+/**
+ * Evaluates the handler based on the clause's type and the references' types
+ * @return a result object
+ */
 Result ClauseHandler::eval() {
     ReferenceType refType1 = clause->getFirstReference()->getRefType();
     ReferenceType refType2 = clause->getSecondReference()->getRefType();
@@ -88,6 +99,9 @@ Result ClauseHandler::eval() {
     return evalNotConstNotConst();
 }
 
+/**
+ * Handles cases where both references are wildcards
+ */
 Result ClauseHandler::evalWcWc() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
@@ -103,6 +117,9 @@ Result ClauseHandler::evalWcWc() {
     return result;
 }
 
+/**
+ * Handles cases where both references are constants
+ */
 Result ClauseHandler::evalConstConst() {
     Result result;
     string val1 = clause->getFirstReference()->getValue();
@@ -111,6 +128,10 @@ Result ClauseHandler::evalConstConst() {
     return result;
 }
 
+/**
+ * Handles cases where the first references is a constant, the second
+ * reference is a wildcard
+ */
 Result ClauseHandler::evalConstWc() {
     Result result;
     string val1 = clause->getFirstReference()->getValue();
@@ -118,6 +139,10 @@ Result ClauseHandler::evalConstWc() {
     return result;
 }
 
+/**
+ * Handles cases where the first references is a wildcard, the second
+ * reference is a constant
+ */
 Result ClauseHandler::evalWcConst() {
     Result result;
     string val2 = clause->getSecondReference()->getValue();
@@ -125,6 +150,10 @@ Result ClauseHandler::evalWcConst() {
     return result;
 }
 
+/**
+ * Handles cases where the first references is a synonym, the second
+ * reference is a constant
+ */
 Result ClauseHandler::evalSynConst() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
@@ -141,6 +170,10 @@ Result ClauseHandler::evalSynConst() {
     return result;
 }
 
+/**
+ * Handles cases where the first references is a constant, the second
+ * reference is a synonym
+ */
 Result ClauseHandler::evalConstSyn() {
     Result result;
     Reference *ref2 = clause->getSecondReference();
@@ -157,6 +190,9 @@ Result ClauseHandler::evalConstSyn() {
     return result;
 }
 
+/**
+ * Handles cases where neither of the references is constant
+ */
 Result ClauseHandler::evalNotConstNotConst() {
     Result result;
     Reference *ref1 = clause->getFirstReference();
@@ -186,6 +222,9 @@ Result ClauseHandler::evalNotConstNotConst() {
     return result;
 }
 
+/**
+ * Handles cases where both references represent the same synonym
+ */
 Result ClauseHandler::evalSameSyn() {
     Result result;
     map<VALUE, VALUE_SET> resultList;
@@ -237,6 +276,9 @@ void ClauseHandler::setResultListForOneRef(Result &result, Reference *thisRef,
     (result.*setThisResultList)(thisRef, thisStmtResults);
 }
 
+/**
+ * Ensures that the information in the clause if valid
+ */
 void ClauseHandler::validate() {
     Reference *ref1 = clause->getFirstReference();
     Reference *ref2 = clause->getSecondReference();
@@ -257,6 +299,11 @@ void ClauseHandler::validate() {
     }
 }
 
+/**
+ * Gets all values of the reference from the pkb
+ * @param pkb pointer to a pkb object
+ * @param ref a reference object
+ */
 set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
     set<string> res;
     DesignEntityType desType = ref.getDeType();

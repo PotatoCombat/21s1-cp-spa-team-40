@@ -31,7 +31,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
 
     TestUtil::addConditionalExpression(&ifStatement);
 
-    ifStatement.setProcName(procedure.getName());
+    ifStatement.setProcName(procedure.getId());
     ifStatement.addThenStmt(&thenStatement);
     ifStatement.addElseStmt(&elseStatement);
     thenStatement.setVariable(&variable);
@@ -48,21 +48,21 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a simple IfStatement") {
                 .asVector()
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                thenStatement.getIndex()) == ifStatement.getIndex());
+                thenStatement.getId()) == ifStatement.getId());
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                elseStatement.getIndex()) == ifStatement.getIndex());
+                elseStatement.getId()) == ifStatement.getId());
     REQUIRE(
-        TestExtractIfStatement::pkb.getParentStarStmts(thenStatement.getIndex())
+        TestExtractIfStatement::pkb.getParentStarStmts(thenStatement.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractIfStatement::pkb.getParentStarStmts(thenStatement.getIndex())
-            .count(ifStatement.getIndex()));
+        TestExtractIfStatement::pkb.getParentStarStmts(thenStatement.getId())
+            .count(ifStatement.getId()));
     REQUIRE(
-        TestExtractIfStatement::pkb.getParentStarStmts(elseStatement.getIndex())
+        TestExtractIfStatement::pkb.getParentStarStmts(elseStatement.getId())
             .size() == 1);
     REQUIRE(
-        TestExtractIfStatement::pkb.getParentStarStmts(elseStatement.getIndex())
-            .count(ifStatement.getIndex()));
+        TestExtractIfStatement::pkb.getParentStarStmts(elseStatement.getId())
+            .count(ifStatement.getId()));
 }
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
@@ -80,7 +80,7 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     TestUtil::addConditionalExpression(&ifStatement);
     TestUtil::addConditionalExpression(&thenIfStatement);
 
-    ifStatement.setProcName(procedure.getName());
+    ifStatement.setProcName(procedure.getId());
     ifStatement.addThenStmt(&thenIfStatement);
     ifStatement.addElseStmt(&elseStatement);
     elseStatement.setVariable(&variable);
@@ -103,24 +103,24 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts a nested IfStatement") {
     // Check that top level ifStatement is parent of thenIfStatement &
     // elseStatement
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                thenIfStatement.getIndex()) == ifStatement.getIndex());
+                thenIfStatement.getId()) == ifStatement.getId());
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                elseStatement.getIndex()) == ifStatement.getIndex());
+                elseStatement.getId()) == ifStatement.getId());
 
     // Check that thenIfStatement is parent of thenIfThenStatement &
     // thenIfElseStatement
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                thenIfThenStatement.getIndex()) == thenIfStatement.getIndex());
+                thenIfThenStatement.getId()) == thenIfStatement.getId());
     REQUIRE(TestExtractIfStatement::pkb.getParentStmt(
-                thenIfElseStatement.getIndex()) == thenIfStatement.getIndex());
+                thenIfElseStatement.getId()) == thenIfStatement.getId());
 
     // Check that thenIfThenStatement & thenIfElseStatement have 2
     // transitive parents each
     REQUIRE(TestExtractIfStatement::pkb
-                .getParentStarStmts(thenIfThenStatement.getIndex())
+                .getParentStarStmts(thenIfThenStatement.getId())
                 .size() == 2);
     REQUIRE(TestExtractIfStatement::pkb
-                .getParentStarStmts(thenIfElseStatement.getIndex())
+                .getParentStarStmts(thenIfElseStatement.getId())
                 .size() == 2);
 }
 
@@ -162,51 +162,51 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Follows relationship "
     de.extract(&program);
 
     auto thenFollow1 =
-        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement1.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement1.getId());
     auto thenFollowStar1 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        thenStatement1.getIndex());
+        thenStatement1.getId());
     auto thenFollow2 =
-        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement2.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement2.getId());
     auto thenFollowStar2 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        thenStatement2.getIndex());
+        thenStatement2.getId());
     auto thenFollow3 =
-        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement3.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(thenStatement3.getId());
     auto thenFollowStar3 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        thenStatement3.getIndex());
+        thenStatement3.getId());
     auto elseFollow1 =
-        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement1.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement1.getId());
     auto elseFollowStar1 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        elseStatement1.getIndex());
+        elseStatement1.getId());
     auto elseFollow2 =
-        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement2.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement2.getId());
     auto elseFollowStar2 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        elseStatement2.getIndex());
+        elseStatement2.getId());
     auto elseFollow3 =
-        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement3.getIndex());
+        TestExtractIfStatement::pkb.getFollowingStmt(elseStatement3.getId());
     auto elseFollowStar3 = TestExtractIfStatement::pkb.getFollowingStarStmts(
-        elseStatement3.getIndex());
+        elseStatement3.getId());
 
-    REQUIRE(thenFollow1 == thenStatement2.getIndex());
+    REQUIRE(thenFollow1 == thenStatement2.getId());
     REQUIRE(thenFollowStar1.size() == 2);
-    REQUIRE(thenFollowStar1.count(thenStatement2.getIndex()));
-    REQUIRE(thenFollowStar1.count(thenStatement3.getIndex()));
+    REQUIRE(thenFollowStar1.count(thenStatement2.getId()));
+    REQUIRE(thenFollowStar1.count(thenStatement3.getId()));
 
-    REQUIRE(thenFollow2 == thenStatement3.getIndex());
+    REQUIRE(thenFollow2 == thenStatement3.getId());
     REQUIRE(thenFollowStar2.size() == 1);
-    REQUIRE(thenFollowStar2.count(thenStatement3.getIndex()));
+    REQUIRE(thenFollowStar2.count(thenStatement3.getId()));
 
     REQUIRE(thenFollow3 == -1);
     REQUIRE(thenFollowStar3.empty());
 
-    REQUIRE(elseFollow1 == elseStatement2.getIndex());
+    REQUIRE(elseFollow1 == elseStatement2.getId());
 
     REQUIRE(elseFollowStar1.size() == 2);
-    REQUIRE(elseFollowStar1.count(elseStatement2.getIndex()));
-    REQUIRE(elseFollowStar1.count(elseStatement3.getIndex()));
+    REQUIRE(elseFollowStar1.count(elseStatement2.getId()));
+    REQUIRE(elseFollowStar1.count(elseStatement3.getId()));
 
-    REQUIRE(elseFollow2 == elseStatement3.getIndex());
+    REQUIRE(elseFollow2 == elseStatement3.getId());
     REQUIRE(elseFollowStar2.size() == 1);
-    REQUIRE(elseFollowStar2.count(elseStatement3.getIndex()));
+    REQUIRE(elseFollowStar2.count(elseStatement3.getId()));
 
     REQUIRE(elseFollow3 == -1);
     REQUIRE(elseFollowStar3.empty());
@@ -253,41 +253,41 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship.") {
 
     // Check Next(ifs, s1), Next(ifs, s2) where s1, s2 are the first THEN
     // and ELSE statements respectively
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
                 .size() == 2);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
-                .count(thenStatement1.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
-                .count(elseStatement1.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
+                .count(thenStatement1.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
+                .count(elseStatement1.getId()));
 
     // Check Next(s1, s2) where s1, s2 are consecutive THEN/ELSE statements
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement1.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement1.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement1.getIndex())
-                .count(thenStatement2.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement2.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement1.getId())
+                .count(thenStatement2.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement2.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement2.getIndex())
-                .count(thenStatement3.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement1.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement2.getId())
+                .count(thenStatement3.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement1.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement1.getIndex())
-                .count(elseStatement2.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement2.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement1.getId())
+                .count(elseStatement2.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement2.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement2.getIndex())
-                .count(elseStatement3.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement2.getId())
+                .count(elseStatement3.getId()));
 
     // Check Next(s1, s2) where s1 is the last THEN/ELSE statement and s2 is
     // the statement which follows the IF statement
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement3.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement3.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement3.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseStatement3.getId())
+                .count(afterIfStatement.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement3.getId())
                 .size() == 1);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenStatement3.getId())
+                .count(afterIfStatement.getId()));
 }
 
 TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
@@ -385,102 +385,102 @@ TEST_CASE("TestExtractIfStatement: Correctly extracts Next relationship in a "
     de.extract(&program);
     // Check Next(ifs, s1), Next(ifs, s2) where s1, s2 are the first THEN
     // and ELSE statements respectively
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
                 .size() == 2);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
-                .count(thenIfStatement.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getIndex())
-                .count(elseIfStatement.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
+                .count(thenIfStatement.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(ifStatement.getId())
+                .count(elseIfStatement.getId()));
 
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getId())
                 .size() == 2);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
-                .count(thenIfThenStatement1.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getIndex())
-                .count(thenIfElseStatement1.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getId())
+                .count(thenIfThenStatement1.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(thenIfStatement.getId())
+                .count(thenIfElseStatement1.getId()));
 
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getId())
                 .size() == 2);
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
-                .count(elseIfThenStatement1.getIndex()));
-    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getIndex())
-                .count(elseIfElseStatement1.getIndex()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getId())
+                .count(elseIfThenStatement1.getId()));
+    REQUIRE(TestExtractIfStatement::pkb.getNextLines(elseIfStatement.getId())
+                .count(elseIfElseStatement1.getId()));
 
     // Check Next(s1, s2) where s1, s2 are consecutive THEN/ELSE statements
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement1.getIndex())
+                .getNextLines(thenIfThenStatement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement1.getIndex())
-                .count(thenIfThenStatement2.getIndex()));
+                .getNextLines(thenIfThenStatement1.getId())
+                .count(thenIfThenStatement2.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement2.getIndex())
+                .getNextLines(thenIfThenStatement2.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement2.getIndex())
-                .count(thenIfThenStatement3.getIndex()));
+                .getNextLines(thenIfThenStatement2.getId())
+                .count(thenIfThenStatement3.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement1.getIndex())
+                .getNextLines(thenIfElseStatement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement1.getIndex())
-                .count(thenIfElseStatement2.getIndex()));
+                .getNextLines(thenIfElseStatement1.getId())
+                .count(thenIfElseStatement2.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement2.getIndex())
+                .getNextLines(thenIfElseStatement2.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement2.getIndex())
-                .count(thenIfElseStatement3.getIndex()));
+                .getNextLines(thenIfElseStatement2.getId())
+                .count(thenIfElseStatement3.getId()));
 
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement1.getIndex())
+                .getNextLines(elseIfThenStatement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement1.getIndex())
-                .count(elseIfThenStatement2.getIndex()));
+                .getNextLines(elseIfThenStatement1.getId())
+                .count(elseIfThenStatement2.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement2.getIndex())
+                .getNextLines(elseIfThenStatement2.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement2.getIndex())
-                .count(elseIfThenStatement3.getIndex()));
+                .getNextLines(elseIfThenStatement2.getId())
+                .count(elseIfThenStatement3.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement1.getIndex())
+                .getNextLines(elseIfElseStatement1.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement1.getIndex())
-                .count(elseIfElseStatement2.getIndex()));
+                .getNextLines(elseIfElseStatement1.getId())
+                .count(elseIfElseStatement2.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement2.getIndex())
+                .getNextLines(elseIfElseStatement2.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement2.getIndex())
-                .count(elseIfElseStatement3.getIndex()));
+                .getNextLines(elseIfElseStatement2.getId())
+                .count(elseIfElseStatement3.getId()));
 
     // Check Next(s1, s2) where s1 is the last THEN/ELSE statement and s2 is
     // the statement which follows the IF statement
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement3.getIndex())
+                .getNextLines(thenIfThenStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfThenStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
+                .getNextLines(thenIfThenStatement3.getId())
+                .count(afterIfStatement.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement3.getIndex())
+                .getNextLines(thenIfElseStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(thenIfElseStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
+                .getNextLines(thenIfElseStatement3.getId())
+                .count(afterIfStatement.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement3.getIndex())
+                .getNextLines(elseIfThenStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfThenStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
+                .getNextLines(elseIfThenStatement3.getId())
+                .count(afterIfStatement.getId()));
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement3.getIndex())
+                .getNextLines(elseIfElseStatement3.getId())
                 .size() == 1);
     REQUIRE(TestExtractIfStatement::pkb
-                .getNextLines(elseIfElseStatement3.getIndex())
-                .count(afterIfStatement.getIndex()));
+                .getNextLines(elseIfElseStatement3.getId())
+                .count(afterIfStatement.getId()));
 }

@@ -1,17 +1,13 @@
 #pragma once
+
 #include "common/model/Statement.h"
-#include <string>
-#include <vector>
+
+#include "source_processor/parser/EntityParser.h"
+
 using namespace std;
 
-class ReadStatementParser {
-private:
-    Statement *stmt;
-    vector<string> content;
-    int index;
-
+class ReadStatementParser : public EntityParser<Statement> {
 public:
     ReadStatementParser(vector<string> content, int index);
-    Statement *parseReadStatement();
-    bool isValidName(string input);
+    Statement *parseEntity();
 };

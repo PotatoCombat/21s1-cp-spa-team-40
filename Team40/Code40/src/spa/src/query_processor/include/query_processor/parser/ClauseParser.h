@@ -7,10 +7,12 @@
 #include "query_processor/Abstractions.h"
 
 #include "query_processor/exception/ValidityError.h"
+
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/ClauseTypeHelper.h"
 #include "query_processor/model/DesignEntityTypeHelper.h"
 #include "query_processor/model/Reference.h"
+
 #include "query_processor/parser/ParserUtil.h"
 
 using namespace std;

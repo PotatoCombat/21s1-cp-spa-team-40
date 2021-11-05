@@ -3,9 +3,9 @@
 #include <set>
 #include <string>
 
-#include "query_processor/relationship_handler/ClauseHandler.h"
-
 #include "pkb/PKB.h"
+
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 using namespace std;
 

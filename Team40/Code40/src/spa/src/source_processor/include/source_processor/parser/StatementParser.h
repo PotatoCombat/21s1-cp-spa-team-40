@@ -7,26 +7,21 @@
 #include "source_processor/parser/PrintStatementParser.h"
 #include "source_processor/parser/ReadStatementParser.h"
 #include "source_processor/parser/WhileStatementParser.h"
-#include <string>
-#include <vector>
-
 using namespace std;
 
-class StatementParser {
+class StatementParser : public EntityParser<Statement> {
 private:
-    vector<string> content;
-    int index;
     vector<Line> programLines;
     int &programIndex;
 
 public:
-    StatementParser(vector<string> content, int index,
-                    vector<Line> programLines, int &programIndex);
-    Statement *parseStatement();
+    StatementParser(vector<string> content, int index, vector<Line> programLines,
+                    int &programIndex);
+    Statement *parseEntity();
     bool isReadStmt();
     bool isPrintStmt();
     bool isCallStmt();
     bool isWhileStmt();
-    bool isAssignStmt();
     bool isIfStmt();
+    bool isAssignStmt();
 };

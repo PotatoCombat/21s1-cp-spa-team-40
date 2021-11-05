@@ -32,31 +32,34 @@ TEST_CASE(
     Program program;
     Procedure callingProc(TestExtractCallStatement::PROC_NAME_1);
     Procedure calledProc(TestExtractCallStatement::PROC_NAME_2);
-    Statement statement(1, StatementType::CALL);
+    Statement statement1(1, StatementType::CALL);
+    Statement statement2(2, StatementType::READ);
+    Variable variable(TestExtractCallStatement::VAR_NAME);
 
-    statement.setProcName(calledProc.getName());
+    statement1.setProcName(calledProc.getId());
+    statement2.setVariable(&variable);
+    callingProc.addToStmtLst(&statement1);
+    calledProc.addToStmtLst(&statement2);
     program.addToProcLst(&callingProc);
     program.addToProcLst(&calledProc);
-    callingProc.addToStmtLst(&statement);
 
     DesignExtractor de(&TestExtractCallStatement::pkb);
     de.extract(&program);
 
     REQUIRE(TestExtractCallStatement::pkb.getAllProcs().asVector().size() == 2);
-    REQUIRE(TestExtractCallStatement::pkb.getAllStmts().asVector().size() == 1);
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
                 .asVector()
                 .size() == 1);
-    REQUIRE(TestExtractCallStatement::pkb.getCalledProcs(callingProc.getName())
-                .count(calledProc.getName()));
-    REQUIRE(TestExtractCallStatement::pkb.getCallerProcs(calledProc.getName())
-                .count(callingProc.getName()));
+    REQUIRE(TestExtractCallStatement::pkb.getCalledProcs(callingProc.getId())
+                .count(calledProc.getId()));
+    REQUIRE(TestExtractCallStatement::pkb.getCallerProcs(calledProc.getId())
+                .count(callingProc.getId()));
     REQUIRE(
-        TestExtractCallStatement::pkb.getCalledStarProcs(callingProc.getName())
-            .count(calledProc.getName()));
+        TestExtractCallStatement::pkb.getCalledStarProcs(callingProc.getId())
+            .count(calledProc.getId()));
     REQUIRE(
-        TestExtractCallStatement::pkb.getCallerStarProcs(calledProc.getName())
-            .count(callingProc.getName()));
+        TestExtractCallStatement::pkb.getCallerStarProcs(calledProc.getId())
+            .count(callingProc.getId()));
 }
 
 TEST_CASE("TestExtractCallStatement: Correctly handles transitive Modifies in "
@@ -70,7 +73,7 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Modifies in "
     Statement statement2(2, StatementType::ASSIGN);
     Variable variable(TestExtractCallStatement::VAR_NAME);
 
-    statement1.setProcName(calledProc.getName());
+    statement1.setProcName(calledProc.getId());
     statement2.setVariable(&variable);
     statement2.setExpressionLst(
         TestExtractCallStatement::DUMMY_EXPRESSION_LIST);
@@ -87,7 +90,7 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Modifies in "
                 .asVector()
                 .size() == 1);
     REQUIRE(
-        TestExtractCallStatement::pkb.getProcsModifyingVar(variable.getName())
+        TestExtractCallStatement::pkb.getProcsModifyingVar(variable.getId())
             .size() == 2);
 }
 
@@ -102,7 +105,7 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Uses in "
     Statement printStatement(2, StatementType::PRINT);
     Variable variable(TestExtractCallStatement::VAR_NAME);
 
-    callStatement.setProcName(calledProc.getName());
+    callStatement.setProcName(calledProc.getId());
     printStatement.setVariable(&variable);
     callingProc.addToStmtLst(&callStatement);
     calledProc.addToStmtLst(&printStatement);
@@ -116,7 +119,7 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Uses in "
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
                 .asVector()
                 .size() == 1);
-    REQUIRE(TestExtractCallStatement::pkb.getProcsUsingVar(variable.getName())
+    REQUIRE(TestExtractCallStatement::pkb.getProcsUsingVar(variable.getId())
                 .size() == 2);
 }
 
@@ -133,8 +136,8 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Calls in "
     Statement printStatement(3, StatementType::PRINT);
     Variable variable(TestExtractCallStatement::VAR_NAME);
 
-    callStatement1.setProcName(calledCallingProc.getName());
-    callStatement2.setProcName(calledCalledProc.getName());
+    callStatement1.setProcName(calledCallingProc.getId());
+    callStatement2.setProcName(calledCalledProc.getId());
     printStatement.setVariable(&variable);
     callingProc.addToStmtLst(&callStatement1);
     calledCallingProc.addToStmtLst(&callStatement2);
@@ -150,22 +153,22 @@ TEST_CASE("TestExtractCallStatement: Correctly handles transitive Calls in "
     REQUIRE(TestExtractCallStatement::pkb.getAllStmts(StatementType::CALL)
                 .asVector()
                 .size() == 2);
-    REQUIRE(TestExtractCallStatement::pkb.getCalledProcs(callingProc.getName())
-                .count(calledCallingProc.getName()));
+    REQUIRE(TestExtractCallStatement::pkb.getCalledProcs(callingProc.getId())
+                .count(calledCallingProc.getId()));
     REQUIRE(TestExtractCallStatement::pkb
-                .getCallerProcs(calledCallingProc.getName())
-                .count(callingProc.getName()));
+                .getCallerProcs(calledCallingProc.getId())
+                .count(callingProc.getId()));
     REQUIRE(TestExtractCallStatement::pkb
-                .getCalledProcs(calledCallingProc.getName())
-                .count(calledCalledProc.getName()));
+                .getCalledProcs(calledCallingProc.getId())
+                .count(calledCalledProc.getId()));
     REQUIRE(
-        TestExtractCallStatement::pkb.getCallerProcs(calledCalledProc.getName())
-            .count(calledCallingProc.getName()));
+        TestExtractCallStatement::pkb.getCallerProcs(calledCalledProc.getId())
+            .count(calledCallingProc.getId()));
 
     REQUIRE(
-        TestExtractCallStatement::pkb.getCalledStarProcs(callingProc.getName())
-            .count(calledCalledProc.getName()));
+        TestExtractCallStatement::pkb.getCalledStarProcs(callingProc.getId())
+            .count(calledCalledProc.getId()));
     REQUIRE(TestExtractCallStatement::pkb
-                .getCallerStarProcs(calledCalledProc.getName())
-                .count(callingProc.getName()));
+                .getCallerStarProcs(calledCalledProc.getId())
+                .count(callingProc.getId()));
 }

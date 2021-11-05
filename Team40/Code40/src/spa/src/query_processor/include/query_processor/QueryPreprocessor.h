@@ -4,10 +4,11 @@
 #include <tuple>
 #include <vector>
 
-#include "QueryParser.h"
-#include "QueryTokenizer.h"
+#include "query_processor/QueryParser.h"
+#include "query_processor/QueryTokenizer.h"
 
 #include "query_processor/exception/ValidityError.h"
+
 #include "query_processor/model/Query.h"
 
 using namespace std;
@@ -25,4 +26,6 @@ private:
     QueryParser parser;
 
     bool returnBoolean = false;
+
+    inline static const string KEYWORD_BOOLEAN = "BOOLEAN";
 };

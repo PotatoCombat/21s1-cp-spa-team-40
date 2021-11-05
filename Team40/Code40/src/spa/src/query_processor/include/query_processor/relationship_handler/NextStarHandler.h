@@ -5,9 +5,9 @@
 #include <string>
 #include <unordered_set>
 
-#include "ClauseHandler.h"
-
 #include "pkb/PKB.h"
+
+#include "query_processor/relationship_handler/ClauseHandler.h"
 
 using namespace std;
 

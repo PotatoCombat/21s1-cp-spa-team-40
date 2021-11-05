@@ -2,10 +2,12 @@
 
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #include "query_processor/exception/ValidityError.h"
-#include "query_processor/model/Reference.h"
+
 #include "query_processor/model/DesignEntityType.h"
+#include "query_processor/model/Reference.h"
 
 namespace ParserUtil {
 	ReferenceType checkRefType(std::string val);
@@ -17,4 +19,5 @@ namespace ParserUtil {
 	bool isAttrRef(std::string val);
 	std::pair<std::string, std::string> splitAttrRef(std::string val);
 	ReferenceAttribute parseValidAttr(DesignEntityType deType, std::string val);
+	Reference *getReferenceFromList(std::vector<Reference *> &list, std::string syn);
 };

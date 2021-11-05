@@ -1,5 +1,7 @@
 file(GLOB catch_main "${CMAKE_CURRENT_SOURCE_DIR}/../main.cpp")
-file(GLOB srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB srcs
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../include/TestUtils.h")
 
 target_sources(unit_testing PRIVATE ${srcs})
 

@@ -13,8 +13,13 @@ enum class ClauseType {
     CALLS_T,
     NEXT,
     NEXT_T,
+    NEXTBIP,
+    NEXTBIP_T,
     AFFECTS,
     AFFECTS_T,
     WITH,
-    PATTERN
+    PATTERN,
+    Count // make sure that this is the last element of this enum for
+          // ResultCache to work properly
+          // shouldn't be used as a clause type
 };

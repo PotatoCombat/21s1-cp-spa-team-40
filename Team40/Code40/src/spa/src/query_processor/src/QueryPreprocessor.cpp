@@ -16,14 +16,14 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
 
         /*********** Parse declaration ***********/
         tokenizer.tokenizeDeclarations(parts.first, declPairs);
-        parser.parseDeclarations(declPairs);
 
         /*********** Parse return synonym ***********/
         retStrings = tokenizer.tokenizeReturnSynonyms(parts.second, clauses);
         if (retStrings.empty()) {
-            returnBoolean = true;
+            this->returnBoolean = true;
         }
 
+        parser.parseDeclarations(declPairs);
         this->addReturnReferencesToQuery(retStrings, q);
 
         if (clauses.empty()) {
@@ -59,12 +59,12 @@ bool QueryPreprocessor::preprocessQuery(const string input, Query &q) {
         return true;
 
     } catch (SyntaxError &se) {
-        // cout << e.what();
+        // cout << se.what() << endl;
         this->clear();
         return false;
 
     } catch (ValidityError &ve) {
-        // cout << e.what();
+        // cout << ve.what() << endl;
         if (returnBoolean) {
             this->clear();
             throw ValidityError("Set results to FALSE");
@@ -81,11 +81,18 @@ void QueryPreprocessor::clear() {
 
 void QueryPreprocessor::addReturnReferencesToQuery(vector<string> retStrings,
                                                    Query &q) {
+    // check if there is a declared reference "BOOLEAN"
+    // add it as a return reference
+    if (this->returnBoolean) {
+        Reference *returnRef = parser.getReferenceIfDeclared(KEYWORD_BOOLEAN);
+        if (returnRef != nullptr) {
+            this->returnBoolean = false;
+            q.addReturnReference(returnRef->copy());
+        }
+    }
+
     for (auto retString : retStrings) {
         Reference *returnRef = parser.parseReturnSynonym(retString);
-        if (returnRef == nullptr) {
-            throw ValidityError("QP-ERROR: return synonym is undeclared");
-        }
         q.addReturnReference(returnRef);
     }
 }

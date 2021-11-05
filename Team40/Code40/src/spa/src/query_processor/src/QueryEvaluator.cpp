@@ -10,8 +10,7 @@ void QueryEvaluator::clear() {
     cache.clear();
 }
 
-QueryEvaluator::QueryEvaluator(PKB *pkb)
-    : pkb(pkb) {}
+QueryEvaluator::QueryEvaluator(PKB *pkb) : pkb(pkb) {}
 
 vector<string> QueryEvaluator::evaluateQuery(Query query) {
     try {
@@ -39,7 +38,7 @@ vector<string> QueryEvaluator::evaluateQuery(Query query) {
     }
 }
 
-Result QueryEvaluator::getTempResult(Clause* clause) {
+Result QueryEvaluator::getTempResult(Clause *clause) {
     ClauseHandler *clauseHandler;
 
     if (clause->getType() == ClauseType::PATTERN) {
@@ -107,6 +106,16 @@ Result QueryEvaluator::getTempResult(Clause* clause) {
         clauseHandler = &nextStarHandler;
     }
 
+    if (clause->getType() == ClauseType::NEXTBIP) {
+        NextBipHandler nextBipHandler(clause, pkb, &cache);
+        clauseHandler = &nextBipHandler;
+    }
+
+    if (clause->getType() == ClauseType::NEXTBIP_T) {
+        NextBipStarHandler nextBipStarHandler(clause, pkb, &cache);
+        clauseHandler = &nextBipStarHandler;
+    }
+
     if (clause->getType() == ClauseType::WITH) {
         WithHandler withHandler(clause, pkb, &cache);
         clauseHandler = &withHandler;
@@ -131,10 +140,12 @@ void QueryEvaluator::evalClauses(bool &exitEarly) {
         Result tempResult = getTempResult(clause);
 
         int ref1Index = INVALID_INDEX, ref2Index = INVALID_INDEX;
-        if (clause->getFirstReference()->getRefType() == ReferenceType::SYNONYM) {
+        if (clause->getFirstReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
             ref1Index = getRefIndex(clause->getFirstReference());
         }
-        if (clause->getSecondReference()->getRefType() == ReferenceType::SYNONYM) {
+        if (clause->getSecondReference()->getRefType() ==
+            ReferenceType::SYNONYM) {
             ref2Index = getRefIndex(clause->getSecondReference());
         }
 
@@ -165,7 +176,7 @@ vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
         return trueRes;
     }
 
-    // for values that is returned but not appear in any clauses, 
+    // for values that is returned but not appear in any clauses,
     // fill in the table with all possible values
     vector<int> returnIndexes;
     for (auto ref : returnRefs) {
@@ -187,13 +198,15 @@ vector<string> QueryEvaluator::finaliseResult(bool exitEarly) {
     return ResultFormatter::formatResult(updatedAttrRes);
 }
 
-void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool &exitEarly) {
+void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx,
+                                   bool &exitEarly) {
     if (!result.isResultValid()) {
         exitEarly = true;
         return;
     }
 
-    if (result.hasResultList1() && result.hasResultList2() && appearInSameClauseAlr[ref1Idx][ref2Idx]) {
+    if (result.hasResultList1() && result.hasResultList2() &&
+        appearInSameClauseAlr[ref1Idx][ref2Idx]) {
         combineTwoSyn(result, ref1Idx, ref2Idx);
     } else {
         vector<pair<int, string>> toRemove;
@@ -219,12 +232,13 @@ void QueryEvaluator::combineResult(Result result, int ref1Idx, int ref2Idx, bool
         appearInSameClauseAlr[ref1Idx][ref2Idx] = true;
         appearInSameClauseAlr[ref2Idx][ref1Idx] = true;
     }
-    
+
     exitEarly = canExitEarly(ref1Idx, ref2Idx);
 }
 
 void QueryEvaluator::combineOneSyn(Result result, int refIdx, int otherRefIdx,
-                                   bool isSecondRef, vector<pair<int, string>> *toRemove) {
+                                   bool isSecondRef,
+                                   vector<pair<int, string>> *toRemove) {
     // refIdx should not be INVALID_INDEX
     map<VALUE, VALUE_SET> res;
 
@@ -333,7 +347,8 @@ void QueryEvaluator::removeLinkResultTable(map<VALUE, VALUE_SET> &iRes,
     }
 }
 
-void QueryEvaluator::addIResToResultTable(map<VALUE, VALUE_SET>& iRes, int thisIdx, int otherIdx) {
+void QueryEvaluator::addIResToResultTable(map<VALUE, VALUE_SET> &iRes,
+                                          int thisIdx, int otherIdx) {
     for (auto &valueToVals : iRes) {
         resultTable.addValueWithLink(thisIdx, valueToVals.first, otherIdx,
                                      valueToVals.second);
@@ -372,7 +387,8 @@ bool QueryEvaluator::canExitEarly(int idx1, int idx2) {
     return false;
 }
 
-vector<vector<string>> QueryEvaluator::handleAttr(vector<vector<string>> input) {
+vector<vector<string>>
+QueryEvaluator::handleAttr(vector<vector<string>> input) {
     vector<vector<string>> updatedResList;
     for (auto res : input) {
         if (returnRefs.size() != res.size()) {

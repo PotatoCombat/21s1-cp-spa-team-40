@@ -1,12 +1,14 @@
 #pragma once
 
-#include "common/model/Abstractions.h"
-#include "common/model/Procedure.h"
-#include "source_processor/design_extractor/EntityContext.h"
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "common/model/Abstractions.h"
+#include "common/model/Procedure.h"
+
+#include "source_processor/design_extractor/EntityContext.h"
 
 using namespace std;
 
@@ -14,6 +16,8 @@ class ExtractionContext {
 private:
     unordered_map<ProcName, unordered_set<ProcName>> procDependencyMap;
     unordered_map<ProcName, int> procIndegreesCounter;
+    unordered_map<ProcName, StmtIndex> procFirstExecutableStatements;
+    unordered_map<ProcName, set<StmtIndex>> procLastExecutableStatements;
 
     static ExtractionContext *instance;
 
@@ -38,6 +42,13 @@ public:
     void setCurrentProcedure(Procedure *procedure);
     void unsetCurrentProcedure(Procedure *procedure);
 
+    StmtIndex getFirstExecutableStatement(const ProcName &procName);
+    set<StmtIndex> getLastExecutableStatements(const ProcName &procName);
+    void setFirstExecutableStatement(const ProcName &procName,
+                                     StmtIndex stmtIndex);
+    void setLastExecutableStatements(const ProcName &procName,
+                                     set<StmtIndex> stmtIndices);
+
     optional<Statement *> getModifyingStatement();
     void setModifyingStatement(Statement *statement);
     void unsetModifyingStatement(Statement *statement);
@@ -58,9 +69,10 @@ public:
     void unsetPreviousStatement(Statement *statement);
     void clearPreviousStatements();
 
-    void registerProcDependency(ProcName caller, ProcName callee);
-    bool hasCyclicalProcDependency(ProcName caller, ProcName callee);
-    unordered_set<ProcName> getProcDependencies(ProcName from);
+    void registerProcDependency(const ProcName &caller, const ProcName &callee);
+    bool hasCyclicalProcDependency(const ProcName &caller,
+                                   const ProcName &callee);
+    unordered_set<ProcName> getProcDependencies(const ProcName &from);
     vector<ProcName> getTopologicallySortedProcNames();
 
     void resetTransientContexts();

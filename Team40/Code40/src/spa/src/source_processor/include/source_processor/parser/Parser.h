@@ -1,13 +1,17 @@
 #pragma once
-#include "common/model/Procedure.h"
-#include "common/model/Program.h"
-#include "common/model/Statement.h"
-#include "source_processor/parser/Line.h"
-#include "source_processor/parser/ProcedureParser.h"
-#include "source_processor/parser/StatementParser.h"
+
 #include <algorithm>
 #include <string>
 #include <vector>
+
+#include "common/model/Procedure.h"
+#include "common/model/Program.h"
+#include "common/model/Statement.h"
+
+#include "source_processor/parser/Line.h"
+#include "source_processor/parser/ProcedureParser.h"
+#include "source_processor/parser/StatementParser.h"
+
 using namespace std;
 
 class Parser {

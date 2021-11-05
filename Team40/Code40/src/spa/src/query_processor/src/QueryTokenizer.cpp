@@ -170,7 +170,7 @@ void QueryTokenizer::tokenizeClauses(string input,
             } else if (token == KEYWORD_WITH) {
                 state = READ_ARGS_STATE;
                 type = WITH_CLAUSE;
-            } else if (token == KEYWORD_AND) {
+            } else if (token == KEYWORD_AND && type != NULL_CLAUSE) {
                 state = READ_ARGS_STATE;
             } else {
                 state = INVALID_STATE;
@@ -205,6 +205,9 @@ void QueryTokenizer::tokenizeClauses(string input,
                 withClauses.push_back(clause);
                 break;
             }
+            default:
+                state = INVALID_STATE;
+                break;
             }
             break;
         }
@@ -246,8 +249,8 @@ size_t QueryTokenizer::tokenizeSuchThatClause(string input, size_t startPos,
     token2 = removeWhitespaceWithinQuotes(token2);
     token3 = removeWhitespaceWithinQuotes(token3);
 
-    validateClauseArg(token2);
-    validateClauseArg(token3);
+    validateSuchThatArg(token2);
+    validateSuchThatArg(token3);
     clause = make_tuple(token1, token2, token3);
     return nextPos;
 }
@@ -270,6 +273,7 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     string token;
 
     ident = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
+    validateName(ident);
 
     commaPos = input.find(COMMA, nextPos);
     if (commaPos == string::npos) {
@@ -325,7 +329,7 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     arguments.push_back(token);
 
     var = arguments.at(0);
-    validateClauseArg(var);
+    validatePatternArg(var);
 
     for (size_t i = 1; i < arguments.size(); ++i) {
         tokens.push_back(arguments.at(i));
@@ -380,8 +384,8 @@ size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
         token2 = removeWhitespaceAroundPeriod(token2);
     }
 
-    validateClauseArg(token1);
-    validateClauseArg(token2);
+    validateWithArg(token1);
+    validateWithArg(token2);
     clause = make_pair(token1, token2);
     return nextPos;
 }
@@ -551,15 +555,53 @@ void QueryTokenizer::validateRsType(string input) {
 }
 
 /**
- * Validates input to be valid clause argument.
+ * Validates input to be valid `such that` argument.
  * @param input The input string.
  * @exception SyntaxError if clause argument is invalid.
  */
-void QueryTokenizer::validateClauseArg(string input) {
-    if (ParserUtil::isQuoted(input)) {
+void QueryTokenizer::validateSuchThatArg(string input) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid such that argument");
+    } else if (ParserUtil::isQuoted(input)) {
+        validateQuoted(input);
+    } else if (!ParserUtil::isValidName(input) &&
+               !ParserUtil::isInteger(input) &&
+               !ParserUtil::isWildcard(input)) {
+        throw SyntaxError("QP-ERROR: invalid such that argument");
+    }
+}
+
+/**
+ * Validates input to be valid `pattern` argument.
+ * @param input The input string.
+ * @exception SyntaxError if clause argument is invalid.
+ */
+void QueryTokenizer::validatePatternArg(string input) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid pattern argument");
+    } else if (ParserUtil::isQuoted(input)) {
+        validateQuoted(input);
+    } else if (!ParserUtil::isValidName(input) &&
+               !ParserUtil::isWildcard(input)) {
+        throw SyntaxError("QP-ERROR: invalid pattern argument");
+    }
+}
+
+/**
+ * Validates input to be valid `with` argument.
+ * @param input The input string.
+ * @exception SyntaxError if clause argument is invalid.
+ */
+void QueryTokenizer::validateWithArg(string input) {
+    if (input.empty()) {
+        throw SyntaxError("QP-ERROR: invalid with argument");
+    } else if (ParserUtil::isQuoted(input)) {
         validateQuoted(input);
     } else if (ParserUtil::isAttrRef(input)) {
         validateAttrRef(input);
+    } else if (!ParserUtil::isValidName(input) &&
+               !ParserUtil::isInteger(input)) {
+        throw SyntaxError("QP-ERROR: invalid with argument");
     }
 }
 

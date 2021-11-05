@@ -7,6 +7,7 @@ DesignExtractor::DesignExtractor(PKB *pkb) : pkb(pkb) {}
 void DesignExtractor::extract(Program *program) {
     extractDepthFirst(program);
     extractBreadthFirst(program);
+    extractNextBip(program);
 }
 
 void DesignExtractor::extractDepthFirst(Program *program) {
@@ -16,5 +17,10 @@ void DesignExtractor::extractDepthFirst(Program *program) {
 
 void DesignExtractor::extractBreadthFirst(Program *program) {
     BreadthFirstExtractor extractor(pkb);
+    extractor.extract(program);
+}
+
+void DesignExtractor::extractNextBip(Program *program) {
+    NextBipExtractor extractor(pkb);
     extractor.extract(program);
 }

@@ -25,14 +25,7 @@ Clause *ClauseParser::parseWt(WithPair withPair) {
  * @return Reference object if match, otherwise nullptr.
  */
 Reference *ClauseParser::getReferenceIfDeclared(string syn) {
-    auto it = find_if(declList.begin(), declList.end(), [&syn](Reference *ref) {
-        return ref->getValue() == syn;
-    });
-
-    if (it != declList.end()) {
-        return *it;
-    }
-    return nullptr;
+    return ParserUtil::getReferenceFromList(declList, syn);
 }
 
 /**

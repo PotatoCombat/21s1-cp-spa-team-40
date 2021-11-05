@@ -1,8 +1,9 @@
 #pragma once
 
-#include "query_processor/model/ClauseType.h"
-#include "query_processor/Result.h"
 #include "query_processor/ResultTable.h"
+
+#include "query_processor/model/ClauseType.h"
+#include "query_processor/model/Result.h"
 
 #include <map>
 #include <stdexcept>
@@ -14,7 +15,7 @@ using namespace std;
 
 class ResultCache {
 private:
-    static const int nClauseTypes = 16;
+    static const int nClauseTypes = static_cast<int>(ClauseType::Count);
 
     vector<VALUE_SET> fullyCachedR1s;
     vector<VALUE_SET> fullyCachedR2s;

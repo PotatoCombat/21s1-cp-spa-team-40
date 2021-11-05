@@ -3,11 +3,15 @@
 #include <string>
 #include <vector>
 
-#include "Clause.h"
-#include "Reference.h"
+#include "query_processor/model/Clause.h"
+#include "query_processor/model/Reference.h"
 
 using namespace std;
 
+/**
+* Represents a Query object
+* Contains all the information needed to correctly evaluate the query
+*/
 class Query {
 private:
     vector<Reference *> referenceList;
