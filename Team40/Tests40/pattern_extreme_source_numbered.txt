@@ -1,0 +1,379 @@
+procedure assign {
+1	x = 1 + 
+		2 + 
+		3 + 
+		4 + 
+		5 + 
+		6 + 
+		7 + 
+		8 + 
+		9 + 
+		10 + 
+		11 + 
+		12 + 
+		13 + 
+		14 + 
+		15 + 
+		16 + 
+		17 + 
+		18 + 
+		19 + 
+		20;							
+2	x = (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10) + 11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20;
+3	x = 1 + 2 +  3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + (11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20);
+4	x = 1 + 2 +  3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14 + (15 + 16 + 17 + 18 + 19 + 20);
+5	x = (1 + 2 + 3 + 4 + 5) * (11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20) + 6 + 7 + 8 + 9 + 10;
+6	x = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 - 9 - 10 - 11 - 12 - 13 - 14 - 15 + 16 + 17 + 18 + 19 + 20;
+7	x = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 - 9 - 10 - 11 - 12 - 13 - 14 - (15 + 16 + 17 + 18 + 19 + 20);
+8	x = (1 + 2) + (3 + 4) + (5 + 6) + (7 + 8 + 9) + 10 + (11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20);
+9	x = (3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14) / (1 + 2) + 15 + 16 + 17 + 18 + 19 + 20;
+10	x = (3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14) / 1 + 2 + 15 + 16 + 17 + 18 + 19 + 20;
+11	x = 1 + 2;
+12	x = (3 + 4);
+13	x = 5 + 6;
+14	x = 7+8+9;
+15	x = (1 + 2) + (3 + 4) + (5 + 6) + (7 + 8 + 9) + 10;
+16	x = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10;
+
+17	x20 = x1 + x2;
+18	x19 = (x1 + (x2 + x3));
+19	x18 = x3 + x4;
+20	x17 = x5 + x6;
+21	x16 = ((x7 + x8) + x9);
+22	x15 = ((x1 + x2) + (x3 + x4) + (x5 + x6) + (x7 + x8 + x9) + x10);
+23	x14 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10;
+24	x13 = x11 + x12;
+25	x12 = (x15 + x16 + x17 + x18 + x19 + x20);
+26	x11 = x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19;
+	
+27	x10 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20;
+	
+28	x9 = ((((((x1) + x2) + x3) + x4) + x5) + (x6) + (x7) + (x8) + (x9) + (x10)) + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20;
+	
+29	x8 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + (x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20);
+	
+30	x7 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + (x15 + x16 + x17 + x18 + x19 + x20);
+	
+31	x6 = x1 + x2 + (x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10) + x11 + x12 + x13 + x14 + (x15 + x16 + x17 + x18 + x19 + x20);
+	
+32	x5 = (x1 + x2 + x3 + x4 + x5) * (x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20) + x6 + x7 + x8 + x9 + x10;
+	
+33	x4 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 - x9 - x10 - x11 - x12 - x13 - x14 - x15 + x16 + x17 + x18 + x19 + x20;
+	
+34	x3 = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 - x9 - x10 - x11 - x12 - x13 - x14 - (x15 + x16 + x17 + x18 + x19 + x20);
+	
+35	x2 = (x1 + x2) + (x3 + x4) + (x5 + x6) + (x7 + x8 + x9) + x10 + (x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20);
+	
+36	x1 = (x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14) / (x1 + x2) + x15 + x16 + x17 + x18 + x19 + x20;
+	
+37	x = (x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14) / x1 + x2 + x15 + x16 + x17 + x18 + x19 + x20;
+
+38	x = (1 * x) + (2 - x) + (x * 3) + (x / 4) + (5 % x) + (x / 6) + (x + 7) + (8 / x) + (9 % x);
+
+39	x = x13 * x14 / (20 * x15) * x16 % x17 / x18 - x13 * x14 / (20 * x15) * x16 % x17 / x18 + 4;
+
+40	x = (x13 * x14 / (20 * x15) * x16 % x17 / x18);
+41	x = (x13 * x14 / (20 * x15) * x16 % x17 / x19);
+42	x = (x13 * x14 / (19 * x15) * x16 % x17 / x18);
+43	x = (x13 * x14 / (20 * x15) % x16 % x17 / x18);
+44	x = (x13 * x14 / (20 * x15) * x16 % x17 / (x18 + 5));
+
+45	y = (y + y) % (y - y * y) - y % y;
+46	y = ((y + y) % (y - (y * y))) - (y % y);
+47	y = (y + y) % (y - y * y) - y % y + (y + y) % (y - y * y) - y % y;
+48	y = (y + y) % (y - y * y) - y % y % (y - y * y) - y % y + (y + y) % (y - y * y) - y % y;
+49	y = (y + y) % (y - y * y + y + y) - y % y % (y - y + y - y * y) - y % y + (y - y + y + y) % (y - y * y) - y % y;
+50	y = y + ((y + y) % (y - y * y) - y % y % (y - y * y));
+51	y = (y + y + y % y + y) % (y - y * y) - y % y + (y + y) % (y - y * y) - y % y;
+52	y = (y + y) % (y - y * y) - y % y;
+53	y = (y + (y)) % ((y - y) * y) - y % y;
+54	y = ((y + (y)) % ((y - y) * y) - y) % y - ((y + (y)) % (y) - y) % y;
+55	y = ((y + y % y - (y * y))) - (y % y);
+56	y = ((y + y % y - y) * y) - (y % y);
+57	y = y + y % y - y * y - y % y + y + y % y - y * y - y % y;
+58	y = y + y % y - y * y - y % (y + y) + y % y - y * y - y % y;
+59	y = y + y % y - y * y - y % y;
+60	y = (y + y) % (y - y) * (y - y % y);
+61	y = ((y + y % y - y) * y) - (y % y);
+62	y = (y + y % y - y) * (y - y) % y;
+63	y = y + (y % y - y) * y - y % y;
+64	y = y * y * y / y * (y + y * ((y % y * y) + y - y));
+
+65	call while;
+66	call if;
+}
+
+procedure while {
+	while ((1 == d + e) || (1 == f + g)) {
+		call = d % e % e % d;
+		read = e % f % (e % e);
+		print = f % g + f % e;
+		while (!(((d < e) && (e >= f)) && (f == g))) {
+			call procedure;
+		}
+		x = call + e % e;
+		y = read + d % e;
+		z = print + f % e;
+	}
+	x = x + 1;
+	y = y + 1;
+	z = z + 1;
+	while (x * y * z < 200) {
+		call print;
+		call procedure;
+		while ((x * y * z > 0) && (x + y + z > read)) {
+			x = x - 1;
+			y = y - 1;
+			z = z - 1;
+			while ((x != 0) && (y != 0) && (z != 0)) {
+				x = x + x - 1;
+				y = y - 1 + y;
+				z = z - (z - 1);
+				while ((x != call) || (z == z)) {
+					call procedure;
+					print call;
+					print x;
+					if (x < z) then {
+						x = x + z + 1;
+						print x;
+					} else {
+						x = z - x + 1;
+					}
+				}
+				while ((y != read) || (x == x)) {
+					read print;
+					if (x == y) then {
+						print = x + y + 1;
+					} else {
+						print = x + y;
+					}
+					print = print + read;
+					print print;
+				}
+				while ((z != print) || (y == y)) {
+					print read;
+					if (y == 0) then {
+						y = z;
+					} else {
+						y = ((y + y) % (y - (y * y))) - (y % y);
+					}
+					read z;
+				}
+			}
+		}
+	}
+}
+
+procedure if {
+	if (a == 1) then {
+		if (b == 2) then {
+			if (c == 3) then {
+				a = e % d % (d % e);
+				b = f % e % (e % f) - d % d;
+				c = 7 * f + f % g - 4 * 5 - e % f + 6;
+			} else {
+				a = b + 1 - c * 2 % 3 + b * c - if + assign;
+				b = a * c / 3 - a - 1 + a - c + call * if;
+				c = a / b + (b - b % 2) * 1 - if - while / 3;
+				if (h == 8) then {
+					assign = a - 1;
+					while = b + 1;
+					if = c - 1;
+					z = a + b + c;
+					y = b + 1;
+					read x;
+				} else {
+					while (h > 0) {
+						h = h - 1;
+						a = b * c;
+						b = c * a;
+						c = a * b;
+					}
+				}
+				print x;
+				print y;
+				print z;
+				a = x;
+				b = y;
+				c = z;
+			}
+		} else {
+			while = b;
+			if = b;
+			read while;
+			while = if + while;
+		}
+	} else {
+		while (a != 1) {
+			if (h == 8) then {
+				print read;
+				print print;
+				if (read == print) then {
+					h = read * 200;
+				} else { 
+					h = print * 200;
+				}
+				a = h;
+			} else {
+				if ((h == 7) || (h == 6)) then {
+					a = 2;
+				} else {
+					a = h * g / (f % e);
+				}
+			}
+		}
+		read read;
+		read print;
+		read call;
+		if (a == 1) then {
+			x = (x + 1) - (d % e) + (e % d);
+			y = (y + 1) - (e % f) + (f % e);
+			z = (z + 1) - (f % g) + (g % f);
+		} else {
+			x = read + print;
+			y = x - 1;
+			z = y - 1;
+		}
+	}
+}
+
+	if (a == b) then {
+		z = (x + y) / y;
+		call call;
+		a = z * 200 + d;
+		b = z % 200 - e;
+		c = z / 200 + f;
+		while (a != b) {
+			a = a - f;
+			b = b + g;
+			c = c * h;
+		}
+	} else {
+		read a;
+		read b;
+		read c;
+	}
+	call while;
+	print a;
+	print b;
+	print c;
+	print d;
+	print e;
+	print f;
+	print g;
+	if (9 == 9) then {
+		call then;
+	} else {
+		call else;
+	}
+	condition = a + b / c - d % e * f - g % h;
+	if (condition >= 0) then {
+		call then;
+	} else {
+		call else;
+	}
+	variable = x + y + (a + b / c) - (y / (x * x + (d - 1)) - f % e % d * 6 + while / 3) * 200 * (read * 200 + 7 * f);
+}
+
+procedure mixed {
+	a = a + 1;
+	if ((a > 1) && (a < 100)) then {
+		a = a / 1;
+		while (a <= b) {
+			a = a - 1;
+			if ((b > 1) && (b < 100)) then {
+				b = b % 1;
+				while (!((b <= c) || (c >= d))) {
+					b = b - 1;
+					c = c + 1;
+					c = c - 1;
+					c = c / 1;
+					c = c % 1;
+					c = c * 1;
+					d = d + 1;
+					d = d - 1;
+					d = d / 1;
+					d = d % 1;
+					d = d * 1;
+				}
+				b = b * 1;
+			} else {
+				b = b + 1;
+				e = e + 1;
+				while (!(e <= f)) {
+					b = b / 1;
+					while (e == f) {
+						f = f - 1;
+						e = e - 1;
+						f = f + 1;
+					}
+					g = e + f;
+					g = e % f;
+					e = e / 1 - f / 1;
+					while (e != f) {
+						f = f / 1 - e / 1;
+					}
+					f = f % 1;
+					e = e % 1;
+					g = g + 1 - (g - 1);
+					g = g % 1;
+				}
+				g = g / 1;
+				e = e * 1;
+				f = f * 1;
+				g = g * 1;
+			}
+		}
+		a = a % 1;
+	} else {
+		a = a * 1;
+		h = 0;
+		while (h > 0) {
+			h = h + 1;
+			while (h < 200) {
+				h = h - 1;
+				while (h < 190) {
+					h = h * 1;
+					while (h < 180) {
+						h = h / 1;
+						while (h < 170) {
+							h = h % 1;
+						}
+						a = a + b;
+					}
+					b = b + c;
+				}
+				h = a + b + c;
+				c = c + d;
+				while (h > 100) {
+					h = h + d + e + f;
+				}
+				g = h;
+			}
+			h = a + b + c + d + e + f + g;
+			h = a + b + c + d + e + f + g + h;
+		}
+		print h;
+	}
+}
+
+procedure call {
+	h = h * y - y + y / (x * x + (h - 1)) + 28;
+	g = g * y - y + y / (z * z + (g - 1)) + 29;
+	f = f * y - y + y / (x * x + (f - 1)) + 30;
+	e = e * y - y + y / (z * z + (e - 1)) + 31;
+	d = d * y - y + y / (x * x + (d - 1)) + 32;
+	c = c * y - y + y / (z * z + (c - 1)) + 33;
+	b = b * y - y + y / (x * x + (b - 1)) + 34;
+	a = a * y - y + y / (z * z + (a - 1)) + 35;
+	call print;
+	assign = h;
+	if = h % g;
+	while = h % g % f;
+	print = h % (g % f) % e;
+	read = h % (g % f) % (e % d);
+	call = h % g % (f % e) % d % c;
+	if = read * 200 + 1 + h % g % (f % e) % d % c % b;
+	while = print * 200 + 1 + h % g % (f % e) % d % c % b % a;
+	call print;
+}
