@@ -189,7 +189,7 @@ void ExpressionParser::checkValidExpression() {
 bool ExpressionParser::isInteger(string input) {
     // INTEGER: DIGIT+
     // constants are sequences of digits
-    if ((input.length() > 0) && (input[0] == 0)) {
+    if ((input.length() > 2) && (input[0] == '0')) {
         return false;
     }
     return find_if(input.begin(), input.end(), [](char c) { return !(isdigit(c)); }) == input.end();
