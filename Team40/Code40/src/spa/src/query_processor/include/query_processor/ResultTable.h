@@ -27,7 +27,7 @@ private:
      */
     void appendGroupResult(set<INDEX> &visited,
                            vector<vector<string>> &existingCombinations,
-                           INDEX idx);
+                           INDEX idx, vector<INDEX> &returnIdexes);
 
     void constructNewCombinations(vector<vector<string>> &newCombinations,
                                   vector<vector<string>> &existingCombinations,
