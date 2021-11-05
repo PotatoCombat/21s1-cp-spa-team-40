@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/NextHandler.h"
 
-NextHandler::NextHandler(Clause *clause, PKB *pkb)
-    : ClauseHandler(clause, pkb, ClauseType::NEXT) {
+NextHandler::NextHandler(Clause *clause, PKB *pkb, ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::NEXT) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;

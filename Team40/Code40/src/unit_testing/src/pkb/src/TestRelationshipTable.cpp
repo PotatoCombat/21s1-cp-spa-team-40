@@ -1,6 +1,6 @@
 #include <set>
 
-#include "TestUtils.h"
+#include "TestPKBUtils.h"
 
 #include "common/model/Abstractions.h"
 #include "pkb/RelationshipTable.h"

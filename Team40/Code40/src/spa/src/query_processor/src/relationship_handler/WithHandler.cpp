@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/WithHandler.h"
 
-WithHandler::WithHandler(Clause* clause, PKB* pkb)
-    : ClauseHandler(clause, pkb, ClauseType::WITH) {
+WithHandler::WithHandler(Clause *clause, PKB *pkb, ResultCache *cache)
+    : ClauseHandler(clause, pkb, cache, ClauseType::WITH) {
     // not used
     validDesType1 = &ClauseHandler::ALL_DES_SET;
     validDesType2 = &ClauseHandler::ALL_DES_SET;

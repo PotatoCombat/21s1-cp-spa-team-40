@@ -33,5 +33,5 @@ private:
                                                   ProgLineIndex branchBackTo);
 
 public:
-    NextBipStarHandler(Clause *clause, PKB *pkb);
+    NextBipStarHandler(Clause *clause, PKB *pkb, ResultCache *cache);
 };
