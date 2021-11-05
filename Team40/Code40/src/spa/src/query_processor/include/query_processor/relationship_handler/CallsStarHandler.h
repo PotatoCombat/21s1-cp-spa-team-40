@@ -16,5 +16,5 @@ private:
     bool isR1ClauseR2(string r1, string r2) override;
 
 public:
-    CallsStarHandler(Clause *clause, PKB *pkb, ResultCache *cache);
+    CallsStarHandler(Clause *clause, PKB *pkb);
 };

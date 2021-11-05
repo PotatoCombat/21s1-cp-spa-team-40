@@ -7,7 +7,7 @@ void QueryEvaluator::clear() {
     clauses.clear();
     referenceAppearInClauses.clear();
     appearInSameClauseAlr.clear();
-    cache.clear();
+    ResultCache::getInstance().clear();
 }
 
 QueryEvaluator::QueryEvaluator(PKB *pkb) : pkb(pkb) {}
@@ -42,92 +42,92 @@ Result QueryEvaluator::getTempResult(Clause *clause) {
     ClauseHandler *clauseHandler;
 
     if (clause->getType() == ClauseType::PATTERN) {
-        PatternHandler patternHandler(clause, pkb, &cache);
+        PatternHandler patternHandler(clause, pkb);
         clauseHandler = &patternHandler;
     }
 
     if (clause->getType() == ClauseType::FOLLOWS) {
-        FollowsHandler followsHandler(clause, pkb, &cache);
+        FollowsHandler followsHandler(clause, pkb);
         clauseHandler = &followsHandler;
     }
 
     if (clause->getType() == ClauseType::FOLLOWS_T) {
-        FollowsStarHandler followsStarHandler(clause, pkb, &cache);
+        FollowsStarHandler followsStarHandler(clause, pkb);
         clauseHandler = &followsStarHandler;
     }
 
     if (clause->getType() == ClauseType::PARENT) {
-        ParentHandler parentHandler(clause, pkb, &cache);
+        ParentHandler parentHandler(clause, pkb);
         clauseHandler = &parentHandler;
     }
 
     if (clause->getType() == ClauseType::PARENT_T) {
-        ParentStarHandler parentStarHandler(clause, pkb, &cache);
+        ParentStarHandler parentStarHandler(clause, pkb);
         clauseHandler = &parentStarHandler;
     }
 
     if (clause->getType() == ClauseType::MODIFIES_P) {
-        ModifiesProcHandler modifiesProcHandler(clause, pkb, &cache);
+        ModifiesProcHandler modifiesProcHandler(clause, pkb);
         clauseHandler = &modifiesProcHandler;
     }
 
     if (clause->getType() == ClauseType::MODIFIES_S) {
-        ModifiesStmtHandler modifiesStmtHandler(clause, pkb, &cache);
+        ModifiesStmtHandler modifiesStmtHandler(clause, pkb);
         clauseHandler = &modifiesStmtHandler;
     }
 
     if (clause->getType() == ClauseType::USES_P) {
-        UsesProcHandler usesProcHandler(clause, pkb, &cache);
+        UsesProcHandler usesProcHandler(clause, pkb);
         clauseHandler = &usesProcHandler;
     }
 
     if (clause->getType() == ClauseType::USES_S) {
-        UsesStmtHandler usesStmtHandler(clause, pkb, &cache);
+        UsesStmtHandler usesStmtHandler(clause, pkb);
         clauseHandler = &usesStmtHandler;
     }
 
     if (clause->getType() == ClauseType::CALLS) {
-        CallsHandler callsHandler(clause, pkb, &cache);
+        CallsHandler callsHandler(clause, pkb);
         clauseHandler = &callsHandler;
     }
 
     if (clause->getType() == ClauseType::CALLS_T) {
-        CallsStarHandler callsStarHandler(clause, pkb, &cache);
+        CallsStarHandler callsStarHandler(clause, pkb);
         clauseHandler = &callsStarHandler;
     }
 
     if (clause->getType() == ClauseType::NEXT) {
-        NextHandler nextHandler(clause, pkb, &cache);
+        NextHandler nextHandler(clause, pkb);
         clauseHandler = &nextHandler;
     }
 
     if (clause->getType() == ClauseType::NEXT_T) {
-        NextStarHandler nextStarHandler(clause, pkb, &cache);
+        NextStarHandler nextStarHandler(clause, pkb);
         clauseHandler = &nextStarHandler;
     }
 
     if (clause->getType() == ClauseType::NEXTBIP) {
-        NextBipHandler nextBipHandler(clause, pkb, &cache);
+        NextBipHandler nextBipHandler(clause, pkb);
         clauseHandler = &nextBipHandler;
     }
 
     if (clause->getType() == ClauseType::NEXTBIP_T) {
-        NextBipStarHandler nextBipStarHandler(clause, pkb, &cache);
+        NextBipStarHandler nextBipStarHandler(clause, pkb);
         clauseHandler = &nextBipStarHandler;
     }
 
     if (clause->getType() == ClauseType::WITH) {
-        WithHandler withHandler(clause, pkb, &cache);
+        WithHandler withHandler(clause, pkb);
         clauseHandler = &withHandler;
     }
 
     if (clause->getType() == ClauseType::AFFECTS) {
-        AffectsHandler affectsHandler(clause, pkb, &cache);
+        AffectsHandler affectsHandler(clause, pkb);
         clauseHandler = &affectsHandler;
     }
 
     if (clause->getType() == ClauseType::AFFECTS_T) {
-        AffectsStarHandler affectsStarHandler(clause, pkb, &cache);
+        AffectsStarHandler affectsStarHandler(clause, pkb);
         clauseHandler = &affectsStarHandler;
     }
 

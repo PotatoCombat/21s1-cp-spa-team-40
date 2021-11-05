@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/PatternHandler.h"
 
-PatternHandler::PatternHandler(Clause *clause, PKB *pkb, ResultCache *cache)
-    : ClauseHandler(clause, pkb, cache, ClauseType::PATTERN) {
+PatternHandler::PatternHandler(Clause *clause, PKB *pkb)
+    : ClauseHandler(clause, pkb, ClauseType::PATTERN) {
     // not used, has it own validate function
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
