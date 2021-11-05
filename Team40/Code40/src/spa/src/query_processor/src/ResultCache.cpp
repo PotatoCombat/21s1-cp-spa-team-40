@@ -1,5 +1,10 @@
 #include "query_processor/ResultCache.h"
 
+ResultCache &ResultCache::getInstance() {
+    static ResultCache instance;
+    return instance;
+}
+
 ResultCache::ResultCache() {
     fullyCachedR1s = vector<VALUE_SET>(nClauseTypes, VALUE_SET{});
     fullyCachedR2s = vector<VALUE_SET>(nClauseTypes, VALUE_SET{});

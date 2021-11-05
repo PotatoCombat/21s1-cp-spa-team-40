@@ -22,5 +22,5 @@ private:
     bool affects(ProgLineIndex line1, ProgLineIndex line2);
 
 public:
-    AffectsStarHandler(Clause *clause, PKB *pkb, ResultCache *cache);
+    AffectsStarHandler(Clause *clause, PKB *pkb);
 };
