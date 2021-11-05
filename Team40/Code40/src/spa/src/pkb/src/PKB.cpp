@@ -373,11 +373,27 @@ set<StmtIndex> PKB::getExactAssignPatternStmts(const VarName &var,
 }
 
 set<StmtIndex> PKB::getIfPatternStmts(const VarName &var) {
+    if (WILDCARD == var) {
+        auto statements = getAllStmts(StatementType::IF).asVector();
+        return set<StmtIndex>(statements.begin(), statements.end());
+    }
     return ifPatternTable.getLHSRelationships(var);
 }
 
+set<VarName> PKB::getIfPatternVars(const StmtIndex &stmt) {
+    return ifPatternTable.getRHSRelationships(stmt);
+}
+
 set<StmtIndex> PKB::getWhilePatternStmts(const VarName &var) {
+    if (WILDCARD == var) {
+        auto statements = getAllStmts(StatementType::WHILE).asVector();
+        return set<StmtIndex>(statements.begin(), statements.end());
+    }
     return whilePatternTable.getLHSRelationships(var);
+}
+
+set<VarName> PKB::getWhilePatternVars(const StmtIndex &stmt) {
+    return whilePatternTable.getRHSRelationships(stmt);
 }
 
 bool PKB::partialAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
