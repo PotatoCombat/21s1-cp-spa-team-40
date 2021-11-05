@@ -1,5 +1,7 @@
 #include "query_processor/ResultTable.h"
 
+const string ResultTable::EMPTY = "";
+
 void ResultTable::clear() { table.clear(); }
 
 void ResultTable::init(int size) {
@@ -209,7 +211,6 @@ void ResultTable::constructNewCombinations(vector<vector<string>> &newCombinatio
 void ResultTable::appendGroupResult(set<INDEX> &visited,
                                     vector<vector<string>> &existingCombinations,
                                     INDEX idx, vector<INDEX> &returnIndexes) {
-    string EMPTY = "";
     vector<INDEX> toBeEval;
     set<INDEX> visitedInGroup; // so that don't need to check all visited idx
     vector<vector<string>> groupCombination{vector<string>(table.size(), EMPTY)};
@@ -272,7 +273,6 @@ void ResultTable::appendGroupResult(set<INDEX> &visited,
 }
 
 vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
-    string EMPTY = "";
     set<INDEX> visited;
     // the inner vector has element equal to the number of indexes in this table
     vector<vector<string>> combinations{vector<string>(table.size(), EMPTY)};

@@ -17,6 +17,8 @@ typedef map<string, IDX_TO_VALUES_MAP> VALUE_TO_POINTERS_MAP;
 
 class ResultTable {
 private:
+    static const string EMPTY;
+
     vector<VALUE_TO_POINTERS_MAP> table;
 
     void assertIndex(INDEX idx);
