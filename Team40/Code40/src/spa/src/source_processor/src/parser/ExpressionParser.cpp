@@ -125,9 +125,6 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
         if (!(isInteger(next) || isName(next) || next == Tokens::SYMBOL_NOT)) {
             throw invalid_argument("invalid expression: factor or ! must appear after (");
         }
-        // if (next == Tokens::SYMBOL_CLOSE_BRACKET) {
-        //     throw invalid_argument("invalid expression: brackets should contain an expression");
-        // }
     } else if (end == exprLst.size() - 1) {
         throw invalid_argument("invalid expression: factor or ! must appear after (");
     } else {
@@ -138,15 +135,6 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
             throw invalid_argument("invalid expression: factor or ! must appear after ( and "
                                    "operator must appear before (");
         }
-        // if (next == Tokens::SYMBOL_CLOSE_BRACKET) {
-        //     throw invalid_argument("invalid expression: brackets should contain an expression");
-        // }
-        // if (end < exprLst.size() - 2) {
-        //     if (exprLst[end + 2] == Tokens::SYMBOL_CLOSE_BRACKET) {
-        //         throw invalid_argument("invalid expression: brackets should "
-        //                                "contain an expression");
-        //     }
-        // }
     }
 }
 
@@ -165,9 +153,6 @@ void ExpressionParser::checkValidCloseBracket(int start, int end) {
         if (!(isInteger(prev) || isName(prev))) {
             throw invalid_argument("invalid expression: factor must appear before )");
         }
-        // if (prev == Tokens::SYMBOL_OPEN_BRACKET) {
-        //     throw invalid_argument("invalid expression: brackets should contain an expression");
-        // }
     } else {
         string prev = exprLst[start - 1];
         string next = exprLst[end + 1];
@@ -175,15 +160,6 @@ void ExpressionParser::checkValidCloseBracket(int start, int end) {
             throw invalid_argument("invalid expression: factor must appear before ) and "
                                    "operator must appear after )");
         }
-        // if (prev == Tokens::SYMBOL_OPEN_BRACKET) {
-        //     throw invalid_argument("invalid expression: brackets should contain an expression");
-        // }
-        // if (start > 1) {
-        //     if (exprLst[start - 2] == Tokens::SYMBOL_OPEN_BRACKET) {
-        //         throw invalid_argument("invalid expression: brackets should "
-        //                                "contain an expression");
-        //     }
-        // }
     }
 }
 
