@@ -69,14 +69,16 @@ jobs:
           - { source: with_boolean_attribute_source, queries: with_boolean_attribute_queries, output: with_boolean_attribute }
           - { source: pattern_source, queries: pattern_queries, output: pattern }
           - { source: tuples_source, queries: tuples_queries, output: tuples }
-          - { source: pattern_source, queries: pattern_queries , output: pattern }
-          - { source: multiclause_source, queries: multiclause_queries, output: multiclause }
           - { source: multiclause_source, queries: multiclause_2st1p_queries, output: multiclause_2st1p }
-          - { source: nextbip_source, queries: nextbip_queries, output: nextbip }
           - { source: affects_simple_source, queries: affects_simple_queries, output: affects_simple }
           - { source: affects_complex_source, queries: affects_complex_queries, output: affects_complex }
           - { source: multiclause_complex_source, queries: multiclause_3st1p_queries, output: multiclause_3st1p }
+          - { source: multiclause_complex_source, queries: multiclause_3st_queries, output: multiclause_3st }
           - { source: multiclause_complex_source, queries: multiclause_semantic_queries, output: multiclause_semantic }
+          - { source: StressTest_source, queries: StressTest_queries, output: StressTest }
+          - { source: pattern_extreme_source, queries: pattern_extreme_queries, output: pattern_extreme }
+          - { source: nextbip_source, queries: nextbip_queries, output: nextbip }
+          - { source: affectsbip_source, queries: affectsbip_queries, output: affectsbip }
 
     steps:
       - uses: actions/checkout@v2
