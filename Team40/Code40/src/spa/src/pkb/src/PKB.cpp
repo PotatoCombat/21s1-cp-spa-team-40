@@ -381,7 +381,9 @@ set<StmtIndex> PKB::getIfPatternStmts(const VarName &var) {
 }
 
 set<VarName> PKB::getIfPatternVars(const StmtIndex &stmt) {
-    return ifPatternTable.getRHSRelationships(stmt);
+    auto vars = ifPatternTable.getRHSRelationships(stmt);
+    vars.erase(WILDCARD);
+    return vars;
 }
 
 set<StmtIndex> PKB::getWhilePatternStmts(const VarName &var) {
@@ -393,7 +395,9 @@ set<StmtIndex> PKB::getWhilePatternStmts(const VarName &var) {
 }
 
 set<VarName> PKB::getWhilePatternVars(const StmtIndex &stmt) {
-    return whilePatternTable.getRHSRelationships(stmt);
+    auto vars = whilePatternTable.getRHSRelationships(stmt);
+    vars.erase(WILDCARD);
+    return vars;
 }
 
 bool PKB::partialAssignPattern(const StmtIndex &stmtIndex, const VarName &var,
