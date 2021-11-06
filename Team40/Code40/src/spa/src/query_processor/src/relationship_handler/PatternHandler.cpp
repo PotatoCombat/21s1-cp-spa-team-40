@@ -61,13 +61,22 @@ set<string> PatternHandler::getR2ClausedR1(string r1) {
             }
             break;
         case DesignEntityType::WHILE:
-            return pkb->getWhilePatternVars(stoi(r1));
+            result =  pkb->getWhilePatternVars(stoi(r1));
+            break;
         case DesignEntityType::IF:
-            return pkb->getIfPatternVars(stoi(r1));
+            result = pkb->getIfPatternVars(stoi(r1));
+            break;
         default:
             throw ClauseHandlerError(
                     "PatternHandler: unknown pattern clause type!");
     }
+
+    for (string s : result) {
+        if (s == WILDCARD) {
+            result.erase(s);
+        }
+    }
+
     return result;
 }
 
