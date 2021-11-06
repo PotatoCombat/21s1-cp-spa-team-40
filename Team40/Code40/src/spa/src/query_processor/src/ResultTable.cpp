@@ -282,7 +282,7 @@ void ResultTable::combineWithExistingCombinations(
     for (auto c1 : existingCombinations) {
         for (auto c2 : filteredCombinations) {
             COMBINATION merged(table.size(), EMPTY);
-            for (int i = 0; i < table.size(); i++) {
+            for (size_t i = 0; i < table.size(); i++) {
                 if (c1[i] != EMPTY) {
                     merged[i] = c1[i];
                 }
