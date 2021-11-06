@@ -3,7 +3,8 @@
 BreadthFirstExtractor::BreadthFirstExtractor(PKB *pkb) : pkb(pkb){};
 
 /**
- * Extracts design entities from the program AST using breadth first search to traverse the tree
+ * Extracts design entities from the program AST using breadth first search to
+ * traverse the tree
  */
 void BreadthFirstExtractor::extract(Program *program) {
     ExtractionContext::getInstance().resetTransientContexts();
@@ -35,8 +36,8 @@ void BreadthFirstExtractor::extractProcedure(Procedure *procedure) {
 }
 
 /**
- * Extracts all statements from the program AST using breadth first search and populates the PKB
- * with the corresponding Follows relationships
+ * Extracts all statements from the program AST using breadth first search and
+ * populates the PKB with the corresponding Follows relationships
  */
 void BreadthFirstExtractor::extractStatement(Statement *statement) {
     vector<Statement *> precedingStatements =
@@ -65,7 +66,8 @@ void BreadthFirstExtractor::extractStatement(Statement *statement) {
 }
 
 /**
- * Extracts all statements of type IF from the program AST using breadth first search
+ * Extracts all statements of type IF from the program AST using breadth first
+ * search
  */
 void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
     statementLists.push_back(ifStatement->getThenStmtLst());
@@ -73,15 +75,16 @@ void BreadthFirstExtractor::extractIfStatement(Statement *ifStatement) {
 }
 
 /**
- * Extracts all statements of type WHILE from the program AST using breadth first search
+ * Extracts all statements of type WHILE from the program AST using breadth
+ * first search
  */
 void BreadthFirstExtractor::extractWhileStatement(Statement *whileStatement) {
     statementLists.push_back(whileStatement->getThenStmtLst());
 }
 
 /**
- * Extracts all statements of type CALL from the program AST using breadth first search and
- * populates the PKB with the corresponding Calls relationships
+ * Extracts all statements of type CALL from the program AST using breadth first
+ * search and populates the PKB with the corresponding Calls relationships
  */
 void BreadthFirstExtractor::extractCallStatement(Statement *callStatement) {
     optional<Procedure *> currentProcedure = ExtractionContext::getInstance().getCurrentProcedure();
