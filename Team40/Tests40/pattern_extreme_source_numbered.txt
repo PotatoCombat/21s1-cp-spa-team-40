@@ -332,24 +332,3 @@ procedure mixed {
 234		print h;
 	}
 }
-
-procedure call {
-	h = h * y - y + y / (x * x + (h - 1)) + 28;
-	g = g * y - y + y / (z * z + (g - 1)) + 29;
-	f = f * y - y + y / (x * x + (f - 1)) + 30;
-	e = e * y - y + y / (z * z + (e - 1)) + 31;
-	d = d * y - y + y / (x * x + (d - 1)) + 32;
-	c = c * y - y + y / (z * z + (c - 1)) + 33;
-	b = b * y - y + y / (x * x + (b - 1)) + 34;
-	a = a * y - y + y / (z * z + (a - 1)) + 35;
-	call print;
-	assign = h;
-	if = h % g;
-	while = h % g % f;
-	print = h % (g % f) % e;
-	read = h % (g % f) % (e % d);
-	call = h % g % (f % e) % d % c;
-	if = read * 200 + 1 + h % g % (f % e) % d % c % b;
-	while = print * 200 + 1 + h % g % (f % e) % d % c % b % a;
-	call print;
-}
