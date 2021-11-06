@@ -21,7 +21,7 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     strategy:
       fail-fast: true
 
@@ -72,6 +72,11 @@ jobs:
           - { source: pattern_source, queries: pattern_queries , output: pattern }
           - { source: multiclause_source, queries: multiclause_queries, output: multiclause }
           - { source: multiclause_source, queries: multiclause_2st1p_queries, output: multiclause_2st1p }
+          - { source: nextbip_source, queries: nextbip_queries, output: nextbip }
+          - { source: affects_simple_source, queries: affects_simple_queries, output: affects_simple }
+          - { source: affects_complex_source, queries: affects_complex_queries, output: affects_complex }
+          - { source: multiclause_complex_source, queries: multiclause_3st1p_queries, output: multiclause_3st1p }
+          - { source: multiclause_complex_source, queries: multiclause_semantic_queries, output: multiclause_semantic }
 
     steps:
       - uses: actions/checkout@v2
