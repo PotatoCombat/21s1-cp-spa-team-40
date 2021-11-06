@@ -71,12 +71,6 @@ set<string> PatternHandler::getR2ClausedR1(string r1) {
                     "PatternHandler: unknown pattern clause type!");
     }
 
-    for (string s : result) {
-        if (s == WILDCARD) {
-            result.erase(s);
-        }
-    }
-
     return result;
 }
 
