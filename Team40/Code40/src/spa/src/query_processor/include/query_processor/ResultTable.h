@@ -14,23 +14,31 @@ typedef int INDEX;
 typedef set<VALUE> VALUE_SET;
 typedef map<INDEX, VALUE_SET> IDX_TO_VALUES_MAP;
 typedef map<string, IDX_TO_VALUES_MAP> VALUE_TO_POINTERS_MAP;
+typedef vector<string> COMBINATION;
+typedef vector<COMBINATION> COMBINATIONS;
 
 class ResultTable {
 private:
+    static const string EMPTY;
+
     vector<VALUE_TO_POINTERS_MAP> table;
 
     void assertIndex(INDEX idx);
 
-    /*
-     * Calculates all the combination result of the group that contains the
-     * input index if the group hasn't been evaluated yet
-     */
     void appendGroupResult(set<INDEX> &visited,
-                           vector<vector<string>> &existingCombinations,
-                           INDEX idx);
+                           COMBINATIONS &existingCombinations, INDEX idx,
+                           vector<INDEX> &returnIdexes);
 
-    void constructNewCombinations(vector<vector<string>> &newCombinations,
-                                  vector<vector<string>> &existingCombinations,
+    void filterGroupCombinations(vector<INDEX> &returnIndexes,
+                           set<INDEX> &visistedInGroup,
+                           COMBINATIONS &groupCombinations,
+                           COMBINATIONS &filteredCombinations);
+
+    void combineWithExistingCombinations(COMBINATIONS &existingCombinations,
+                                         COMBINATIONS &filteredCombinations);
+
+    void constructNewCombinations(COMBINATIONS &newCombinations,
+                                  COMBINATIONS &existingCombinations,
                                   set<INDEX> &visitedInGroup, INDEX idx);
 
     bool canAppendValue(VALUE value, INDEX idx,
@@ -67,5 +75,5 @@ public:
 
     bool hasVal(INDEX idx, VALUE val);
 
-    vector<vector<string>> generateResult(vector<INDEX> indexes);
+    COMBINATIONS generateResult(vector<INDEX> indexes);
 };
