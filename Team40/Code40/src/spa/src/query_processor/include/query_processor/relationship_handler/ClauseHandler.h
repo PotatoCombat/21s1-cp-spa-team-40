@@ -33,7 +33,6 @@ protected:
 
     // change this to false if don't want to use cache
     bool useCache = true;
-    ResultCache *cache;
 
     static set<DesignEntityType> STMT_DES_SET;
     static set<DesignEntityType> PROCEDURE_DES_SET;
@@ -44,7 +43,7 @@ protected:
     static set<ReferenceType> ALL_VALID_REF;
     static set<ReferenceType> NO_WILDCARD_REF;
 
-    ClauseHandler(Clause *clause, PKB *pkb, ResultCache *cache, ClauseType validClauseType);
+    ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType);
 
     set<string> getR1ClauseR2Wrapper(string r2);
     set<string> getR2ClausedR1Wrapper(string r1);

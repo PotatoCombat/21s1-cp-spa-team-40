@@ -1,7 +1,7 @@
 #include "query_processor/relationship_handler/AffectsHandler.h"
 
-AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb, ResultCache *cache)
-    : ClauseHandler(clause, pkb, cache, ClauseType::AFFECTS) {
+AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb)
+    : ClauseHandler(clause, pkb, ClauseType::AFFECTS) {
     validDesType1 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validDesType2 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;
