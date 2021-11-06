@@ -174,7 +174,7 @@ void Lexer::addString(string &input, vector<string> &inputVector) {
 }
 
 /**
- * Remove all spaces from the current token
+ * Removes all spaces from the current token
  */
 string Lexer::cleanString(string input) {
     input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
