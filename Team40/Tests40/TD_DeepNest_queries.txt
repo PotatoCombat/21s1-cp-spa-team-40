@@ -216,5 +216,5 @@ z
 44 - Modifies and Pattern
 assign a; if ifs;
 Select ifs such that Modifies(ifs, "y") pattern a(_, _"x * a * b * c / y"_)
-
+15
 5000
