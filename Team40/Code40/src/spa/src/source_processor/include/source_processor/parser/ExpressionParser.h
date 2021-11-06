@@ -30,11 +30,4 @@ public:
 
     bool isInteger(string input);
     bool isName(string input);
-    bool isRoundBracket(string input);
-    bool isValidAssignOperator(string input);
-    bool isValidConditionalOperator(string input);
-    bool isOperator(string input);
-    bool isArtihmeticOperator(string input);
-    bool isComparisonOperator(string input);
-    bool isLogicalOperator(string input);
 };

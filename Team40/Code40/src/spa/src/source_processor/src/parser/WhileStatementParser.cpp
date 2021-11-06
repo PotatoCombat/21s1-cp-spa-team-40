@@ -10,6 +10,11 @@ WhileStatementParser::WhileStatementParser(vector<string> content, int index,
     entity = new Statement(index, StatementType::WHILE);
 };
 
+/**
+ * Parses a tokenized string identified to be a while statement into a
+ * Statement object of type WHILE.
+ * @return Statement object of type WHILE.
+ */
 Statement *WhileStatementParser::parseEntity(int &programIndex) {
     vector<string>::iterator whileItr = find(content.begin(), content.end(), Tokens::KEYWORD_WHILE);
     vector<string>::iterator endItr =
@@ -32,11 +37,18 @@ Statement *WhileStatementParser::parseEntity(int &programIndex) {
     entity->setExpressionLst(condLst);
     parseChildStmts(programIndex);
     if (entity->getThenStmtLst().size() == 0) {
-        throw invalid_argument("nested stmtLst should have at least one statement.");
+        throw invalid_argument("invalid while statement: nested stmtLst should "
+                               "have at least one statement.");
     }
     return entity;
 }
 
+/**
+ * Iterates through the subsequent tokenized program lines after the initial
+ * While statement declaration, calls StatementParser to parse them and adds
+ * them to the stmtLst The loop is terminated when the first unnested closing
+ * brace (terminator) is detected
+ */
 void WhileStatementParser::parseChildStmts(int &programIndex) {
     int terminator = 0;
     for (int i = programIndex + 1; i < programLines.size(); i++) {

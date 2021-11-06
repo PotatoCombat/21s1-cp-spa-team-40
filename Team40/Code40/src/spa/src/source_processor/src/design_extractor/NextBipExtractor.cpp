@@ -10,8 +10,7 @@ void NextBipExtractor::extract(Program *program) {
     // Extract procedures in topologically reverse order of dependencies
     vector<ProcName> sortedProcNames =
         ExtractionContext::getInstance().getTopologicallySortedProcNames();
-    for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend();
-         it++) {
+    for (auto it = sortedProcNames.rbegin(); it != sortedProcNames.rend(); it++) {
         Procedure *proc = pkb->getProcByName(*it);
         extractProcedure(proc);
     }
@@ -20,13 +19,11 @@ void NextBipExtractor::extract(Program *program) {
 void NextBipExtractor::extractProcedure(Procedure *procedure) {
     ExtractionContext::getInstance().setCurrentProcedure(procedure);
     // Create terminal stmt (equivalent of dummy node in CFG)
-    auto *terminalStmt =
-        new Statement(getNextTerminalIndex(), StatementType::TERMINAL);
+    auto *terminalStmt = new Statement(getNextTerminalIndex(), StatementType::TERMINAL);
     terminalStmtsMap[procedure->getId()] = terminalStmt;
 
     // Extract statements recursively
-    Statement *firstExecutableStmt =
-        pkb->getProcByName(procedure->getId())->getStmtLst().front();
+    Statement *firstExecutableStmt = pkb->getProcByName(procedure->getId())->getStmtLst().front();
     extractStatement(firstExecutableStmt);
 
     ExtractionContext::getInstance().unsetCurrentProcedure(procedure);
@@ -58,9 +55,8 @@ void NextBipExtractor::extractCallStatement(Statement *callStatement) {
         extractCallTerminalNextBip(callStatement, calledProcFirstExecutableStmt,
                                    calledProcTerminalStmt);
     } else {
-        extractCallStatementNextBip(
-            callStatement, calledProcFirstExecutableStmt,
-            calledProcTerminalStmt, nextStatement.value());
+        extractCallStatementNextBip(callStatement, calledProcFirstExecutableStmt,
+                                    calledProcTerminalStmt, nextStatement.value());
         extractStatement(nextStatement.value());
     }
 }
@@ -82,8 +78,7 @@ void NextBipExtractor::extractNonCallStatement(Statement *statement) {
     }
 }
 
-void NextBipExtractor::extractCallStatementNextBip(Statement *branchInFrom,
-                                                   Statement *branchInTo,
+void NextBipExtractor::extractCallStatementNextBip(Statement *branchInFrom, Statement *branchInTo,
                                                    Statement *branchBackFrom,
                                                    Statement *branchBackTo) {
     pkb->insertBranchIn(branchInFrom, branchInTo);
@@ -98,16 +93,14 @@ Statement *NextBipExtractor::getFirstExecutableStmt(const ProcName &procName) {
     return pkb->getStmtByIndex(calledProcFirstStmtIndex);
 }
 
-optional<Statement *>
-NextBipExtractor::getStatementAfterCallStatement(StmtIndex callStmtIndex) {
+optional<Statement *> NextBipExtractor::getStatementAfterCallStatement(StmtIndex callStmtIndex) {
     set<ProgLineIndex> nextStmtIndices = pkb->getNextLines(callStmtIndex);
     if (nextStmtIndices.empty()) {
         return nullopt;
     }
     if (nextStmtIndices.size() > 1) {
-        throw runtime_error(
-            "Encountered a call statement with more than one next "
-            "statement (syntactically impossible).");
+        throw runtime_error("Encountered a call statement with more than one next "
+                            "statement (syntactically impossible).");
     }
     return pkb->getStmtByIndex(*nextStmtIndices.begin());
 }
@@ -131,8 +124,7 @@ void NextBipExtractor::extractNonCallTerminalNextBip(Statement *statement) {
     visited.insert(terminalStmtsMap[currentProcName]->getId());
 }
 
-void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
-                                                  Statement *branchInTo,
+void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom, Statement *branchInTo,
                                                   Statement *branchBackFrom) {
     ProcName currentProcName = getCurrentProcName();
     if (!terminalStmtsMap.count(currentProcName)) {
@@ -140,14 +132,12 @@ void NextBipExtractor::extractCallTerminalNextBip(Statement *branchInFrom,
     }
     Statement *branchBackTo = terminalStmtsMap[currentProcName];
     pkb->insertNext(branchInFrom, branchBackTo);
-    extractCallStatementNextBip(branchInFrom, branchInTo, branchBackFrom,
-                                branchBackTo);
+    extractCallStatementNextBip(branchInFrom, branchInTo, branchBackFrom, branchBackTo);
     visited.insert(terminalStmtsMap[currentProcName]->getId());
 }
 
 bool NextBipExtractor::isLastExecutableStmt(Statement *statement) {
     set<ProgLineIndex> nextStatements = pkb->getNextLines(statement->getId());
     return (nextStatements.empty() ||
-            (statement->getStatementType() == StatementType::WHILE &&
-             nextStatements.size() < 2));
+            (statement->getStatementType() == StatementType::WHILE && nextStatements.size() < 2));
 }

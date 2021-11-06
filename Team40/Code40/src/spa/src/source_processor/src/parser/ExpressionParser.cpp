@@ -5,6 +5,13 @@
 ExpressionParser::ExpressionParser(vector<string> exprLst, Statement *stmt)
     : exprLst(exprLst), stmt(stmt){};
 
+/**
+ * Parses the conditional expressions in If and While statements as well as the
+ * arithmetic expressions in Assign statements into an expression list. Also
+ * ensures that the expression is valid by ensuring that operators and factors
+ * are alternating
+ * @return Parsed expression list.
+ */
 vector<string> ExpressionParser::parseExpression() {
     checkValidExpression();
     bool oprtrFlag = false; // if false, must be variable/constant. if true, must be operator
@@ -18,14 +25,14 @@ vector<string> ExpressionParser::parseExpression() {
             Variable *variable = new Variable(curr);
             stmt->addExpressionVar(variable);
             oprtrFlag = true; // next token must be an operator
-        } else if (isRoundBracket(curr)) {
+        } else if (Tokens::isRoundBracket(curr)) {
             checkValidBracket(curr, i);
-        } else if ((isOperator(curr) && oprtrFlag) || (curr == Tokens::SYMBOL_NOT)) {
+        } else if ((Tokens::isOperator(curr) && oprtrFlag) || (curr == Tokens::SYMBOL_NOT)) {
             checkValidOperator(curr, i);
             oprtrFlag = false; // next token must be a variable/constant
         } else {
-            throw invalid_argument(
-                "invalid expression: invalid variable, constant or operator encountered");
+            throw invalid_argument("invalid expression: invalid variable, "
+                                   "constant or operator encountered");
         }
     }
     if (!brackets.empty()) {
@@ -34,21 +41,24 @@ vector<string> ExpressionParser::parseExpression() {
     return exprLst;
 }
 
+/**
+ * Ensures that a detected operator is valid according to the statement type
+ */
 void ExpressionParser::checkValidOperator(string curr, int index) {
     if (stmt->getStatementType() == StatementType::ASSIGN) {
-        if (!isValidAssignOperator(curr)) {
+        if (!Tokens::isValidAssignOperator(curr)) {
             throw invalid_argument("invalid expression: invalid operator in assign statement");
         }
     } else if (stmt->getStatementType() == StatementType::WHILE) {
-        if (!isValidConditionalOperator(curr)) {
+        if (!Tokens::isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid expression: invalid operator in while statement");
         }
     } else if (stmt->getStatementType() == StatementType::IF) {
-        if (!isValidConditionalOperator(curr)) {
+        if (!Tokens::isValidConditionalOperator(curr)) {
             throw invalid_argument("invalid expression: invalid operator in if statement");
         }
     }
-    if (isLogicalOperator(curr)) {
+    if (Tokens::isLogicalOperator(curr)) {
         if (index == exprLst.size() - 1) {
             throw invalid_argument("invalid expression: ( must appear after logical operator");
         } else if (exprLst[index + 1] != Tokens::SYMBOL_OPEN_BRACKET) {
@@ -56,14 +66,19 @@ void ExpressionParser::checkValidOperator(string curr, int index) {
         }
         if (curr != Tokens::SYMBOL_NOT) {
             if (index == 0) {
-                throw invalid_argument("invalid expression: ) must appear before logical operator");
+                throw invalid_argument("invalid expression: ) must appear "
+                                       "before logical operator");
             } else if (exprLst[index - 1] != Tokens::SYMBOL_CLOSE_BRACKET) {
-                throw invalid_argument("invalid expression: ) must appear before logical operator");
+                throw invalid_argument("invalid expression: ) must appear "
+                                       "before logical operator");
             }
         }
     }
 }
 
+/**
+ * Ensures that the entire expression has valid brackets that match each other
+ */
 void ExpressionParser::checkValidBracket(string curr, int index) {
     if (curr == Tokens::SYMBOL_OPEN_BRACKET) {
         brackets.push(curr);
@@ -96,6 +111,12 @@ void ExpressionParser::checkValidBracket(string curr, int index) {
         checkValidCloseBracket(start, end);
 }
 
+/**
+ * Ensures that a detected open bracket is followed by either a factor or a not
+ * operator and preceded by nothing or an operator. Also ensures that an
+ * expression (min 3 tokens) exists between the current open bracket and the
+ * next close bracket.
+ */
 void ExpressionParser::checkValidOpenBracket(int start, int end) {
     if (start == 0 && end == exprLst.size() - 1) {
         return;
@@ -109,7 +130,7 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
     } else {
         string prev = exprLst[start - 1];
         string next = exprLst[end + 1];
-        if (!(isOperator(prev) &&
+        if (!(Tokens::isOperator(prev) &&
               (isInteger(next) || isName(next) || next == Tokens::SYMBOL_NOT))) {
             throw invalid_argument("invalid expression: factor or ! must appear after ( and "
                                    "operator must appear before (");
@@ -117,48 +138,58 @@ void ExpressionParser::checkValidOpenBracket(int start, int end) {
     }
 }
 
+/**
+ * Ensures that a detected close bracket is preceded by a factor and followed by
+ * nothing or an operator. Also ensures that an expression (min 3 tokens) exists
+ * between the current close bracket and the previous open bracket.
+ */
 void ExpressionParser::checkValidCloseBracket(int start, int end) {
     if (start == 0 && end == exprLst.size() - 1) {
         return;
     } else if (start == 0) {
-        throw invalid_argument("invalid expression: factor or ! must appear before )");
+        throw invalid_argument("invalid expression: factor must appear before )");
     } else if (end == exprLst.size() - 1) {
         string prev = exprLst[start - 1];
         if (!(isInteger(prev) || isName(prev))) {
-            throw invalid_argument("invalid expression: factor or ! must appear before )");
+            throw invalid_argument("invalid expression: factor must appear before )");
         }
     } else {
         string prev = exprLst[start - 1];
         string next = exprLst[end + 1];
-        if (!(isOperator(next) && (isInteger(prev) || isName(prev)))) {
-            throw invalid_argument("invalid expression: factor or ! must appear before ) and "
+        if (!(Tokens::isOperator(next) && (isInteger(prev) || isName(prev)))) {
+            throw invalid_argument("invalid expression: factor must appear before ) and "
                                    "operator must appear after )");
         }
     }
 }
 
+/**
+ * Ensures that the expression is not empty and does not terminate with an
+ * operator. Also ensures that conditional expressions contain at least one
+ * logical or comparison operator
+ */
 void ExpressionParser::checkValidExpression() {
     if (exprLst.empty()) {
         throw invalid_argument("invalid expression: no arguments");
     }
-    // conditions and expressions should not end with an operator
-    if (isOperator(exprLst.back())) {
-        throw invalid_argument("invalid expression: cannot end with an operator");
-    }
-    StatementType type = stmt->getStatementType();
-    // condition should have at least one operator
-    if (type == StatementType::IF || type == StatementType::WHILE) {
-        if ((exprLst.size() < MIN_COND_LEN_WITH_AND_OR) ||
-            ((exprLst.size() < MIN_COND_LEN_WITH_NOT) && (exprLst[0] != Tokens::SYMBOL_NOT))) {
-            throw invalid_argument("invalid expression: conditions need at least one operator");
+    if (stmt->getStatementType() == StatementType::IF) {
+        if (find_if(exprLst.begin(), exprLst.end(), [](string s) {
+                return (Tokens::isLogicalOperator(s) || Tokens::isComparisonOperator(s));
+            }) == exprLst.end()) {
+            throw invalid_argument("invalid expression: conditional expressions should have at "
+                                   "least one logical or comparison operator");
         }
+    }
+    // conditions and expressions should not end with an operator
+    if (Tokens::isOperator(exprLst.back())) {
+        throw invalid_argument("invalid expression: cannot end with an operator");
     }
 }
 
 bool ExpressionParser::isInteger(string input) {
     // INTEGER: DIGIT+
     // constants are sequences of digits
-    if ((input.length() > 0) && (input[0] == 0)) {
+    if ((input.length() > 1) && (input[0] == '0')) {
         return false;
     }
     return find_if(input.begin(), input.end(), [](char c) { return !(isdigit(c)); }) == input.end();
@@ -172,34 +203,4 @@ bool ExpressionParser::isName(string input) {
         return false;
     }
     return find_if(input.begin(), input.end(), [](char c) { return !(isalnum(c)); }) == input.end();
-}
-
-bool ExpressionParser::isRoundBracket(string input) {
-    return input == Tokens::SYMBOL_OPEN_BRACKET || input == Tokens::SYMBOL_CLOSE_BRACKET;
-}
-
-bool ExpressionParser::isValidAssignOperator(string input) { return (isArtihmeticOperator(input)); }
-
-bool ExpressionParser::isValidConditionalOperator(string input) {
-    return (isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input));
-}
-
-bool ExpressionParser::isOperator(string input) {
-    return isLogicalOperator(input) || isComparisonOperator(input) || isArtihmeticOperator(input);
-}
-
-bool ExpressionParser::isArtihmeticOperator(string input) {
-    return input == Tokens::SYMBOL_PLUS || input == Tokens::SYMBOL_MINUS ||
-           input == Tokens::SYMBOL_MULTIPLY || input == Tokens::SYMBOL_DIVIDE ||
-           input == Tokens::SYMBOL_MODULO;
-}
-
-bool ExpressionParser::isComparisonOperator(string input) {
-    return input == Tokens::SYMBOL_GREATER_THAN || input == Tokens::SYMBOL_GREATER_THAN_OR_EQUALS_TO || 
-           input == Tokens::SYMBOL_LESS_THAN || input == Tokens::SYMBOL_LESS_THAN_OR_EQUALS_TO || 
-           input == Tokens::SYMBOL_EQUALS || input == Tokens::SYMBOL_NOT_EQUALS;
-}
-
-bool ExpressionParser::isLogicalOperator(string input) {
-    return input == Tokens::SYMBOL_NOT || input == Tokens::SYMBOL_AND || input == Tokens::SYMBOL_OR;
 }

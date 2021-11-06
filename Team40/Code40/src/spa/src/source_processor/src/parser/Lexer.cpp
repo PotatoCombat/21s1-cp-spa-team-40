@@ -6,6 +6,11 @@
 
 // tokenize file input
 
+/**
+ * Tokenizes an input file using lexical analysis into its respective program lines and assigns
+ * each line a respective index
+ * @return a list of tokenized program lines
+ */
 vector<Line> Lexer::tokenizeFile(fstream &file) {
     vector<Line> programLines;
     vector<vector<string>> programTokens = mergeLine(file);
@@ -34,6 +39,10 @@ vector<Line> Lexer::tokenizeFile(fstream &file) {
     return programLines;
 }
 
+/**
+ * Merges tokenized program lines that have been separated in the source file
+ * @return a list of tokenized program lines without an index
+ */
 vector<vector<string>> Lexer::mergeLine(fstream &file) {
     string input;
     vector<vector<string>> programTokens;
@@ -61,6 +70,11 @@ vector<vector<string>> Lexer::mergeLine(fstream &file) {
     return programTokens;
 }
 
+/**
+ * Splits a tokenized program line according to terminal tokens (i.e. semicolons and braces)
+ * @return a tuple with the first and second element representing the input program line after the
+ * first split
+ */
 tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     tuple<vector<string>, vector<string>> splitString;
     vector<string> currString;
@@ -81,6 +95,10 @@ tuple<vector<string>, vector<string>> Lexer::splitLine(vector<string> line) {
     return splitString;
 }
 
+/**
+ * Tokenizes an input file line according to the parsing expression grammar
+ * @return a tokenized version of the input file line
+ */
 vector<string> Lexer::tokenizeLine(string input) {
     vector<string> inputLine;
     string currString = "";
@@ -88,7 +106,7 @@ vector<string> Lexer::tokenizeLine(string input) {
         char curr = input.at(i);
         currString = cleanString(currString);
 
-        if (isOperator(curr) || isBracket(curr) || isSemiColon(curr)) {
+        if (isOperator(curr) || isBracket(curr) || isSemiColon(curr) || ::isspace(curr)) {
             // push back previous string before special character
             addString(currString, inputLine);
             currString.push_back(curr);
@@ -112,6 +130,9 @@ vector<string> Lexer::tokenizeLine(string input) {
 
 // helper functions
 
+/**
+ * Tokenizes an operator symbol and add its to the list of tokens from the current input file line
+ */
 void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr, string &currString,
                                  vector<string> &inputLine) {
     // check if operator has an additional character
@@ -125,6 +146,9 @@ void Lexer::tokenizeAndAddSymbol(string input, int &i, char curr, string &currSt
     addString(currString, inputLine);
 }
 
+/**
+ * Tokenizes a keyword and adds it to the list of tokens from the current input file line
+ */
 void Lexer::tokenizeAndAddKeyword(string input, int &i, string &currString,
                                   vector<string> &inputLine) {
     // check if keyword has an additional character
@@ -137,6 +161,10 @@ void Lexer::tokenizeAndAddKeyword(string input, int &i, string &currString,
     }
 }
 
+/**
+ * Adds the current token to the list of tokens from the current input file line and resets the
+ * input string to be empty
+ */
 void Lexer::addString(string &input, vector<string> &inputVector) {
     input = cleanString(input);
     if (!input.empty()) {
@@ -145,11 +173,17 @@ void Lexer::addString(string &input, vector<string> &inputVector) {
     input = "";
 }
 
+/**
+ * Removes all spaces from the current token
+ */
 string Lexer::cleanString(string input) {
     input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
     return input;
 }
 
+/**
+ * Makes sure that all the brackets and braces in the input source file have a valid match
+ */
 void Lexer::checkValidBracket(char curr) {
     if (isBracket(curr)) {
         if (curr == Tokens::CHAR_OPEN_BRACKET || curr == Tokens::CHAR_OPEN_BRACE) {

@@ -7,16 +7,13 @@ ExtractionContext &ExtractionContext::getInstance() {
     return instance;
 }
 
-optional<Procedure *> ExtractionContext::getCurrentProcedure() {
-    return currentProcedure;
-}
+optional<Procedure *> ExtractionContext::getCurrentProcedure() { return currentProcedure; }
 
 void ExtractionContext::setCurrentProcedure(Procedure *procedure) {
     if (currentProcedure.has_value()) {
         throw runtime_error("Trying to overwrite another procedure.");
     }
-    if (procDependencyMap.find(procedure->getId()) ==
-        procDependencyMap.end()) {
+    if (procDependencyMap.find(procedure->getId()) == procDependencyMap.end()) {
         procDependencyMap[procedure->getId()] = unordered_set<ProcName>();
         procIndegreesCounter[procedure->getId()] = 0;
     }
@@ -33,40 +30,33 @@ void ExtractionContext::unsetCurrentProcedure(Procedure *procedure) {
     currentProcedure = nullopt;
 }
 
-StmtIndex
-ExtractionContext::getFirstExecutableStatement(const ProcName &procName) {
-    if (procFirstExecutableStatements.find(procName) ==
-        procFirstExecutableStatements.end()) {
+StmtIndex ExtractionContext::getFirstExecutableStatement(const ProcName &procName) {
+    if (procFirstExecutableStatements.find(procName) == procFirstExecutableStatements.end()) {
         throw runtime_error("Trying to get a null value.");
     }
     return procFirstExecutableStatements[procName];
 }
 
-void ExtractionContext::setFirstExecutableStatement(const ProcName &procName,
-                                                    StmtIndex stmtIndex) {
+void ExtractionContext::setFirstExecutableStatement(const ProcName &procName, StmtIndex stmtIndex) {
     if (procFirstExecutableStatements.count(procName)) {
         throw runtime_error("Trying to unset another StmtIndex.");
     }
     procFirstExecutableStatements[procName] = stmtIndex;
 }
 
-set<StmtIndex>
-ExtractionContext::getLastExecutableStatements(const ProcName &procName) {
-    if (procLastExecutableStatements.find(procName) ==
-        procLastExecutableStatements.end()) {
+set<StmtIndex> ExtractionContext::getLastExecutableStatements(const ProcName &procName) {
+    if (procLastExecutableStatements.find(procName) == procLastExecutableStatements.end()) {
         throw runtime_error("Trying to get a null value.");
     }
     return procLastExecutableStatements[procName];
 }
 
-void ExtractionContext::setLastExecutableStatements(
-    const ProcName &procName, set<StmtIndex> stmtIndices) {
+void ExtractionContext::setLastExecutableStatements(const ProcName &procName,
+                                                    set<StmtIndex> stmtIndices) {
     procLastExecutableStatements[procName] = std::move(stmtIndices);
 }
 
-optional<Statement *> ExtractionContext::getModifyingStatement() {
-    return modifyingStatement;
-}
+optional<Statement *> ExtractionContext::getModifyingStatement() { return modifyingStatement; }
 
 void ExtractionContext::setModifyingStatement(Statement *statement) {
     if (modifyingStatement.has_value()) {
@@ -85,9 +75,7 @@ void ExtractionContext::unsetModifyingStatement(Statement *statement) {
     modifyingStatement = nullopt;
 }
 
-optional<Statement *> ExtractionContext::getUsingStatement() {
-    return usingStatement;
-}
+optional<Statement *> ExtractionContext::getUsingStatement() { return usingStatement; }
 
 void ExtractionContext::setUsingStatement(Statement *statement) {
     if (usingStatement.has_value()) {
@@ -106,9 +94,7 @@ void ExtractionContext::unsetUsingStatement(Statement *statement) {
     usingStatement = nullopt;
 }
 
-vector<Statement *> ExtractionContext::getParentStatements() {
-    return parentStatements;
-}
+vector<Statement *> ExtractionContext::getParentStatements() { return parentStatements; }
 
 void ExtractionContext::setParentStatement(Statement *statement) {
     parentStatements.push_back(statement);
@@ -126,9 +112,7 @@ void ExtractionContext::unsetParentStatement(Statement *statement) {
 
 void ExtractionContext::clearParentStatements() { parentStatements.clear(); }
 
-vector<Statement *> ExtractionContext::getPrecedingStatements() {
-    return precedingStatements;
-}
+vector<Statement *> ExtractionContext::getPrecedingStatements() { return precedingStatements; }
 
 void ExtractionContext::setPrecedingStatement(Statement *statement) {
     precedingStatements.push_back(statement);
@@ -144,13 +128,9 @@ void ExtractionContext::unsetPrecedingStatement(Statement *statement) {
     precedingStatements.pop_back();
 }
 
-void ExtractionContext::clearPrecedingStatements() {
-    precedingStatements.clear();
-}
+void ExtractionContext::clearPrecedingStatements() { precedingStatements.clear(); }
 
-vector<Statement *> ExtractionContext::getPreviousStatements() {
-    return previousStatements;
-}
+vector<Statement *> ExtractionContext::getPreviousStatements() { return previousStatements; }
 
 void ExtractionContext::setPreviousStatement(Statement *statement) {
     previousStatements.push_back(statement);
@@ -166,17 +146,14 @@ void ExtractionContext::unsetPreviousStatement(Statement *statement) {
     previousStatements.pop_back();
 }
 
-void ExtractionContext::clearPreviousStatements() {
-    previousStatements.clear();
-}
+void ExtractionContext::clearPreviousStatements() { previousStatements.clear(); }
 
-void ExtractionContext::registerProcDependency(const ProcName &caller,
-                                               const ProcName &callee) {
+void ExtractionContext::registerProcDependency(const ProcName &caller, const ProcName &callee) {
     // Note: We are guaranteed that there will be no circular dependencies in
     // SIMPLE (i.e. recursion)
     if (hasCyclicalProcDependency(caller, callee)) {
-        throw runtime_error("There exists a cyclical dependency between " +
-                            caller + " and " + callee);
+        throw runtime_error("There exists a cyclical dependency between " + caller + " and " +
+                            callee);
     }
     // If the dependency already exists, do nothing
     if (procDependencyMap[caller].count(callee)) {
@@ -186,8 +163,7 @@ void ExtractionContext::registerProcDependency(const ProcName &caller,
     procIndegreesCounter[callee]++;
 }
 
-bool ExtractionContext::hasCyclicalProcDependency(const ProcName &caller,
-                                                  const ProcName &callee) {
+bool ExtractionContext::hasCyclicalProcDependency(const ProcName &caller, const ProcName &callee) {
     if (caller == callee) {
         return true;
     }
@@ -199,14 +175,12 @@ bool ExtractionContext::hasCyclicalProcDependency(const ProcName &caller,
             return true;
         }
         callers.pop_back();
-        copy(procDependencyMap[c].begin(), procDependencyMap[c].end(),
-             back_inserter(callers));
+        copy(procDependencyMap[c].begin(), procDependencyMap[c].end(), back_inserter(callers));
     }
     return false;
 }
 
-unordered_set<ProcName>
-ExtractionContext::getProcDependencies(const ProcName &caller) {
+unordered_set<ProcName> ExtractionContext::getProcDependencies(const ProcName &caller) {
     return procDependencyMap[caller];
 }
 
@@ -214,8 +188,7 @@ ExtractionContext::getProcDependencies(const ProcName &caller) {
 vector<ProcName> ExtractionContext::getTopologicallySortedProcNames() {
     vector<ProcName> sortedProcNames;
     vector<ProcName> callers;
-    unordered_map<ProcName, unordered_set<ProcName>> procDependencyMapCopy(
-        procDependencyMap);
+    unordered_map<ProcName, unordered_set<ProcName>> procDependencyMapCopy(procDependencyMap);
     unordered_map<ProcName, int> procIndegreesCounterCopy(procIndegreesCounter);
     // Add all procedures with 0 in-degrees into callers
     for (auto &it : procDependencyMapCopy) {

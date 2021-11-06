@@ -5,6 +5,11 @@ StatementParser::StatementParser(vector<string> content, int index, vector<Line>
                                  int &programIndex)
     : EntityParser(content, index), programLines(programLines), programIndex(programIndex) {}
 
+/**
+ * Detects the type of statement that is present on the program line and passes it to the
+ * appropriate parser to be parsed
+ * @return Statement object of the detected type.
+ */
 Statement *StatementParser::parseEntity() {
     if (isAssignStmt()) {
         AssignStatementParser assignParser(content, index);

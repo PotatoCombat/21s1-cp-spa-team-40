@@ -1,5 +1,10 @@
 #include "source_processor/parser/Parser.h"
 
+/**
+ * Parses a list of tokenized program lines by passing them to their respective
+ * parser and adding the returned Entity object into the program's ast
+ * @return the program's abstract syntax tree
+ */
 Program Parser::parseProgram(vector<Line> programLines) {
     Program program;
     Procedure *currProc = nullptr;
@@ -48,7 +53,7 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
     if (currProc != nullptr) {
         // stmtLst: stmt+
         if (currProc->getStmtLst().empty()) {
-            throw invalid_argument("procedure should have at least one "
+            throw invalid_argument("invalid procedure: should have at least one "
                                    "statement.");
         }
         program.addToProcLst(currProc);
@@ -58,6 +63,6 @@ void Parser::checkAndAddValidProcedure(Procedure *currProc, Program &program) {
 void Parser::checkValidProgram(Program program) {
     // program: procedure+
     if (program.getProcLst().empty()) {
-        throw invalid_argument("program should have at least one procedure.");
+        throw invalid_argument("invalid program: should have at least one procedure.");
     }
 }

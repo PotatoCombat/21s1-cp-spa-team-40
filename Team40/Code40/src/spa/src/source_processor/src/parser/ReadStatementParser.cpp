@@ -6,9 +6,13 @@ ReadStatementParser::ReadStatementParser(vector<string> content, int index)
     entity = new Statement(index, StatementType::READ);
 };
 
+/**
+ * Parses a tokenized string identified to be a read statement into a
+ * Statement object of type READ.
+ * @return Statement object of type READ.
+ */
 Statement *ReadStatementParser::parseEntity() {
-    vector<string>::iterator readItr =
-        find(content.begin(), content.end(), Tokens::KEYWORD_READ);
+    vector<string>::iterator readItr = find(content.begin(), content.end(), Tokens::KEYWORD_READ);
     if (next(readItr) == content.end()) {
         throw invalid_argument("invalid read statement");
     }
