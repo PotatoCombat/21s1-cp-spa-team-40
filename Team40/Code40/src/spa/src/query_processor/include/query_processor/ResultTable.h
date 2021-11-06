@@ -14,7 +14,8 @@ typedef int INDEX;
 typedef set<VALUE> VALUE_SET;
 typedef map<INDEX, VALUE_SET> IDX_TO_VALUES_MAP;
 typedef map<string, IDX_TO_VALUES_MAP> VALUE_TO_POINTERS_MAP;
-typedef vector<vector<string>> COMBINATIONS;
+typedef vector<string> COMBINATION;
+typedef vector<COMBINATION> COMBINATIONS;
 
 class ResultTable {
 private:
