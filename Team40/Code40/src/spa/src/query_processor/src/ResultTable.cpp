@@ -1,5 +1,7 @@
 #include "query_processor/ResultTable.h"
 
+const string ResultTable::EMPTY = "";
+
 void ResultTable::clear() { table.clear(); }
 
 void ResultTable::init(int size) {
@@ -178,7 +180,7 @@ bool ResultTable::hasVal(INDEX idx, VALUE val) {
 }
 
 bool ResultTable::canAppendValue(VALUE value, INDEX idx,
-                                 vector<string> &combination,
+                                 COMBINATION &combination,
                                  set<INDEX> &visitedInGroup) {
     for (INDEX vIdx : visitedInGroup) {
         if (hasPointerToIdx(idx, value, vIdx) &&
@@ -189,28 +191,34 @@ bool ResultTable::canAppendValue(VALUE value, INDEX idx,
     return true;
 }
 
-void ResultTable::constructNewCombinations(vector<vector<string>> &newCombinations,
-                                           vector<vector<string>> &existingCombinations, 
+void ResultTable::constructNewCombinations(COMBINATIONS &newCombinations,
+                                           COMBINATIONS &existingCombinations, 
                                            set<INDEX> &visitedInGroup, INDEX idx) {
-    for (vector<string> combination : existingCombinations) {
+    for (auto combination : existingCombinations) {
         for (string value : getValues(idx)) {
             if (!canAppendValue(value, idx, combination, visitedInGroup)) {
                 continue;
             }
 
             // if has link to values of all visited indexes
-            vector<string> temp = combination;
+            COMBINATION temp = combination;
             temp[idx] = value;
             newCombinations.push_back(temp);
         }
     }
 }
 
+/**
+ * Calculates all the combination result of the group that contains the
+ * input index if the group hasn't been evaluated yet
+ */
 void ResultTable::appendGroupResult(set<INDEX> &visited,
-                                    vector<vector<string>> &existingCombinations,
-                                    INDEX idx) {
+                                    COMBINATIONS &existingCombinations,
+                                    INDEX idx, vector<INDEX> &returnIndexes) {
     vector<INDEX> toBeEval;
     set<INDEX> visitedInGroup; // so that don't need to check all visited idx
+    COMBINATIONS groupCombinations{COMBINATION(table.size(), EMPTY)};
+    
     toBeEval.push_back(idx);
     while (!toBeEval.empty()) {
         INDEX currIdx = toBeEval.back();
@@ -220,36 +228,92 @@ void ResultTable::appendGroupResult(set<INDEX> &visited,
             continue;
         }
 
-        vector<vector<string>> newCombinations;
-        constructNewCombinations(newCombinations, existingCombinations,
+        COMBINATIONS newCombinations;
+        constructNewCombinations(newCombinations, groupCombinations,
                                  visitedInGroup, currIdx);
 
         for (auto otherIndex : getLinkedIndexes(currIdx)) {
             toBeEval.push_back(otherIndex);
         }
 
-        existingCombinations = newCombinations;
+        groupCombinations = newCombinations;
         visited.insert(currIdx);
         visitedInGroup.insert(currIdx);
     }
+
+    // filter return values
+    COMBINATIONS filteredCombination{};
+    filterGroupCombinations(returnIndexes, visitedInGroup, groupCombinations,
+                      filteredCombination);
+
+    // combine with existing combinations
+    combineWithExistingCombinations(existingCombinations, filteredCombination);
 }
 
-vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
-    string EMPTY = "";
+/**
+ * Only keeps the combinations between values of return indexes in this group
+ */
+void ResultTable::filterGroupCombinations(vector<INDEX> &returnIndexes,
+                                    set<INDEX> &visitedInGroup,
+                                    COMBINATIONS &groupCombinations,
+                                    COMBINATIONS &filteredCombinations) {
+    set<COMBINATION> generatedAlready;
+    for (auto v : groupCombinations) {
+        COMBINATION res(table.size(), EMPTY);
+        for (INDEX i : returnIndexes) {
+            if (visitedInGroup.count(i) > 0) {
+                res[i] = v[i];
+            }
+        }
+        if (generatedAlready.count(res) == 0) {
+            filteredCombinations.push_back(res);
+            generatedAlready.insert(res);
+        }
+    }
+}
+
+/**
+ * Combines existingCombinations and filteredCombinations and override
+ * existingCombinations with the new combinations
+ */
+void ResultTable::combineWithExistingCombinations(
+    COMBINATIONS &existingCombinations, COMBINATIONS &filteredCombinations) {
+    COMBINATIONS mergedCombination;
+    for (auto c1 : existingCombinations) {
+        for (auto c2 : filteredCombinations) {
+            COMBINATION merged(table.size(), EMPTY);
+            for (size_t i = 0; i < table.size(); i++) {
+                if (c1[i] != EMPTY) {
+                    merged[i] = c1[i];
+                }
+                if (c2[i] != EMPTY) {
+                    merged[i] = c2[i];
+                }
+            }
+            mergedCombination.push_back(merged);
+        }
+    }
+    existingCombinations = mergedCombination;
+}
+
+/**
+ * Generate result for the return indexes
+ */
+COMBINATIONS ResultTable::generateResult(vector<INDEX> indexes) {
     set<INDEX> visited;
     // the inner vector has element equal to the number of indexes in this table
-    vector<vector<string>> combinations{vector<string>(table.size(), EMPTY)};
+    COMBINATIONS combinations{COMBINATION(table.size(), EMPTY)};
     
     // evaluate each groups
     for (INDEX idx : indexes) {
-        appendGroupResult(visited, combinations, idx);
+        appendGroupResult(visited, combinations, idx, indexes);
     }
 
     // generate result
-    vector<vector<string>> finalRes;
-    set<vector<string>> generatedAlready;
-    for (vector<string> v : combinations) {
-        vector<string> res;
+    COMBINATIONS finalRes;
+    set<COMBINATION> generatedAlready;
+    for (auto v : combinations) {
+        COMBINATION res;
         for (INDEX i : indexes) {
             res.push_back(v[i]);
         }
