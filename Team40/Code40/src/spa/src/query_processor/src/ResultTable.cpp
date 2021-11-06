@@ -191,8 +191,8 @@ bool ResultTable::canAppendValue(VALUE value, INDEX idx,
     return true;
 }
 
-void ResultTable::constructNewCombinations(vector<vector<string>> &newCombinations,
-                                           vector<vector<string>> &existingCombinations, 
+void ResultTable::constructNewCombinations(COMBINATIONS &newCombinations,
+                                           COMBINATIONS &existingCombinations, 
                                            set<INDEX> &visitedInGroup, INDEX idx) {
     for (auto combination : existingCombinations) {
         for (string value : getValues(idx)) {
@@ -213,11 +213,11 @@ void ResultTable::constructNewCombinations(vector<vector<string>> &newCombinatio
  * input index if the group hasn't been evaluated yet
  */
 void ResultTable::appendGroupResult(set<INDEX> &visited,
-                                    vector<vector<string>> &existingCombinations,
+                                    COMBINATIONS &existingCombinations,
                                     INDEX idx, vector<INDEX> &returnIndexes) {
     vector<INDEX> toBeEval;
     set<INDEX> visitedInGroup; // so that don't need to check all visited idx
-    vector<vector<string>> groupCombinations{vector<string>(table.size(), EMPTY)};
+    COMBINATIONS groupCombinations{vector<string>(table.size(), EMPTY)};
     
     toBeEval.push_back(idx);
     while (!toBeEval.empty()) {
@@ -228,7 +228,7 @@ void ResultTable::appendGroupResult(set<INDEX> &visited,
             continue;
         }
 
-        vector<vector<string>> newCombinations;
+        COMBINATIONS newCombinations;
         constructNewCombinations(newCombinations, groupCombinations,
                                  visitedInGroup, currIdx);
 
@@ -242,7 +242,7 @@ void ResultTable::appendGroupResult(set<INDEX> &visited,
     }
 
     // filter return values
-    vector<vector<string>> filteredCombination{};
+    COMBINATIONS filteredCombination{};
     filterGroupCombinations(returnIndexes, visitedInGroup, groupCombinations,
                       filteredCombination);
 
@@ -278,7 +278,7 @@ void ResultTable::filterGroupCombinations(vector<INDEX> &returnIndexes,
  */
 void ResultTable::combineWithExistingCombinations(
     COMBINATIONS &existingCombinations, COMBINATIONS &filteredCombinations) {
-    vector<vector<string>> mergedCombination;
+    COMBINATIONS mergedCombination;
     for (auto c1 : existingCombinations) {
         for (auto c2 : filteredCombinations) {
             vector<string> merged(table.size(), EMPTY);
@@ -299,10 +299,10 @@ void ResultTable::combineWithExistingCombinations(
 /**
  * Generate result for the return indexes
  */
-vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
+COMBINATIONS ResultTable::generateResult(vector<INDEX> indexes) {
     set<INDEX> visited;
     // the inner vector has element equal to the number of indexes in this table
-    vector<vector<string>> combinations{vector<string>(table.size(), EMPTY)};
+    COMBINATIONS combinations{vector<string>(table.size(), EMPTY)};
     
     // evaluate each groups
     for (INDEX idx : indexes) {
@@ -310,7 +310,7 @@ vector<vector<string>> ResultTable::generateResult(vector<INDEX> indexes) {
     }
 
     // generate result
-    vector<vector<string>> finalRes;
+    COMBINATIONS finalRes;
     set<vector<string>> generatedAlready;
     for (auto v : combinations) {
         vector<string> res;
