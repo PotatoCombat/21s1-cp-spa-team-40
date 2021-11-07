@@ -1,7 +1,10 @@
 #include "catch.hpp"
-#include "source_processor/SourceProcessor.h"
-#include "pkb/PKB.h"
+
 #include <string>
+
+#include "pkb/PKB.h"
+
+#include "source_processor/SourceProcessor.h"
 
 TEST_CASE("Parser") {
     PKB pkb;

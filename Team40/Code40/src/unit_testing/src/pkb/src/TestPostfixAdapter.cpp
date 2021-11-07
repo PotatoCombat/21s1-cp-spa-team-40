@@ -1,8 +1,8 @@
+#include "catch.hpp"
+
 #include "TestPKBUtils.h"
 
 #include "pkb/PostfixAdapter.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

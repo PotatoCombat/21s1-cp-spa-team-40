@@ -1,4 +1,5 @@
 #include "TestCommonUtils.h"
+
 #include "common/model/Statement.h"
 
 TEST_CASE("Statement: ==") {

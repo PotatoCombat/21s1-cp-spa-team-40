@@ -1,5 +1,6 @@
-#include "common/model/ConstantValue.h"
 #include "catch.hpp"
+
+#include "common/model/ConstantValue.h"
 
 TEST_CASE("ConstantValue: Creates and retrieves name correctly") {
     const string VALUE = "10";

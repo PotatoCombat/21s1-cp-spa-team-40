@@ -1,9 +1,9 @@
+#include "catch.hpp"
+
 #include <functional>
 #include <vector>
 
 #include "pkb/Iterator.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

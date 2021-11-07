@@ -1,12 +1,13 @@
+#include "catch.hpp"
+
 #include "query_processor/QueryEvaluator.h"
+
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
 
 #include "test_util/PKBStub.h"
 #include "test_util/PKBStub2.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

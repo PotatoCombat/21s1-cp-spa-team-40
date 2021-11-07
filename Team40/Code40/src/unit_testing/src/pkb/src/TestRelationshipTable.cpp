@@ -1,11 +1,12 @@
+#include "catch.hpp"
+
 #include <set>
 
 #include "TestPKBUtils.h"
 
 #include "common/model/Abstractions.h"
-#include "pkb/RelationshipTable.h"
 
-#include "catch.hpp"
+#include "pkb/RelationshipTable.h"
 
 #define EQUALS_SET( actual, ... ) REQUIRE(TestUtils::equalSets(actual, __VA_ARGS__))
 

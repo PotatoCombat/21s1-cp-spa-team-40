@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include <cctype>
 #include <iostream>
 #include <iterator>
@@ -7,11 +8,13 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
 #include "common/model/Abstractions.h"
 #include "common/model/ConstantValue.h"
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
 #include "common/model/Variable.h"
+
 using namespace std;
 
 struct TestCommonUtils {

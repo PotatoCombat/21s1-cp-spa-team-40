@@ -1,10 +1,10 @@
+#include "catch.hpp"
+
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "pkb/EntityTable.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

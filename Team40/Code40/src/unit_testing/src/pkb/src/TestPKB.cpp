@@ -1,11 +1,11 @@
+#include "catch.hpp"
+
 #include <string>
 #include <vector>
 
 #include "TestPKBUtils.h"
 
 #include "pkb/PKB.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

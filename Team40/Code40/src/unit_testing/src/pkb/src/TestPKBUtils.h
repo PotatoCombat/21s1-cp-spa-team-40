@@ -1,3 +1,5 @@
+#include "catch.hpp"
+
 #include <cctype>
 #include <iostream>
 #include <iterator>
@@ -12,8 +14,6 @@
 #include "common/model/Procedure.h"
 #include "common/model/Statement.h"
 #include "common/model/Variable.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

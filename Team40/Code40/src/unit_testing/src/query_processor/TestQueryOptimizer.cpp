@@ -1,9 +1,10 @@
+#include "catch.hpp"
+
 #include "query_processor/QueryOptimizer.h"
+
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
-
-#include "catch.hpp"
 
 TEST_CASE("QueryOptimizer: clauses that return boolean moved to front") {
     Reference a(DesignEntityType::STMT, ReferenceType::SYNONYM, "a");
