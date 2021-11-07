@@ -9,7 +9,7 @@ using namespace std;
 TEST_CASE("Integration: SP process Source1") {
     PKB pkb;
     SourceProcessor sourceProcessor(&pkb);
-    sourceProcessor.processSource("../../../../Tests40/Source1.txt");
+    sourceProcessor.processSource("../../../../../Tests40/basic1_source.txt");
 
     REQUIRE(pkb.getAllProcs().asVector().size() == 1); // Only one procedure
 
