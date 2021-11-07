@@ -9,7 +9,7 @@ PatternHandler::PatternHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
-/** 
+/**
  * Choose suitable function to use
  * @param getPatternStmts, hasPattern: pointers to function pointer
  */
@@ -34,8 +34,7 @@ void PatternHandler::getFunctions(GetPatternStmtsFunc &getPatternStmts,
         hasPattern = &PatternHandler::whilePattern;
         break;
     default:
-        throw ClauseHandlerError(
-            "PatternHandler: unknown pattern clause type!");
+        throw ClauseHandlerError("PatternHandler: unknown pattern clause type!");
     }
 }
 
@@ -53,22 +52,21 @@ set<string> PatternHandler::getR1ClauseR2(string r2) {
 set<string> PatternHandler::getR2ClausedR1(string r1) {
     set<string> result;
     switch (clause->getFirstReference()->getDeType()) {
-        case DesignEntityType::ASSIGN:
-            for (auto &var : pkb->getVarsModifiedByStmt(stoi(r1))) {
-                if (isR1ClauseR2(r1, var)) {
-                    result.insert(var);
-                }
+    case DesignEntityType::ASSIGN:
+        for (auto &var : pkb->getVarsModifiedByStmt(stoi(r1))) {
+            if (isR1ClauseR2(r1, var)) {
+                result.insert(var);
             }
-            break;
-        case DesignEntityType::WHILE:
-            result =  pkb->getWhilePatternVars(stoi(r1));
-            break;
-        case DesignEntityType::IF:
-            result = pkb->getIfPatternVars(stoi(r1));
-            break;
-        default:
-            throw ClauseHandlerError(
-                    "PatternHandler: unknown pattern clause type!");
+        }
+        break;
+    case DesignEntityType::WHILE:
+        result = pkb->getWhilePatternVars(stoi(r1));
+        break;
+    case DesignEntityType::IF:
+        result = pkb->getIfPatternVars(stoi(r1));
+        break;
+    default:
+        throw ClauseHandlerError("PatternHandler: unknown pattern clause type!");
     }
 
     return result;
@@ -84,8 +82,7 @@ bool PatternHandler::isR1ClauseR2(string r1, string r2) {
 void PatternHandler::validate() {
     Reference *stmt = clause->getFirstReference();
     Reference *var = clause->getSecondReference();
-    set<DesignEntityType> validDesTypes = {DesignEntityType::ASSIGN,
-                                           DesignEntityType::WHILE,
+    set<DesignEntityType> validDesTypes = {DesignEntityType::ASSIGN, DesignEntityType::WHILE,
                                            DesignEntityType::IF};
     if (validDesTypes.count(stmt->getDeType()) == 0 ||
         stmt->getRefType() != ReferenceType::SYNONYM) {
@@ -94,8 +91,7 @@ void PatternHandler::validate() {
     }
 
     if (var->getDeType() != DesignEntityType::VARIABLE) {
-        throw ClauseHandlerError(
-            "AssignPatternHandler: second argument must be variable");
+        throw ClauseHandlerError("AssignPatternHandler: second argument must be variable");
     }
 }
 

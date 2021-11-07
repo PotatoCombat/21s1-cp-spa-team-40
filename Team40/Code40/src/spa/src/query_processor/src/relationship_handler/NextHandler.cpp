@@ -1,7 +1,6 @@
 #include "query_processor/relationship_handler/NextHandler.h"
 
-NextHandler::NextHandler(Clause *clause, PKB *pkb)
-    : ClauseHandler(clause, pkb, ClauseType::NEXT) {
+NextHandler::NextHandler(Clause *clause, PKB *pkb) : ClauseHandler(clause, pkb, ClauseType::NEXT) {
     validDesType1 = &ClauseHandler::STMT_DES_SET;
     validDesType2 = &ClauseHandler::STMT_DES_SET;
     validRefType1 = &ClauseHandler::ALL_VALID_REF;
@@ -43,6 +42,4 @@ set<string> NextHandler::getR2ClausedR1(string r1) {
  * reference 1 and reference 2 are program lines
  * @return true if reference 2 is executed next of reference 1, false otherwise
  */
-bool NextHandler::isR1ClauseR2(string r1, string r2) {
-    return pkb->next(stoi(r1), stoi(r2));
-}
+bool NextHandler::isR1ClauseR2(string r1, string r2) { return pkb->next(stoi(r1), stoi(r2)); }

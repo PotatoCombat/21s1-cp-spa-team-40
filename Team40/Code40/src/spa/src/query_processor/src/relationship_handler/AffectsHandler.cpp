@@ -47,8 +47,7 @@ set<string> AffectsHandler::getR2ClausedR1(string r1) {
     return breadthFirstSearch(line1, modifiedVars, false);
 }
 
-set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line,
-                                               const set<VarName> &vars,
+set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line, const set<VarName> &vars,
                                                bool isFindingR1) {
     set<string> results;
     ProgLineIndex curr;
@@ -71,12 +70,9 @@ set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line,
     return results;
 }
 
-void AffectsHandler::exploreNeighbours(bool isFindingR1,
-                                       const ProgLineIndex currLine,
-                                       const VarName currVar,
-                                       unordered_set<ProgLineIndex> &visited,
-                                       queue<ProgLineIndex> &open,
-                                       set<string> &results) {
+void AffectsHandler::exploreNeighbours(bool isFindingR1, const ProgLineIndex currLine,
+                                       const VarName currVar, unordered_set<ProgLineIndex> &visited,
+                                       queue<ProgLineIndex> &open, set<string> &results) {
     bool (PKB::*checkRelationship)(const ProgLineIndex &, const VarName &) =
         isFindingR1 ? &PKB::stmtModifies : &PKB::stmtUses;
 

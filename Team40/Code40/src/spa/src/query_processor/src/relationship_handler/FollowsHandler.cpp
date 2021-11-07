@@ -41,6 +41,4 @@ set<string> FollowsHandler::getR2ClausedR1(string r1) {
  * are statements
  * @return true if reference 1 follows reference 2, false otherwise
  */
-bool FollowsHandler::isR1ClauseR2(string r1, string r2) {
-    return pkb->follows(stoi(r1), stoi(r2));
-}
+bool FollowsHandler::isR1ClauseR2(string r1, string r2) { return pkb->follows(stoi(r1), stoi(r2)); }

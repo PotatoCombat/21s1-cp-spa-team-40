@@ -40,6 +40,4 @@ set<string> ParentHandler::getR2ClausedR1(string r1) {
  * 1 and reference 2 are statements
  * @return true if reference 1 is a parent of reference 2, false otherwise
  */
-bool ParentHandler::isR1ClauseR2(string r1, string r2) {
-    return pkb->parent(stoi(r1), stoi(r2));
-}
+bool ParentHandler::isR1ClauseR2(string r1, string r2) { return pkb->parent(stoi(r1), stoi(r2)); }

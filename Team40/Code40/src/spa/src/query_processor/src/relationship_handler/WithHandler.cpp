@@ -1,7 +1,6 @@
 #include "query_processor/relationship_handler/WithHandler.h"
 
-WithHandler::WithHandler(Clause *clause, PKB *pkb)
-    : ClauseHandler(clause, pkb, ClauseType::WITH) {
+WithHandler::WithHandler(Clause *clause, PKB *pkb) : ClauseHandler(clause, pkb, ClauseType::WITH) {
     // not used
     validDesType1 = &ClauseHandler::ALL_DES_SET;
     validDesType2 = &ClauseHandler::ALL_DES_SET;
@@ -23,19 +22,16 @@ void WithHandler::validate() {
     ReferenceAttribute attr2 = ref2->getAttr();
 
     // cannot be wildcard
-    if (refType1 == ReferenceType::WILDCARD ||
-        refType2 == ReferenceType::WILDCARD) {
+    if (refType1 == ReferenceType::WILDCARD || refType2 == ReferenceType::WILDCARD) {
         throw ClauseHandlerError("invalid reference type");
     }
 
-    // synonym must be of type ‘prog_line’
-    if (refType1 == ReferenceType::SYNONYM &&
-        desType1 != DesignEntityType::STMT && 
+    // synonym must be of type prog_line
+    if (refType1 == ReferenceType::SYNONYM && desType1 != DesignEntityType::STMT &&
         attr1 == ReferenceAttribute::DEFAULT) {
         throw ClauseHandlerError("with clause can only compare synonyms if they are of type stmt");
     }
-    if (refType2 == ReferenceType::SYNONYM &&
-        desType2 != DesignEntityType::STMT &&
+    if (refType2 == ReferenceType::SYNONYM && desType2 != DesignEntityType::STMT &&
         attr2 == ReferenceAttribute::DEFAULT) {
         throw ClauseHandlerError("with clause can only compare synonyms if they are of type stmt");
     }
@@ -82,40 +78,34 @@ bool WithHandler::isR1ClauseR2(string r1, string r2) {
     // convert r1
     string convertedR1 = r1;
     // call.procName
-    if (desType1 == DesignEntityType::CALL &&
-        attr1 == ReferenceAttribute::NAME) {
+    if (desType1 == DesignEntityType::CALL && attr1 == ReferenceAttribute::NAME) {
         convertedR1 = pkb->getCallProcedure(stoi(r1));
     }
-    
+
     // print.varName
-    if (desType1 == DesignEntityType::PRINT &&
-        attr1 == ReferenceAttribute::NAME) {
+    if (desType1 == DesignEntityType::PRINT && attr1 == ReferenceAttribute::NAME) {
         convertedR1 = pkb->getPrintVariable(stoi(r1));
     }
 
     // read.varName
-    if (desType1 == DesignEntityType::READ &&
-        attr1 == ReferenceAttribute::NAME) {
+    if (desType1 == DesignEntityType::READ && attr1 == ReferenceAttribute::NAME) {
         convertedR1 = pkb->getReadVariable(stoi(r1));
     }
 
     // convert r2
     string convertedR2 = r2;
     // call.procName
-    if (desType2 == DesignEntityType::CALL &&
-        attr2 == ReferenceAttribute::NAME) {
+    if (desType2 == DesignEntityType::CALL && attr2 == ReferenceAttribute::NAME) {
         convertedR2 = pkb->getCallProcedure(stoi(r2));
     }
 
     // print.varName
-    if (desType2 == DesignEntityType::PRINT &&
-        attr2 == ReferenceAttribute::NAME) {
+    if (desType2 == DesignEntityType::PRINT && attr2 == ReferenceAttribute::NAME) {
         convertedR2 = pkb->getPrintVariable(stoi(r2));
     }
 
     // read.varName
-    if (desType2 == DesignEntityType::READ &&
-        attr2 == ReferenceAttribute::NAME) {
+    if (desType2 == DesignEntityType::READ && attr2 == ReferenceAttribute::NAME) {
         convertedR2 = pkb->getReadVariable(stoi(r2));
     }
 
