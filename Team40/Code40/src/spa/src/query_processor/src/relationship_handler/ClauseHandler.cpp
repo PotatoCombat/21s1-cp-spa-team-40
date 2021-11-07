@@ -1,42 +1,27 @@
 #include "query_processor/relationship_handler/ClauseHandler.h"
 
-set<DesignEntityType> ClauseHandler::STMT_DES_SET {
-    DesignEntityType::STMT,
-    DesignEntityType::ASSIGN,
-    DesignEntityType::CALL,
-    DesignEntityType::IF,
-    DesignEntityType::PRINT,
-    DesignEntityType::READ,
-    DesignEntityType::WHILE
-};
+set<DesignEntityType> ClauseHandler::STMT_DES_SET{
+    DesignEntityType::STMT,  DesignEntityType::ASSIGN, DesignEntityType::CALL, DesignEntityType::IF,
+    DesignEntityType::PRINT, DesignEntityType::READ,   DesignEntityType::WHILE};
 
-set<DesignEntityType> ClauseHandler::PROCEDURE_DES_SET {
-    DesignEntityType::PROCEDURE
-};
+set<DesignEntityType> ClauseHandler::PROCEDURE_DES_SET{DesignEntityType::PROCEDURE};
 
-set<DesignEntityType> ClauseHandler::VARIABLE_DES_SET {
-    DesignEntityType::VARIABLE
-};
+set<DesignEntityType> ClauseHandler::VARIABLE_DES_SET{DesignEntityType::VARIABLE};
 
 set<DesignEntityType> ClauseHandler::ALL_DES_SET{
-    DesignEntityType::STMT,    DesignEntityType::ASSIGN,
-    DesignEntityType::CALL,    DesignEntityType::IF,
-    DesignEntityType::PRINT,   DesignEntityType::READ,
-    DesignEntityType::WHILE,   DesignEntityType::PROCEDURE,
-    DesignEntityType::VARIABLE};
+    DesignEntityType::STMT,  DesignEntityType::ASSIGN,    DesignEntityType::CALL,
+    DesignEntityType::IF,    DesignEntityType::PRINT,     DesignEntityType::READ,
+    DesignEntityType::WHILE, DesignEntityType::PROCEDURE, DesignEntityType::VARIABLE};
 
-set<DesignEntityType> ClauseHandler::ASSIGN_STMT_DES_SET {
+set<DesignEntityType> ClauseHandler::ASSIGN_STMT_DES_SET{
     DesignEntityType::STMT,
     DesignEntityType::ASSIGN,
 };
 
-set<ReferenceType> ClauseHandler::ALL_VALID_REF {
-    ReferenceType::CONSTANT, ReferenceType::SYNONYM, ReferenceType::WILDCARD
-};
+set<ReferenceType> ClauseHandler::ALL_VALID_REF{ReferenceType::CONSTANT, ReferenceType::SYNONYM,
+                                                ReferenceType::WILDCARD};
 
-set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{
-    ReferenceType::CONSTANT, ReferenceType::SYNONYM
-};
+set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{ReferenceType::CONSTANT, ReferenceType::SYNONYM};
 
 /**
  * Creates a handler to be evaluated
@@ -45,8 +30,7 @@ set<ReferenceType> ClauseHandler::NO_WILDCARD_REF{
  * source code
  * @param validClauseType the clause type that this handler supports
  */
-ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb,
-                             ClauseType validClauseType)
+ClauseHandler::ClauseHandler(Clause *clause, PKB *pkb, ClauseType validClauseType)
     : clause(clause), pkb(pkb), validClauseType(validClauseType) {}
 
 /**
@@ -58,40 +42,34 @@ Result ClauseHandler::eval() {
     ReferenceType refType2 = clause->getSecondReference()->getRefType();
 
     validate();
-  
+
     // WILDCARD WILDCARD
-    if (refType1 == ReferenceType::WILDCARD &&
-        refType2 == ReferenceType::WILDCARD) {
+    if (refType1 == ReferenceType::WILDCARD && refType2 == ReferenceType::WILDCARD) {
         return evalWcWc();
     }
 
     // CONSTANT CONSTANT
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::CONSTANT) {
+    if (refType1 == ReferenceType::CONSTANT && refType2 == ReferenceType::CONSTANT) {
         return evalConstConst();
     }
 
     // CONSTANT WILDCARD
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::WILDCARD) {
+    if (refType1 == ReferenceType::CONSTANT && refType2 == ReferenceType::WILDCARD) {
         return evalConstWc();
     }
 
     // WILDCARD CONSTANT
-    if (refType1 == ReferenceType::WILDCARD &&
-        refType2 == ReferenceType::CONSTANT) {
+    if (refType1 == ReferenceType::WILDCARD && refType2 == ReferenceType::CONSTANT) {
         return evalWcConst();
     }
 
     // SYNONYM CONSTANT
-    if (refType1 == ReferenceType::SYNONYM &&
-        refType2 == ReferenceType::CONSTANT) {
+    if (refType1 == ReferenceType::SYNONYM && refType2 == ReferenceType::CONSTANT) {
         return evalSynConst();
     }
 
     // CONSTANT SYNONYM
-    if (refType1 == ReferenceType::CONSTANT &&
-        refType2 == ReferenceType::SYNONYM) {
+    if (refType1 == ReferenceType::CONSTANT && refType2 == ReferenceType::SYNONYM) {
         return evalConstSyn();
     }
 
@@ -203,8 +181,7 @@ Result ClauseHandler::evalNotConstNotConst() {
     string val2 = ref2->getValue();
 
     // same synonym
-    if (refType1 == ReferenceType::SYNONYM &&
-        refType2 == ReferenceType::SYNONYM && val1 == val2) {
+    if (refType1 == ReferenceType::SYNONYM && refType2 == ReferenceType::SYNONYM && val1 == val2) {
         return evalSameSyn();
     }
 
@@ -240,9 +217,8 @@ Result ClauseHandler::evalSameSyn() {
     return result;
 }
 
-void ClauseHandler::setResultListForOneRef(Result &result, Reference *thisRef,
-                                            Reference *otherRef,
-                                            bool isFirstRef) {
+void ClauseHandler::setResultListForOneRef(Result &result, Reference *thisRef, Reference *otherRef,
+                                           bool isFirstRef) {
     set<string> (ClauseHandler::*getOtherRefValues)(string);
     void (Result::*setThisResultList)(Reference *, map<VALUE, VALUE_SET>);
     if (isFirstRef) {
@@ -303,10 +279,10 @@ void ClauseHandler::validate() {
  * @param pkb pointer to a pkb object
  * @param ref a reference object
  */
-set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
+set<string> ClauseHandler::getAll(PKB *pkb, Reference ref) {
     set<string> res;
     DesignEntityType desType = ref.getDeType();
-    switch (desType) { 
+    switch (desType) {
     case DesignEntityType::CONSTANT:
         for (string s : pkb->getAllConsts().asVector()) {
             res.insert(s);
@@ -322,7 +298,7 @@ set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
             res.insert(s);
         }
         return res;
-    case DesignEntityType::STMT: 
+    case DesignEntityType::STMT:
         for (int i : pkb->getAllStmts().asVector()) {
             res.insert(to_string(i));
         }
@@ -337,8 +313,9 @@ set<string> ClauseHandler::getAll(PKB* pkb, Reference ref) {
 }
 
 bool ClauseHandler::isType(string val, DesignEntityType type) {
-    bool isNumber = !val.empty() && find_if(val.begin(), 
-        val.end(), [](unsigned char c) { return !isdigit(c); }) == val.end();
+    bool isNumber = !val.empty() && find_if(val.begin(), val.end(), [](unsigned char c) {
+                                        return !isdigit(c);
+                                    }) == val.end();
 
     if (!isNumber) {
         return true;
@@ -355,8 +332,8 @@ bool ClauseHandler::isType(string val, DesignEntityType type) {
 set<string> ClauseHandler::getR1ClauseR2Wrapper(string r2) {
     ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache.isR2FullyCached(r2, clsType) &&
-        clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
+    if (useCache && cache.isR2FullyCached(r2, clsType) && clsType != ClauseType::WITH &&
+        clsType != ClauseType::PATTERN) {
         return cache.getR1Values(r2, clsType);
     }
 
@@ -371,8 +348,8 @@ set<string> ClauseHandler::getR1ClauseR2Wrapper(string r2) {
 set<string> ClauseHandler::getR2ClausedR1Wrapper(string r1) {
     ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache.isR1FullyCached(r1, clsType) &&
-        clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
+    if (useCache && cache.isR1FullyCached(r1, clsType) && clsType != ClauseType::WITH &&
+        clsType != ClauseType::PATTERN) {
         return cache.getR2Values(r1, clsType);
     }
 
@@ -387,8 +364,8 @@ set<string> ClauseHandler::getR2ClausedR1Wrapper(string r1) {
 bool ClauseHandler::isR1ClauseR2Wrapper(string r1, string r2) {
     ResultCache &cache = ResultCache::getInstance();
     ClauseType clsType = clause->getType();
-    if (useCache && cache.isR1FullyCached(r1, clsType) &&
-        clsType != ClauseType::WITH && clsType != ClauseType::PATTERN) {
+    if (useCache && cache.isR1FullyCached(r1, clsType) && clsType != ClauseType::WITH &&
+        clsType != ClauseType::PATTERN) {
         return cache.isR1ClauseR2(r1, r2, clsType);
     }
     bool valid = isR1ClauseR2(r1, r2);

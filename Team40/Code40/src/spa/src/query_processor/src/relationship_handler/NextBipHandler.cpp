@@ -46,6 +46,4 @@ set<string> NextBipHandler::getR2ClausedR1(string r1) {
     return result;
 }
 
-bool NextBipHandler::isR1ClauseR2(string r1, string r2) {
-    return pkb->nextBip(stoi(r1), stoi(r2));
-}
+bool NextBipHandler::isR1ClauseR2(string r1, string r2) { return pkb->nextBip(stoi(r1), stoi(r2)); }
