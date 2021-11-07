@@ -1,6 +1,6 @@
 #include "query_processor/relationship_handler/AffectsStarHandler.h"
 
-AffectsStarHandler::AffectsStarHandler(Clause* clause, PKB* pkb)
+AffectsStarHandler::AffectsStarHandler(Clause *clause, PKB *pkb)
     : ClauseHandler(clause, pkb, ClauseType::AFFECTS_T) {
     validDesType1 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validDesType2 = &ClauseHandler::ASSIGN_STMT_DES_SET;
@@ -8,12 +8,17 @@ AffectsStarHandler::AffectsStarHandler(Clause* clause, PKB* pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/**
+ * Gets all reference 1 values such that reference 1 affects reference 2
+ * directly or indirectly
+ * @return all valid reference 1 values
+ */
 set<string> AffectsStarHandler::getR1ClauseR2(string r2) {
     ProgLineIndex line2 = stoi(r2);
     ProgLineIndex curr;
 
     if (pkb->getStmtType(line2) != StatementType::ASSIGN) {
-        return { };
+        return {};
     }
 
     queue<ProgLineIndex> open;
@@ -43,12 +48,17 @@ set<string> AffectsStarHandler::getR1ClauseR2(string r2) {
     return results;
 }
 
+/**
+ * Gets all reference 2 values such that reference 1 is affected by reference 2
+ * directly or indirectly
+ * @return all valid reference 2 values
+ */
 set<string> AffectsStarHandler::getR2ClausedR1(string r1) {
     ProgLineIndex line1 = stoi(r1);
     ProgLineIndex curr;
 
     if (pkb->getStmtType(line1) != StatementType::ASSIGN) {
-        return { };
+        return {};
     }
 
     queue<ProgLineIndex> open;
@@ -78,6 +88,10 @@ set<string> AffectsStarHandler::getR2ClausedR1(string r1) {
     return results;
 }
 
+/**
+ * Checks that reference 1 affects reference 2 directly or indirectly
+ * @return true if reference 1 affects reference 2, false otherwise
+ */
 bool AffectsStarHandler::isR1ClauseR2(string r1, string r2) {
     queue<ProgLineIndex> open;
     unordered_set<ProgLineIndex> visited;
@@ -86,8 +100,8 @@ bool AffectsStarHandler::isR1ClauseR2(string r1, string r2) {
     ProgLineIndex line2 = stoi(r2);
     ProgLineIndex curr;
 
-    if (pkb->getStmtType(line1) != StatementType::ASSIGN
-        || pkb->getStmtType(line2) != StatementType::ASSIGN) {
+    if (pkb->getStmtType(line1) != StatementType::ASSIGN ||
+        pkb->getStmtType(line2) != StatementType::ASSIGN) {
         return false;
     }
 
@@ -120,7 +134,7 @@ set<ProgLineIndex> AffectsStarHandler::getAffectingStmts(ProgLineIndex line2) {
     ProgLineIndex curr;
 
     if (pkb->getStmtType(line2) != StatementType::ASSIGN) {
-        return { };
+        return {};
     }
 
     set<VarName> usedVars = pkb->getVarsUsedByStmt(line2);
@@ -143,20 +157,20 @@ set<ProgLineIndex> AffectsStarHandler::getAffectingStmts(ProgLineIndex line2) {
                 visited.insert(i); // Mark current as visited
 
                 switch (pkb->getStmtType(i)) {
-                    case StatementType::ASSIGN:
-                        if (pkb->stmtModifies(i, usedVar)) {
-                            results.insert(i);
-                            continue;
-                        }
-                        break;
-                    case StatementType::IF:
-                    case StatementType::WHILE:
-                        break;
-                    default:
-                        if (pkb->stmtModifies(i, usedVar)) {
-                            continue;
-                        }
-                        break;
+                case StatementType::ASSIGN:
+                    if (pkb->stmtModifies(i, usedVar)) {
+                        results.insert(i);
+                        continue;
+                    }
+                    break;
+                case StatementType::IF:
+                case StatementType::WHILE:
+                    break;
+                default:
+                    if (pkb->stmtModifies(i, usedVar)) {
+                        continue;
+                    }
+                    break;
                 }
                 open.push(i);
             }
@@ -174,7 +188,7 @@ set<ProgLineIndex> AffectsStarHandler::getAffectedStmts(ProgLineIndex line1) {
     ProgLineIndex curr;
 
     if (pkb->getStmtType(line1) != StatementType::ASSIGN) {
-        return { };
+        return {};
     }
 
     // Should only have one var
@@ -194,22 +208,22 @@ set<ProgLineIndex> AffectsStarHandler::getAffectedStmts(ProgLineIndex line1) {
             visited.insert(i); // Mark current as visited
 
             switch (pkb->getStmtType(i)) {
-                case StatementType::ASSIGN:
-                    if (pkb->stmtUses(i, modifiedVar)) {
-                        results.insert(i);
-                    }
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
-                case StatementType::IF:
-                case StatementType::WHILE:
-                    break;
-                default:
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
+            case StatementType::ASSIGN:
+                if (pkb->stmtUses(i, modifiedVar)) {
+                    results.insert(i);
+                }
+                if (pkb->stmtModifies(i, modifiedVar)) {
+                    continue;
+                }
+                break;
+            case StatementType::IF:
+            case StatementType::WHILE:
+                break;
+            default:
+                if (pkb->stmtModifies(i, modifiedVar)) {
+                    continue;
+                }
+                break;
             }
             open.push(i);
         }
@@ -223,8 +237,8 @@ bool AffectsStarHandler::affects(ProgLineIndex line1, ProgLineIndex line2) {
     unordered_set<ProgLineIndex> visited;
     ProgLineIndex curr;
 
-    if (pkb->getStmtType(line1) != StatementType::ASSIGN
-        || pkb->getStmtType(line2) != StatementType::ASSIGN) {
+    if (pkb->getStmtType(line1) != StatementType::ASSIGN ||
+        pkb->getStmtType(line2) != StatementType::ASSIGN) {
         return false;
     }
 
@@ -252,14 +266,14 @@ bool AffectsStarHandler::affects(ProgLineIndex line1, ProgLineIndex line2) {
             }
 
             switch (pkb->getStmtType(i)) {
-                case StatementType::IF:
-                case StatementType::WHILE:
-                    break;
-                default:
-                    if (pkb->stmtModifies(i, modifiedVar)) {
-                        continue;
-                    }
-                    break;
+            case StatementType::IF:
+            case StatementType::WHILE:
+                break;
+            default:
+                if (pkb->stmtModifies(i, modifiedVar)) {
+                    continue;
+                }
+                break;
             }
 
             visited.insert(i); // Mark current as visited

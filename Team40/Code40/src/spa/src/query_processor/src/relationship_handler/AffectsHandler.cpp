@@ -1,6 +1,6 @@
 #include "query_processor/relationship_handler/AffectsHandler.h"
 
-AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb)
+AffectsHandler::AffectsHandler(Clause *clause, PKB *pkb)
     : ClauseHandler(clause, pkb, ClauseType::AFFECTS) {
     validDesType1 = &ClauseHandler::ASSIGN_STMT_DES_SET;
     validDesType2 = &ClauseHandler::ASSIGN_STMT_DES_SET;
@@ -8,6 +8,10 @@ AffectsHandler::AffectsHandler(Clause* clause, PKB* pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/**
+ * Gets all reference 1 values such that reference 1 affects reference 2
+ * @return all valid reference 1 values
+ */
 set<string> AffectsHandler::getR1ClauseR2(string r2) {
     ProgLineIndex line2 = stoi(r2);
 
@@ -20,6 +24,10 @@ set<string> AffectsHandler::getR1ClauseR2(string r2) {
     return breadthFirstSearch(line2, usedVars, true);
 }
 
+/**
+ * Gets all reference 2 values such that reference 1 is affected by reference 2
+ * @return all valid reference 2 values
+ */
 set<string> AffectsHandler::getR2ClausedR1(string r1) {
     ProgLineIndex line1 = stoi(r1);
 
@@ -37,7 +45,9 @@ set<string> AffectsHandler::getR2ClausedR1(string r1) {
     return breadthFirstSearch(line1, modifiedVars, false);
 }
 
-set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line, const set<VarName> &vars, bool isFindingR1) {
+set<string> AffectsHandler::breadthFirstSearch(const ProgLineIndex line,
+                                               const set<VarName> &vars,
+                                               bool isFindingR1) {
     set<string> results;
     ProgLineIndex curr;
 
@@ -99,7 +109,10 @@ void AffectsHandler::exploreNeighbours(bool isFindingR1,
     }
 }
 
-
+/**
+ * Checks that reference 1 affects reference 2
+ * @return true if reference 1 affects reference 2, false otherwise
+ */
 bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
     queue<ProgLineIndex> open;
     unordered_set<ProgLineIndex> visited;
@@ -108,8 +121,8 @@ bool AffectsHandler::isR1ClauseR2(string r1, string r2) {
     ProgLineIndex line2 = stoi(r2);
     ProgLineIndex curr;
 
-    if (pkb->getStmtType(line1) != StatementType::ASSIGN
-        || pkb->getStmtType(line2) != StatementType::ASSIGN) {
+    if (pkb->getStmtType(line1) != StatementType::ASSIGN ||
+        pkb->getStmtType(line2) != StatementType::ASSIGN) {
         return false;
     }
 

@@ -8,6 +8,11 @@ FollowsStarHandler::FollowsStarHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/**
+ * Gets all reference 1 values such that reference 1 follows reference 2
+ * directly or indirectly
+ * @return all valid reference 1 values
+ */
 set<string> FollowsStarHandler::getR1ClauseR2(string r2) {
     set<string> res;
     for (int i : pkb->getPrecedingStarStmts(stoi(r2))) {
@@ -16,6 +21,11 @@ set<string> FollowsStarHandler::getR1ClauseR2(string r2) {
     return res;
 }
 
+/**
+ * Gets all reference 2 values such that reference 1 is followed by reference 2
+ * directly or indirectly
+ * @return all valid reference 2 values
+ */
 set<string> FollowsStarHandler::getR2ClausedR1(string r1) {
     set<string> res;
     for (int i : pkb->getFollowingStarStmts(stoi(r1))) {
@@ -24,6 +34,10 @@ set<string> FollowsStarHandler::getR2ClausedR1(string r1) {
     return res;
 }
 
+/**
+ * Checks that reference 1 follows reference 2 directly or indirectly
+ * @return true if reference 1 follows reference 2, false otherwise
+ */
 bool FollowsStarHandler::isR1ClauseR2(string r1, string r2) {
     return pkb->followsStar(stoi(r1), stoi(r2));
 }

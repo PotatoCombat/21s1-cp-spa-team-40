@@ -8,14 +8,26 @@ CallsHandler::CallsHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/**
+ * Gets all reference 1 values such that reference 1 calls reference 2
+ * @return all valid reference 1 values
+ */
 set<string> CallsHandler::getR1ClauseR2(string r2) {
     return pkb->getCallerProcs(r2);
 }
 
+/**
+ * Gets all reference 2 values such that reference 1 is called by reference 2
+ * @return all valid reference 2 values
+ */
 set<string> CallsHandler::getR2ClausedR1(string r1) {
     return pkb->getCalledProcs(r1);
 }
 
+/**
+ * Checks that reference 1 calls reference 2
+ * @return true if reference 1 calls reference 2, false otherwise
+ */
 bool CallsHandler::isR1ClauseR2(string r1, string r2) {
     return pkb->calls(r1, r2);
 }
