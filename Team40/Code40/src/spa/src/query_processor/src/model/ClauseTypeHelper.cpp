@@ -1,24 +1,22 @@
 #include "query_processor/model/ClauseTypeHelper.h"
 
 ClauseTypeHelper::ClauseTypeHelper() {
-    stringToTypeMap = {
-        {"Follows", ClauseType::FOLLOWS},
-        {"Follows*", ClauseType::FOLLOWS_T},
-        {"Parent", ClauseType::PARENT},
-        {"Parent*", ClauseType::PARENT_T},
-        {"Modifies", ClauseType::MODIFIES_S},
-        {"Modifies*",
-         ClauseType::MODIFIES_P}, // workaround differentiating S and P
-        {"Uses", ClauseType::USES_S},
-        {"Uses*", ClauseType::USES_P}, // workaround differentiating S and P
-        {"Calls", ClauseType::CALLS},
-        {"Calls*", ClauseType::CALLS_T},
-        {"Next", ClauseType::NEXT},
-        {"Next*", ClauseType::NEXT_T},
-        {"NextBip", ClauseType::NEXTBIP},
-        {"NextBip*", ClauseType::NEXTBIP_T},
-        {"Affects", ClauseType::AFFECTS},
-        {"Affects*", ClauseType::AFFECTS_T}};
+    stringToTypeMap = {{"Follows", ClauseType::FOLLOWS},
+                       {"Follows*", ClauseType::FOLLOWS_T},
+                       {"Parent", ClauseType::PARENT},
+                       {"Parent*", ClauseType::PARENT_T},
+                       {"Modifies", ClauseType::MODIFIES_S},
+                       {"Modifies*", ClauseType::MODIFIES_P},
+                       {"Uses", ClauseType::USES_S},
+                       {"Uses*", ClauseType::USES_P},
+                       {"Calls", ClauseType::CALLS},
+                       {"Calls*", ClauseType::CALLS_T},
+                       {"Next", ClauseType::NEXT},
+                       {"Next*", ClauseType::NEXT_T},
+                       {"NextBip", ClauseType::NEXTBIP},
+                       {"NextBip*", ClauseType::NEXTBIP_T},
+                       {"Affects", ClauseType::AFFECTS},
+                       {"Affects*", ClauseType::AFFECTS_T}};
     deTypeMap1 = {{ClauseType::FOLLOWS, DesignEntityType::STMT},
                   {ClauseType::FOLLOWS_T, DesignEntityType::STMT},
                   {ClauseType::PARENT, DesignEntityType::STMT},

@@ -1,14 +1,12 @@
 #include "query_processor/parser/ParserUtil.h"
 
-ReferenceType ParserUtil::checkRefType(std::string val) {
+ReferenceType ParserUtil::parseRefType(std::string val) {
     if (isWildcard(val)) {
         return ReferenceType::WILDCARD;
-    } else if (isInteger(val)) {
-        return ReferenceType::CONSTANT;
-    } else if (isQuoted(val)) {
+    } else if (isInteger(val) || isQuoted(val)) {
         return ReferenceType::CONSTANT;
     }
-    throw ValidityError("invalid value");
+    throw ValidityError("QP-ERROR: invalid value");
 }
 
 bool ParserUtil::isWildcard(std::string val) { return val == "_"; }

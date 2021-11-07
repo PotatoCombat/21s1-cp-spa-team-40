@@ -26,7 +26,7 @@ Clause *WithParser::parseWt(WithPair withPair) {
     if (r1->getAttr() == r2->getAttr()) {
         return new Clause(ClauseType::WITH, *r1, *r2);
     } else {
-        throw ValidityError("invalid with clause");
+        throw ValidityError("QP-ERROR: invalid with clause");
     }
 }
 
@@ -48,7 +48,7 @@ Reference *WithParser::parseReference(string ref) {
         ReferenceType refType = r->getRefType();
         ReferenceAttribute attr = r->getAttr();
         if (!isAttrRef && deType != DesignEntityType::PROG_LINE) {
-            throw ValidityError("invalid with argument");
+            throw ValidityError("QP-ERROR: invalid with argument");
         }
         if (isAttrRef) {
             attr = ParserUtil::parseValidAttr(deType, attrStr);
@@ -69,7 +69,7 @@ Reference *WithParser::parseReference(string ref) {
         deType = DesignEntityType::STMT;
         attr = ReferenceAttribute::INTEGER;
     } else {
-        throw ValidityError("invalid with argument");
+        throw ValidityError("QP-ERROR: invalid with argument");
     }
     return new Reference(deType, ReferenceType::CONSTANT, syn, attr);
 }

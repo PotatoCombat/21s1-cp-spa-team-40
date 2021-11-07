@@ -10,7 +10,7 @@
 #include "query_processor/model/Reference.h"
 
 namespace ParserUtil {
-	ReferenceType checkRefType(std::string val);
+	ReferenceType parseRefType(std::string val);
 	bool isWildcard(std::string val);
 	bool isQuote(std::string val);
 	bool isInteger(std::string val);

@@ -55,7 +55,6 @@ void QueryTokenizer::tokenizeDeclarations(string input,
  * Extracts the return synonym from the select clause and passes the remaining
  * of the clause to a string.
  * @param input The select clause string (assumes non-empty string).
- * @param &returnSynonym The return synonym.
  * @param &remaining The remaining of the select clause.
  * @return Vector of return synonyms (empty if BOOLEAN).
  */
@@ -79,9 +78,9 @@ vector<string> QueryTokenizer::tokenizeReturnSynonyms(string input,
 
     string retString = tokenizeReturnRef(rest, remaining);
     if (retString == KEYWORD_BOOLEAN) {
-        return vector<string>();
+        return {};
     }
-    return vector<string>{retString};
+    return {retString};
 }
 
 vector<string> QueryTokenizer::tokenizeReturnTuple(string input,
@@ -348,7 +347,6 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
  */
 size_t QueryTokenizer::tokenizeWithClause(string input, size_t startPos,
                                           WithPair &clause) {
-
     string token1;
     string token2;
     size_t nextPos;
@@ -429,6 +427,10 @@ vector<PatToken> QueryTokenizer::tokenizePattern(vector<string> patArgs) {
     return tokens;
 }
 
+/**
+ * Validates that pattern expression tokens follow PQL grammar rules.
+ * @exception SyntaxError if pattern token is invalid.
+ */
 void QueryTokenizer::validateTokens(vector<PatToken> tokens) {
     int bracketCount = 0;
     bool isWord = true;
@@ -712,7 +714,7 @@ size_t QueryTokenizer::findPatternDelimiter(string input, size_t pos) {
 }
 
 /**
- * Get token starting from a start positon and before a character x.
+ * Gets token starting from a start positon and before a character x.
  * @param input The clauses string.
  * @param startPos The start positon.
  * @param x The character to find.
@@ -730,6 +732,12 @@ string QueryTokenizer::getTokenBeforeX(string input, char x, size_t startPos,
     return trim(input.substr(startPos, xPos - startPos));
 }
 
+/**
+ * Gets position immediately after a right bracket.
+ * @param input The input string.
+ * @param startPos The start positon to search for right bracket.
+ * @return Position after the right bracket.
+ */
 size_t QueryTokenizer::getPosAfterRBracket(string input, size_t startPos) {
     size_t tokenPos = findNextToken(input, startPos);
     if (input[tokenPos] != R_BRACKET) {
@@ -759,6 +767,6 @@ bool QueryTokenizer::isOperator(string token) {
     return OPERATOR_SET.find(token) != string::npos;
 }
 
-bool QueryTokenizer::isLBracket(string token) { return token == "("; }
+bool QueryTokenizer::isLBracket(string token) { return token == L_BRACKET_STR; }
 
-bool QueryTokenizer::isRBracket(string token) { return token == ")"; }
+bool QueryTokenizer::isRBracket(string token) { return token == R_BRACKET_STR; }

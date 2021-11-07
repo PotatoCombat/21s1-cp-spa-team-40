@@ -23,7 +23,7 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
         DesignEntityType deType = deHelper.valueToDesType(x.first);
         ReferenceType refType = ReferenceType::SYNONYM;
         string syn = x.second;
-        Reference *ref = ParserUtil::getReferenceFromList(declList, syn);
+        Reference *ref = getReferenceIfDeclared(syn);
         if (ref != nullptr) {
             throw ValidityError("QP-ERROR: synonym has been declared");
         }
@@ -40,7 +40,8 @@ void QueryParser::parseDeclarations(vector<DeclPair> declPairs) {
 /**
  * Parses return reference by checking if it is in the declaration list.
  * @param ref Return reference to parse.
- * @return Reference object, otherwise nullptr.
+ * @return Reference object.
+ * @exception ValidityError if return reference is not declared.
  */
 Reference *QueryParser::parseReturnSynonym(string ref) {
     string syn = ref;
@@ -53,7 +54,7 @@ Reference *QueryParser::parseReturnSynonym(string ref) {
         attrStr = attrRef.second;
     }
 
-    Reference *x = ParserUtil::getReferenceFromList(declList, syn);
+    Reference *x = getReferenceIfDeclared(syn);
     if (x == nullptr) {
         throw ValidityError("QP-ERROR: return synonym is undeclared");
     }

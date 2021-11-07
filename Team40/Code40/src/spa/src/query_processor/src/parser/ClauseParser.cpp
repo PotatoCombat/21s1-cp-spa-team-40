@@ -54,7 +54,7 @@ Reference *ClauseParser::parseStmtRef(string syn) {
     }
 
     DesignEntityType deType = DesignEntityType::STMT;
-    ReferenceType refType = ParserUtil::checkRefType(syn);
+    ReferenceType refType = ParserUtil::parseRefType(syn);
     ReferenceAttribute attr = ReferenceAttribute::INTEGER;
     return new Reference(deType, refType, syn, attr);
 }
@@ -80,7 +80,7 @@ Reference *ClauseParser::parseEntRef(string syn, DesignEntityType type) {
     }
 
     ReferenceAttribute attr = ReferenceAttribute::NAME;
-    ReferenceType refType = ParserUtil::checkRefType(syn);
+    ReferenceType refType = ParserUtil::parseRefType(syn);
     if (ParserUtil::isQuoted(syn)) {
         syn = syn.substr(1, syn.size() - 2);
     }

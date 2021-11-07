@@ -23,11 +23,11 @@ Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
     // choose a parser
     ClauseType clsType = clsHelper.valueToClsType(type);
     bool isAffects =
-        clsType == ClauseType::AFFECTS || clsType == ClauseType::AFFECTS_T;
+        clsHelper.chooseDeType2(clsType) == DesignEntityType::ASSIGN;
     bool isStmtStmt =
         clsHelper.chooseDeType2(clsType) == DesignEntityType::STMT;
     bool isProcProc =
-        clsType == ClauseType::CALLS || clsType == ClauseType::CALLS_T;
+        clsHelper.chooseDeType2(clsType) == DesignEntityType::PROCEDURE;
     if (isAffects) {
         return parseAffects();
     } else if (isStmtStmt) {
@@ -46,19 +46,14 @@ Clause *SuchThatParser::parseSt(ClsTuple clsTuple) {
  * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseStmtStmt() {
-    // number/synonym/wildcard, number/synonym/wildcard
-
-    // statement is a constant(integer)/wildcard
-    if (ParserUtil::isQuoted(this->ref1) || ParserUtil::isQuoted(this->ref2)) {
-        throw ValidityError("invalid clause argument");
-    }
+    // integer/synonym/wildcard, integer/synonym/wildcard
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
     r1 = parseStmtRef(this->ref1);
     r2 = parseStmtRef(this->ref2);
     if (r1 == nullptr || r2 == nullptr) {
-        throw ValidityError("invalid clause argument");
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -71,19 +66,14 @@ Clause *SuchThatParser::parseStmtStmt() {
  * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseAffects() {
-    // number/assign/wildcard, number/assign/wildcard
-
-    // statement is a constant(integer)/wildcard
-    if (ParserUtil::isQuoted(this->ref1) || ParserUtil::isQuoted(this->ref2)) {
-        throw ValidityError("invalid clause argument");
-    }
+    // integer/assign/wildcard, integer/assign/wildcard
 
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
     r1 = parseAssignRef(this->ref1);
     r2 = parseAssignRef(this->ref2);
     if (r1 == nullptr || r2 == nullptr) {
-        throw ValidityError("invalid clause argument");
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -98,18 +88,12 @@ Clause *SuchThatParser::parseAffects() {
 Clause *SuchThatParser::parseProcProc() {
     // quoted/synonym/wildcard, quoted/synonym/wildcard
 
-    // procedure is a constant(quoted)/wildcard
-    if (ParserUtil::isInteger(this->ref1) ||
-        ParserUtil::isInteger(this->ref2)) {
-        throw ValidityError("invalid clause argument");
-    }
-
     ClauseType clsType = clsHelper.valueToClsType(this->type);
 
     r1 = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
     r2 = parseEntRef(this->ref2, DesignEntityType::PROCEDURE);
     if (r1 == nullptr || r2 == nullptr) {
-        throw ValidityError("invalid clause argument");
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -123,11 +107,12 @@ Clause *SuchThatParser::parseProcProc() {
  */
 Clause *SuchThatParser::parseXEnt() {
     if (ParserUtil::isWildcard(this->ref1)) {
-        throw ValidityError("first argument cannot be wildcard");
+        throw ValidityError("QP-ERROR: first argument cannot be wildcard");
     }
 
-    if (ParserUtil::isInteger(this->ref2)) {
-        throw ValidityError("second argument cannot be integer");
+    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
+    if (r2 == nullptr) {
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
 
     if (type == "Modifies") {
@@ -135,7 +120,7 @@ Clause *SuchThatParser::parseXEnt() {
     } else if (type == "Uses") {
         return parseUses();
     } else {
-        throw ValidityError("invalid clause type");
+        throw ValidityError("QP-ERROR: invalid clause type");
     }
 }
 
@@ -146,30 +131,25 @@ Clause *SuchThatParser::parseXEnt() {
  * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseModifies() {
-    // MODIFIES_S: number/synonym, quoted/synonym/wildcard
-    // MODIFIES_P: quoted/synonym, quoted/synonym/wildcard
+    // MODIFIES_S: integer/synonym, quoted/variable/wildcard
+    // MODIFIES_P: quoted/synonym, quoted/variable/wildcard
     ClauseType clsType;
 
     Reference *r1Stmt = parseStmtRef(this->ref1);
     Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
     if (r1Stmt == nullptr && r1Proc == nullptr) {
-        throw ValidityError("invalid clause argument");
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
     if (r1Stmt != nullptr) {
         if (r1Stmt->getDeType() == DesignEntityType::PRINT) {
             delete r1Stmt;
-            throw ValidityError("invalid clause argument");
+            throw ValidityError("QP-ERROR: invalid clause argument");
         }
         r1 = r1Stmt;
         clsType = ClauseType::MODIFIES_S;
     } else {
         r1 = r1Proc;
         clsType = ClauseType::MODIFIES_P;
-    }
-
-    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
-    if (r2 == nullptr) {
-        throw ValidityError("invalid clause argument");
     }
 
     return new Clause(clsType, *r1, *r2);
@@ -182,19 +162,19 @@ Clause *SuchThatParser::parseModifies() {
  * @exception ValidityError if invalid arguments.
  */
 Clause *SuchThatParser::parseUses() {
-    // USES_S: number/synonym, quoted/synonym/wildcard
-    // USES_P: quoted/synonym, quoted/synonym/wildcard
+    // USES_S: integer/synonym, quoted/variable/wildcard
+    // USES_P: quoted/synonym, quoted/variable/wildcard
     ClauseType clsType;
 
     Reference *r1Stmt = parseStmtRef(this->ref1);
     Reference *r1Proc = parseEntRef(this->ref1, DesignEntityType::PROCEDURE);
     if (r1Stmt == nullptr && r1Proc == nullptr) {
-        throw ValidityError("invalid clause argument");
+        throw ValidityError("QP-ERROR: invalid clause argument");
     }
     if (r1Stmt != nullptr) {
         if (r1Stmt->getDeType() == DesignEntityType::READ) {
             delete r1Stmt;
-            throw ValidityError("invalid clause argument");
+            throw ValidityError("QP-ERROR: invalid clause argument");
         }
         r1 = r1Stmt;
         clsType = ClauseType::USES_S;
@@ -203,14 +183,15 @@ Clause *SuchThatParser::parseUses() {
         clsType = ClauseType::USES_P;
     }
 
-    r2 = parseEntRef(this->ref2, DesignEntityType::VARIABLE);
-    if (r2 == nullptr) {
-        throw ValidityError("invalid clause argument");
-    }
-
     return new Clause(clsType, *r1, *r2);
 }
 
+/**
+ * Parses a `assignRef` string into a `Reference` object.
+ * This includes: stmt, assign, prog_line.
+ * @param syn The assignRef.
+ * @return Reference object, otherwise nullptr.
+ */
 Reference *SuchThatParser::parseAssignRef(string syn) {
     // syn:  ASSIGN | INTEGER | WILDCARD
     if (ParserUtil::isQuoted(syn)) {
@@ -221,7 +202,7 @@ Reference *SuchThatParser::parseAssignRef(string syn) {
     if (r != nullptr) {
         DesignEntityType deType = r->getDeType();
         if (deType != DesignEntityType::ASSIGN &&
-            deType != DesignEntityType::PROG_LINE && 
+            deType != DesignEntityType::PROG_LINE &&
             deType != DesignEntityType::STMT) {
             return nullptr;
         }
@@ -233,7 +214,7 @@ Reference *SuchThatParser::parseAssignRef(string syn) {
     }
 
     DesignEntityType deType = DesignEntityType::STMT;
-    ReferenceType refType = ParserUtil::checkRefType(syn);
+    ReferenceType refType = ParserUtil::parseRefType(syn);
     ReferenceAttribute attr = ReferenceAttribute::INTEGER;
     return new Reference(deType, refType, syn, attr);
 }
