@@ -1,0 +1,352 @@
+procedure read {
+1	read a;
+2	x = a + 1;
+3	read b;
+4	y = b + 1;
+5	read c;
+6	z = c + 1;
+7	if (a == b) then {
+8		z = (x + y) / y;
+9		call call;
+10		a = z * 200 + d;
+11		b = z % 200 - e;
+12		c = z / 200 + f;
+13		while (a != b) {
+14			a = a - f;
+15			b = b + g;
+16			c = c * h;
+		}
+	} else {
+17		read a;
+18		read b;
+19		read c;
+	}
+20	call while;
+21	print a;
+22	print b;
+23	print c;
+24	print d;
+25	print e;
+26	print f;
+27	print g;
+28	if (9 == 9) then {
+29		call then;
+	} else {
+30		call else;
+	}
+31	condition = a + b / c - d % e * f - g % h;
+32	if (condition >= 0) then {
+33		call then;
+	} else {
+34		call else;
+	}
+35	variable = x + y + (a + b / c) - (y / (x * x + (d - 1)) - f % e % d * 6 + while / 3) * 200 * (read * 200 + 7 * f);
+}
+
+procedure call {
+36	a = 10;
+37	b = 11;
+38	c = 12;
+39	d = 13;
+40	e = 14;
+41	f = 15;
+42	g = 16;
+43	h = 17;
+44	call if;
+45	h = g;
+46	g = f;
+47	f = e;
+48	e = d;
+49	d = c;
+50	c = b;
+51	b = a;
+52	a = h;
+53	call while;
+54	h = h * y - y + y / (x * x + (h - 1)) + 28;
+55	g = g * y - y + y / (z * z + (g - 1)) + 29;
+56	f = f * y - y + y / (x * x + (f - 1)) + 30;
+57	e = e * y - y + y / (z * z + (e - 1)) + 31;
+58	d = d * y - y + y / (x * x + (d - 1)) + 32;
+59	c = c * y - y + y / (z * z + (c - 1)) + 33;
+60	b = b * y - y + y / (x * x + (b - 1)) + 34;
+61	a = a * y - y + y / (z * z + (a - 1)) + 35;
+62	call print;
+63	assign = h;
+64	if = h % g;
+65	while = h % g % f;
+66	print = h % (g % f) % e;
+67	read = h % (g % f) % (e % d);
+68	call = h % g % (f % e) % d % c;
+69	if = read * 200 + 1 + h % g % (f % e) % d % c % b;
+70	while = print * 200 + 1 + h % g % (f % e) % d % c % b % a;
+71	call print;
+}
+
+procedure while {
+72	while ((1 == d + e) || (1 == f + g)) {
+73		call = d % e % e % d;
+74		read = e % f % (e % e);
+75		print = f % g + f % e;
+76		while (!(((d < e) && (e >= f)) && (f == g))) {
+77			call procedure;
+		}
+78		x = call + e % e;
+79		y = read + d % e;
+80		z = print + f % e;
+	}
+81	x = x + 1;
+82	y = y + 1;
+83	z = z + 1;
+84	while (x * y * z < 200) {
+85		call print;
+86		call procedure;
+87		while ((x * y * z > 0) && (x + y + z > read)) {
+88			x = x - 1;
+89			y = y - 1;
+90			z = z - 1;
+91			while ((x != 0) && (y != 0) && (z != 0)) {
+92				x = x + x - 1;
+93				y = y - 1 + y;
+94				z = z - (z - 1);
+95				while ((x != call) || (z == z)) {
+96					call procedure;
+97					print call;
+98					print x;
+99					if (x < z) then {
+100						x = x + z + 1;
+101						print x;
+					} else {
+102						x = z - x + 1;
+					}
+				}
+103				while ((y != read) || (x == x)) {
+104					read print;
+105					if (x == y) then {
+106						print = x + y + 1;
+					} else {
+107						print = x + y;
+					}
+108					print = print + read;
+109					print print;
+				}
+110				while ((z != print) || (y == y)) {
+111					print read;
+112					if (y == 0) then {
+113						y = z;
+					} else {
+114						y = ((y + y) % (y - (y * y))) - (y % y);
+					}
+115					read z;
+				}
+			}
+		}
+	}
+116	call print;
+}
+
+procedure print {
+117	call if;
+118	print read;
+119	print print;
+120	call procedure;
+121	print read;
+122	print print;
+}
+
+procedure procedure {
+123	read read;
+124	read print;
+}
+
+procedure if {
+125	if (a == 1) then {
+126		if (b == 2) then {
+127			if (c == 3) then {
+128				a = e % d % (d % e);
+129				b = f % e % (e % f) - d % d;
+130				c = 7 * f + f % g - 4 * 5 - e % f + 6;
+			} else {
+131				a = b + 1 - c * 2 % 3 + b * c - if + assign;
+132				b = a * c / 3 - a - 1 + a - c + call * if;
+133				c = a / b + (b - b % 2) * 1 - if - while / 3;
+134				if (h == 8) then {
+135					assign = a - 1;
+136					while = b + 1;
+137					if = c - 1;
+138					z = a + b + c;
+139					y = b + 1;
+140					read x;
+				} else {
+141					while (h > 0) {
+142						h = h - 1;
+143						a = b * c;
+144						b = c * a;
+145						c = a * b;
+					}
+				}
+146				print x;
+147				print y;
+148				print z;
+149				a = x;
+150				b = y;
+151				c = z;
+			}
+		} else {
+152			while = b;
+153			if = b;
+154			read while;
+155			while = if + while;
+		}
+	} else {
+156		while (a != 1) {
+157			if (h == 8) then {
+158				print read;
+159				print print;
+160				if (read == print) then {
+161					h = read * 200;
+				} else { 
+162					h = print * 200;
+				}
+163				a = h;
+			} else {
+164				if ((h == 7) || (h == 6)) then {
+165					a = 2;
+				} else {
+166					a = h * g / (f % e);
+				}
+			}
+		}
+167		read read;
+168		read print;
+169		read call;
+170		if (a == 1) then {
+171			x = (x + 1) - (d % e) + (e % d);
+172			y = (y + 1) - (e % f) + (f % e);
+173			z = (z + 1) - (f % g) + (g % f);
+		} else {
+174			x = read + print;
+175			y = x - 1;
+176			z = y - 1;
+		}
+	}
+}
+
+procedure then {
+177	a = a + 1;
+178	if ((a > 1) && (a < 100)) then {
+179		a = a / 1;
+180		while (a <= b) {
+181			a = a - 1;
+182			if ((b > 1) && (b < 100)) then {
+183				b = b % 1;
+184				while (!((b <= c) || (c >= d))) {
+185					b = b - 1;
+186					c = c + 1;
+187					c = c - 1;
+188					c = c / 1;
+189					c = c % 1;
+190					c = c * 1;
+191					d = d + 1;
+192					d = d - 1;
+193					d = d / 1;
+194					d = d % 1;
+195					d = d * 1;
+				}
+196				b = b * 1;
+			} else {
+197				b = b + 1;
+198				e = e + 1;
+199				while (!(e <= f)) {
+200					b = b / 1;
+201					while (e == f) {
+202						f = f - 1;
+203						e = e - 1;
+204						f = f + 1;
+					}
+205					g = e + f;
+206					g = e % f;
+207					e = e / 1 - f / 1;
+208					while (e != f) {
+209						f = f / 1 - e / 1;
+					}
+210					f = f % 1;
+211					e = e % 1;
+212					g = g + 1 - (g - 1);
+213					g = g % 1;
+				}
+214				g = g / 1;
+215				e = e * 1;
+216				f = f * 1;
+217				g = g * 1;
+			}
+		}
+218		a = a % 1;
+	} else {
+219		a = a * 1;
+220		h = 0;
+221		while (h > 0) {
+222			h = h + 1;
+223			while (h < 200) {
+224				h = h - 1;
+225				while (h < 190) {
+226					h = h * 1;
+227					while (h < 180) {
+228						h = h / 1;
+229						while (h < 170) {
+230							h = h % 1;
+						}
+231						a = a + b;
+					}
+232					b = b + c;
+				}
+233				h = a + b + c;
+234				c = c + d;
+235				while (h > 100) {
+236					h = h + d + e + f;
+				}
+237				g = h;
+			}
+238			h = a + b + c + d + e + f + g;
+239			h = a + b + c + d + e + f + g + h;
+		}
+240		print h;
+	}
+241	print a;
+242	print b;
+243	print c;
+244	print d;
+245	print e;
+246	print f;
+247	print g;
+248	print h;
+}
+
+procedure else {
+249	print assign;
+250	if (assign != a + b + c + d) then {
+251		read assign;
+	} else {
+252		if = assign;
+253		while = assign;
+254		call = assign;
+	}
+255	print assign;
+256	print if;
+257	if (if != e + f + g + h) then {
+258		read if;
+	} else {
+259		assign = if;
+260		while = assign;
+261		call = assign;
+	}
+262	print if;
+263	print while;
+264	if (while != e + f + g + h) then {
+265		read while;
+	} else {
+266		assign = while;
+267		while = assign;
+268		call = assign;
+	}
+269	print while;
+}
