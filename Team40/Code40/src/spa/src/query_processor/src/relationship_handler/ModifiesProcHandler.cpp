@@ -10,7 +10,7 @@ ModifiesProcHandler::ModifiesProcHandler(Clause *clause, PKB *pkb)
 
 /**
  * Gets all reference 1 values such that reference 1 modifies reference 2 where
- * reference 1 is a procedure
+ * reference 1 is a procedure and reference 2 is a variable
  * @return all valid reference 1 values
  */
 set<string> ModifiesProcHandler::getR1ClauseR2(string r2) {
@@ -19,7 +19,7 @@ set<string> ModifiesProcHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 2 is modified by reference 1
- * where reference 1 is a procedure
+ * where reference 1 is a procedure and reference 2 is a variable
  * @return all valid reference 2 values
  */
 set<string> ModifiesProcHandler::getR2ClausedR1(string r1) {
@@ -28,6 +28,7 @@ set<string> ModifiesProcHandler::getR2ClausedR1(string r1) {
 
 /**
  * Checks that reference 1 modifies reference 2 where reference 1 is a procedure
+ * and reference 2 is a variable
  * @return true if reference 1 modifies reference 2, false otherwise
  */
 bool ModifiesProcHandler::isR1ClauseR2(string r1, string r2) {

@@ -10,7 +10,7 @@ UsesStmtHandler::UsesStmtHandler(Clause *clause, PKB *pkb)
 
 /**
  * Gets all reference 1 values such that reference 1 uses reference 2 where
- * reference 1 is a statement
+ * reference 1 is a statement and reference 2 is a variable
  * @return all valid reference 1 values
  */
 set<string> UsesStmtHandler::getR1ClauseR2(string r2) {
@@ -23,7 +23,7 @@ set<string> UsesStmtHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 2 is used by reference 1
- * where reference 1 is a statement
+ * where reference 1 is a statement and reference 2 is a variable
  * @return all valid reference 2 values
  */
 set<string> UsesStmtHandler::getR2ClausedR1(string r1) {
@@ -31,7 +31,8 @@ set<string> UsesStmtHandler::getR2ClausedR1(string r1) {
 }
 
 /**
- * Checks that reference 1 uses reference 2 where reference 1 is a statement
+ * Checks that reference 1 uses reference 2 where reference 1 is a statement and
+ * reference 2 is a variable
  * @return true if reference 1 uses reference 2, false otherwise
  */
 bool UsesStmtHandler::isR1ClauseR2(string r1, string r2) {

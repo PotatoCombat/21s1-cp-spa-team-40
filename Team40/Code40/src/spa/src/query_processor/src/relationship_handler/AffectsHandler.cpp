@@ -9,7 +9,8 @@ AffectsHandler::AffectsHandler(Clause *clause, PKB *pkb)
 }
 
 /**
- * Gets all reference 1 values such that reference 1 affects reference 2
+ * Gets all reference 1 values such that reference 1 affects reference 2 where
+ * reference 1 and reference 2 are assign statements
  * @return all valid reference 1 values
  */
 set<string> AffectsHandler::getR1ClauseR2(string r2) {
@@ -26,6 +27,7 @@ set<string> AffectsHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 1 is affected by reference 2
+ * where reference 1 and reference 2 are assign statements
  * @return all valid reference 2 values
  */
 set<string> AffectsHandler::getR2ClausedR1(string r1) {
@@ -110,7 +112,8 @@ void AffectsHandler::exploreNeighbours(bool isFindingR1,
 }
 
 /**
- * Checks that reference 1 affects reference 2
+ * Checks that reference 1 affects reference 2 where reference 1 and reference 2
+ * are assign statements
  * @return true if reference 1 affects reference 2, false otherwise
  */
 bool AffectsHandler::isR1ClauseR2(string r1, string r2) {

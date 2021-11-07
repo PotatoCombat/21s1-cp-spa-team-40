@@ -10,7 +10,7 @@ FollowsStarHandler::FollowsStarHandler(Clause *clause, PKB *pkb)
 
 /**
  * Gets all reference 1 values such that reference 1 follows reference 2
- * directly or indirectly
+ * directly or indirectly where reference 1 and reference 2 are statements
  * @return all valid reference 1 values
  */
 set<string> FollowsStarHandler::getR1ClauseR2(string r2) {
@@ -23,7 +23,7 @@ set<string> FollowsStarHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 1 is followed by reference 2
- * directly or indirectly
+ * directly or indirectly where reference 1 and reference 2 are statements
  * @return all valid reference 2 values
  */
 set<string> FollowsStarHandler::getR2ClausedR1(string r1) {
@@ -35,7 +35,8 @@ set<string> FollowsStarHandler::getR2ClausedR1(string r1) {
 }
 
 /**
- * Checks that reference 1 follows reference 2 directly or indirectly
+ * Checks that reference 1 follows reference 2 directly or indirectly where
+ * reference 1 and reference 2 are statements
  * @return true if reference 1 follows reference 2, false otherwise
  */
 bool FollowsStarHandler::isR1ClauseR2(string r1, string r2) {
