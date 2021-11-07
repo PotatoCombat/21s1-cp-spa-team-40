@@ -1,0 +1,1338 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>21s1-cp-spa-team-40</name><parsing_time_taken>2897.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">1</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20)")]]></querystr>
+<stuans>1,2</stuans>
+<correct>1,2</correct>
+<time_taken>92.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">2</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20)"_)]]></querystr>
+<stuans>1,2</stuans>
+<correct>1,2</correct>
+<time_taken>105.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">3</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(1 + 2)")]]></querystr>
+<stuans>11</stuans>
+<correct>11</correct>
+<time_taken>24.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">4</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _ "(1 + 2)" _)]]></querystr>
+<stuans>1,11,15,16,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,11,15,16</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">5</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, " (      3 + 4 ) ")]]></querystr>
+<stuans>12</stuans>
+<correct>12</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">6</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"3 + 4"_)]]></querystr>
+<stuans>10,12,15,8,9</stuans>
+<correct>8,9,10,12,15</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">7</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(5+6)")]]></querystr>
+<stuans>13</stuans>
+<correct>13</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">8</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(5+6)"_)]]></querystr>
+<stuans>13,15,8</stuans>
+<correct>8,13,15</correct>
+<time_taken>29.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">9</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,         "(7 +  8 + 9)")]]></querystr>
+<stuans>14</stuans>
+<correct>14</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">10</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(7 + 8 + 9)"_)]]></querystr>
+<stuans>14,15,8</stuans>
+<correct>8,14,15</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">11</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select BOOLEAN pattern a(_,         "2 + 3")]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">12</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(2 + 3)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern (syntactic error)">13</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        "(2 + 3)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">14</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"2 + 3)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">15</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(2 + 3"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">16</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(2 3 +)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">17</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(+ 2 3)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">18</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"      "_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">19</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _" ( ) "_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern (syntactic error)">20</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select BOOLEAN pattern a(_,        _" ( ) "_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">21</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,         "4 + 5")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>25.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">22</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(4 + 5)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>27.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">23</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,         "((6) + (7))")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">24</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"(6 + 7)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>58.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">25</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,         "8 - 9 - 10 - 11 - 12 - 13 - 14")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>40.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">26</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_,        _"8 - 9 - 10 - 11 - 12 - 13 - 14"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>46.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">27</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(1 + 2 + 3)"_)]]></querystr>
+<stuans>1,16,2,3,4,5,6,7</stuans>
+<correct>1,2,3,4,5,6,7,16</correct>
+<time_taken>41.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">28</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _ "1 + 2 + 3 + 4 + 5" _)]]></querystr>
+<stuans>1,16,2,3,4,5,6,7</stuans>
+<correct>1,2,3,4,5,6,7,16</correct>
+<time_taken>48.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">29</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _ "(((((1) + 2) + 3) + 4) + 5)" _)]]></querystr>
+<stuans>1,16,2,3,4,5,6,7</stuans>
+<correct>1,2,3,4,5,6,7,16</correct>
+<time_taken>75.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern does not exist">30</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "(((((1) + 2) + 3) + 4) + 5)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>45.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">31</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _ "1 + 2 + 3 + 4 + 5 +6 + 7 + 8" _)]]></querystr>
+<stuans>1,16,2,3,4,6,7</stuans>
+<correct>1,2,3,4,6,7,16</correct>
+<time_taken>77.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">32</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _ "1 + 2 + 3 + 4 + 5 +6 + 7 + 8 + 9" _)]]></querystr>
+<stuans>1,16,2,3,4</stuans>
+<correct>1,2,3,4,16</correct>
+<time_taken>81.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">33</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _ "1 + 2 + 3 + 4 + 5 +6 + 7 + 8 + 9 + 10" _)]]></querystr>
+<stuans>1,16,2,3,4</stuans>
+<correct>1,2,3,4,16</correct>
+<time_taken>67.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern exists">34</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "1 + 2 + 3 + 4 + 5 +6 + 7 + 8 + 9 + 10")]]></querystr>
+<stuans>16</stuans>
+<correct>16</correct>
+<time_taken>85.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">35</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"1 + 2 + 3 + 4 + 5 +6 + 7 + 8 + 9 + 10 + 11"_)]]></querystr>
+<stuans>1,2,4</stuans>
+<correct>1,2,4</correct>
+<time_taken>94.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern does not exist">36</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"2 + 3 + 4 + 5 +6 + 7 + 8 + 9 + 10 + 11"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>108.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">37</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"3 + 4 + 5 +6 + 7 + 8 + 9 + 10"_)]]></querystr>
+<stuans>10,9</stuans>
+<correct>9,10</correct>
+<time_taken>71.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">38</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"((1 + 2) + (3 + 4) + (5 + 6) + (7 + 8 + 9) + 10)"_)]]></querystr>
+<stuans>15,8</stuans>
+<correct>8,15</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern exists">39</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "((1 + 2) + (3 + 4) + (5 + 6) + (7 + 8 + 9) + 10)")]]></querystr>
+<stuans>15</stuans>
+<correct>15</correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">40</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"11 + 12"_)]]></querystr>
+<stuans>3,5,8</stuans>
+<correct>3,5,8</correct>
+<time_taken>41.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">41</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"11 + 12 + 13 + 14 + 15 + 16 + 17 + 18 + 19 + 20"_)]]></querystr>
+<stuans>3,5,8</stuans>
+<correct>3,5,8</correct>
+<time_taken>83.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">42</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(15 + 16) + 17 + 18 + 19 + 20"_)]]></querystr>
+<stuans>4,7</stuans>
+<correct>4,7</correct>
+<time_taken>62.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">43</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20)")]]></querystr>
+<stuans>27,28</stuans>
+<correct>27,28</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">44</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20)"_)]]></querystr>
+<stuans>27,28</stuans>
+<correct>27,28</correct>
+<time_taken>174.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">45</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a.stmt#, v.varName> pattern a(v, _"(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20)"_)]]></querystr>
+<stuans>27 x10,28 x9</stuans>
+<correct>27 x10,28 x9</correct>
+<time_taken>129.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">46</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>108.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">47</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19)"_)]]></querystr>
+<stuans>27,28</stuans>
+<correct>27,28</correct>
+<time_taken>89.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">48</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a.stmt#, v.varName> pattern a(v, _"(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19)"_)]]></querystr>
+<stuans>27 x10,28 x9</stuans>
+<correct>27 x10,28 x9</correct>
+<time_taken>119.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">49</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>79.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">50</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18"_)]]></querystr>
+<stuans>27,28</stuans>
+<correct>27,28</correct>
+<time_taken>73.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">51</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a.stmt#, v.varName> pattern a(v, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18"_)]]></querystr>
+<stuans>27 x10,28 x9</stuans>
+<correct>27 x10,28 x9</correct>
+<time_taken>81.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern exists">52</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "x1")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">53</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a.stmt# pattern a(v, _"x1"_)]]></querystr>
+<stuans>17,18,22,23,27,28,29,30,31,32,33,34,35,36,37</stuans>
+<correct>17,18,22,23,27,28,29,30,31,32,33,34,35,36,37</correct>
+<time_taken>32.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">54</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a, v.varName> pattern a(v, _"x1"_)]]></querystr>
+<stuans>17 x20,18 x19,22 x15,23 x14,27 x10,28 x9,29 x8,30 x7,31 x6,32 x5,33 x4,34 x3,35 x2,36 x1,37 x</stuans>
+<correct>17 x20,18 x19,22 x15,23 x14,27 x10,28 x9,29 x8,30 x7,31 x6,32 x5,33 x4,34 x3,35 x2,36 x1,37 x</correct>
+<time_taken>27.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">55</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x1 + x2)")]]></querystr>
+<stuans>17</stuans>
+<correct>17</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">56</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x1 + x2)"_)]]></querystr>
+<stuans>17,22,23,27,28,29,30,31,32,33,34,35,36</stuans>
+<correct>17,22,23,27,28,29,30,31,32,33,34,35,36</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">57</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x3 + x4)")]]></querystr>
+<stuans>19</stuans>
+<correct>19</correct>
+<time_taken>24.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">58</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x3 + x4)"_)]]></querystr>
+<stuans>19,22,31,35,36,37</stuans>
+<correct>19,22,31,35,36,37</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">59</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x5 + x6)")]]></querystr>
+<stuans>20</stuans>
+<correct>20</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">60</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x5 + x6)"_)]]></querystr>
+<stuans>20,22,35</stuans>
+<correct>20,22,35</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern exists">61</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x7 + x8 + x9)")]]></querystr>
+<stuans>21</stuans>
+<correct>21</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">62</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x7 + x8 + x9)"_)]]></querystr>
+<stuans>21,22,35</stuans>
+<correct>21,22,35</correct>
+<time_taken>25.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">63</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x2 + x3)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern">64</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x2 + x3)"_)]]></querystr>
+<stuans>18</stuans>
+<correct>18</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">65</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x4 + x5)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">66</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x4 + x5)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">67</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "(x6 + x7)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">68</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"(x6 + x7)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Assign pattern does not exist">69</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, "x8 - x9 - x10 - x11 - x12 - x13 - x14")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>36.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">70</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"x8 - x9 - x10 - x11 - x12 - x13 - x14"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>33.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern does not exist">71</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"x8 + x9"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Assign pattern exists">72</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(_, _"x1 + x2 + x3"_)]]></querystr>
+<stuans>23,27,28,29,30,32,33,34</stuans>
+<correct>23,27,28,29,30,32,33,34</correct>
+<time_taken>24.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">73</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x1 + x2 + x3 + x4 + x5"_)]]></querystr>
+<stuans>23,27,28,29,30,32,33,34</stuans>
+<correct>23,27,28,29,30,32,33,34</correct>
+<time_taken>41.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern does not exist">74</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "(((((x1) + x2) + x3) + x4) + x5)")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>38.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">75</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(((((x1) + x2) + x3) + x4) + x5)"_)]]></querystr>
+<stuans>23,27,28,29,30,32,33,34</stuans>
+<correct>23,27,28,29,30,32,33,34</correct>
+<time_taken>35.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">76</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a, v> pattern a(v, _"(((((x1) + x2) + x3) + x4) + x5)"_)]]></querystr>
+<stuans>23 x14,27 x10,28 x9,29 x8,30 x7,32 x5,33 x4,34 x3</stuans>
+<correct>23 x14,27 x10,28 x9,29 x8,30 x7,32 x5,33 x4,34 x3</correct>
+<time_taken>36.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern does not exist">77</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(x1 + (x2 + (x3 + (x4 + (x5)))))"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>32.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">78</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8"_)]]></querystr>
+<stuans>23,27,28,29,30,33,34</stuans>
+<correct>23,27,28,29,30,33,34</correct>
+<time_taken>42.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern exists">79</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10")]]></querystr>
+<stuans>23</stuans>
+<correct>23</correct>
+<time_taken>46.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">80</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10"_)]]></querystr>
+<stuans>23,27,28,29,30</stuans>
+<correct>23,27,28,29,30</correct>
+<time_taken>49.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="4" Pattern="2" With="2" CondNum="9" RelNum="0" comment="Assign pattern exists">81</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a, v, a1, v1> pattern a(v, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10"_) with v.varName = "x14" pattern a1(v1, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10"_) with v1.varName = "x10"]]></querystr>
+<stuans>23 x14 27 x10</stuans>
+<correct>23 x14 27 x10</correct>
+<time_taken>95.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">82</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11"_)]]></querystr>
+<stuans>27,28,30</stuans>
+<correct>27,28,30</correct>
+<time_taken>84.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern does not exist">83</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select BOOLEAN pattern a(v, "x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10")]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>68.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">84</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10"_)]]></querystr>
+<stuans>31,36,37</stuans>
+<correct>31,36,37</correct>
+<time_taken>49.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Assign pattern exists">85</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, "((x1 + x2) + (x3 + x4) + (x5 + x6) + (x7 + x8 + x9) + x10)")]]></querystr>
+<stuans>22</stuans>
+<correct>22</correct>
+<time_taken>56.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">86</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"((x1 + x2) + (x3 + x4) + (x5 + x6) + (x7 + x8 + x9) + x10)"_)]]></querystr>
+<stuans>22,35</stuans>
+<correct>22,35</correct>
+<time_taken>52.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">87</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x11 + x12"_)]]></querystr>
+<stuans>24,29,32,35</stuans>
+<correct>24,29,32,35</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">88</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20"_)]]></querystr>
+<stuans>29,32,35</stuans>
+<correct>29,32,35</correct>
+<time_taken>53.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">89</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_)]]></querystr>
+<stuans>25,30,31,34</stuans>
+<correct>25,30,31,34</correct>
+<time_taken>39.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">90</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_) such that Affects(a1,a)]]></querystr>
+<stuans>25,30,31,34</stuans>
+<correct>25,30,31,34</correct>
+<time_taken>381.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">91</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a1 pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_) such that Affects(a1,a)]]></querystr>
+<stuans>17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33</stuans>
+<correct>17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33</correct>
+<time_taken>500.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">92</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select <a,a1> pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_) such that Affects(a1,a)]]></querystr>
+<stuans>25 17,25 18,25 19,25 20,25 21,25 22,30 17,30 18,30 19,30 20,30 21,30 22,30 23,30 24,30 25,30 26,30 27,30 28,30 29,31 17,31 18,31 19,31 20,31 21,31 22,31 23,31 24,31 25,31 26,31 27,31 28,31 29,31 30,34 17,34 18,34 19,34 20,34 21,34 22,34 23,34 24,34 25,34 26,34 27,34 28,34 29,34 30,34 31,34 32,34 33</stuans>
+<correct>25 17,25 18,25 19,25 20,25 21,25 22,30 17,30 18,30 19,30 20,30 21,30 22,30 23,30 24,30 25,30 26,30 27,30 28,30 29,31 17,31 18,31 19,31 20,31 21,31 22,31 23,31 24,31 25,31 26,31 27,31 28,31 29,31 30,34 17,34 18,34 19,34 20,34 21,34 22,34 23,34 24,34 25,34 26,34 27,34 28,34 29,34 30,34 31,34 32,34 33</correct>
+<time_taken>511.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">93</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_) such that Affects(a,a1)]]></querystr>
+<stuans>25,30,31,34</stuans>
+<correct>25,30,31,34</correct>
+<time_taken>605.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">94</id><querystr><![CDATA[assign a, a1; variable v, v1; if ifs, ifs1; while w, w1; Select a1 pattern a(v, _"x15 + x16 + x17 + x18 + x19 + x20"_) such that Affects(a,a1)]]></querystr>
+<stuans>26,27,28,29,30,31,32,33,34,35,36,37</stuans>
+<correct>26,27,28,29,30,31,32,33,34,35,36,37</correct>
+<time_taken>697.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="18" Pattern="1" With="2" CondNum="22" RelNum="0" comment="Assign pattern exists">95</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(1 * x)"_) and a(v, _"(2 - x)"_) and a1(v1, _"(x * 3)"_) and a1(v1, _"(x / 4)"_) and a2(v1, _"(5 % x)"_) and a2(v1, _"x / 6"_) and a3(v, _"(x + 7)"_) and a3(v, _"(8 / x)"_) and a3(v, _"(9 % x)"_) with a.stmt# = a1.stmt# and a2.stmt# = a3.stmt# with v.varName = v1.varName]]></querystr>
+<stuans>38</stuans>
+<correct>38</correct>
+<time_taken>2285.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="8" Pattern="2" With="1" CondNum="12" RelNum="0" comment="Assign pattern exists">96</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(1 * x) + (2 - x)"_) and a1(v, _"(1 * x) + (2 - x) + (x * 3)"_) and a2(v, _"(9 % x)"_) with a2.stmt# = a.stmt#  pattern a(v1, _"(5 % x)"_)]]></querystr>
+<stuans>38</stuans>
+<correct>38</correct>
+<time_taken>952.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">97</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x13 * x14 / (20 * x15) * x16 % x17 / x18"_)]]></querystr>
+<stuans>39,40</stuans>
+<correct>39,40</correct>
+<time_taken>41.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">98</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x13 * x14 / (20 * x15) * x16 % x17"_)]]></querystr>
+<stuans>39,40,41,44</stuans>
+<correct>39,40,41,44</correct>
+<time_taken>37.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">99</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x13 * x14 / (20 * x15) * x16"_)]]></querystr>
+<stuans>39,40,41,44</stuans>
+<correct>39,40,41,44</correct>
+<time_taken>34.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern exists">100</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"x13 * x14 / (20 * x15)"_)]]></querystr>
+<stuans>39,40,41,43,44</stuans>
+<correct>39,40,41,43,44</correct>
+<time_taken>29.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">101</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y + y"_) such that Affects*(a, a1)]]></querystr>
+<stuans>45,46,47,48,49,50,51,52,53,54,58,60</stuans>
+<correct>45,46,47,48,49,50,51,52,53,54,58,60</correct>
+<time_taken>2023.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">102</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y - y"_) such that Affects(a, a1)]]></querystr>
+<stuans>49,53,54,60,62</stuans>
+<correct>49,53,54,60,62</correct>
+<time_taken>383.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" UnnamedVar="3" Pattern="1" SuchThat="1" CondNum="7" RelNum="1" comment="Assign pattern exists">103</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y * y"_) such that Follows*(_, a)]]></querystr>
+<stuans>45,46,47,48,49,50,51,52,55,57,58,59,64</stuans>
+<correct>45,46,47,48,49,50,51,52,55,57,58,59,64</correct>
+<time_taken>89.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern does not exist">104</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y / y"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>30.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">105</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y % y"_) such that Modifies(a, "y")]]></querystr>
+<stuans>45,46,47,48,49,50,51,52,53,55,56,57,58,59,60,61,62,63,64</stuans>
+<correct>45,46,47,48,49,50,51,52,53,55,56,57,58,59,60,61,62,63,64</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">106</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y + y % y - y * y - y % y"_) such that Follows(a, a1)]]></querystr>
+<stuans>55,57,59</stuans>
+<correct>55,57,59</correct>
+<time_taken>62.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" With="1" CondNum="5" RelNum="0" comment="Assign pattern exists">107</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y - y * y"_) with 1 = 1]]></querystr>
+<stuans>45,46,47,48,49,50,51,52</stuans>
+<correct>45,46,47,48,49,50,51,52</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">108</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y) % (y - y * y)"_) such that Next(a, a1)]]></querystr>
+<stuans>45,46,47,48,50,51,52</stuans>
+<correct>45,46,47,48,50,51,52</correct>
+<time_taken>60.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern does not exist">109</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select BOOLEAN pattern a(v, _"(y - y * y) - y % y"_) such that Next*(a2, a3)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>429.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" With="1" CondNum="5" RelNum="0" comment="Assign pattern exists">110</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y - y) * y"_) with "v" = "v"]]></querystr>
+<stuans>53,54</stuans>
+<correct>53,54</correct>
+<time_taken>44.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">111</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y + y % y - (y * y)"_) such that Modifies(a, "y")]]></querystr>
+<stuans>55,57,58,59</stuans>
+<correct>55,57,58,59</correct>
+<time_taken>54.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">112</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y + y % y"_) such that Modifies("assign", "y")]]></querystr>
+<stuans>55,56,57,58,59,61,62</stuans>
+<correct>55,56,57,58,59,61,62</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">113</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y) % y"_) such that Modifies("assign", v)]]></querystr>
+<stuans>54</stuans>
+<correct>54</correct>
+<time_taken>44.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Assign pattern does not exist">114</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"y + (y % y - y)"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>46.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">115</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y % y - y)"_) such that Uses( " assign " , "y")]]></querystr>
+<stuans>56,61,62</stuans>
+<correct>56,61,62</correct>
+<time_taken>48.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">116</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y - y + y - y * y)"_) such that Uses("assign", v)]]></querystr>
+<stuans>49</stuans>
+<correct>49</correct>
+<time_taken>50.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">117</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"((y + y % y - y) * y) - (y % y)"_) such that Uses(a, v)]]></querystr>
+<stuans>56,61</stuans>
+<correct>56,61</correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">118</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y % y - y) * y - y % y"_) such that Follows*(a, a1)]]></querystr>
+<stuans>56,61</stuans>
+<correct>56,61</correct>
+<time_taken>403.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" With="1" CondNum="5" RelNum="0" comment="Assign pattern exists">119</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y % y - y) * (y - y) % y"_) with v.varName = "y"]]></querystr>
+<stuans>62</stuans>
+<correct>62</correct>
+<time_taken>81.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">120</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; Select a pattern a(v, _"(y + y) % (y - y * y + y + y) - y % y % (y - y + y - y * y) - y % y + (y - y + y + y) % (y - y * y) - y % y"_) such that Affects(a, 50)]]></querystr>
+<stuans>49</stuans>
+<correct>49</correct>
+<time_taken>188.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">121</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select a pattern a(v, _"(y + y) % (y - y * y + y + y) - y % y % (y - y + y - y * y) - y % y + (y - y + y + y) % (y - y * y) - y % y"_) such that Follows*(a, c)]]></querystr>
+<stuans>49</stuans>
+<correct>49</correct>
+<time_taken>294.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Pattern="1" With="1" CondNum="5" RelNum="0" comment="Assign pattern exists with invalid with">122</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select BOOLEAN pattern a(v, _"(y + y) % (y - y * y + y + y) - y % y % (y - y + y - y * y) - y % y + (y - y + y + y) % (y - y * y) - y % y"_) with a1.stmt# = c.stmt#]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>217.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" Pattern="1" SuchThat="1" CondNum="4" RelNum="1" comment="Assign pattern exists">123</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select a pattern a(v, "y * y * y / y * (y + y * ((y % y * y) + y - y))") such that Follows(a, c)]]></querystr>
+<stuans>64</stuans>
+<correct>64</correct>
+<time_taken>119.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="2" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="7" RelNum="2" comment="Assign pattern exists">124</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c, c1; Select a pattern a(v, _"y * y * y / y"_) such that Follows(a, c) and Follows(c, c1)]]></querystr>
+<stuans>64</stuans>
+<correct>64</correct>
+<time_taken>75.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Assign pattern exists">125</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select a pattern a(v, _"((y % y * y) + y - y)"_) such that Next(a, c)]]></querystr>
+<stuans>64</stuans>
+<correct>64</correct>
+<time_taken>90.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="3" Pattern="1" SuchThat="1" CondNum="7" RelNum="1" comment="Assign pattern exists">126</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select a pattern a(v, _"y * ((y % y * y) + y - y)"_) such that Next*(a, _)]]></querystr>
+<stuans>64</stuans>
+<correct>64</correct>
+<time_taken>394.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" Nextstar="1" UnnamedVar="3" Pattern="1" SuchThat="2" CondNum="9" RelNum="2" comment="Assign pattern exists">127</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; Select <a, c> pattern a(v, _"y * ((y % y * y) + y - y)"_) such that Affects(_, a) such that Next*(a, c)]]></querystr>
+<stuans>64 65,64 66,64 67</stuans>
+<correct>64 65,64 66,64 67</correct>
+<time_taken>703.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="9" RelNum="3" comment="Assign pattern exists">128</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; procedure proc, proc1; Select a pattern a(v, _"y * ((y % y * y) + y - y)"_) such that Calls(proc, proc1) such that Uses(proc, v) and Modifies(a, v)]]></querystr>
+<stuans>64</stuans>
+<correct>64</correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="9" RelNum="3" comment="Assign pattern exists">129</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; procedure proc, proc1; Select v pattern a(v, _"y * ((y % y * y) + y - y)"_) such that Calls(proc, proc1) such that Uses(proc, v) and Modifies(a, v)]]></querystr>
+<stuans>y</stuans>
+<correct>y</correct>
+<time_taken>141.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" With="1" CondNum="10" RelNum="3" comment="Assign pattern exists">130</id><querystr><![CDATA[assign a, a1, a2, a3; variable v, v1; if ifs, ifs1; while w, w1; call c; procedure proc, proc1; Select <proc.procName, proc1.procName> pattern a(v, _"y * ((y % y * y) + y - y)"_) such that Calls(proc, proc1) such that Uses(proc, v) and Modifies(a, v) with proc1.procName = "while"]]></querystr>
+<stuans>assign while</stuans>
+<correct>assign while</correct>
+<time_taken>135.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="All while statements">131</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; Select w]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240,68,72,81,83,87,91,93,95</stuans>
+<correct>68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="All while statements">132</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w such that Parent(w, n)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240,68,72,81,83,87,91,93,95</stuans>
+<correct>68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>121.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Pattern while exists">133</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; Select w pattern w(_,_)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240,68,72,81,83,87,91,93,95</stuans>
+<correct>68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>24.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" Parent="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="7" RelNum="2" comment="Pattern while exists">134</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(_,_) such that Parent(w, n) and Next*(n, w)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240,68,72,81,83,87,91,93,95</stuans>
+<correct>68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>557.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="4" Pattern="2" SuchThat="1" CondNum="9" RelNum="1" comment="Pattern while with child pattern while exists">135</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(_,_) such that Parent(w, w1) pattern w1(_, _)]]></querystr>
+<stuans>174,196,198,200,202,204,206,208,210,211,212,226,228,68,81,83,87,91</stuans>
+<correct>68,81,83,87,91,174,196,198,200,202,204,206,208,210,211,212,226,228</correct>
+<time_taken>70.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="4" Pattern="2" SuchThat="1" CondNum="9" RelNum="1" comment="Pattern while with indirect child pattern while exists">136</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(_,_) such that Parent*(w, w1) pattern w1(_, _)]]></querystr>
+<stuans>160,174,196,198,200,202,204,206,208,210,211,212,226,228,230,68,81,83,87,91</stuans>
+<correct>68,81,83,87,91,160,174,196,198,200,202,204,206,208,210,211,212,226,228,230</correct>
+<time_taken>75.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" With="1" CondNum="9" RelNum="1" comment="Pattern while with child pattern while with same control variable exists">137</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Parent(w, w1) pattern w1(v1, _) with v.varName = v1.varName]]></querystr>
+<stuans>174,196,198,200,202,204,206,208,210,211,212,226,228,68,81,83,87,91</stuans>
+<correct>68,81,83,87,91,174,196,198,200,202,204,206,208,210,211,212,226,228</correct>
+<time_taken>90.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Pattern while using control variables exists">138</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select v pattern w(v,_) such that Uses(w, v)]]></querystr>
+<stuans>a,b,c,d,e,f,g,h</stuans>
+<correct>a,b,c,d,e,f,g,h</correct>
+<time_taken>52.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">139</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "a") with v.varName = "a"]]></querystr>
+<stuans>102,136,160,81,83,87,91,93,95</stuans>
+<correct>81,83,87,91,93,95,102,136,160</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">140</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "b") with v.varName = "b"]]></querystr>
+<stuans>102,160,164,81,83,87,91,95</stuans>
+<correct>81,83,87,91,95,102,160,164</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">141</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "c") with v.varName = "c"]]></querystr>
+<stuans>102,164,81,83,87,91</stuans>
+<correct>81,83,87,91,102,164</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">142</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "d") with v.varName = "d"]]></querystr>
+<stuans>164,68,72,91,93</stuans>
+<correct>68,72,91,93,164</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">143</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "e") with v.varName = "e"]]></querystr>
+<stuans>174,176,183,68,72</stuans>
+<correct>68,72,174,176,183</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">144</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "f") with v.varName = "f"]]></querystr>
+<stuans>174,176,183,68,72</stuans>
+<correct>68,72,174,176,183</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">145</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "g") with v.varName = "g"]]></querystr>
+<stuans>68,72</stuans>
+<correct>68,72</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">146</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, "h") with v.varName = "h"]]></querystr>
+<stuans>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</stuans>
+<correct>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="2" CondNum="8" RelNum="1" comment="Pattern while using control variables does not exist">147</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern w(v,_) such that Uses(68, "h") with v.varName = "h" with w.stmt# = 68]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="2" CondNum="8" RelNum="1" comment="Pattern while using control variables does not exist">148</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern w(v,_) such that Uses(68, "a") with v.varName = "a" with w.stmt# = 68]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="8" RelNum="2" comment="Pattern while using and modifying control variables exists">149</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, v) such that Modifies(w, v)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,68,72,81,83,87,95</stuans>
+<correct>68,72,81,83,87,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</correct>
+<time_taken>57.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" With="1" CondNum="9" RelNum="2" comment="Pattern while using and modifying control variables exists">150</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, v) such that Modifies(w, v) with v.varName = "h"]]></querystr>
+<stuans>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</stuans>
+<correct>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</correct>
+<time_taken>55.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using control variables exists">151</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Uses(w, v) with v.varName = "h"]]></querystr>
+<stuans>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</stuans>
+<correct>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>42.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while using and modifying control variables exists">152</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Modifies(w, v) with v.varName = "h"]]></querystr>
+<stuans>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</stuans>
+<correct>124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</correct>
+<time_taken>29.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="7" RelNum="2" comment="Pattern while using control variables inside container exists">153</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Parent(w, n) and Uses(n, v)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240,68,72,81,83,87,91,95</stuans>
+<correct>68,72,81,83,87,91,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240</correct>
+<time_taken>153.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" Parent="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="9" RelNum="3" comment="Pattern while using and modifying control variables inside container exists">154</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Parent(w, n) and Uses(n, v) such that Modifies(n, v)]]></querystr>
+<stuans>102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,68,81,83,87</stuans>
+<correct>68,81,83,87,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234</correct>
+<time_taken>185.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="All if statements">155</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; Select i]]></querystr>
+<stuans>104,108,109,110,117,137,140,144,150,158,162,232,97</stuans>
+<correct>97,104,108,109,110,117,137,140,144,150,158,162,232</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="All if statements">156</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i such that Parent(i, n)]]></querystr>
+<stuans>104,108,109,110,117,137,140,144,150,158,162,232,97</stuans>
+<correct>97,104,108,109,110,117,137,140,144,150,158,162,232</correct>
+<time_taken>36.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Pattern if exists">157</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; Select i pattern i(_,_,_)]]></querystr>
+<stuans>104,108,109,110,117,137,140,144,150,158,162,232,97</stuans>
+<correct>97,104,108,109,110,117,137,140,144,150,158,162,232</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="7" RelNum="2" comment="Pattern if exists">158</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(_,_,_) such that Parent(i, n) and Uses(i, v)]]></querystr>
+<stuans>104,108,109,110,117,137,140,144,150,158,162,232,97</stuans>
+<correct>97,104,108,109,110,117,137,140,144,150,158,162,232</correct>
+<time_taken>166.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" CondNum="8" RelNum="1" comment="Pattern if with child pattern while exists">159</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(_,_,_) such that Parent(i, i1) pattern i1(_,_,_)]]></querystr>
+<stuans>108,109,110,137</stuans>
+<correct>108,109,110,137</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="3" Pattern="2" SuchThat="1" CondNum="8" RelNum="1" comment="Pattern if with indirect child pattern while exists">160</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(_,_,_) such that Parent*(i, i1) pattern i1(_,_,_)]]></querystr>
+<stuans>108,109,110,137,158</stuans>
+<correct>108,109,110,137,158</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" With="1" CondNum="9" RelNum="1" comment="Pattern if with child pattern while with same control variable exists">161</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Parent(i, i1) pattern i1(v1,_,_) with v.varName = v1.varName]]></querystr>
+<stuans>108,137</stuans>
+<correct>108,137</correct>
+<time_taken>47.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="Pattern if using control variables exists">162</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select v pattern i(v,_,_) such that Uses(i, v)]]></querystr>
+<stuans>a,b,c,h</stuans>
+<correct>a,b,c,h</correct>
+<time_taken>48.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">163</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "a") with v.varName = "a"]]></querystr>
+<stuans>108,140,150,158,97</stuans>
+<correct>97,108,140,150,158</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">164</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "b") with v.varName = "b"]]></querystr>
+<stuans>104,109,162</stuans>
+<correct>104,109,162</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">165</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "c") with v.varName = "c"]]></querystr>
+<stuans>110,97</stuans>
+<correct>97,110</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">166</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern w(v,_,_) such that Uses(i, "d") with v.varName = "d"]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">167</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, v) with v.varName = "e"]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>46.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">168</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "f") with v.varName = "f"]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">169</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "g") with v.varName = "g"]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">170</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, "h") with v.varName = "h"]]></querystr>
+<stuans>117,137,140,144,232</stuans>
+<correct>117,137,140,144,232</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="2" CondNum="8" RelNum="1" comment="Pattern if using control variables does not exist">171</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern i(v,_,_) such that Uses(117, "h") with v.varName = "a" with i.stmt# = 117]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="2" CondNum="8" RelNum="1" comment="Pattern if using control variables does not exist">172</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern i(v,_,_) such that Uses(117, "a") with v.varName = "c" with i.stmt# = 117]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="8" RelNum="2" comment="Pattern if using and modifying control variables exists">173</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, v) such that Modifies(i, v)]]></querystr>
+<stuans>104,108,109,110,117,137,140,150,158,162,232</stuans>
+<correct>104,108,109,110,117,137,140,150,158,162,232</correct>
+<time_taken>46.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" Parent="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" CondNum="9" RelNum="3" comment="Pattern if using and modifying control variables in container exists">174</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(n, v) and Parent(i, n) such that Modifies(i, v)]]></querystr>
+<stuans>104,108,109,110,117,137,150,158,162,232</stuans>
+<correct>104,108,109,110,117,137,150,158,162,232</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="2" With="1" CondNum="9" RelNum="2" comment="Pattern if using and modifying control variables exists">175</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, v) such that Modifies(i, v) with v.varName = "h"]]></querystr>
+<stuans>117,137,140,232</stuans>
+<correct>117,137,140,232</correct>
+<time_taken>54.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern if using control variables exists">176</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(i, v) with v.varName = "h"]]></querystr>
+<stuans>117,137,140,144,232</stuans>
+<correct>117,137,140,144,232</correct>
+<time_taken>36.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="2" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="8" RelNum="2" comment="Pattern if using control variables exists">177</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Uses(n, v) and Parent(i, n) with v.varName = "h"]]></querystr>
+<stuans>117,137,144,232</stuans>
+<correct>117,137,144,232</correct>
+<time_taken>113.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" With="1" CondNum="7" RelNum="1" comment="Pattern while modifying control variables exists">178</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select i pattern i(v,_,_) such that Modifies(i, v) with v.varName = "h"]]></querystr>
+<stuans>117,137,140,232</stuans>
+<correct>117,137,140,232</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" CondNum="8" RelNum="1" comment="Pattern if parent while using same control variable exists">179</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern i(v,_,_) such that Parent(i, w) pattern w(v,_)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" CondNum="8" RelNum="1" comment="Pattern if parent while using same control variable exists">180</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select v pattern i(v,_,_) such that Parent(i, w) pattern w(v,_)]]></querystr>
+<stuans>a,b,h</stuans>
+<correct>a,b,h</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Calls="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="2" CondNum="10" RelNum="2" comment="Pattern while parent if using same control variable exists">181</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select BOOLEAN pattern w(v,_) such that Parent(w, i) pattern i(v,_,_) such that Calls("assign", "mixed")]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="2" CondNum="10" RelNum="2" comment="Pattern while parent if using same control variable exists">182</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select v pattern w(v,_) such that Parent(w, i) pattern i(v,_,_) such that Calls("assign", "if")]]></querystr>
+<stuans>a,b,h</stuans>
+<correct>a,b,h</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="3" UnnamedVar="5" Pattern="4" SuchThat="2" With="1" CondNum="16" RelNum="3" comment="Pattern while more than three inner containers exists">183</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w pattern w(v,_) such that Parent(w, n) pattern w1(v1,_) with n = w1.stmt# pattern w2(_,_) pattern w3(_,_) such that Parent(w1, w2) and Parent(w2, w3)]]></querystr>
+<stuans>196,198,200,202,204,206,208,210,81,83</stuans>
+<correct>81,83,196,198,200,202,204,206,208,210</correct>
+<time_taken>185.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="2" Parentstar="1" UnnamedVar="5" Pattern="4" SuchThat="2" With="1" CondNum="16" RelNum="3" comment="Pattern while more than three inner containers exists">184</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; Select w.stmt# pattern w(v,_) such that Parent(w, n) pattern w1(v1,_) with n = w1.stmt# pattern w2(_,_) pattern w3(_,_) such that Parent(w1, w2) and Parent*(w2, w3)]]></querystr>
+<stuans>196,198,200,202,204,206,208,210,226,81,83</stuans>
+<correct>81,83,196,198,200,202,204,206,208,210,226</correct>
+<time_taken>205.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" Parent="1" UnnamedVar="3" Pattern="2" SuchThat="1" With="1" CondNum="10" RelNum="2" comment="Pattern while with child assign exists">185</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; assign a,a1,a2,a3; Select a1.stmt# pattern w(v,_) pattern a("h", _) such that Parent(w, a) and Affects*(a, a1) with a.stmt# = 197]]></querystr>
+<stuans>199,201,203,205,207,209,214,215,216</stuans>
+<correct>199,201,203,205,207,209,214,215,216</correct>
+<time_taken>1989.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" Parent="2" UnnamedVar="3" Pattern="1" SuchThat="2" CondNum="10" RelNum="3" comment="Pattern while with child container with following statement exists">186</id><querystr><![CDATA[while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; stmt s; Select w.stmt# pattern w(v,_) such that Parent(w, n) such that Parent(n, s) and Follows(n, _)]]></querystr>
+<stuans>102,174,196,198,200,202,210,211,226,68,87,95</stuans>
+<correct>68,87,95,102,174,196,198,200,202,210,211,226</correct>
+<time_taken>116.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Semantically invalid pattern assign">187</id><querystr><![CDATA[while w; if i; variable v; prog_line n; assign a; Select BOOLEAN pattern a(v,_,_)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Semantically invalid pattern while">188</id><querystr><![CDATA[while w; if i; variable v; prog_line n; Select BOOLEAN pattern w(v,_,_)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Semantically invalid pattern if">189</id><querystr><![CDATA[while w; if i; variable v; prog_line n; Select BOOLEAN pattern i(v,_)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Syntactically invalid pattern if">190</id><querystr><![CDATA[while w; if i; variable v; prog_line n; Select BOOLEAN pattern i(v,_,_,_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

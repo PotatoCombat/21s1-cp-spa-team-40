@@ -1,0 +1,162 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>21s1-cp-spa-team-40</name><parsing_time_taken>74.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="is affects relationship is present (boolean return)">1</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, _) ]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="any assignment affects given assignment (boolean return)">2</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, 4)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="given assignment affects any assignment (boolean return)">3</id><querystr><![CDATA[ Select BOOLEAN such that Affects(33, _)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="given synonyms are from the same procedure (boolean return)">4</id><querystr><![CDATA[ Select BOOLEAN such that Affects(34, 38)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="given assignment affects another given assignment (boolean return)">5</id><querystr><![CDATA[ Select BOOLEAN such that Affects(38, 40)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignments affected by the given assignment (assign declaration, single synonym return)">6</id><querystr><![CDATA[assign a; Select a such that Affects(24,a) ]]></querystr>
+<stuans>27</stuans>
+<correct>27</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignment affecting the given assignment (assign declaration, single synonym return)">7</id><querystr><![CDATA[assign a; Select a such that Affects(a, 33)]]></querystr>
+<stuans>27,29</stuans>
+<correct>27,29</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all assignment affected by the given assignment (prog_line declaration, single synonym return)">8</id><querystr><![CDATA[prog_line n; Select n such that Affects(9,n) ]]></querystr>
+<stuans>12</stuans>
+<correct>12</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all assignment affecting the given assignment (prog_line declaration, single synonym return)">9</id><querystr><![CDATA[prog_line n; Select n such that Affects(n,17) ]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignments affecting some statement (assign declaration, tuple with 2 variables return)">10</id><querystr><![CDATA[assign a1, a2; Select <a1, a2> such that Affects(a1, a2)]]></querystr>
+<stuans>24 27,27 24,27 33,29 33,38 40,39 40,4 17,9 12</stuans>
+<correct>4 17,9 12,24 27,27 24,27 33,29 33,38 40,39 40</correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="2" SuchThat="1" CondNum="4" RelNum="2" comment="all assignments affecting some statement that affects another statement (assign declaration, tuple with 3 variables return)">11</id><querystr><![CDATA[assign a1,  a2, a3; Select <a1, a2, a3> such that Affects(a1 ,a2) and Affects(a2, a3) ]]></querystr>
+<stuans>24 27 24,24 27 33,27 24 27</stuans>
+<correct>24 27 33,24 27 24,27 24 27</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="is affects* relationship is present (boolean return)">12</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, _) ]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="any assignment affects* given assignment (boolean return)">13</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, 33)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="given assignment affects* any assignment (boolean return)">14</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(21, _)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="given synonyms are from the same procedure (boolean return)">15</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(33, 34)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="given assignment affects* another given assignment (boolean return)">17</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(21, 33)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignments affected* by the given assignment (assign declaration, single synonym return)">18</id><querystr><![CDATA[assign a; Select a such that Affects*(24,a) ]]></querystr>
+<stuans>24,27,33</stuans>
+<correct>24,27,33</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignment affecting* the given assignment (assign declaration, single synonym return)">19</id><querystr><![CDATA[assign a; Select a such that Affects*(a, 33)]]></querystr>
+<stuans>24,27,29</stuans>
+<correct>24,27,29</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all assignment affected* by the given assignment (prog_line declaration, single synonym return)">20</id><querystr><![CDATA[prog_line n; Select n such that Affects*(33, n) ]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all assignment affecting* the given assignment (prog_line declaration, single synonym return)">20</id><querystr><![CDATA[prog_line n; Select n such that Affects*(n, 24) ]]></querystr>
+<stuans>24,27</stuans>
+<correct>24,27</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all assignments affecting* some statement (assign declaration, tuple with 2 variables return)">21</id><querystr><![CDATA[assign a1,  a2; Select <a1, a2> such that Affects*(a1 ,a2)]]></querystr>
+<stuans>24 24,24 27,24 33,27 24,27 27,27 33,29 33,38 40,39 40,4 17,9 12</stuans>
+<correct>4 17,9 12,24 27,24 33,27 33,29 33,38 40,39 40,24 24,27 24,27 27</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="2" SuchThat="1" CondNum="4" RelNum="2" comment="all assignments affecting* some statement that affects some other statement (assign declaration, tuple with 2 variables return)">22</id><querystr><![CDATA[assign a1,  a2, a3; Select <a1, a2, a3> such that Affects*(a1 ,a2) and Affects*(a2 ,a3)]]></querystr>
+<stuans>24 24 24,24 24 27,24 24 33,24 27 24,24 27 27,24 27 33,27 24 24,27 24 27,27 24 33,27 27 24,27 27 27,27 27 33</stuans>
+<correct>24 24 24,24 24 27,24 24 33,24 27 24,24 27 27,24 27 33,27 24 24,27 24 27,27 24 33,27 27 24,27 27 27,27 27 33</correct>
+<time_taken>33.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

@@ -1,0 +1,372 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>21s1-cp-spa-team-40</name><parsing_time_taken>16.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all statements">1</id><querystr><![CDATA[stmt s; Select s]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that call another procedure">2</id><querystr><![CDATA[procedure p, q; Select p such that Calls(p, q)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that are called by another procedure">3</id><querystr><![CDATA[procedure p, q; Select q such that Calls(p, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that call another procedure with wildcard">4</id><querystr><![CDATA[procedure p; Select p such that Calls(p, _)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that are called by another procedure with wildcard">5</id><querystr><![CDATA[procedure q; Select q such that Calls(_, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="different synonym used where both are wild cards">6</id><querystr><![CDATA[stmt s; Select s such that Calls(_, _)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called by a specific procedure">7</id><querystr><![CDATA[procedure p; Select p such that Calls("  C", p)]]></querystr>
+<stuans>D,E,F,G</stuans>
+<correct>D,E,F,G</correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called by a specific procedure (doesn't exist)">8</id><querystr><![CDATA[procedure p; Select p such that Calls("  A", p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling a specific procedure">9</id><querystr><![CDATA[procedure p; Select p such that Calls(p, "G")]]></querystr>
+<stuans>C,D,E</stuans>
+<correct>C,D,E</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling a specific procedure (doesn't exist)">10</id><querystr><![CDATA[procedure p; Select p such that Calls(p, "A")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid query looking for statements that call another procedure">11</id><querystr><![CDATA[stmt p; Select p such that Calls(p, "G")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>6.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="get all procedures">12</id><querystr><![CDATA[procedure p; Select p]]></querystr>
+<stuans>A,B,C,D,E,F,G,H</stuans>
+<correct>A,B,C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="synonym not in condition where condition is TRUE">13</id><querystr><![CDATA[stmt s; Select s such that Calls("  B", _)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="boolean for a TRUE condition">14</id><querystr><![CDATA[ Select BOOLEAN such that Calls("B", "   C")]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="boolean for a FALSE condition">15</id><querystr><![CDATA[ Select BOOLEAN such that Calls("A",   "C")]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all tuple procedure pairs that call and are called">16</id><querystr><![CDATA[procedure p, q; Select <p, q> such that Calls(p, q)]]></querystr>
+<stuans>B C,C D,C E,C F,C G,D G,E F,E G,E H</stuans>
+<correct>B C,C D,C E,C F,C G,D G,E F,E G,E H</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures that call themselves (not possible)">17</id><querystr><![CDATA[procedure p; Select p such that Calls(p, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" CondNum="1" RelNum="0" comment="call all booleans">18</id><querystr><![CDATA[ Select BOOLEAN]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that call another procedure using procName">19</id><querystr><![CDATA[procedure p, q; Select p.procName such that Calls(p, q)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that are called by another procedure using procName">20</id><querystr><![CDATA[procedure p, q; Select q.procName such that Calls(p, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that call another procedure with wildcard using procName">21</id><querystr><![CDATA[procedure p; Select p.procName such that Calls(p, _)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that are called by another procedure with wildcard using procName">22</id><querystr><![CDATA[procedure q; Select q.procName such that Calls(_, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="different synonym used where both are wild cards using procName">23</id><querystr><![CDATA[stmt s; Select s such that Calls(_, _)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called by a specific procedure using procName">24</id><querystr><![CDATA[procedure p; Select p.procName such that Calls("  C", p)]]></querystr>
+<stuans>D,E,F,G</stuans>
+<correct>D,E,F,G</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called by a specific procedure (doesn't exist) using procName">25</id><querystr><![CDATA[procedure p; Select p.procName such that Calls("  A", p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling a specific procedure using procName">26</id><querystr><![CDATA[procedure p; Select p.procName such that Calls(p, "G")]]></querystr>
+<stuans>C,D,E</stuans>
+<correct>C,D,E</correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling a specific procedure (doesn't exist) using procName">27</id><querystr><![CDATA[procedure p; Select p.procName such that Calls(p, "A")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid query looking for statements that call another procedure using procName">28</id><querystr><![CDATA[stmt p; Select p.procName such that Calls(p, "G")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="get all procedures using procName">29</id><querystr><![CDATA[procedure p; Select p.procName]]></querystr>
+<stuans>A,B,C,D,E,F,G,H</stuans>
+<correct>A,B,C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all tuple procedure pairs that call and are called using procName">30</id><querystr><![CDATA[procedure p, q; Select <p.procName, q.procName> such that Calls(p, q)]]></querystr>
+<stuans>B C,C D,C E,C F,C G,D G,E F,E G,E H</stuans>
+<correct>B C,C D,C E,C F,C G,D G,E F,E G,E H</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures that call themselves (not possible) using procName">31</id><querystr><![CDATA[procedure p; Select p.procName such that Calls(p, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="all tuple procedure pairs that call and are called using procName">32</id><querystr><![CDATA[procedure p, q; Select <p, q.procName> such that Calls(p, q)]]></querystr>
+<stuans>B C,C D,C E,C F,C G,D G,E F,E G,E H</stuans>
+<correct>B C,C D,C E,C F,C G,D G,E F,E G,E H</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that call* another procedure">33</id><querystr><![CDATA[procedure p, q; Select p such that Calls*(p, q)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all procedures that are called* by another procedure">34</id><querystr><![CDATA[procedure p, q; Select q such that Calls*(p, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that call* another procedure with wildcard">35</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, _)]]></querystr>
+<stuans>B,C,D,E</stuans>
+<correct>B,C,D,E</correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="all procedures that are called* by another procedure with wildcard">36</id><querystr><![CDATA[procedure q; Select q such that Calls*(_, q)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="different synonym used where both are wild cards">37</id><querystr><![CDATA[stmt s; Select s such that Calls*(_, _)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called* by a specific procedure">38</id><querystr><![CDATA[procedure p; Select p such that Calls*("  B", p)]]></querystr>
+<stuans>C,D,E,F,G,H</stuans>
+<correct>C,D,E,F,G,H</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures called* by a specific procedure (doesn't exist)">39</id><querystr><![CDATA[procedure p; Select p such that Calls*("  A", p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling* a specific procedure">40</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, "H")]]></querystr>
+<stuans>B,C,E</stuans>
+<correct>B,C,E</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures calling* a specific procedure (doesn't exist)">41</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, "A")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="invalid query looking for statements that call* another procedure">42</id><querystr><![CDATA[stmt p; Select p such that Calls*(p, "G")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="synonym not in condition where condition is TRUE">43</id><querystr><![CDATA[stmt s; Select s such that Calls*("  B", _)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="boolean for a TRUE condition">44</id><querystr><![CDATA[ Select BOOLEAN such that Calls*("B", "   H")]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="boolean for a FALSE condition">45</id><querystr><![CDATA[ Select BOOLEAN such that Calls*("A",   "C")]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="all tuple procedure pairs that call* and are called*">46</id><querystr><![CDATA[procedure p, q; Select <p, q> such that Calls*(p, q)]]></querystr>
+<stuans>B C,B D,B E,B F,B G,B H,C D,C E,C F,C G,C H,D G,E F,E G,E H</stuans>
+<correct>B C,B D,B E,B F,B G,B H,C D,C E,C F,C G,C H,D G,E F,E G,E H</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="procedures that call* themselves (not possible)">47</id><querystr><![CDATA[procedure p; Select p such that Calls*(p, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>7.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="Get all call statements">48</id><querystr><![CDATA[call c; Select c]]></querystr>
+<stuans>10,11,12,13,14,15,5,8,9</stuans>
+<correct>10,11,12,13,14,15,5,8,9</correct>
+<time_taken>8.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym not in relationship TRUE">49</id><querystr><![CDATA[stmt s; Select s such that Calls("B", "C")]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym not in relationship FALSE">50</id><querystr><![CDATA[stmt s; Select s such that Calls("B", "G")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym not in relationship TRUE">51</id><querystr><![CDATA[stmt s; Select s such that Calls*("B", "G")]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</stuans>
+<correct>1,10,11,12,13,14,15,16,17,18,2,3,4,5,6,7,8,9</correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="synonym not in relationship FALSE">52</id><querystr><![CDATA[stmt s; Select s such that Calls*("C", "B")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>9.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

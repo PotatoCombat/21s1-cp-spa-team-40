@@ -1,0 +1,565 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>21s1-cp-spa-team-40</name><parsing_time_taken>1944.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of end of while loop">1</id><querystr><![CDATA[stmt s; Select s such that NextBip(6, s)]]></querystr>
+<stuans>3</stuans>
+<correct>3</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of condition of if statement">2</id><querystr><![CDATA[stmt s; Select s such that NextBip(7, s)]]></querystr>
+<stuans>10,8</stuans>
+<correct>8,10</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of condition of while loop">3</id><querystr><![CDATA[stmt s; Select s such that NextBip(3, s)]]></querystr>
+<stuans>4,7</stuans>
+<correct>4,7</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of else of if statement">4</id><querystr><![CDATA[stmt s; Select s such that NextBip(9, s)]]></querystr>
+<stuans>24</stuans>
+<correct>24</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of then of if statement">5</id><querystr><![CDATA[stmt s; Select s such that NextBip(8, s)]]></querystr>
+<stuans>9</stuans>
+<correct>9</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of statement list within while loop">6</id><querystr><![CDATA[stmt s; Select s such that NextBip(4, s)]]></querystr>
+<stuans>5</stuans>
+<correct>5</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of statement list within if statement">7</id><querystr><![CDATA[stmt s; Select s such that NextBip(16, s)]]></querystr>
+<stuans>17,18</stuans>
+<correct>17,18</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="boolean with two wild cards">8</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(_, _)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="reflexivity with while statement">9</id><querystr><![CDATA[stmt s; Select s such that NextBip(s, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="reflexivity with any other statement (invalid)">10</id><querystr><![CDATA[assign s; Select s such that NextBip(s, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip of a call statement (NextBip statement, not across procs)">11</id><querystr><![CDATA[stmt s; Select s such that NextBip(5, s)]]></querystr>
+<stuans>21</stuans>
+<correct>21</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="all statements that come NextBip of something">12</id><querystr><![CDATA[stmt s; Select s such that NextBip(_, s)]]></querystr>
+<stuans>10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>83.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="all statements that have something NextBip">13</id><querystr><![CDATA[stmt s; Select s such that NextBip(s, _)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>84.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of an assign statement">14</id><querystr><![CDATA[assign a; stmt s; Select s such that NextBip(a, s)]]></querystr>
+<stuans>101,103,105,106,108,11,110,112,113,115,116,118,12,120,122,123,125,126,127,129,13,131,132,134,136,138,139,14,141,142,144,145,146,148,149,15,151,153,155,156,158,160,161,163,165,167,168,170,171,174,175,177,179,180,182,183,186,187,189,19,191,192,194,195,197,199,2,201,203,205,207,208,21,211,213,215,217,218,220,25,26,28,3,35,37,39,40,42,43,45,46,47,5,50,51,53,55,56,58,59,6,60,62,63,64,73,75,77,78,80,82,83,86,87,89,9,90,92,93,95,98</stuans>
+<correct>2,3,5,11,12,13,19,101,103,105,106,108,110,112,113,115,116,118,120,122,123,125,126,127,129,131,132,134,136,138,139,14,141,142,144,145,146,148,149,15,151,153,155,156,158,160,161,163,165,167,168,170,171,174,175,177,179,180,182,183,186,187,189,191,192,194,195,197,199,201,203,205,207,208,21,211,213,215,217,218,220,25,26,28,35,37,39,40,42,43,45,46,47,50,51,53,55,56,58,59,6,60,62,63,64,73,75,77,78,80,82,83,86,87,89,9,90,92,93,95,98</correct>
+<time_taken>424.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of end of proc">15</id><querystr><![CDATA[stmt s; Select s such that NextBip(18, s)]]></querystr>
+<stuans>19</stuans>
+<correct>19</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of a generic while loop">16</id><querystr><![CDATA[while w; stmt s; Select s such that NextBip(w, s)]]></querystr>
+<stuans>104,107,111,114,119,128,133,135,154,159,16,162,166,169,172,176,181,184,188,190,193,198,20,202,209,212,219,22,221,23,38,4,48,52,61,7,76,81,84,88,91,94</stuans>
+<correct>4,7,20,104,107,111,114,119,128,133,135,154,159,16,162,166,169,172,176,181,184,188,190,193,198,202,209,212,219,22,221,23,38,48,52,61,76,81,84,88,91,94</correct>
+<time_taken>66.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of a generic if statement">17</id><querystr><![CDATA[if i; stmt s; Select s such that NextBip(i, s)]]></querystr>
+<stuans>10,102,109,121,124,140,143,152,157,164,17,173,178,18,185,200,204,206,210,214,216,36,41,44,49,54,57,79,8,85</stuans>
+<correct>8,10,102,109,121,124,140,143,152,157,164,17,173,178,18,185,200,204,206,210,214,216,36,41,44,49,54,57,79,85</correct>
+<time_taken>55.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of an assign statement">18</id><querystr><![CDATA[assign a; stmt s; Select s such that NextBip(11, s)]]></querystr>
+<stuans>12</stuans>
+<correct>12</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip of a call statement">19</id><querystr><![CDATA[call c; stmt s; Select s such that NextBip(c, s)]]></querystr>
+<stuans>100,117,130,137,147,150,196,21,24,27,69</stuans>
+<correct>100,117,130,137,147,150,196,21,24,27,69</correct>
+<time_taken>57.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="boolean with true condition">20</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(15, 20)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="boolean with false condition">21</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(5, 19)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="checking for a specific condition">22</id><querystr><![CDATA[stmt s; Select s such that NextBip(6, 3)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>56.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="statement that comes before statement after a while loop">23</id><querystr><![CDATA[stmt s; Select s such that NextBip(s, 7)]]></querystr>
+<stuans>3</stuans>
+<correct>3</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="statement that comes before statement after an if statement">24</id><querystr><![CDATA[stmt s; Select s such that NextBip(s, 18)]]></querystr>
+<stuans>16</stuans>
+<correct>16</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip* of end of while loop">25</id><querystr><![CDATA[stmt s; Select s such that NextBip*(6, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9</stuans>
+<correct>7,8,9,10,11,12,13,14,15,16,17,18,3,4,5,6,19,20,21,22,23,24,25,26,27,28</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of condition of if statement">26</id><querystr><![CDATA[stmt s; Select s such that NextBip*(7, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,24,25,26,27,28,8,9</stuans>
+<correct>8,9,10,11,12,13,14,15,16,17,18,19,20,24,25,26,27,28</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of condition of while loop">27</id><querystr><![CDATA[stmt s; Select s such that NextBip*(3, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9</stuans>
+<correct>4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,3,19,20,21,22,23,24,25,26,27,28</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of else of if statement">28</id><querystr><![CDATA[stmt s; Select s such that NextBip*(9, s)]]></querystr>
+<stuans>12,13,14,15,16,17,18,19,20,24,25,26,27,28</stuans>
+<correct>12,13,14,15,16,17,18,19,20,24,25,26,27,28</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of then of if statement">29</id><querystr><![CDATA[stmt s; Select s such that NextBip*(8, s)]]></querystr>
+<stuans>12,13,14,15,16,17,18,19,20,24,25,26,27,28,9</stuans>
+<correct>12,13,14,15,16,17,18,19,20,24,25,26,27,28,9</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of statement list within while loop">30</id><querystr><![CDATA[stmt s; Select s such that NextBip*(4, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9</stuans>
+<correct>3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of statement list within if statement">31</id><querystr><![CDATA[stmt s; Select s such that NextBip*(16, s)]]></querystr>
+<stuans>15,16,17,18,19,20</stuans>
+<correct>17,18,15,16,19,20</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="boolean with two wild cards">32</id><querystr><![CDATA[ Select BOOLEAN such that NextBip*(_, _)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip* of a call statement (NextBip* statement, not across procs)">35</id><querystr><![CDATA[stmt s; Select s such that NextBip*(5, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9</stuans>
+<correct>6,7,8,9,10,11,12,13,14,15,16,17,18,3,4,5,19,20,21,22,23,24,25,26,27,28</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="all statements that come NextBip* of something">36</id><querystr><![CDATA[stmt s; Select s such that NextBip*(_, s)]]></querystr>
+<timeout/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="all statements that have something NextBip*">37</id><querystr><![CDATA[stmt s; Select s such that NextBip*(s, _)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>1262.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip* of end of proc">39</id><querystr><![CDATA[stmt s; Select s such that NextBip*(18, s)]]></querystr>
+<stuans>15,16,17,18,19,20</stuans>
+<correct>15,16,17,18,19,20</correct>
+<time_taken>69.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="everything NextBip* of an assign statement">42</id><querystr><![CDATA[assign a; stmt s; Select s such that NextBip*(11, s)]]></querystr>
+<stuans>12,13,14,15,16,17,18,19,20</stuans>
+<correct>12,13,14,15,16,17,18,19,20</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="boolean with true condition">44</id><querystr><![CDATA[ Select BOOLEAN such that NextBip*(13, 18)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>33.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="boolean with false condition">45</id><querystr><![CDATA[ Select BOOLEAN such that NextBip*(19, 11)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="checking for a specific condition">46</id><querystr><![CDATA[stmt s; Select s such that NextBip*(6, 3)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>59.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="statement that comes before statement after a while loop">47</id><querystr><![CDATA[stmt s; Select s such that NextBip*(s, 7)]]></querystr>
+<stuans>1,2,21,22,23,24,25,26,27,28,3,4,5,6</stuans>
+<correct>1,2,3,4,5,6,21,22,23,24,25,26,27,28</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="statement that comes before statement after an if statement">48</id><querystr><![CDATA[stmt s; Select s such that NextBip*(s, 18)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,21,22,23,24,25,26,27,28,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,27,28</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="Get all prog lines">49</id><querystr><![CDATA[prog_line n; Select n such that NextBip(_,_)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>79.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for call">50</id><querystr><![CDATA[call c; Select c such that NextBip(c,_)]]></querystr>
+<stuans>10,104,108,112,115,122,126,129,131,135,137,142,145,147,154,159,163,167,170,173,178,183,186,190,193,23,24,33,38,43,46,49,5,54,58,61,65,72,77,82,85,9,90,93,97</stuans>
+<correct>5,10,104,108,112,115,122,126,129,131,135,137,142,145,147,154,159,163,167,170,173,178,183,186,190,193,23,24,33,38,43,46,49,54,58,61,65,72,77,82,85,9,90,93,97</correct>
+<time_taken>38.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for read">51</id><querystr><![CDATA[read r; Select r such that NextBip(r,_)]]></querystr>
+<stuans>29,30,31,32,69,70,71,73</stuans>
+<correct>29,30,31,32,69,70,71,73</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for print">52</id><querystr><![CDATA[print p; Select p such that NextBip(p,_)]]></querystr>
+<stuans>64,66,67,95,96,98,99</stuans>
+<correct>64,66,67,95,96,98,99</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for while">53</id><querystr><![CDATA[while w; Select w such that NextBip(w,_)]]></querystr>
+<stuans>103,110,118,132,15,153,158,165,175,180,187,197,201,21,211,3,37,51,75,80,87</stuans>
+<correct>3,103,110,118,132,15,153,158,165,175,180,187,197,201,21,211,37,51,75,80,87</correct>
+<time_taken>27.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for if">54</id><querystr><![CDATA[if ifs; Select ifs such that NextBip(ifs,_)]]></querystr>
+<stuans>101,120,139,151,156,16,177,199,203,213,35,40,53,7,78</stuans>
+<correct>7,101,120,139,151,156,16,177,199,203,213,35,40,53,78</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for assign">55</id><querystr><![CDATA[assign a; Select a such that NextBip(a,_)]]></querystr>
+<stuans>1,100,102,105,106,107,109,11,111,113,114,116,117,119,12,121,123,124,125,127,128,13,130,133,134,136,138,14,140,141,143,144,146,148,149,150,152,155,157,160,161,162,164,166,168,169,17,171,172,174,176,179,18,181,182,184,185,188,189,19,191,192,194,195,196,198,2,200,202,204,205,206,207,208,209,210,212,214,215,216,217,218,219,22,220,221,25,26,27,28,34,36,39,4,41,42,44,45,47,48,50,52,55,56,57,59,6,60,62,63,74,76,79,8,81,83,84,86,88,89,91,92,94</stuans>
+<correct>1,11,12,17,2,4,6,8,100,102,105,106,107,109,111,113,114,116,117,119,121,123,124,125,127,128,13,130,133,134,136,138,14,140,141,143,144,146,148,149,150,152,155,157,160,161,162,164,166,168,169,171,172,174,176,179,18,181,182,184,185,188,189,19,191,192,194,195,196,198,200,202,204,205,206,207,208,209,210,212,214,215,216,217,218,219,22,220,221,25,26,27,28,34,36,39,41,42,44,45,47,48,50,52,55,56,57,59,60,62,63,74,76,79,81,83,84,86,88,89,91,92,94</correct>
+<time_taken>60.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x, _) for stmt">56</id><querystr><![CDATA[stmt s; Select s such that NextBip(s,_)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,10,11,12,13,14,15,16,17,19,2,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>65.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="NextBip(x, _) for prog_line">57</id><querystr><![CDATA[prog_line n; Select n such that NextBip(n,_)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,10,11,12,13,14,15,16,17,19,2,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>65.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for call">58</id><querystr><![CDATA[call c; Select c such that NextBip(_,c)]]></querystr>
+<stuans>10,104,108,112,115,122,126,129,131,135,137,142,145,147,154,159,163,167,170,173,178,183,186,190,193,23,24,33,38,43,46,49,5,54,58,61,65,72,77,82,85,9,90,93,97</stuans>
+<correct>5,10,104,108,112,115,122,126,129,131,135,137,142,145,147,154,159,163,167,170,173,178,183,186,190,193,23,24,33,38,43,46,49,54,58,61,65,72,77,82,85,9,90,93,97</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for read">59</id><querystr><![CDATA[read r; Select r such that NextBip(_,r)]]></querystr>
+<stuans>30,31,32,69,70,71,73</stuans>
+<correct>30,31,32,69,70,71,73</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for print">60</id><querystr><![CDATA[print p; Select p such that NextBip(_,p)]]></querystr>
+<stuans>64,66,67,68,95,96,98,99</stuans>
+<correct>64,66,67,68,95,96,98,99</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="_,s for while">61</id><querystr><![CDATA[while w; Select w such that NextBip(w,_)]]></querystr>
+<stuans>103,110,118,132,15,153,158,165,175,180,187,197,201,21,211,3,37,51,75,80,87</stuans>
+<correct>3,103,110,118,132,15,153,158,165,175,180,187,197,201,21,211,37,51,75,80,87</correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for if">62</id><querystr><![CDATA[if ifs; Select ifs such that NextBip(_,ifs)]]></querystr>
+<stuans>101,120,139,151,156,16,177,199,203,213,35,40,53,7,78</stuans>
+<correct>7,101,120,139,151,156,16,177,199,203,213,35,40,53,78</correct>
+<time_taken>10.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for assign">63</id><querystr><![CDATA[assign a; Select a such that NextBip(_,a)]]></querystr>
+<stuans>100,102,105,106,107,109,11,111,113,114,116,117,119,12,121,123,124,125,127,128,13,130,133,134,136,138,14,140,141,143,144,146,148,149,150,152,155,157,160,161,162,164,166,168,169,17,171,172,174,176,179,18,181,182,184,185,188,189,19,191,192,194,195,196,198,2,20,200,202,204,205,206,207,208,209,210,212,214,215,216,217,218,219,22,220,221,25,26,27,28,34,36,39,4,41,42,44,45,47,48,50,52,55,56,57,59,6,60,62,63,74,76,79,8,81,83,84,86,88,89,91,92,94</stuans>
+<correct>11,12,17,18,2,20,4,6,8,100,102,105,106,107,109,111,113,114,116,117,119,121,123,124,125,127,128,13,130,133,134,136,138,14,140,141,143,144,146,148,149,150,152,155,157,160,161,162,164,166,168,169,171,172,174,176,179,181,182,184,185,188,189,19,191,192,194,195,196,198,200,202,204,205,206,207,208,209,210,212,214,215,216,217,218,219,22,220,221,25,26,27,28,34,36,39,41,42,44,45,47,48,50,52,55,56,57,59,60,62,63,74,76,79,81,83,84,86,88,89,91,92,94</correct>
+<time_taken>35.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(_, x) for stmt">64</id><querystr><![CDATA[stmt s; Select s such that NextBip(_,s)]]></querystr>
+<stuans>10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>54.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" SuchThat="1" CondNum="4" RelNum="0" comment="NextBip(_, x) for progline">65</id><querystr><![CDATA[prog_line n; Select n such that NextBip(_,n)]]></querystr>
+<stuans>10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>60.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for call">66</id><querystr><![CDATA[call c1,c2; Select c1 such that NextBip(c1,c2)]]></querystr>
+<stuans>112,115,131,135,145,23,49,54,85,9,90</stuans>
+<correct>112,115,131,135,145,23,49,54,85,9,90</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for call">67</id><querystr><![CDATA[call c1,c2; Select c2 such that NextBip(c1,c2)]]></querystr>
+<stuans>137,147,24</stuans>
+<correct>137,147,24</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for read">68</id><querystr><![CDATA[read r1,r2; Select r1 such that NextBip(r1,r2)]]></querystr>
+<stuans>29,30,31,69,70</stuans>
+<correct>29,30,31,69,70</correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for read">69</id><querystr><![CDATA[read r1,r2; Select r2 such that NextBip(r1,r2)]]></querystr>
+<stuans>30,31,32,70,71</stuans>
+<correct>30,31,32,70,71</correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for print">70</id><querystr><![CDATA[print p1,p2; Select p1 such that NextBip(p1,p2)]]></querystr>
+<stuans>66,67,95,98,99</stuans>
+<correct>66,67,95,98,99</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for print">71</id><querystr><![CDATA[print p1,p2; Select p1 such that NextBip(p1,p2)]]></querystr>
+<stuans>66,67,95,98,99</stuans>
+<correct>66,67,95,98,99</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for while">72</id><querystr><![CDATA[while w1,w2; Select w1 such that NextBip(w1,w2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for while">73</id><querystr><![CDATA[while w1,w2; Select w2 such that NextBip(w1,w2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for if">74</id><querystr><![CDATA[if ifs1,ifs2; Select ifs1 such that NextBip(ifs1,ifs2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>11.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for if">75</id><querystr><![CDATA[if ifs1,ifs2; Select ifs2 such that NextBip(ifs1,ifs2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for assign">76</id><querystr><![CDATA[assign a1,a2; Select a1 such that NextBip(a1,a2)]]></querystr>
+<stuans>1,105,11,116,12,123,124,13,133,136,140,143,146,148,149,160,172,18,181,184,188,191,194,195,204,205,206,207,209,214,215,216,217,219,221,25,26,27,28,41,44,48,55,56,59,62,84,88,91</stuans>
+<correct>1,11,105,116,12,123,124,13,133,136,140,143,146,148,149,160,172,18,181,184,188,191,194,195,204,205,206,207,209,214,215,216,217,219,221,25,26,27,28,41,44,48,55,56,59,62,84,88,91</correct>
+<time_taken>66.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for assign">77</id><querystr><![CDATA[assign a1,a2; Select a2 such that NextBip(a1,a2)]]></querystr>
+<stuans>105,106,11,113,116,12,123,125,127,13,134,136,138,14,141,144,146,148,149,155,160,161,168,171,174,179,182,189,19,191,192,194,195,2,205,207,208,215,217,218,220,25,26,28,39,42,45,47,50,55,56,59,6,60,62,63,83,86,89,92</stuans>
+<correct>11,12,2,105,106,113,116,123,125,127,13,134,136,138,14,141,144,146,148,149,155,160,161,168,171,174,179,182,189,19,191,192,194,195,205,207,208,215,217,218,220,25,26,28,39,42,45,47,50,55,56,59,6,60,62,63,83,86,89,92</correct>
+<time_taken>70.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for stmt">78</id><querystr><![CDATA[stmt s1,s2; Select s1 such that NextBip(s1,s2)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,10,11,12,13,14,15,16,17,19,2,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>666.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip(x1, x2) for stmt">79</id><querystr><![CDATA[stmt s1,s2; Select s2 such that NextBip(s1,s2)]]></querystr>
+<stuans>10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>645.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x1, x2) for prog_line">80</id><querystr><![CDATA[prog_line n1,n2; Select n1 such that NextBip(n1,n2)]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>1,10,11,12,13,14,15,16,17,19,2,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>613.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" SuchThat="1" CondNum="3" RelNum="0" comment="NextBip(x1, x2) for prog_line">81</id><querystr><![CDATA[prog_line n1,n2; Select n2 such that NextBip(n1,n2)]]></querystr>
+<stuans>10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>647.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" CondNum="2" RelNum="0" comment="prog_line">82</id><querystr><![CDATA[prog_line n; Select n]]></querystr>
+<stuans>1,10,100,101,102,103,104,105,106,107,108,109,11,110,111,112,113,114,115,116,117,118,119,12,120,121,122,123,124,125,126,127,128,129,13,130,131,132,133,134,135,136,137,138,139,14,140,141,142,143,144,145,146,147,148,149,15,150,151,152,153,154,155,156,157,158,159,16,160,161,162,163,164,165,166,167,168,169,17,170,171,172,173,174,175,176,177,178,179,18,180,181,182,183,184,185,186,187,188,189,19,190,191,192,193,194,195,196,197,198,199,2,20,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,52,53,54,55,56,57,58,59,6,60,61,62,63,64,65,66,67,68,69,7,70,71,72,73,74,75,76,77,78,79,8,80,81,82,83,84,85,86,87,88,89,9,90,91,92,93,94,95,96,97,98,99</stuans>
+<correct>10,11,12,13,14,15,16,17,18,19,2,20,3,4,5,6,7,8,9,1,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,21,210,211,212,213,214,215,216,217,218,219,22,220,221,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99</correct>
+<time_taken>30.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="NextBip tuple">83</id><querystr><![CDATA[stmt s1, s2; Select <s1, s2> such that NextBip(s1, s2)]]></querystr>
+<stuans>1 2,10 27,100 101,101 102,101 109,102 103,103 104,103 107,104 117,105 106,106 103,107 108,108 130,109 110,11 12,110 111,110 114,111 112,112 137,113 110,114 115,115 147,116 39,116 73,117 118,118 119,118 128,119 120,12 13,120 121,120 124,121 122,122 150,123 127,124 125,125 126,126 196,127 118,128 129,129 130,13 14,130 131,131 137,132 133,132 135,133 134,134 132,135 147,136 105,136 115,136 46,136 47,136 78,136 83,137 150,138 139,139 140,139 143,14 15,140 141,141 142,142 196,143 144,144 145,145 147,146 113,146 132,146 50,146 86,147 150,148 149,149 116,149 136,149 146,149 55,149 87,15 16,15 20,150 151,151 152,151 173,152 153,153 154,153 172,154 196,155 156,156 157,156 164,157 158,158 159,158 162,159 196,16 17,16 18,160 161,161 158,162 163,163 196,164 165,165 166,165 169,166 167,167 196,168 165,169 170,17 15,170 196,171 153,172 195,173 196,174 175,175 176,175 193,176 177,177 178,177 185,178 196,179 180,18 19,180 181,180 184,181 182,182 183,183 196,184 192,185 186,186 196,187 188,187 190,188 189,189 187,19 15,190 196,191 192,192 175,193 196,194 195,195 123,195 138,195 148,195 59,195 75,196 197,197 198,197 221,198 199,199 200,199 210,2 3,200 201,201 202,201 209,202 203,203 204,203 206,204 205,205 208,206 207,207 208,208 201,209 220,21 22,21 23,210 211,211 212,211 219,212 213,213 214,213 216,214 215,215 218,216 217,217 218,218 211,219 220,22 21,220 197,221 127,221 145,221 155,221 160,221 168,221 170,221 171,221 174,221 179,221 180,221 187,221 191,221 194,221 62,221 98,23 24,24 27,25 26,26 12,26 6,27 28,28 11,28 25,29 30,3 4,3 7,30 31,31 32,32 33,33 69,34 35,35 36,35 49,36 37,37 38,37 48,38 100,39 40,4 5,40 41,40 44,41 42,42 43,43 117,44 45,45 46,46 130,47 37,48 63,49 137,5 21,50 51,51 52,51 61,52 53,53 54,53 57,54 147,55 56,56 60,57 58,58 150,59 60,6 3,60 51,61 196,62 63,63 64,64 65,65 69,66 67,67 68,69 70,7 10,7 8,70 71,71 72,72 100,73 74,74 75,75 76,75 94,76 77,77 117,78 79,78 85,79 80,8 9,80 81,80 84,81 82,82 130,83 80,84 92,85 137,86 87,87 88,87 91,88 89,89 90,9 24,90 147,91 92,92 93,93 150,94 95,95 96,96 97,97 196,98 99,99 34,99 66</stuans>
+<correct>1 2,10 27,100 101,101 102,101 109,102 103,103 104,103 107,104 117,105 106,106 103,107 108,108 130,109 110,11 12,110 111,110 114,111 112,112 137,113 110,114 115,115 147,116 39,116 73,117 118,118 119,118 128,119 120,12 13,120 121,120 124,121 122,122 150,123 127,124 125,125 126,126 196,127 118,128 129,129 130,13 14,130 131,131 137,132 133,132 135,133 134,134 132,135 147,136 105,136 115,136 46,136 47,136 78,136 83,137 150,138 139,139 140,139 143,14 15,140 141,141 142,142 196,143 144,144 145,145 147,146 113,146 132,146 50,146 86,147 150,148 149,149 116,149 136,149 146,149 55,149 87,15 16,15 20,150 151,151 152,151 173,152 153,153 154,153 172,154 196,155 156,156 157,156 164,157 158,158 159,158 162,159 196,16 17,16 18,160 161,161 158,162 163,163 196,164 165,165 166,165 169,166 167,167 196,168 165,169 170,17 15,170 196,171 153,172 195,173 196,174 175,175 176,175 193,176 177,177 178,177 185,178 196,179 180,18 19,180 181,180 184,181 182,182 183,183 196,184 192,185 186,186 196,187 188,187 190,188 189,189 187,19 15,190 196,191 192,192 175,193 196,194 195,195 123,195 138,195 148,195 59,195 75,196 197,197 198,197 221,198 199,199 200,199 210,2 3,200 201,201 202,201 209,202 203,203 204,203 206,204 205,205 208,206 207,207 208,208 201,209 220,21 22,21 23,210 211,211 212,211 219,212 213,213 214,213 216,214 215,215 218,216 217,217 218,218 211,219 220,22 21,220 197,221 127,221 145,221 155,221 160,221 168,221 170,221 171,221 174,221 179,221 180,221 187,221 191,221 194,221 62,221 98,23 24,24 27,25 26,26 12,26 6,27 28,28 11,28 25,29 30,3 4,3 7,30 31,31 32,32 33,33 69,34 35,35 36,35 49,36 37,37 38,37 48,38 100,39 40,4 5,40 41,40 44,41 42,42 43,43 117,44 45,45 46,46 130,47 37,48 63,49 137,5 21,50 51,51 52,51 61,52 53,53 54,53 57,54 147,55 56,56 60,57 58,58 150,59 60,6 3,60 51,61 196,62 63,63 64,64 65,65 69,66 67,67 68,69 70,7 10,7 8,70 71,71 72,72 100,73 74,74 75,75 76,75 94,76 77,77 117,78 79,78 85,79 80,8 9,80 81,80 84,81 82,82 130,83 80,84 92,85 137,86 87,87 88,87 91,88 89,89 90,9 24,90 147,91 92,92 93,93 150,94 95,95 96,96 97,97 196,98 99,99 34,99 66</correct>
+<time_taken>1103.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="normal next between number">85</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(5, 21)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>27.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="call and proc between number">86</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(21, 22)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" SuchThat="1" CondNum="2" RelNum="0" comment="call and proc between number">87</id><querystr><![CDATA[ Select BOOLEAN such that NextBip(21, 22)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

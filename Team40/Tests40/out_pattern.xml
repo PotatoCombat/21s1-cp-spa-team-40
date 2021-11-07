@@ -1,0 +1,281 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>21s1-cp-spa-team-40</name><parsing_time_taken>40.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="both wildcards">1</id><querystr><![CDATA[assign a; Select a pattern a(_,_)]]></querystr>
+<stuans>1,10,11,12,14,15,17,18,3,4,5,6,7,9</stuans>
+<correct>1,3,4,5,6,7,9,10,11,12,14,15,17,18</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="second wild card">2</id><querystr><![CDATA[assign a; variable v; Select <a, v> pattern a(v,_)]]></querystr>
+<stuans>1 x,10 b,11 c,12 d,14 x,15 z,17 a,18 b,3 y,4 z,5 x,6 y,7 x,9 a</stuans>
+<correct>1 x,3 y,4 z,5 x,6 y,7 x,9 a,10 b,11 c,12 d,14 x,15 z,17 a,18 b</correct>
+<time_taken>29.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">3</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   a    * b"_)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">4</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   z + x"_)]]></querystr>
+<stuans>5</stuans>
+<correct>5</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">5</id><querystr><![CDATA[assign a; Select a pattern a(_, _" v + x * y + z * t"_)]]></querystr>
+<stuans>18,7</stuans>
+<correct>7,18</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">6</id><querystr><![CDATA[assign a; Select a pattern a(_, _"v"_)]]></querystr>
+<stuans>11,12,18,7,9</stuans>
+<correct>7,9,11,12,18</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">7</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   x * y"_)]]></querystr>
+<stuans>10,12,17,18,7</stuans>
+<correct>7,10,12,17,18</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">8</id><querystr><![CDATA[assign a; Select a pattern a(_, _"v + x"_)]]></querystr>
+<stuans>11</stuans>
+<correct>11</correct>
+<time_taken>15.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">9</id><querystr><![CDATA[assign a; Select a pattern a(_, _"v + x * y"_)]]></querystr>
+<stuans>12,18,7</stuans>
+<correct>18,12,7</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">10</id><querystr><![CDATA[assign a; Select a pattern a(_, _" y + z * t"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>14.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">11</id><querystr><![CDATA[assign a; Select a pattern a(_, _"x * y + z * t"_)]]></querystr>
+<stuans>17</stuans>
+<correct>17</correct>
+<time_taken>17.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">12</id><querystr><![CDATA[assign a; Select a pattern a(_, _" v + x * y  + z * t  "_)]]></querystr>
+<stuans>18,7</stuans>
+<correct>18,7</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">13</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   ((a)    * (b))"_)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">14</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   ((((z + x))))"_)]]></querystr>
+<stuans>5</stuans>
+<correct>5</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">15</id><querystr><![CDATA[assign a; Select a pattern a(_, _" (v + (x * y) + z * t)"_)]]></querystr>
+<stuans>18,7</stuans>
+<correct>18,7</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match invalid bracket matching">16</id><querystr><![CDATA[assign a; Select a pattern a(_, _"(((v))"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>13.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">17</id><querystr><![CDATA[assign a; Select a pattern a(_, _"   (x * y)"_)]]></querystr>
+<stuans>10,12,17,18,7</stuans>
+<correct>7,10,12,17,18</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">18</id><querystr><![CDATA[assign a; Select a pattern a(_, _"(v + x)"_)]]></querystr>
+<stuans>11</stuans>
+<correct>11</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">19</id><querystr><![CDATA[assign a; Select a pattern a(_, _"(v + x) * y"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">20</id><querystr><![CDATA[assign a; Select a pattern a(_, _" (y + z) * t"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">21</id><querystr><![CDATA[assign a; Select a pattern a(_, _"x * (y + z) * t"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>23.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">22</id><querystr><![CDATA[assign a; Select a pattern a(_, _" v + x * y  + (z * t)  "_)]]></querystr>
+<stuans>18,7</stuans>
+<correct>18,7</correct>
+<time_taken>24.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="Finding a partial match">23</id><querystr><![CDATA[assign a; Select a pattern a(_, _" x + 1"_)]]></querystr>
+<stuans>14</stuans>
+<correct>14</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">24</id><querystr><![CDATA[assign a; Select a pattern a("b", _" y + z * t"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">25</id><querystr><![CDATA[assign a; Select a pattern a("b", _"x * y + z * t"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>32.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">26</id><querystr><![CDATA[assign a; Select a pattern a("b", _" v + x * y  + z * t  "_)]]></querystr>
+<stuans>18</stuans>
+<correct>18</correct>
+<time_taken>19.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">27</id><querystr><![CDATA[assign a; Select a pattern a("z", _"   ((a)    * (b))"_)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>21.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">28</id><querystr><![CDATA[assign a; Select a pattern a("y", _"   (((((z + x))))"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="Finding a partial match">29</id><querystr><![CDATA[assign a; Select a pattern a("b", _"(x * y)"_)]]></querystr>
+<stuans>10,18</stuans>
+<correct>10,18</correct>
+<time_taken>18.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">30</id><querystr><![CDATA[assign a; Select a pattern a(_, " (v + (x * y) + z * t)")]]></querystr>
+<stuans>18,7</stuans>
+<correct>7,18</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">31</id><querystr><![CDATA[assign a; Select a pattern a(_, " v + x * y + z * t")]]></querystr>
+<stuans>18,7</stuans>
+<correct>7,18</correct>
+<time_taken>28.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Finding an exact match">32</id><querystr><![CDATA[assign a; Select a pattern a("x", " v + x * y + z * t")]]></querystr>
+<stuans>7</stuans>
+<correct>7</correct>
+<time_taken>33.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Finding an exact match">33</id><querystr><![CDATA[assign a; Select a pattern a("b", " v + x * y + z * t")]]></querystr>
+<stuans>18</stuans>
+<correct>18</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">34</id><querystr><![CDATA[assign a; Select a pattern a(_, "x * y ")]]></querystr>
+<stuans>10</stuans>
+<correct>10</correct>
+<time_taken>22.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Pattern="1" CondNum="2" RelNum="0" comment="Finding an exact match">35</id><querystr><![CDATA[assign a; variable v; Select v pattern a(v, " (v + (x * y) + z * t)")]]></querystr>
+<stuans>b,x</stuans>
+<correct>x,b</correct>
+<time_taken>30.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">36</id><querystr><![CDATA[if ifs; Select ifs pattern ifs(_,_,_)]]></querystr>
+<stuans>2</stuans>
+<correct>2</correct>
+<time_taken>35.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">37</id><querystr><![CDATA[while w; Select w pattern w(_,_)]]></querystr>
+<stuans>16</stuans>
+<correct>16</correct>
+<time_taken>20.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">38</id><querystr><![CDATA[if ifs; variable v; Select <ifs, v> pattern ifs(v,_,_)]]></querystr>
+<stuans>2 x,2 y</stuans>
+<correct>2 x,2 y</correct>
+<time_taken>16.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="Finding an exact match">39</id><querystr><![CDATA[while w; variable v; Select <w, v> pattern w(v,_)]]></querystr>
+<stuans>16 x,16 z</stuans>
+<correct>16 x,16 z</correct>
+<time_taken>26.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>
