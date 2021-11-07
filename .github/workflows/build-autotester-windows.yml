@@ -1,19 +1,19 @@
 name: Run Autotester on Windows Environment
 
-# on:
-#   push:
-#     branches:
-#       - master
-#   pull_request:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.
 # Comment the above 7 lines, and uncomment the following 3 lines
 # Runs job at 8am and 6pm daily
-on:
- schedule:
-   - cron: "0 0,10 * * *"
+# on:
+#  schedule:
+#    - cron: "0 0,10 * * *"
 
 env:
     BUILD_TYPE: Release
@@ -52,31 +52,25 @@ jobs:
       fail-fast: false
       matrix:
         test-files:
-          - { source: Sample_source, queries: Sample_queries, output: out } 
-          - { source: Source1, queries: Queries1, output: out1 } 
-          - { source: Source2, queries: Queries2, output: out2 } 
-          - { source: Source3, queries: Queries3, output: out3 } 
-          - { source: TA_source, queries: TA_queries, output: TA } 
-          - { source: TD_BasicSource_source, queries: TD_BasicSource_queries, output: TD_Basic } 
-          - { source: TD_ComplexSource_source, queries: TD_ComplexSource_queries, output: TD_Complex } 
-          - { source: TD_DeepNest_source, queries: TD_DeepNest_queries, output: TD_DeepNest }
-          - { source: TD_SIMPLE_1_source, queries: TD_SIMPLE_1_queries, output: TD_SIMPLE_1 } 
-          - { source: TD_SIMPLE_2_source, queries: TD_SIMPLE_2_queries, output: TD_SIMPLE_2 } 
-          - { source: TD_SIMPLE_3_source, queries: TD_SIMPLE_3_queries, output: TD_SIMPLE_3 } 
-          - { source: TD_SIMPLE_4_source, queries: TD_SIMPLE_4_queries, output: TD_SIMPLE_4 }
+          - { source: Sample_source, queries: Sample_queries, output: out }          
+          - { source: basic1_source, queries: basic1_queries, output: basic1 }
+          - { source: basic2_source, queries: basic2_queries, output: basic2 }
+          - { source: basic3_source, queries: basic3_queries, output: basic3 }
+          - { source: TA_source, queries: TA_queries, output: TA }
           - { source: call_source, queries: call_queries, output: call }
           - { source: next_source, queries: next_queries, output: next }
-          - { source: with_boolean_attribute_source, queries: with_boolean_attribute_queries, output: with_boolean_attribute }
-          - { source: pattern_source, queries: pattern_queries, output: pattern }
-          - { source: tuples_source, queries: tuples_queries, output: tuples }
-          - { source: multiclause_source, queries: multiclause_2st_queries, output: multiclause_2st }
-          - { source: multiclause_source, queries: multiclause_2st1p_queries, output: multiclause_2st1p }
           - { source: affects_simple_source, queries: affects_simple_queries, output: affects_simple }
           - { source: affects_complex_source, queries: affects_complex_queries, output: affects_complex }
-          - { source: multiclause_complex_source, queries: multiclause_3st1p_queries, output: multiclause_3st1p }
-          - { source: multiclause_complex_source, queries: multiclause_3st_queries, output: multiclause_3st }
-          - { source: multiclause_complex_source, queries: multiclause_semantic_queries, output: multiclause_semantic }
+          - { source: pattern_source, queries: pattern_queries, output: pattern }
+          - { source: with_boolean_attribute_source, queries: with_boolean_attribute_queries, output: with_boolean_attribute }
+          - { source: tuples_source, queries: tuples_queries, output: tuples }
+          - { source: multiclause_2st1p_source, queries: multiclause_2st1p_queries, output: multiclause_2st1p }
           - { source: multiclause_2st1w1p_source, queries: multiclause_2st1w1p_queries, output: multiclause_2st1w1p }
+          - { source: multiclause_2st1w_source, queries: multiclause_2st1w_queries, output: multiclause_2st1w }
+          - { source: multiclause_2st_source, queries: multiclause_2st_queries, output: multiclause_2st }
+          - { source: multiclause_3st1p_source, queries: multiclause_3st1p_queries, output: multiclause_3st1p }
+          - { source: multiclause_3st_source, queries: multiclause_3st_queries, output: multiclause_3st }
+          - { source: multiclause_semantic_source, queries: multiclause_semantic_queries, output: multiclause_semantic }
           - { source: StressTest_source, queries: StressTest_queries, output: StressTest }
           - { source: pattern_extreme_source, queries: pattern_extreme_queries, output: pattern_extreme }
           - { source: nextbip_source, queries: nextbip_queries, output: nextbip }
