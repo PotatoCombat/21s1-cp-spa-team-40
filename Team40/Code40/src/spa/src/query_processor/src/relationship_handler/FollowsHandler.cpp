@@ -9,7 +9,7 @@ FollowsHandler::FollowsHandler(Clause *clause, PKB *pkb)
 }
 
 /**
- * Gets all reference 1 values such that reference 1 follows reference 2 where
+ * Gets all reference 1 values such that reference 1 follows reference 2, where
  * reference 1 and reference 2 are statements
  * @return all valid reference 1 values
  */
@@ -23,7 +23,7 @@ set<string> FollowsHandler::getR1ClauseR2(string r2) {
 }
 
 /**
- * Gets all reference 2 values such that reference 1 is followed by reference 2
+ * Gets all reference 2 values such that reference 1 is followed by reference 2,
  * where reference 1 and reference 2 are statements
  * @return all valid reference 2 values
  */
@@ -37,7 +37,7 @@ set<string> FollowsHandler::getR2ClausedR1(string r1) {
 }
 
 /**
- * Checks that reference 1 follows reference 2 where reference 1 and reference 2
+ * checks whether reference 1 follows reference 2, where reference 1 and reference 2
  * are statements
  * @return true if reference 1 follows reference 2, false otherwise
  */

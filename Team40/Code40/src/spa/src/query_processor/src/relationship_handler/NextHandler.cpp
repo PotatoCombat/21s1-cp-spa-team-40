@@ -9,7 +9,7 @@ NextHandler::NextHandler(Clause *clause, PKB *pkb) : ClauseHandler(clause, pkb, 
 
 /**
  * Gets all reference 1 values such that reference 2 is executed next of
- * reference 1 where reference 1 and reference 2 are program lines
+ * reference 1, where reference 1 and reference 2 are program lines
  * @return all valid reference 1 values
  */
 set<string> NextHandler::getR1ClauseR2(string r2) {
@@ -24,7 +24,7 @@ set<string> NextHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 2 is executed next of
- * reference 1 where reference 1 and reference 2 are program lines
+ * reference 1, where reference 1 and reference 2 are program lines
  * @return all valid reference 2 values
  */
 set<string> NextHandler::getR2ClausedR1(string r1) {
@@ -38,7 +38,7 @@ set<string> NextHandler::getR2ClausedR1(string r1) {
 }
 
 /**
- * Checks that reference reference 2 is executed next of reference 1 where
+ * checks whether reference reference 2 is executed next of reference 1 where
  * reference 1 and reference 2 are program lines
  * @return true if reference 2 is executed next of reference 1, false otherwise
  */

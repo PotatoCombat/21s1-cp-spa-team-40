@@ -10,7 +10,7 @@ NextStarHandler::NextStarHandler(Clause *clause, PKB *pkb)
 
 /**
  * Gets all reference 1 values such that reference 2 is executed next of
- * reference 1 directly or indirectly where reference 1 and reference 2 are
+ * reference 1, directly or indirectly, where reference 1 and reference 2 are
  * program lines
  * @return all valid reference 1 values
  */
@@ -47,7 +47,7 @@ set<string> NextStarHandler::getR1ClauseR2(string r2) {
 
 /**
  * Gets all reference 2 values such that reference 2 is executed next of
- * reference 1 directly or indirectly where reference 1 and reference 2 are
+ * reference 1, directly or indirectly, where reference 1 and reference 2 are
  * program lines
  * @return all valid reference 2 values
  */
@@ -83,8 +83,8 @@ set<string> NextStarHandler::getR2ClausedR1(string r1) {
 }
 
 /**
- * Checks that reference reference 2 is executed next of reference 1 directly or
- * indirectly where reference 1 and reference 2 are program lines
+ * checks whether reference reference 2 is executed next of reference 1 directly or
+ * indirectly, where reference 1 and reference 2 are program lines
  * @return true if reference 2 is executed next of reference 1, false otherwise
  */
 bool NextStarHandler::isR1ClauseR2(string r1, string r2) {
