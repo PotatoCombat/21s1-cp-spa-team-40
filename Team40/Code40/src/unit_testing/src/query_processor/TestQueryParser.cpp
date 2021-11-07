@@ -2,63 +2,69 @@
 
 #include "query_processor/QueryParser.h"
 
-struct TestQueryParser {
-    static const DeclPair DECL;
-    static const ClsTuple REL;
-    static Reference DECLARED_SYN;
-    static const Reference UNDECLARED_SYN;
-    static const Reference WILDCARD_S;
-    static const Reference WILDCARD_V;
-    static const Reference CONSTANT1;
-    static const Reference CONSTANT4;
-    static Reference ASSIGN;
-    static vector<Reference *> createReferenceV(int n);
-};
+TEST_CASE("QueryParser: parseDeclarations valid") {
+    vector<DeclPair> pairs;
+    pairs.push_back(make_pair("stmt", "s"));
+    pairs.push_back(make_pair("assign", "a"));
+    pairs.push_back(make_pair("assign", "a1"));
+    pairs.push_back(make_pair("call", "c"));
+    pairs.push_back(make_pair("print", "p"));
+    pairs.push_back(make_pair("read", "r"));
+    pairs.push_back(make_pair("while", "w"));
+    pairs.push_back(make_pair("if", "i"));
+    pairs.push_back(make_pair("prog_line", "n"));
+    pairs.push_back(make_pair("variable", "v"));
+    pairs.push_back(make_pair("procedure", "proc"));
+    pairs.push_back(make_pair("constant", "const"));
 
-const DeclPair TestQueryParser::DECL = make_pair("stmt", "s");
-const ClsTuple TestQueryParser::REL = make_tuple("Follows*", "s", "4");
-Reference TestQueryParser::DECLARED_SYN =
-    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s");
-const Reference TestQueryParser::UNDECLARED_SYN =
-    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "undeclared");
-const Reference TestQueryParser::WILDCARD_S =
-    Reference(DesignEntityType::STMT, ReferenceType::WILDCARD, "_");
-const Reference TestQueryParser::WILDCARD_V =
-    Reference(DesignEntityType::VARIABLE, ReferenceType::WILDCARD, "_");
-const Reference TestQueryParser::CONSTANT1 =
-    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "1");
-const Reference TestQueryParser::CONSTANT4 =
-    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "4");
-Reference TestQueryParser::ASSIGN =
-    Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a");
+    ReferenceType refType = ReferenceType::SYNONYM;
+    ReferenceAttribute attrInt = ReferenceAttribute::INTEGER;
+    ReferenceAttribute attrName = ReferenceAttribute::NAME;
 
-vector<Reference *> TestQueryParser::createReferenceV(int n) {
-    vector<Reference *> vect;
-    if (n == 1) {
-        vect.push_back(&TestQueryParser::DECLARED_SYN);
-    } else if (n == 2) {
-        vect.push_back(&TestQueryParser::DECLARED_SYN);
-        vect.push_back(&TestQueryParser::ASSIGN);
+    vector<Reference *> refs;
+    refs.push_back(
+        new Reference(DesignEntityType::STMT, refType, "s", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::ASSIGN, refType, "a", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::ASSIGN, refType, "a1", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::CALL, refType, "c", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::PRINT, refType, "p", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::READ, refType, "r", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::WHILE, refType, "w", attrInt));
+    refs.push_back(new Reference(DesignEntityType::IF, refType, "i", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::PROG_LINE, refType, "n", attrInt));
+    refs.push_back(
+        new Reference(DesignEntityType::VARIABLE, refType, "v", attrName));
+    refs.push_back(
+        new Reference(DesignEntityType::PROCEDURE, refType, "proc", attrName));
+    refs.push_back(
+        new Reference(DesignEntityType::CONSTANT, refType, "const", attrInt));
+
+    QueryParser parser;
+
+    parser.parseDeclarations(pairs);
+
+    for (size_t i = 0; i < pairs.size(); ++i) {
+        Reference *expected = refs[i];
+        Reference *actual = parser.getReferenceIfDeclared(pairs[i].second);
+        REQUIRE(actual->equals(*expected));
+        REQUIRE(actual->getAttr() == expected->getAttr());
     }
-    return vect;
 }
 
-TEST_CASE("QueryParser: isValidName") {
+TEST_CASE("QueryParser: parseDeclarations invalid") {
+    QueryParser parser;
 
-    SECTION("test fail: parse invalid name") {
-        string invalid = "stmt 0PD;";
-        REQUIRE(!ParserUtil::isValidName(invalid));
-
-        invalid = "assign s_fishy;";
-        REQUIRE(!ParserUtil::isValidName(invalid));
-
-        invalid = "print 11111;";
-        REQUIRE(!ParserUtil::isValidName(invalid));
-
-        invalid = " ";
-        REQUIRE(!ParserUtil::isValidName(invalid));
-
-        invalid = "";
-        REQUIRE(!ParserUtil::isValidName(invalid));
+    SECTION("FAIL: same synonym declared twice") {
+        vector<DeclPair> pairs;
+        pairs.push_back(make_pair("stmt", "s"));
+        pairs.push_back(make_pair("assign", "s"));
+        REQUIRE_THROWS_AS(parser.parseDeclarations(pairs), ValidityError);
     }
 }

@@ -94,7 +94,7 @@ TEST_CASE("QueryTokenizer: tokenizeDeclarations") {
     QueryTokenizer tokenizer;
     vector<DeclPair> vec;
 
-    SECTION("test standard") {
+    SECTION("valid name") {
         string DECL = "stmt s; assign a; print p1;";
         DeclPair p1 = make_pair("stmt", "s");
         DeclPair p2 = make_pair("assign", "a");
@@ -103,6 +103,28 @@ TEST_CASE("QueryTokenizer: tokenizeDeclarations") {
 
         tokenizer.tokenizeDeclarations(DECL, vec);
         REQUIRE(TestQueryTokenizer::compareVectorPair(vec, expected));
+    }
+
+    SECTION("FAIL: invalid name") {
+        string DECL = "stmt 0PD;";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(DECL, vec),
+                          SyntaxError);
+
+        DECL = "stmt s_fishy;";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(DECL, vec),
+                          SyntaxError);
+
+        DECL = "stmt 11111;";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(DECL, vec),
+                          SyntaxError);
+
+        DECL = "stmt    ;";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(DECL, vec),
+                          SyntaxError);
+
+        DECL = "stmt ();";
+        REQUIRE_THROWS_AS(tokenizer.tokenizeDeclarations(DECL, vec),
+                          SyntaxError);
     }
 }
 
