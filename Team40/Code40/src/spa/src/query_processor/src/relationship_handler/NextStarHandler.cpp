@@ -8,6 +8,12 @@ NextStarHandler::NextStarHandler(Clause *clause, PKB *pkb)
     validRefType2 = &ClauseHandler::ALL_VALID_REF;
 }
 
+/**
+ * Gets all reference 1 values such that reference 2 is executed next of
+ * reference 1, directly or indirectly, where reference 1 and reference 2 are
+ * program lines
+ * @return all valid reference 1 values
+ */
 set<string> NextStarHandler::getR1ClauseR2(string r2) {
     queue<ProgLineIndex> open;
     unordered_set<ProgLineIndex> visited;
@@ -39,6 +45,12 @@ set<string> NextStarHandler::getR1ClauseR2(string r2) {
     return res;
 }
 
+/**
+ * Gets all reference 2 values such that reference 2 is executed next of
+ * reference 1, directly or indirectly, where reference 1 and reference 2 are
+ * program lines
+ * @return all valid reference 2 values
+ */
 set<string> NextStarHandler::getR2ClausedR1(string r1) {
     queue<ProgLineIndex> open;
     unordered_set<ProgLineIndex> visited;
@@ -70,6 +82,11 @@ set<string> NextStarHandler::getR2ClausedR1(string r1) {
     return res;
 }
 
+/**
+ * checks whether reference reference 2 is executed next of reference 1 directly or
+ * indirectly, where reference 1 and reference 2 are program lines
+ * @return true if reference 2 is executed next of reference 1, false otherwise
+ */
 bool NextStarHandler::isR1ClauseR2(string r1, string r2) {
     queue<ProgLineIndex> open;
     unordered_set<ProgLineIndex> visited;
