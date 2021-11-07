@@ -3,9 +3,8 @@
 #include <string>
 
 #include "query_processor/QueryPreprocessor.h"
-#include "query_processor/model/DesignEntityTypeHelper.h"
+
 #include "query_processor/model/Query.h"
-#include "query_processor/parser/ParserUtil.h"
 
 struct TestQPreprocessor {
     static const string INPUT_1;
@@ -366,8 +365,8 @@ TEST_CASE("QueryPreprocessor: with clauses") {
                      ReferenceAttribute::INTEGER);
     Reference procedure(DesignEntityType::PROCEDURE, ReferenceType::SYNONYM,
                         "p", ReferenceAttribute::NAME);
-    Reference prog_line(DesignEntityType::STMT, ReferenceType::SYNONYM,
-                        "n", ReferenceAttribute::INTEGER);
+    Reference prog_line(DesignEntityType::STMT, ReferenceType::SYNONYM, "n",
+                        ReferenceAttribute::INTEGER);
     Reference call(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
                    ReferenceAttribute::INTEGER);
     Reference call_p(DesignEntityType::CALL, ReferenceType::SYNONYM, "c",
@@ -413,11 +412,12 @@ TEST_CASE("QueryPreprocessor: Select BOOLEAN") {
     REQUIRE(q.getClauses().empty());
 }
 
-TEST_CASE("QueryPreprocessor: Invalid query syntax") {
+TEST_CASE("QueryPreprocessor: invalid query syntax") {
     const string QUERY = "stmt s; Select s such that";
     const string QUERY1 = "stmt s; Select s with \"\" = \"a\"";
     const string QUERY2 = "stmt s; Select BOOLEAN with \"\" = \"a\"";
     const string QUERY3 = "stmt s; Select <> such that Next*(s, s)";
+    const string QUERY4 = "stmt s; Select s such that (s, s)";
 
     QueryPreprocessor qp;
     Query q;
@@ -426,4 +426,5 @@ TEST_CASE("QueryPreprocessor: Invalid query syntax") {
     REQUIRE_FALSE(qp.preprocessQuery(QUERY1, q));
     REQUIRE_FALSE(qp.preprocessQuery(QUERY2, q));
     REQUIRE_FALSE(qp.preprocessQuery(QUERY3, q));
+    REQUIRE_FALSE(qp.preprocessQuery(QUERY4, q));
 }

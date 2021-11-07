@@ -120,7 +120,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
                           SyntaxError);
     }
 
-    SECTION("PASS: test one synonym") {
+    SECTION("test one synonym") {
         string SELECT = "Select s with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
@@ -131,7 +131,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(remaining == CLAUSE);
     }
 
-    SECTION("PASS: test BOOLEAN") {
+    SECTION("test BOOLEAN") {
         string SELECT = "Select BOOLEAN with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
@@ -142,7 +142,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(remaining == CLAUSE);
     }
 
-    SECTION("PASS: test tuple") {
+    SECTION("test tuple") {
         string SELECT = "Select <P, A, L> with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
@@ -159,7 +159,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(remaining == CLAUSE);
     }
 
-    SECTION("PASS: test attrRef without whitespace") {
+    SECTION("test attrRef without whitespace") {
         string SELECT = "Select P.stmt# with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
@@ -182,7 +182,7 @@ TEST_CASE("QueryTokenizer: tokenizeReturnSynonyms") {
         REQUIRE(remaining == CLAUSE);
     }
 
-    SECTION("PASS: test attrRef with whitespace") {
+    SECTION("test attrRef with whitespace") {
         string SELECT = "Select P . stmt# with P.procName = \" a \"";
         string remaining;
         vector<string> actual =
@@ -316,7 +316,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
     vector<PatTuple> pat;
     vector<WithPair> wit;
 
-    SECTION("PASS: test assign wildcard, wildcard") {
+    SECTION("test assign wildcard, wildcard") {
         string input = "pattern a(_, _)";
         PatTuple expected = make_tuple("a", "_", vector<string>{"_"});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -358,7 +358,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test assign wildcard, ?") {
+    SECTION("test assign wildcard, ?") {
         string input = "pattern a(_, _\"x\"_)"; // (_, _"x"_)
         PatTuple expected = make_tuple("a", "_", vector<string>{"_\"x\"_"});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -395,7 +395,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test assign syn, ?") {
+    SECTION("test assign syn, ?") {
         string input = "pattern a(synonym, _\" x \"_)"; // (synonym, _" x "_)
         PatTuple expected =
             make_tuple("a", "synonym", vector<string>{"_\"x\"_"});
@@ -422,7 +422,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test assign quoted, ?") {
+    SECTION("test assign quoted, ?") {
         string input =
             "pattern a(\"quoted\", \" x * y \")"; // ("quoted", "x * y")
         PatTuple expected =
@@ -452,7 +452,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test assign empty pattern string") {
+    SECTION("test assign empty pattern string") {
         string input = "pattern a(_, \" \")";
         PatTuple expected = make_tuple("a", "_", vector<string>{"\"\""});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -462,7 +462,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test if _, _, _") {
+    SECTION("test if _, _, _") {
         string input = "pattern ifs(_, _, _)";
         PatTuple expected = make_tuple("ifs", "_", vector<string>{"_", "_"});
         tokenizer.tokenizeClauses(input, rel, pat, wit);
@@ -482,7 +482,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test if syn, _, _") {
+    SECTION("test if syn, _, _") {
         string input = "pattern ifs(synonym, _, _)";
         PatTuple expected =
             make_tuple("ifs", "synonym", vector<string>{"_", "_"});
@@ -503,7 +503,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for pattern") {
             pat, vector<PatTuple>{expected}));
     }
 
-    SECTION("PASS: test if quoted, _, _") {
+    SECTION("test if quoted, _, _") {
         string input = "pattern ifs(\" quoted \", _, _)";
         PatTuple expected =
             make_tuple("ifs", "\"quoted\"", vector<string>{"_", "_"});
@@ -531,7 +531,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for multiple pattern clauses") {
     vector<PatTuple> pat;
     vector<WithPair> wit;
 
-    SECTION("PASS: test pattern x(x,x) pattern x(x,x)") {
+    SECTION("test pattern x(x,x) pattern x(x,x)") {
         string input = "pattern a(_, _) pattern w (_, _)";
         vector<PatTuple> expected;
         expected.push_back(make_tuple("a", "_", vector<string>{"_"}));
@@ -564,7 +564,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for multiple pattern clauses") {
         REQUIRE(TestQueryTokenizer::compareVectorPatTuple(pat, expected));
     }
 
-    SECTION("PASS: test pattern x(x,x)/pattern x(x,x,x)") {
+    SECTION("test pattern x(x,x)/pattern x(x,x,x)") {
         string input = "pattern a(_, _) pattern ifs (x, _, _)";
         vector<PatTuple> expected;
         expected.push_back(make_tuple("a", "_", vector<string>{"_"}));
@@ -595,7 +595,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
     vector<PatTuple> pat;
     vector<WithPair> wit;
 
-    SECTION("PASS: pattern and such that such that pattern") {
+    SECTION("pattern and such that such that pattern") {
         string input = "pattern a(x, _) and i(_, _, _ ) such that Calls*(p1, "
                        "p2) such that Parent(i2, i) pattern i2(x, _, _)";
         vector<PatTuple> expP;
@@ -611,7 +611,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
         REQUIRE(TestQueryTokenizer::compareVectorTuple(rel, relP));
     }
 
-    SECTION("PASS: such that and and such that and") {
+    SECTION("such that and and such that and") {
         string input =
             "such that Calls*(p1, p2) and Parent(a1, c2) and Parent*(a1, c2) "
             "such that Follows*(i2, i) and Uses(p1, x)";
@@ -635,7 +635,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses N clauses (pat + cls + and)") {
 TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
     QueryTokenizer tokenizer;
 
-    SECTION("PASS: synonym") {
+    SECTION("synonym") {
         string input = "with name1 = name2";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -651,7 +651,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 
-    SECTION("PASS: integer") {
+    SECTION("integer") {
         string input = "with 123 = 456";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -666,7 +666,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 
-    SECTION("PASS: quoted") {
+    SECTION("quoted") {
         string input = "with \"something\" = \" a \"";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -683,7 +683,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 
-    SECTION("PASS: attribute") {
+    SECTION("attribute") {
         string input = "with P.procName = v.varName";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -714,7 +714,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 
-    SECTION("PASS: attribute and quoted") {
+    SECTION("attribute and quoted") {
         string input = "with P . procName = \" a \"";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -731,7 +731,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
         REQUIRE(TestQueryTokenizer::compareVectorPair(wit, expected));
     }
 
-    SECTION("PASS: multiple clauses") {
+    SECTION("multiple clauses") {
         string input = "with P . procName = \" a \" and a.stmt# = n";
         vector<ClsTuple> rel;
         vector<PatTuple> pat;
@@ -760,7 +760,7 @@ TEST_CASE("QueryTokenizer: tokenizeClauses for with") {
 TEST_CASE("QueryTokenizer: tokenizePattern") {
     QueryTokenizer tokenizer;
 
-    SECTION("PASS: valid patterns tokenized") {
+    SECTION("valid patterns tokenized") {
         vector<string> P_SIMPLE_1{"\"x + y\""};
         vector<string> P_SIMPLE_2{"\"x + 10 + y\""};
         vector<string> P_BRACKETS_1{"\"((y))\""};

@@ -3,6 +3,8 @@
 #include "query_processor/Abstractions.h"
 #include "query_processor/QueryParser.h"
 
+#include "query_processor/model/Reference.h"
+
 struct TestQueryParser {
     static const DeclPair DECL;
     static const ClsTuple REL;
