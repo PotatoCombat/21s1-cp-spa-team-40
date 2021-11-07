@@ -651,37 +651,37 @@ assign while
 131 - All while statements
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3;
 Select w
-68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,210,215,217,219,223,229
+68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
 132 - All while statements
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w such that Parent(w, n)
-68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,210,215,217,219,223,229
+68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
 133 - Pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3;
 Select w pattern w(_,_)
-68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,210,215,217,219,223,229
+68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
 134 - Pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(_,_) such that Parent(w, n) and Next*(n, w)
-68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,210,215,217,219,223,229
+68,72,81,83,87,91,93,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
 135 - Pattern while with child pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(_,_) such that Parent(w, w1) pattern w1(_, _)
-68,81,83,87,91,174,196,198,200,202,215,217
+68,81,83,87,91,174,196,198,200,202,204,206,208,210,211,212,226,228
 5000
 136 - Pattern while with indirect child pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(_,_) such that Parent*(w, w1) pattern w1(_, _)
-68,81,83,87,91,160,174,196,198,200,202,215,217,219
+68,81,83,87,91,160,174,196,198,200,202,204,206,208,210,211,212,226,228,230
 5000
 137 - Pattern while with child pattern while with same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Parent(w, w1) pattern w1(v1, _) with v.varName = v1.varName
-68,81,83,87,91,174,196,198,200,202,215,217
+68,81,83,87,91,174,196,198,200,202,204,206,208,210,211,212,226,228
 5000
 138 - Pattern while using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
@@ -726,7 +726,7 @@ Select w pattern w(v,_) such that Uses(w, "g") with v.varName = "g"
 146 - Pattern while using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Uses(w, "h") with v.varName = "h"
-124,196,198,200,202,204,210,215,217,219,223,229
+124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
 147 - Pattern while using control variables does not exist
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
@@ -738,182 +738,212 @@ while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select BOOLEAN pattern w(v,_) such that Uses(68, "a") with v.varName = "a" with w.stmt# = 68
 FALSE
 5000
-149 - Pattern while using control variables exists
+149 - Pattern while using and modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Uses(w, v) such that Modifies(w, v)
-68,72,81,83,87,95,102,124,136,160,164,174,176,183,196,198,200,202,204,210,215,217,219,223
+68,72,81,83,87,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234
 5000
-150 - Pattern while using control variables exists
+150 - Pattern while using and modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Uses(w, v) such that Modifies(w, v) with v.varName = "h"
-124,196,198,200,202,204,210,215,217,219,223
+124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234
 5000
 151 - Pattern while using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Uses(w, v) with v.varName = "h"
-124,196,198,200,202,204,210,215,217,219,223,229
+124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
 5000
-152 - Pattern while using control variables exists
+152 - Pattern while using and modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select w pattern w(v,_) such that Modifies(w, v) with v.varName = "h"
-124,196,198,200,202,204,210,215,217,219,223
+124,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234
 5000
-153 - All if statements
+153 - Pattern while using control variables inside container exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
+Select w pattern w(v,_) such that Parent(w, n) and Uses(n, v)
+68,72,81,83,87,91,95,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234,240
+5000
+154 - Pattern while using and modifying control variables inside container exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
+Select w pattern w(v,_) such that Parent(w, n) and Uses(n, v) such that Modifies(n, v)
+68,81,83,87,102,124,136,160,164,174,176,183,196,198,200,202,204,206,208,210,211,212,213,221,226,228,230,234
+5000
+155 - All if statements
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3;
 Select i
-97,104,108,109,110,117,137,140,144,150,158,162,221
+97,104,108,109,110,117,137,140,144,150,158,162,232
 5000
-154 - All if statements
+156 - All if statements
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i such that Parent(i, n)
-97,104,108,109,110,117,137,140,144,150,158,162,221
+97,104,108,109,110,117,137,140,144,150,158,162,232
 5000
-155 - Pattern if exists
+157 - Pattern if exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3;
 Select i pattern i(_,_,_)
-97,104,108,109,110,117,137,140,144,150,158,162,221
+97,104,108,109,110,117,137,140,144,150,158,162,232
 5000
-156 - Pattern if exists
+158 - Pattern if exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(_,_,_) such that Parent(i, n) and Uses(i, v)
-97,104,108,109,110,117,137,140,144,150,158,162,221
+97,104,108,109,110,117,137,140,144,150,158,162,232
 5000
-157 - Pattern if with child pattern while exists
+159 - Pattern if with child pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(_,_,_) such that Parent(i, i1) pattern i1(_,_,_)
 108,109,110,137
 5000
-158 - Pattern if with indirect child pattern while exists
+160 - Pattern if with indirect child pattern while exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(_,_,_) such that Parent*(i, i1) pattern i1(_,_,_)
 108,109,110,137,158
 5000
-159 - Pattern if with child pattern while with same control variable exists
+161 - Pattern if with child pattern while with same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Parent(i, i1) pattern i1(v1,_,_) with v.varName = v1.varName
 108,137
 5000
-160 - Pattern if using control variables exists
+162 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select v pattern i(v,_,_) such that Uses(i, v)
 a,b,c,h
 5000
-161 - Pattern if using control variables exists
+163 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "a") with v.varName = "a"
 97,108,140,150,158
 5000
-162 - Pattern if using control variables exists
+164 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "b") with v.varName = "b"
 104,109,162
 5000
-163 - Pattern if using control variables exists
+165 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "c") with v.varName = "c"
 97,110
 5000
-164 - Pattern if using control variables exists
+166 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern w(v,_,_) such that Uses(i, "d") with v.varName = "d"
 none
 5000
-165 - Pattern if using control variables exists
+167 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, v) with v.varName = "e"
 none
 5000
-166 - Pattern if using control variables exists
+168 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "f") with v.varName = "f"
 none
 5000
-167 - Pattern if using control variables exists
+169 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "g") with v.varName = "g"
 none
 5000
-168 - Pattern if using control variables exists
+170 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, "h") with v.varName = "h"
-117,137,140,144,221
+117,137,140,144,232
 5000
-169 - Pattern if using control variables does not exist
+171 - Pattern if using control variables does not exist
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select BOOLEAN pattern i(v,_,_) such that Uses(117, "h") with v.varName = "a" with i.stmt# = 117
 FALSE
 5000
-170 - Pattern if using control variables does not exist
+172 - Pattern if using control variables does not exist
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select BOOLEAN pattern i(v,_,_) such that Uses(117, "a") with v.varName = "c" with i.stmt# = 117
 FALSE
 5000
-171 - Pattern if using control variables exists
+173 - Pattern if using and modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, v) such that Modifies(i, v)
-104,108,109,110,117,137,140,150,158,162,221
+104,108,109,110,117,137,140,150,158,162,232
 5000
-172 - Pattern if using control variables exists
+174 - Pattern if using and modifying control variables in container exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(n, v) and Parent(i, n) such that Modifies(i, v)
-104,108,109,110,117,137,150,158,162,221
+104,108,109,110,117,137,150,158,162,232
 5000
-173 - Pattern if using control variables exists
+175 - Pattern if using and modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, v) such that Modifies(i, v) with v.varName = "h"
-117,137,140,221
+117,137,140,232
 5000
-174 - Pattern if using control variables exists
+176 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(i, v) with v.varName = "h"
-117,137,140,144,221
+117,137,140,144,232
 5000
-175 - Pattern if using control variables exists
+177 - Pattern if using control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Uses(n, v) and Parent(i, n) with v.varName = "h"
-117,137,144,221
+117,137,144,232
 5000
-176 - Pattern while using control variables exists
+178 - Pattern while modifying control variables exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select i pattern i(v,_,_) such that Modifies(i, v) with v.varName = "h"
-117,137,140,221
+117,137,140,232
 5000
-177 - Pattern if parent while using same control variable exists
+179 - Pattern if parent while using same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select BOOLEAN pattern i(v,_,_) such that Parent(i, w) pattern w(v,_)
 TRUE
 5000
-178 - Pattern if parent while using same control variable exists
+180 - Pattern if parent while using same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
 Select v pattern i(v,_,_) such that Parent(i, w) pattern w(v,_)
 a,b,h
 5000
-179 - Pattern while parent if using same control variable exists
+181 - Pattern while parent if using same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
-Select BOOLEAN pattern w(v,_) such that Parent(w, i) pattern i(v,_,_)
+Select BOOLEAN pattern w(v,_) such that Parent(w, i) pattern i(v,_,_) such that Calls("assign", "mixed")
 TRUE
 5000
-180 - Pattern while parent if using same control variable exists
+182 - Pattern while parent if using same control variable exists
 while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
-Select v pattern w(v,_) such that Parent(w, i) pattern i(v,_,_)
+Select v pattern w(v,_) such that Parent(w, i) pattern i(v,_,_) such that Calls("assign", "if")
 a,b,h
 5000
-181 - Semantically invalid pattern assign
+183 - Pattern while more than three inner containers exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
+Select w pattern w(v,_) such that Parent(w, n) pattern w1(v1,_) with n = w1.stmt# pattern w2(_,_) pattern w3(_,_) such that Parent(w1, w2) and Parent(w2, w3)
+81,83,196,198,200,202,204,206,208,210
+5000
+184 - Pattern while more than three inner containers exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n;
+Select w.stmt# pattern w(v,_) such that Parent(w, n) pattern w1(v1,_) with n = w1.stmt# pattern w2(_,_) pattern w3(_,_) such that Parent(w1, w2) and Parent*(w2, w3)
+81,83,196,198,200,202,204,206,208,210,226
+5000
+185 - Pattern while with child assign exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; assign a,a1,a2,a3;
+Select a1.stmt# pattern w(v,_) pattern a("h", _) such that Parent(w, a) and Affects*(a, a1) with a.stmt# = 197
+199,201,203,205,207,209,214,215,216
+5000
+186 - Pattern while with child container with following statement exists
+while w,w1,w2,w3; if i,i1,i2,i3; variable v,v1,v2,v3; prog_line n; stmt s;
+Select w.stmt# pattern w(v,_) such that Parent(w, n) such that Parent(n, s) and Follows(n, _)
+68,87,95,102,174,196,198,200,202,210,211,226
+5000
+187 - Semantically invalid pattern assign
 while w; if i; variable v; prog_line n; assign a;
 Select BOOLEAN pattern a(v,_,_)
 FALSE
 5000
-181 - Semantically invalid pattern while
+188 - Semantically invalid pattern while
 while w; if i; variable v; prog_line n;
 Select BOOLEAN pattern w(v,_,_)
 FALSE
 5000
-183 - Semantically invalid pattern if
+189 - Semantically invalid pattern if
 while w; if i; variable v; prog_line n;
 Select BOOLEAN pattern i(v,_)
 FALSE
 5000
-184 - Syntactically invalid pattern if
+190 - Syntactically invalid pattern if
 while w; if i; variable v; prog_line n;
 Select BOOLEAN pattern i(v,_,_,_)
 

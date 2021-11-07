@@ -288,6 +288,23 @@ procedure mixed {
 						h = h / 1;
 						while (h < 125) {
 							h = h % 1;
+							while (h < 100) {
+								h = h + 1;
+								while (h < 90) {
+									h = h - 1;
+									while (h < 80) {
+										while (h < 70) {
+											while (h < 60) {
+												while (h < 50) {
+													h = h % 1;
+												}
+											}
+											h = h / 1;
+										}
+										h = h * 1;
+									}
+								}
+							}
 						}
 						a = a + b;
 					}

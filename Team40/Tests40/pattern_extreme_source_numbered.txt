@@ -288,47 +288,64 @@ procedure mixed {
 203						h = h / 1;
 204						while (h < 125) {
 205							h = h % 1;
+206							while (h < 100) {
+207								h = h + 1;
+208								while (h < 90) {
+209									h = h - 1;
+210									while (h < 80) {
+211										while (h < 70) {
+212											while (h < 60) {
+213												while (h < 50) {
+214													h = h % 1;
+												}
+											}
+215											h = h / 1;
+										}
+216										h = h * 1;
+									}
+								}
+							}
 						}
-206						a = a + b;
+217						a = a + b;
 					}
-207					b = b + c;
+218					b = b + c;
 				}
-208				h = a + b + c;
-209				c = c + d;
-210				while (h > 100) {
-211					h = h + d + e + f;
+219				h = a + b + c;
+220				c = c + d;
+221				while (h > 100) {
+222					h = h + d + e + f;
 				}
-212				g = h;
+223				g = h;
 			}
-213			h = a + b + c + d + e + f + g;
-214			h = a + b + c + d + e + f + g + h;
+224			h = a + b + c + d + e + f + g;
+225			h = a + b + c + d + e + f + g + h;
 		}
-215		while (h > 0) {
-216			h = h + 1;
-217			while (h < 200) {
-218				h = h - 1;
-219				while (h < 190) {
-220					h = h * 1;
-221					if (h < 180) then {
-222						h = h / 1;
-223						while (h < 170) {
-224							h = h % 1;
+226		while (h > 0) {
+227			h = h + 1;
+228			while (h < 200) {
+229				h = h - 1;
+230				while (h < 190) {
+231					h = h * 1;
+232					if (h < 180) then {
+233						h = h / 1;
+234						while (h < 170) {
+235							h = h % 1;
 						}
-225						a = a + b;
+236						a = a + b;
 					} else {
-226						b = b + c;
-227						h = a + b + c;
-228						c = c + d;
-229						while (h > 100) {
-230							a = h + d + e + f;
+237						b = b + c;
+238						h = a + b + c;
+239						c = c + d;
+240						while (h > 100) {
+241							a = h + d + e + f;
 						}
-231						g = h;
+242						g = h;
 					}
 				}
 			}
-232			h = a + b + c + d + e + f + g;
-233			h = a + b + c + d + e + f + g + h;
+243			h = a + b + c + d + e + f + g;
+244			h = a + b + c + d + e + f + g + h;
 		}
-234		print h;
+245		print h;
 	}
 }
