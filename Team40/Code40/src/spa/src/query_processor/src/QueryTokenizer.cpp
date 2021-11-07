@@ -266,34 +266,35 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
     PatIdent ident;
     PatVar var;
     vector<PatToken> tokens;
-    vector<string> arguments;
     size_t nextPos;
     size_t commaPos;
+    size_t tempPos;
     string token;
 
     ident = getTokenBeforeX(input, L_BRACKET, startPos, nextPos);
     validateName(ident);
 
+    // first argument
     commaPos = input.find(COMMA, nextPos);
     if (commaPos == string::npos) {
         throw SyntaxError("QP-ERROR: no comma after left bracket");
     }
+    var = trim(input.substr(nextPos, commaPos - nextPos));
+    var = removeWhitespaceWithinQuotes(var);
+    validatePatternArg(var);
+    nextPos = commaPos + 1;
 
-    // go through the commas
-    while (commaPos != string::npos) {
-        string token = trim(input.substr(nextPos, commaPos - nextPos));
-        if (ParserUtil::isQuoted(token) || hasNoWhitespace(token) ||
-            ParserUtil::isWildcard(token)) {
-            token = removeWhitespaceWithinQuotes(token);
-            arguments.push_back(token);
-            nextPos = commaPos + 1;
-        } else {
-            // walked into another clause's comma
-            break;
+    // middle (of three) argument
+    tempPos = input.find(COMMA, nextPos);
+    if (tempPos != string::npos) {
+        string token = trim(input.substr(nextPos, tempPos - nextPos));
+        if (ParserUtil::isWildcard(token)) {
+            tokens.push_back(token);
+            nextPos = tempPos + 1;
         }
-        commaPos = input.find(COMMA, nextPos);
     }
 
+    // last argument
     size_t tokenPos = findNextToken(input, nextPos);
     if (tokenPos == string::npos) {
         throw SyntaxError("QP-ERROR: incomplete pattern clause");
@@ -323,16 +324,9 @@ size_t QueryTokenizer::tokenizePatternClause(string input, size_t startPos,
             nextPos = getPosAfterRBracket(input, nextPos);
         }
     } else {
-        token = getTokenBeforeX(input, R_BRACKET, tokenPos, nextPos);
+        throw SyntaxError("QP-ERROR: invalid pattern clause");
     }
-    arguments.push_back(token);
-
-    var = arguments.at(0);
-    validatePatternArg(var);
-
-    for (size_t i = 1; i < arguments.size(); ++i) {
-        tokens.push_back(arguments.at(i));
-    }
+    tokens.push_back(token);
 
     clause = make_tuple(ident, var, tokens);
     return nextPos;

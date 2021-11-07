@@ -23,4 +23,6 @@ private:
     PKB *pkb;
     QueryPreprocessor preprocessor;
     QueryEvaluator evaluator = QueryEvaluator(nullptr);
+
+    inline static const string FALSE_RESULT = "FALSE";
 };
