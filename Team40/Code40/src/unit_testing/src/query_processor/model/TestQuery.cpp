@@ -1,10 +1,10 @@
+#include "catch.hpp"
+
 #include <vector>
 
 #include "query_processor/model/Clause.h"
 #include "query_processor/model/Query.h"
 #include "query_processor/model/Reference.h"
-
-#include "catch.hpp"
 
 using namespace std;
 

@@ -1,7 +1,5 @@
 #include "catch.hpp"
 
-#include "query_processor/Abstractions.h"
-
 #include "query_processor/parser/PatternParser.h"
 
 TEST_CASE("PatternParser: parse pattern clauses") {

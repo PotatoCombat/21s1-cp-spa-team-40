@@ -1,6 +1,5 @@
 #include "catch.hpp"
 
-#include "query_processor/Abstractions.h"
 #include "query_processor/parser/WithParser.h"
 
 TEST_CASE("WithParser: parse with clause") {

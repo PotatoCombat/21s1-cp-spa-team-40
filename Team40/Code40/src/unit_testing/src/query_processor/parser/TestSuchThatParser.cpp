@@ -1,6 +1,5 @@
 #include "catch.hpp"
 
-#include "query_processor/Abstractions.h"
 #include "query_processor/parser/SuchThatParser.h"
 
 struct TestSuchThatParser {
@@ -184,7 +183,7 @@ TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
     SuchThatParser p;
     p.initReferences(TestSuchThatParser::DECLARATIONS);
 
-    SECTION("TEST FAIL: quoted argument") {
+    SECTION("FAIL: quoted argument") {
         SECTION("integer/quoted") {
             ClsTuple tup = make_tuple("Parent", "1", "\"C4\"");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
@@ -210,7 +209,7 @@ TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
         }
     }
 
-    SECTION("TEST FAIL: wrong type synonym (non-statement)") {
+    SECTION("FAIL: wrong type synonym (non-statement)") {
         SECTION("first synonym non-statement") {
             ClsTuple tup = make_tuple("Parent", "foodVariable", "a");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
@@ -228,7 +227,7 @@ TEST_CASE("SuchThatParser: parse parent clause - invalid arguments") {
         }
     }
 
-    SECTION("TEST FAIL: undeclared synonym") {
+    SECTION("FAIL: undeclared synonym") {
         SECTION("first synonym undeclared") {
             ClsTuple tup = make_tuple("Parent", "statement", "aaaaaa");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
@@ -335,7 +334,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
     SuchThatParser p;
     p.initReferences(TestSuchThatParser::DECLARATIONS);
 
-    SECTION("TEST FAIL: first argument cannot be wildcard") {
+    SECTION("FAIL: first argument cannot be wildcard") {
         ClsTuple tup = make_tuple("Modifies", "_", "_");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -346,12 +345,12 @@ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: first argument cannot be variable type") {
+    SECTION("FAIL: first argument cannot be variable type") {
         ClsTuple tup = make_tuple("Modifies", "foodVariable", "\"value\"");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: second argument cannot be integer") {
+    SECTION("FAIL: second argument cannot be integer") {
         ClsTuple tup = make_tuple("Modifies", "\"procedur3\"", "1");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -359,7 +358,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: second argument cannot be non-variable type") {
+    SECTION("FAIL: second argument cannot be non-variable type") {
         ClsTuple tup = make_tuple("Modifies", "statement", "PROCEDURE");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -367,7 +366,7 @@ TEST_CASE("SuchThatParser: parse modifies clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: undeclared synonym") {
+    SECTION("FAIL: undeclared synonym") {
         ClsTuple tup = make_tuple("Modifies", "statement", "undeclared");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -448,7 +447,7 @@ TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
     SuchThatParser p;
     p.initReferences(TestSuchThatParser::DECLARATIONS);
 
-    SECTION("TEST FAIL: arguments cannot be non-procedure") {
+    SECTION("FAIL: arguments cannot be non-procedure") {
         ClsTuple tup = make_tuple("Calls*", "statement", "_");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -456,7 +455,7 @@ TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: arguments cannot be integer") {
+    SECTION("FAIL: arguments cannot be integer") {
         ClsTuple tup = make_tuple("Calls*", "1", "_");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -464,7 +463,7 @@ TEST_CASE("SuchThatParser: parse calls* clause - invalid arguments") {
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
     }
 
-    SECTION("TEST FAIL: undeclared synonym") {
+    SECTION("FAIL: undeclared synonym") {
         ClsTuple tup = make_tuple("Calls*", "PROCEDURE", "undeclared");
         REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
 
@@ -608,7 +607,7 @@ TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
     SuchThatParser p;
     p.initReferences(TestSuchThatParser::DECLARATIONS);
 
-    SECTION("TEST FAIL: quoted argument") {
+    SECTION("FAIL: quoted argument") {
         SECTION("integer/quoted") {
             ClsTuple tup = make_tuple("Affects", "1", "\"C4\"");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
@@ -634,7 +633,7 @@ TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
         }
     }
 
-    SECTION("TEST FAIL: wrong type synonym (non-assign)") {
+    SECTION("FAIL: wrong type synonym (non-assign)") {
         SECTION("first synonym non-assign") {
             ClsTuple tup = make_tuple("Affects", "foodVariable", "a");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);
@@ -652,7 +651,7 @@ TEST_CASE("SuchThatParser: parse affects clause - invalid arguments") {
         }
     }
 
-    SECTION("TEST FAIL: undeclared synonym") {
+    SECTION("FAIL: undeclared synonym") {
         SECTION("first synonym undeclared") {
             ClsTuple tup = make_tuple("Affects", "a", "aaaaaa");
             REQUIRE_THROWS_AS(p.parse(tup), ValidityError);

@@ -1,40 +1,55 @@
 #include "catch.hpp"
 
 #include "query_processor/model/Clause.h"
-#include "query_processor/model/Reference.h"
 
 using namespace std;
 
 struct TestClause {
-    static Reference R1;
-    static Reference R2;
+    static Reference *R1;
+    static Reference *R2;
+    static Reference *R3;
     static Clause *createFollowsClause();
     static Clause *createParentClause();
+    static Clause *createPatternClause();
 };
 
-Reference TestClause::R1 =
-    Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s",
-              ReferenceAttribute::INTEGER);
-Reference TestClause::R2 =
-    Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "_",
-              ReferenceAttribute::INTEGER);
+Reference *TestClause::R1 =
+    new Reference(DesignEntityType::STMT, ReferenceType::SYNONYM, "s",
+                  ReferenceAttribute::INTEGER);
+Reference *TestClause::R2 =
+    new Reference(DesignEntityType::STMT, ReferenceType::CONSTANT, "_",
+                  ReferenceAttribute::INTEGER);
+Reference *TestClause::R3 =
+    new Reference(DesignEntityType::ASSIGN, ReferenceType::SYNONYM, "a",
+                  ReferenceAttribute::INTEGER);
 
 Clause *TestClause::createFollowsClause() {
-    return new Clause(ClauseType::FOLLOWS, R1, R2);
+    return new Clause(ClauseType::FOLLOWS, *R1, *R2);
 }
 
 Clause *TestClause::createParentClause() {
-    Reference ref1 = R1;
-    Reference ref2 = R2;
-    return new Clause(ClauseType::PARENT, ref1, ref2);
+    return new Clause(ClauseType::PARENT, *R1, *R2);
+}
+
+Clause *TestClause::createPatternClause() {
+    return new Clause(*R3, *R2, {"x", "+", "y"}, false);
 }
 
 TEST_CASE("Clause: get methods") {
     Clause *clause = TestClause::createFollowsClause();
 
     REQUIRE(clause->getType() == ClauseType::FOLLOWS);
-    REQUIRE(TestClause::R1.equals(*(clause->getFirstReference())));
-    REQUIRE(TestClause::R2.equals(*(clause->getSecondReference())));
+    REQUIRE(TestClause::R1->equals(*(clause->getFirstReference())));
+    REQUIRE(TestClause::R2->equals(*(clause->getSecondReference())));
+    delete clause;
+
+    clause = TestClause::createPatternClause();
+    REQUIRE(clause->getType() == ClauseType::PATTERN);
+    REQUIRE(TestClause::R3->equals(*(clause->getFirstReference())));
+    REQUIRE(TestClause::R2->equals(*(clause->getSecondReference())));
+    REQUIRE(clause->getPattern() == vector<string>{"x", "+", "y"});
+    REQUIRE(clause->isExactMatch() == false);
+    delete clause;
 }
 
 TEST_CASE("Clause: equals") {
