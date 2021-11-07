@@ -11,13 +11,12 @@ public:
 
     void clear();
 
-    // meant to be private, public just for testing purposes
-    vector<PatToken> parsePatternTokens();
-
 private:
     Clause *parsePt(PatTuple patTuple) override;
 
     Clause *parseAssign();
+
+    vector<PatToken> parsePatternTokens();
 
     bool isAssignPatternClause();
     bool isWhilePatternClause();

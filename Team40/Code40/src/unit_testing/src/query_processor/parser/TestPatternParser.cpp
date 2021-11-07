@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "query_processor/Abstractions.h"
+
 #include "query_processor/parser/PatternParser.h"
 
 TEST_CASE("PatternParser: parse pattern clauses") {
@@ -110,7 +111,63 @@ TEST_CASE("PatternParser: parse pattern clauses") {
         delete expected, actual;
     }
 
-    SECTION("TEST FAIL: stmt undeclared/invalid") {
+    SECTION("synonym, pattern expression") {
+        vector<PatToken> P_SIMPLE_1{"\"", "x", "+", "y", "\""};
+        vector<PatToken> P_SIMPLE_2{"\"", "x", "+", "10", "+", "y", "\""};
+        vector<PatToken> P_BRACKETS_1{"\"", "(", "(", "y", ")", ")", "\""};
+        vector<PatToken> P_BRACKETS_2{"\"", "x", "+", "(", "(", "y", ")",
+                                    "*",  "(", "x", ")", ")", "\""};
+        vector<PatToken> P_COMPLEX_1{"_",  "\"", "x", "+",    "y", "-",
+                                   "10", "*",  "(", "n4m3", "%", "x",
+                                   ")",  "/",  "y", "\"",   "_"};
+        vector<PatToken> P_COMPLEX_2{"_",  "\"", "(",  "(", "(",  "x", "-",
+                                   "y",  ")",  "*",  "z", ")",  "/", "(",
+                                   "a",  "-",  "20", "%", "b",  ")", "-",
+                                   "10", ")",  "*",  "x", "\"", "_"};
+
+        vector<PatToken> T_SIMPLE_1{"x", "+", "y"};
+        vector<PatToken> T_SIMPLE_2{"x", "+", "10", "+", "y"};
+        vector<PatToken> T_BRACKETS_1{"(", "(", "y", ")", ")"};
+        vector<PatToken> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
+                                    "*", "(", "x", ")", ")"};
+        vector<PatToken> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
+                                   "n4m3", "%", "x", ")", "/",  "y"};
+        vector<PatToken> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
+                                   "z", ")", "/", "(",  "a", "-", "20", "%",
+                                   "b", ")", "-", "10", ")", "*", "x"};
+
+        Clause *expected = new Clause(D_ASSIGN, D_VARIABLE, T_SIMPLE_1, true);
+        Clause *actual = p.parse(make_tuple("a", "v", P_SIMPLE_1));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = new Clause(D_ASSIGN, D_VARIABLE, T_SIMPLE_2, true);
+        actual = p.parse(make_tuple("a", "v", P_SIMPLE_2));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = new Clause(D_ASSIGN, D_VARIABLE, T_BRACKETS_1, true);
+        actual = p.parse(make_tuple("a", "v", P_BRACKETS_1));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = new Clause(D_ASSIGN, D_VARIABLE, T_BRACKETS_2, true);
+        actual = p.parse(make_tuple("a", "v", P_BRACKETS_2));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = new Clause(D_ASSIGN, D_VARIABLE, T_COMPLEX_1, false);
+        actual = p.parse(make_tuple("a", "v", P_COMPLEX_1));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+
+        expected = new Clause(D_ASSIGN, D_VARIABLE, T_COMPLEX_2, false);
+        actual = p.parse(make_tuple("a", "v", P_COMPLEX_2));
+        REQUIRE(actual->equals(*expected));
+        delete expected, actual;
+    }
+
+    SECTION("FAIL: stmt undeclared/invalid") {
         REQUIRE_THROWS_AS(p.parse(make_tuple("a1", "\"x\"", PATTERN_QUOTED)),
                           ValidityError);
         REQUIRE_THROWS_AS(p.parse(make_tuple("c", "\"x\"", PATTERN_QUOTED)),
@@ -121,7 +178,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
                           ValidityError);
     }
 
-    SECTION("TEST FAIL: invalid var/arg to assign") {
+    SECTION("FAIL: invalid var/arg to assign") {
         REQUIRE_THROWS_AS(p.parse(make_tuple("a", "_\"x\"_", PATTERN_QUOTED)),
                           ValidityError);
         REQUIRE_THROWS_AS(p.parse(make_tuple("a", "c", PATTERN_QUOTED)),
@@ -134,7 +191,7 @@ TEST_CASE("PatternParser: parse pattern clauses") {
             ValidityError);
     }
 
-    SECTION("TEST FAIL: invalid second (and third) arguments to while/if") {
+    SECTION("FAIL: invalid second (and third) arguments to while/if") {
         vector<string> PATTERN_MULTI_1{"_", "\"x\""};
         vector<string> PATTERN_MULTI_2{"\"x\"", "_"};
         REQUIRE_THROWS_AS(p.parse(make_tuple("w", "\"x\"", PATTERN_QUOTED)),
@@ -143,53 +200,5 @@ TEST_CASE("PatternParser: parse pattern clauses") {
                           ValidityError);
         REQUIRE_THROWS_AS(p.parse(make_tuple("ifs", "\"x\"", PATTERN_MULTI_2)),
                           ValidityError);
-    }
-}
-
-TEST_CASE("PatternParser: parse pattern string into tokens") {
-    PatternParser p;
-
-    SECTION("PASS: valid patterns") {
-        vector<string> P_SIMPLE_1{"\"", "x", "+", "y", "\""};
-        vector<string> P_SIMPLE_2{"\"", "x", "+", "10", "+", "y", "\""};
-        vector<string> P_BRACKETS_1{"\"", "(", "(", "y", ")", ")", "\""};
-        vector<string> P_BRACKETS_2{"\"", "x", "+", "(", "(", "y", ")",
-                                    "*",  "(", "x", ")", ")", "\""};
-        vector<string> P_COMPLEX_1{"_",  "\"", "x", "+",    "y", "-",
-                                   "10", "*",  "(", "n4m3", "%", "x",
-                                   ")",  "/",  "y", "\"",   "_"};
-        vector<string> P_COMPLEX_2{"_",  "\"", "(",  "(", "(",  "x", "-",
-                                   "y",  ")",  "*",  "z", ")",  "/", "(",
-                                   "a",  "-",  "20", "%", "b",  ")", "-",
-                                   "10", ")",  "*",  "x", "\"", "_"};
-
-        vector<string> T_SIMPLE_1{"x", "+", "y"};
-        vector<string> T_SIMPLE_2{"x", "+", "10", "+", "y"};
-        vector<string> T_BRACKETS_1{"(", "(", "y", ")", ")"};
-        vector<string> T_BRACKETS_2{"x", "+", "(", "(", "y", ")",
-                                    "*", "(", "x", ")", ")"};
-        vector<string> T_COMPLEX_1{"x",    "+", "y", "-", "10", "*", "(",
-                                   "n4m3", "%", "x", ")", "/",  "y"};
-        vector<string> T_COMPLEX_2{"(", "(", "(", "x",  "-", "y", ")",  "*",
-                                   "z", ")", "/", "(",  "a", "-", "20", "%",
-                                   "b", ")", "-", "10", ")", "*", "x"};
-
-        vector<string> tokens = p.parsePatternTokens(P_SIMPLE_1);
-        REQUIRE(tokens == T_SIMPLE_1);
-
-        tokens = p.parsePatternTokens(P_SIMPLE_2);
-        REQUIRE(tokens == T_SIMPLE_2);
-
-        tokens = p.parsePatternTokens(P_BRACKETS_1);
-        REQUIRE(tokens == T_BRACKETS_1);
-
-        tokens = p.parsePatternTokens(P_BRACKETS_2);
-        REQUIRE(tokens == T_BRACKETS_2);
-
-        tokens = p.parsePatternTokens(P_COMPLEX_1);
-        REQUIRE(tokens == T_COMPLEX_1);
-
-        tokens = p.parsePatternTokens(P_COMPLEX_2);
-        REQUIRE(tokens == T_COMPLEX_2);
     }
 }
